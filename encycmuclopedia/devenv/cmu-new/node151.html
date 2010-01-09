@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.7.3 Compiler Arguments</TITLE>
+<META NAME="description" CONTENT="5.7.3 Compiler Arguments">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2601" HREF="node152.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2599" HREF="node148.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2593" HREF="node150.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2603" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2604" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2602" HREF="node152.html">5.7.4 Practical Difficulties</A>
+<B>Up:</B> <A NAME="tex2html2600" HREF="node148.html">5.7 Block Compilation</A>
+<B> Previous:</B> <A NAME="tex2html2594" HREF="node150.html">5.7.2 Block Compilation Declarations</A>
+<BR> <P>
+<H2><A NAME="SECTION00673000000000000000">5.7.3 Compiler Arguments</A></H2>
+<P>
+<A NAME="compilefileblock">&#160;</A>
+<A NAME="10214">&#160;</A>
+<P>
+The <tt>:block-compile</tt> and <tt>:entry-points</tt> arguments to
+<tt>extensions:compile-from-stream</tt> and <A NAME="10218">&#160;</A><tt>compile-file</tt> (page&nbsp;<A HREF="node85.html#FNcompilefile"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>) provide overall
+control of block compilation, and allow block compilation without requiring
+modification of the program source.
+<P>
+There are three possible values of the <tt>:block-compile</tt> argument:
+<DL ><DT><STRONG><i>nil</i></STRONG>
+<DD> Do no compile-time resolution of global function
+  names, not even for self-recursive calls.  This inhibits any
+  <tt>start-block</tt> declarations appearing in the file, allowing all
+  functions to be incrementally redefined.
+<P>
+<DT><STRONG><i>t</i></STRONG>
+<DD> Start compiling in block compilation mode.  This is
+  mainly useful for block compiling small files that contain no
+  <tt>start-block</tt> declarations.  See also the <tt>:entry-points</tt>
+  argument.
+<P>
+<DT><STRONG><tt>:specified</tt></STRONG>
+<DD> Start compiling in form-at-a-time mode, but
+  exploit <tt>start-block</tt> declarations and compile self-recursive
+  calls as local calls.  Normally <tt>:specified</tt> is the default for
+  this argument (see <A NAME="10230">&#160;</A><tt>*block-compile-default*</tt> (page&nbsp;<A HREF="node151.html#VRblockcompiledefault"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>).)
+<P>
+</DL>
+<P>
+The <tt>:entry-points</tt> argument can be used in conjunction with
+<tt>:block-compile</tt> <i>t</i> to specify the entry-points to a
+block-compiled file.  If not specified or <i>nil</i>, all global functions
+will be compiled as entry points.  When <tt>:block-compile</tt> is not
+<i>t</i>, this argument is ignored.
+<P>
+<b>[Variable]</b><BR> 
+<tt> * block-compile-default*</tt><BR> <BR>
+<P>
+  This variable determines the default value for the
+  <tt>:block-compile</tt> argument to <tt>compile-file</tt> and
+  <tt>compile-from-stream</tt>.  The initial value of this variable is
+  <tt>:specified</tt>, but <i>nil</i> is sometimes useful for totally
+  inhibiting block compilation.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

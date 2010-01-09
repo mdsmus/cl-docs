@@ -1,0 +1,151 @@
+<html lang="en">
+<head>
+<title>sb-cover - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Contributed-Modules.html#Contributed-Modules" title="Contributed Modules">
+<link rel="prev" href="sb_002drotate_002dbyte.html#sb_002drotate_002dbyte" title="sb-rotate-byte">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="sb-cover"></a>
+<a name="sb_002dcover"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="sb_002drotate_002dbyte.html#sb_002drotate_002dbyte">sb-rotate-byte</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Contributed-Modules.html#Contributed-Modules">Contributed Modules</a>
+<hr>
+</div>
+
+<h3 class="section">15.6 sb-cover</h3>
+
+<p><a name="index-Code-Coverage-628"></a>
+The <code>sb-cover</code> module provides a code coverage tool for SBCL. The
+tool has support for expression coverage, and for some branch coverage. 
+Coverage reports are only generated for code compiled using
+<code>compile-file</code> with the value of the
+<code>sb-cover:store-coverage-data</code> optimization quality set to 3.
+
+   <p>As of SBCL 1.0.6 <code>sb-cover</code> is still experimental, and the
+interfaces documented here might change in later versions.
+
+<h4 class="subsection">15.6.1 Example Usage</h4>
+
+<pre class="lisp">     ;;; Load SB-COVER
+     (require :sb-cover)
+     
+     ;;; Turn on generation of code coverage instrumentation in the compiler
+     (declaim (optimize sb-cover:store-coverage-data))
+     
+     ;;; Load some code, ensuring that it's recompiled with the new optimization
+     ;;; policy.
+     (asdf:oos 'asdf:load-op :cl-ppcre-test :force t)
+     
+     ;;; Run the test suite.
+     (cl-ppcre-test:test)
+     
+     ;;; Produce a coverage report
+     (sb-cover:report "/tmp/report/")
+     
+     ;;; Turn off instrumentation
+     (declaim (optimize (sb-cover:store-coverage-data 0)))
+</pre>
+<!-- @subsection Output -->
+<!-- Write some documentation about how to interpret the results -->
+<h4 class="subsection">15.6.2 Functions</h4>
+
+<p><a name="Function-sb_002dcover_003areport"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-cover:report</b><var> directory &amp;key form-mode external-format<a name="index-sb_002dcover_003areport-629"></a></var><br>
+<blockquote><p><a name="index-sb_002dcover_003areport-630"></a>Print a code coverage report of all instrumented files into <code>directory</code>. 
+If <code>directory</code> does not exist, it will be created. The main report will be
+printed to the file cover-index.html. The external format of the source
+files can be specified with the <code>external-format</code> parameter.
+
+        <p>If the keyword argument <code>form-mode</code> has the value <code>:car</code>, the annotations in
+the coverage report will be placed on the CARs of any cons-forms, while if
+it has the value <code>:whole</code> the whole form will be annotated (the default). 
+The former mode shows explicitly which forms were instrumented, while the
+latter mode is generally easier to read. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dcover_003areset_002dcoverage"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-cover:reset-coverage</b><var><a name="index-sb_002dcover_003areset_002dcoverage-631"></a></var><br>
+<blockquote><p><a name="index-sb_002dcover_003areset_002dcoverage-632"></a>Reset all coverage data back to the `Not executed` state. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dcover_003aclear_002dcoverage"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-cover:clear-coverage</b><var><a name="index-sb_002dcover_003aclear_002dcoverage-633"></a></var><br>
+<blockquote><p><a name="index-sb_002dcover_003aclear_002dcoverage-634"></a>Clear all files from the coverage database. The files will be re-entered
+into the database when the <code>fasl</code> files (produced by compiling
+<code>store-coverage-data</code> optimization policy set to 3) are loaded again into the
+image. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dcover_003asave_002dcoverage"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-cover:save-coverage</b><var><a name="index-sb_002dcover_003asave_002dcoverage-635"></a></var><br>
+<blockquote><p><a name="index-sb_002dcover_003asave_002dcoverage-636"></a>Returns an opaque representation of the current code coverage state. 
+The only operation that may be done on the state is passing it to
+<code>restore-coverage</code>. The representation is guaranteed to be readably printable. 
+A representation that has been printed and read back will work identically
+in <code>restore-coverage</code>. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dcover_003asave_002dcoverage_002din_002dfile"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-cover:save-coverage-in-file</b><var> pathname<a name="index-sb_002dcover_003asave_002dcoverage_002din_002dfile-637"></a></var><br>
+<blockquote><p><a name="index-sb_002dcover_003asave_002dcoverage_002din_002dfile-638"></a>Call <code>save-coverage</code> and write the results of that operation into the
+file designated by <code>pathname</code>. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dcover_003arestore_002dcoverage"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-cover:restore-coverage</b><var> coverage-state<a name="index-sb_002dcover_003arestore_002dcoverage-639"></a></var><br>
+<blockquote><p><a name="index-sb_002dcover_003arestore_002dcoverage-640"></a>Restore the code coverage data back to an earlier state produced by
+<code>save-coverage</code>. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dcover_003arestore_002dcoverage_002dfrom_002dfile"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-cover:restore-coverage-from-file</b><var> pathname<a name="index-sb_002dcover_003arestore_002dcoverage_002dfrom_002dfile-641"></a></var><br>
+<blockquote><p><a name="index-sb_002dcover_003arestore_002dcoverage_002dfrom_002dfile-642"></a><code>read</code> the contents of the file designated by <code>pathname</code> and pass the
+result to <code>restore-coverage</code>. 
+</p></blockquote></div>
+
+   </body></html>
+

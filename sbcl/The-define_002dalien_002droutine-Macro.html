@@ -1,0 +1,117 @@
+<html lang="en">
+<head>
+<title>The define-alien-routine Macro - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Foreign-Function-Calls.html#Foreign-Function-Calls" title="Foreign Function Calls">
+<link rel="prev" href="The-alien_002dfuncall-Primitive.html#The-alien_002dfuncall-Primitive" title="The alien-funcall Primitive">
+<link rel="next" href="define_002dalien_002droutine-Example.html#define_002dalien_002droutine-Example" title="define-alien-routine Example">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="The-define-alien-routine-Macro"></a>
+<a name="The-define_002dalien_002droutine-Macro"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="define_002dalien_002droutine-Example.html#define_002dalien_002droutine-Example">define-alien-routine Example</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="The-alien_002dfuncall-Primitive.html#The-alien_002dfuncall-Primitive">The alien-funcall Primitive</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Foreign-Function-Calls.html#Foreign-Function-Calls">Foreign Function Calls</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">7.7.2 The <code>define-alien-routine</code> Macro</h4>
+
+<div class="defun">
+&mdash; Macro: <b>sb-alien:define-alien-routine</b><var> name result-type &amp;rest arg-specifiers<a name="index-sb_002dalien_003adefine_002dalien_002droutine-286"></a></var><br>
+<blockquote><p><a name="index-define_002dalien_002droutine-287"></a>
+The <code>define-alien-routine</code> macro is a convenience for
+automatically generating Lisp interfaces to simple foreign functions. 
+The primary feature is the parameter style specification, which
+translates the C pass-by-reference idiom into additional return
+values.
+
+        <p><var>name</var> is usually a string external symbol, but may also be a
+symbol Lisp name or a list of the foreign name and the Lisp name.  If
+only one name is specified, the other is automatically derived as for
+<code>extern-alien</code>.  <var>result-type</var> is the alien type of the
+return value.
+
+        <p>Each element of the <var>arg-specifiers</var> list
+specifies an argument to the foreign function, and is
+of the form
+     <pre class="lisp">          (aname atype &amp;amp;optional style)
+</pre>
+        <p><var>aname</var> is the symbol name of the argument to the constructed
+function (for documentation). <var>atype</var> is the alien type of
+corresponding foreign argument.  The semantics of the actual call are
+the same as for <code>alien-funcall</code>. <var>style</var> specifies how this
+argument should be handled at call and return time, and should be one
+of the following:
+
+          <ul>
+<li><code>:in</code> specifies that the argument is passed by value. This is the
+default. <code>:in</code> arguments have no corresponding return value from
+the Lisp function.
+
+          <li><code>:copy</code> is similar to <code>:in</code>, but the argument is copied to a
+pre-allocated object and a pointer to this object is passed to the
+foreign routine.
+
+          <li><code>:out</code> specifies a pass-by-reference output value.  The type of
+the argument must be a pointer to a fixed-sized object (such as an
+integer or pointer).  <code>:out</code> and <code>:in-out</code> style cannot be
+used with pointers to arrays, records or functions.  An object of the
+correct size is allocated on the stack, and its address is passed to
+the foreign function.  When the function returns, the contents of this
+location are returned as one of the values of the Lisp function (and
+the location is automatically deallocated).
+
+          <li><code>:in-out</code> is a combination of <code>:copy</code> and <code>:out</code>.  The
+argument is copied to a pre-allocated object and a pointer to this
+object is passed to the foreign routine.  On return, the contents of
+this location is returned as an additional value.
+
+        </ul>
+
+        <blockquote>
+Note: Any efficiency-critical foreign interface function should be inline
+expanded, which can be done by preceding the
+<code>define-alien-routine</code> call with:
+
+     <pre class="lisp">          (declaim (inline lisp-name))
+</pre>
+        <p>In addition to avoiding the Lisp call overhead, this allows
+pointers, word-integers and floats to be passed using non-descriptor
+representations, avoiding consing.) 
+</blockquote>
+
+     </blockquote></div>
+
+   </body></html>
+

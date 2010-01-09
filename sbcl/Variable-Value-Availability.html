@@ -1,0 +1,119 @@
+<html lang="en">
+<head>
+<title>Variable Value Availability - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Variable-Access.html#Variable-Access" title="Variable Access">
+<link rel="next" href="Note-On-Lexical-Variable-Access.html#Note-On-Lexical-Variable-Access" title="Note On Lexical Variable Access">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Variable-Value-Availability"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Note-On-Lexical-Variable-Access.html#Note-On-Lexical-Variable-Access">Note On Lexical Variable Access</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Variable-Access.html#Variable-Access">Variable Access</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">4.4.1 Variable Value Availability</h4>
+
+<p><a name="index-Availability-of-debug-variables-87"></a><a name="index-Validity-of-debug-variables-88"></a><a name="index-Debug-optimization-quality-89"></a>
+The value of a variable may be unavailable to the debugger in portions
+of the program where Lisp says that the variable is defined.  If a
+variable value is not available, the debugger will not let you read or
+write that variable.  With one exception, the debugger will never
+display an incorrect value for a variable.  Rather than displaying
+incorrect values, the debugger tells you the value is unavailable.
+
+   <p>The one exception is this: if you interrupt (e.g., with &lt;C-c&gt;) or
+if there is an unexpected hardware error such as &ldquo;&lsquo;<samp><span class="samp">bus error</span></samp>&rsquo;&rdquo;
+(which should only happen in unsafe code), then the values displayed
+for arguments to the interrupted frame might be
+incorrect.<a rel="footnote" href="#fn-1" name="fnd-1"><sup>1</sup></a>  This exception applies only to the
+interrupted frame: any frame farther down the stack will be fine.
+
+   <p>The value of a variable may be unavailable for these reasons:
+
+     <ul>
+<li>The value of the <code>debug</code> optimization quality may have omitted debug
+information needed to determine whether the variable is available. 
+Unless a variable is an argument, its value will only be available when
+<code>debug</code> is at least <code>2</code>.
+
+     <li>The compiler did lifetime analysis and determined that the value was no longer
+needed, even though its scope had not been exited.  Lifetime analysis is
+inhibited when the <code>debug</code> optimization quality is <code>3</code>.
+
+     <li>The variable's name is an uninterned symbol (gensym).  To save space, the
+compiler only dumps debug information about uninterned variables when the
+<code>debug</code> optimization quality is <code>3</code>.
+
+     <li>The frame's location is unknown (see <a href="Unknown-Locations-and-Interrupts.html#Unknown-Locations-and-Interrupts">Unknown Locations and Interrupts</a>) because the debugger was entered due to an interrupt or
+unexpected hardware error.  Under these conditions the values of
+arguments will be available, but might be incorrect.  This is the
+exception mentioned above.
+
+     <li>The variable (or the code referencing it) was optimized out
+of existence.  Variables with no reads are always optimized away.  The
+degree to which the compiler deletes variables will depend on the
+value of the <code>compilation-speed</code> optimization quality, but most
+source-level optimizations are done under all compilation policies.
+
+     <li>The variable is never set and its definition looks like
+     <pre class="lisp">          (LET ((var1 var2))
+             ...)
+</pre>
+     <p>In this case, <code>var1</code> is substituted with <code>var2</code>.
+
+     <li>The variable is never set and is referenced exactly once.  In this
+case, the reference is substituted with the variable initial value.
+
+   </ul>
+
+   <p>Since it is especially useful to be able to get the arguments to a
+function, argument variables are treated specially when the
+<code>speed</code> optimization quality is less than <code>3</code> and the
+<code>debug</code> quality is at least <code>1</code>.  With this compilation
+policy, the values of argument variables are almost always available
+everywhere in the function, even at unknown locations.  For
+non-argument variables, <code>debug</code> must be at least <code>2</code> for
+values to be available, and even then, values are only available at
+known locations.
+
+   <div class="footnote">
+<hr>
+<h4>Footnotes</h4><p class="footnote"><small>[<a name="fn-1" href="#fnd-1">1</a>]</small> Since the location of an interrupt or hardware
+error will always be an unknown location, non-argument variable values
+will never be available in the interrupted frame.  See <a href="Unknown-Locations-and-Interrupts.html#Unknown-Locations-and-Interrupts">Unknown Locations and Interrupts</a>.</p>
+
+   <hr></div>
+
+   </body></html>
+

@@ -1,0 +1,495 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 28</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 28 - Practical Techniques for Programming</h1> 
+
+<P>In this chapter, we'll learn some brief yet useful guidelines for
+Lisp style, followed by practical advice on tradeoffs among
+debugging, performance, and readability.</P>
+
+<h2>Elements of Lisp style</h2>
+
+<p>The art of Lisp style is simpler and more fruitful than in most other
+languages.  Lisp's simple, consistent syntax eliminates the need for the
+rules of style that plague more complicated languages.  And the direct,
+standardized availability of complex functionality within Lisp helps to
+drive down the size of programs, thereby providing improved readability
+through brevity.  (In my experience, a Lisp program may range in size
+from 5 percent to 20 percent of an equivalent C++ program.)
+
+<p>Furthermore, the universal availability of Lisp-aware program editing
+tools -- such as Emacs or its equivalent built into many Lisp IDEs --
+means that you can let the computer handle the details of indentation 
+that are so important to the ability of a person to comprehend the
+structure of a Lisp program.  I've said this before, but it bears 
+repeating: you should <em>not</em> be programming in Lisp without the
+aid of a Lisp-aware editor.
+
+<p>So, if we don't have to worry about conventions for spelling,
+capitalization, indentation, and other such mundane details, then
+what remains for us to discuss as elements of Lisp style? How about
+things that are truly important? Lisp programming style is about the
+choice of proper abstractions, and about communicating not just with
+the compiler, but with other people who will eventually read your
+program. (For that matter, good style will help you read your own
+program some months or years in the future.)
+
+<h2>Property lists are handy for small (very small) ad-hoc databases</h2>
+
+<p>A long, long time ago the capabilities of a typical Lisp
+implementation were very much less than what you'll find in any
+Common Lisp system today. After all, Lisp has been around for over
+forty years since John McCarthy first invented the notations (see <a
+href="chapter34.html">Chapter 34</a>). Strangely, when Lisp is
+taught at all in computer science curricula, it is taught using a
+circa-1965 view of the state of Lisp implementations: interpreted
+execution, limited data structures, and no real application beyond
+the manipulation of symbols.
+
+<p>Unfortunately, authors and publishers of Lisp textbooks did
+little to help correct these misperceptions, ignoring Common Lisp
+(and indeed, many of its recent forebears) in highly-recommened
+Lisp textbooks published as recently as 1989.
+
+<p>In the bad old days -- when Lisp didn't have arrays, vectors, hash 
+tables, structures, or CLOS -- programmers learned to rely heavily on
+property lists as an important mechanism for structuring data.  You'll
+still find -- in bookstores and on the shelves of college libraries --
+Lisp and AI books that recommend the use of property lists as the 
+underlying basis for looking up values identified by a symbolic key.
+
+<p>A property list is a list of alternating keys and values.  For example:
+the list <code>(SEX MALE PARENTS (BOB JANE) OCCUPATION MUSICIAN)</code> 
+establishes these relations:
+
+<pre>
+relation   value
+---------- ----------
+sex        male
+parents    (bob jane)
+occupation musician
+</pre> 
+
+When you attach these relations to a symbol, say <code>JAMES</code>,
+then you have a way to get information related to the symbol
+<code>JAMES</code>, namely the properties having the names
+<code>SEX</code>, <code>PARENTS</code>, and <code>OCCUPATION</code>.
+
+<p>In Common Lisp you can retrieve a symbol's property using
+<code>(GET</code> <i>symbol</i> <i>property-name</i><code>)</code>,
+and set a property using <code>(SETF (GET</code> <i>symbol</i>
+<code>property-name</code><code>)</code>
+<i>property-value</i><code>)</code>. 
+
+<p>While property lists were useful substitutes for more capable
+data structures in ancient Lisp implementations, they find few uses
+in modern Lisp programs. One problem is efficiency. Every time you
+ask Lisp to retrieve a property value, it must locate the symbol's
+property list and then search the list for a matching key. If you
+have five or six properties on a symbol, the search may or may not
+be faster than using a hash table; the exact crossover point will
+depend upon your particular Lisp implementation. The other problem
+is that properties are shared among all parts of your program. It's
+not too difficult to imagine two programmers using a property named
+<code>COLOR</code> in two different ways in two parts of the same
+program. Imagine their surprise when they discover the conflict...
+
+<p>At any rate, you should become familiar with all of the
+capabilities of Common Lisp, and learn to recognize that information
+about older Lisp implementation which still haunts us through the
+mists of history.
+
+<h2>Declarations help the compiler, sometimes</h2>
+
+<p>Common Lisp defines the following declarations:
+
+<dl>
+<dt>special
+<dd>declares a variable to have dynamic (not lexical) scope
+<dt>optimize
+<dd>instructs the compiler how to weight the relative importance of
+ <ul>
+  <li>speed
+  <li>safety
+  <li>space
+  <li>debug
+  <li>compilation-speed
+ </ul> 
+<dt>dynamic-extent
+<dd>declares that the programmer expects the lifetime of a function
+    or variable to end when control leaves the enclosing form
+<dt>type
+<dd>declares that a variable will always have values of a given type
+<dt>ftype
+<dd>declares that a function should expect arguments of specified
+    types, and that the function will return values or given types
+<dt>ignore
+<dd>declares that a variable is not referenced
+<dt>ignorable
+<dd>declares that a variable may not be referenced
+<dt>inline
+<dd>declares that the programmer would like a function to
+    be compiled as inline code
+<dt>notinline
+<dd>declares that the programmer does not want a function to
+    be compiled as inline code
+</dl> 
+
+<p>Of these, only the first and last <em>must</em> be implemented.
+The rest are advisory; depending upon the implementation, the
+compiler may or may not honor the given advice. If you've programmed
+in other languages, you may find it strange that most of Lisp's
+declarations are advisory rather than mandatory. So let's dig a bit
+deeper and see what this really means to you.
+
+<p>Lisp by default must have the <em>capability</em> to determine
+the type of every variable at runtime. This is not to say that a
+sufficiently smart compiler can't infer at compile time that a
+variable will always be of a particular type and generate code that
+does not need to check types at run time. However, an actual
+"sufficiently smart compiler" remains an elusive creature, much like
+the Yeti, Bigfoot and the Loch Ness Monster.
+
+<p>Declarations allow the programmer to pass metainformation to the
+compiler. This is not part of the program, but rather information
+<em>about</em> the program. Declarations can help the compiler to
+generate better code by providing information about the programmer's
+<em>intent</em>. 
+
+<p>For example, if you declare that a variable will always be a
+<code>FIXNUM</code> (an integer value that fits in a single machine
+word) then the compiler can emit code to load that variable directly
+into a register in preparation for the next operation. If you
+declare the result of the operation to also be a
+<code>FIXNUM</code>, then the compiler can generate code to perform
+the operation and store the result using simple machine instructions
+without first checking the <code>actual</code> type of the value.
+Given such declarations, a good Lisp compiler can generate code
+comparable to a low-level language in which operations and types in
+the language map directly onto the underlying machine.
+
+<p>But there's a risk. If you declare certain types, and the
+compiler emits code that optimizes the program according to your
+declarations, and the program then <em>contradicts</em> those
+declarations by providing a value of a different type at runtime,
+then bad things will happen. Tell the compiler to expect two numbers
+to add, then pass it a number and a symbol, and all bets are off.
+
+<p>Fortunately, the declarations that guide the compiler are
+themselves moderated by the <code>OPTIMIZE</code> declaration. The
+<code>OPTIMIZE</code> declaration lets you instruct the compiler
+about the relative importance of certain properties of the program.
+You can specify the relative importance of the <code>SPEED</code>,
+<code>SPACE</code>, and <code>SIZE</code> of the generated code. You
+can specify whether you'd like to allow the compiler to spend extra
+time doing a better job, or to emphasize
+<code>COMPILATION-SPEED</code>. You can specify the importance of
+being able to <code>DEBUG</code> your program, which may cause the
+compiler to produce code that is simpler or interacts well with the
+debugger.
+
+<blockquote>
+Values range from 0 to 3 for the <code>OPTIMIZE</code> declarations,
+with 0 meaning "totally unimportant" and 3 meaning "most important".
+The default value is 1, meaning "of normal importance".
+Bear in mind that for something to be relatively more important, 
+something else must be less important; it won't give the compiler
+any useful guidance to specify values of 3 for all of the 
+<code>OPTIMIZE</code> declarations.
+</blockquote> 
+
+<p>Of all the <code>OPTIMIZE</code> declarations, the most important is
+<code>SAFETY</code>, since this affects the amount of trust the
+compiler is willing to extend to your type declarations. A high
+value of <code>SAFETY</code> generally compels the compiler to check
+the type of every value that it can't absolutely determine at
+compile time. Lower <code>SAFETY</code> values put increasing weight
+upon your abilities as a programmer to guarantee that type
+declarations are correct, array bounds are always in range, etc.
+
+<p>The exact effect of declarations (with the exception of
+<code>SPECIAL</code> and <code>NOTINLINE</code>) varies among Lisp
+implementations; consult your reference manual for details.
+
+<h2>DEFVAR versus DEFPARAMETER</h2>
+
+<p>Although not required by the Common Lisp standard, almost all
+implementations require that you load code from a file. (The one
+exception that I know of is the Venue Medley environment, which
+normally saves the entire Lisp world when you end a session. Medley
+also keeps track of new definitions created in the listener and
+allows you to save just those definitions to a file.) 
+
+<p>In a file-based Lisp environment, you'll normally add definitions
+to a file of source code. One reason for so doing is to periodically
+save your work; unless you're debugging FFI code or running buggy
+Lisp code with a low optimization value for safety, your Lisp
+environment will almost never crash.  However, other disasters can
+happen -- another application could crash and bring down the system
+in an unprotected OS such as the Mac OS or Windows, the power could
+fail, or your cat could walk across the keyboard when you leave to
+refill your coffee.
+
+<p>As your program gets larger, you may find that it's useful to
+reload an entire source file after making a series of changes. Most
+Lisp environments also let you evaluate one definition at a time in
+any open window. This is quite useful because you can edit, then
+recompile, one definition at a time. But sometimes you'll forget,
+and then it's easier to just reload the entire file than to spend
+time figuring out which definition you might have forgotten to
+recompile after last changing its definition.
+
+<p>But you may also be in the midst of debugging your program when
+you'd like to reload its source code. If your program uses any
+global variables to keep track of its state, you really <em>don't</em> 
+want to reinitialize these in the midst of your debugging session.
+So, how do you handle this?  You could put definitions of your
+program's state variables in a separate file, but that increases
+your mental workload and increases debugging time by splitting clearly
+interrelated parts of your program into two separate files.  (I know
+that this is an accepted practice in many programming languages, but
+it really does increase the amount of work you do as a programmer.
+Imagine how much less pleasurable reading a novel would be if the novel
+was delivered as a set of pamphlets, one per character, and you had to
+follow page references to get to the next part of the dialog.)
+
+<p>Fortunately, Lisp has grown through decades of real-world programming
+experience, and has a very simple mechanism to handle whether variables
+get reinitialized or not when you load a file. You use <code>DEFVAR</code> 
+to declare variables with values that need to be initialized only once.
+To declare a variable with an initial value that gets set every time its
+defining form is evaluated, use <code>DEFPARAMETER</code>.
+
+<p>One final note: as a matter of form, you should name global variables
+with a leading and trailing asterisk, as in <code>*MY-ADDRESS*</code>.
+Think of this convention as a courtesy to those who will maintain your
+code at some future date.
+
+<h2>Define constants with DEFCONSTANT</h2>
+
+<p>You should define global constants using
+<code>DEFCONSTANT</code>. From the viewpoint of reading a Lisp
+program, the distinction between <code>DEFPARAMETER</code> and
+<code>DEFCONSTANT</code> is that the value defined by
+<code>DEFPARAMETER</code> could concievably be altered by the user
+after the program is compiled, but a <code>DEFCONSTANT</code> value
+will <em>never</em> change. A good Lisp compiler will take advantage
+of <code>DEFCONSTANT</code> declarations to perform classical
+optimizations such as constant folding or compiling immediate load
+instructions.
+
+<p>Fewer Lisp programmers follow a naming convention for constants.
+The one I use puts a leading and trailing plus sign on the name of
+the constant, as in <code>+RTS-OPCODE+</code>.
+
+<h2>Know when (not) to use the compiler</h2>
+
+<p>Most Lisp systems include both an interpreter and a compiler;
+when both are available, you'll normally find that it's easier to
+debug interpreted code. Consult your vendor's documentation to 
+learn how to switch between the interpreter and the compiler.
+
+<p>Of course, when performance is important, you'll want to run
+your code compiled once it's debugged.  But see the earlier cautions
+about running buggy code with low safety settings.
+
+<p>When you're writing Lisp code to run on multiple platforms, it's
+safest to assume that code will run interpreted unless you call
+<code>COMPILE</code> or <code>COMPILE-FILE</code>. For this reason,
+you should develop the practice of writing (or using) a system
+definition procedure that first loads all of your Lisp source files,
+then compiles them, then loads the compiled files. This is usually
+overkill, but it's a very safe, conservative approach. With suitable
+source code organization and proper use of <code>EVAL-WHEN</code>
+you can reduce the number of source files that must first be loaded;
+the main idea is to ensure that all macros are defined before
+compiling code that uses the macros, but there are other possible
+situations that can depend upon the current state of the Lisp world.
+
+<h2>Speed vs. ability to debug</h2>
+
+<p>Interpreted programs are easier to debug because it's easier for
+the debugger to access the actual source code at the point of an
+error. Once you've compiled your program, the debugger typically has
+less source information available; you may find yourself puzzling
+over a transformed version of the source code or grovelling through
+assembly-language instructions to find the source of the error.
+Fortunately, the need for such low-level debugging will be rare if
+you follow some simple advice:
+
+<ol>
+<li>Keep high <code>SAFETY</code> optimizations on untested code.
+<li>If an interpreter is available to you, use it until your code is
+    working well.
+<li>If you have a compile-only environment, use lower optimization
+    settings for <code>SPEED</code> and higher settings for <code>DEBUG</code>.
+</ol> 
+
+<p>Once your code is running well, then you should compile it and
+adjust the optimization declarations for performance. If you find
+that simply compiling your program provides adequate performance,
+leave it alone. If the performance of the compiled program falls far
+below your expectations, first improve the algorithm; optimization
+declarations typically have a fractional impact upon performance.
+
+<a name="efficiency"></a> 
+<h2>Efficiency: spotting it, testing it</h2>
+
+<p>The first rule of efficiency in any programming language is to
+start with an efficient algorithm. It's a little harder to spot
+inefficiencies in a Lisp program because the underlying operations
+don't usually map directly onto a hardware instruction. But with a
+certain amount of knowledge and practice, you should be able to tell
+why the following four programs have radically different resource
+requirements.
+
+<p>These four programs return the sum of a list of numbers, but do
+it in different ways.  In each case, we test the program with the
+<code>TIME</code> form, which reports run time and memory allocation.
+Each program is tested twice, once with a list of ten thousand elements, 
+then again with one hundred thousand.
+
+<pre>
+<i>;; Runtime increases as the square of the number of elements</i> 
+? (defun sum-list-bad-1 (list)
+    (let ((result 0))
+      (dotimes (i (length list))
+        (incf result (elt list i)))
+      result))
+SUM-LIST-BAD-1
+? (let ((list (make-list 10000 :initial-element 1)))
+    (time (sum-list-bad-1 list)))
+(SUM-LIST-BAD-1 LIST) took 2,199 milliseconds (2.199 seconds) to run.
+Of that, 102 milliseconds (0.102 seconds) were spent in The Cooperative Multitasking Experience.
+ 16 bytes of memory allocated.
+10000
+? (let ((list (make-list 100000 :initial-element 1)))
+    (time (sum-list-bad-1 list)))
+(SUM-LIST-BAD-1 LIST) took 336,650 milliseconds (336.650 seconds) to run.
+Of that, 15,680 milliseconds (15.680 seconds) were spent in The Cooperative Multitasking Experience.
+ 2,704 bytes of memory allocated.
+100000
+
+<i>;; Recursive version works when compiler does tail-call optimization</i> 
+? (defun sum-list-bad-2 (list)
+    (labels ((do-sum (rest-list sum)
+               (if (null rest-list)
+                 sum
+                 (do-sum (rest rest-list) (+ sum (first rest-list))))))
+      (do-sum list 0)))
+SUM-LIST-BAD-2
+? (let ((list (make-list 10000 :initial-element 1)))
+    (time (sum-list-bad-2 list)))
+(SUM-LIST-BAD-2 LIST) took 2 milliseconds (0.002 seconds) to run.
+10000
+? (let ((list (make-list 100000 :initial-element 1)))
+    (time (sum-list-bad-2 list)))
+(SUM-LIST-BAD-2 LIST) took 21 milliseconds (0.021 seconds) to run.
+100000
+
+<i>;; The recursive version can fail w/o tail-call optimization</i> 
+? (defun sum-list-bad-3 (list)
+    (declare (optimize (debug 3)))  <i>; disable tail-call optimization</i> 
+    (labels ((do-sum (rest-list sum)
+               (if (null rest-list)
+                 sum
+                 (do-sum (rest rest-list) (+ sum (first rest-list))))))
+      (do-sum list 0)))
+SUM-LIST-BAD-3
+? (let ((list (make-list 10000 :initial-element 1)))
+    (time (sum-list-bad-3 list)))
+&gt; Error: Stack overflow on control stack.
+
+<i>;; The iterative version is not as elegant, but it's fast!</i> 
+? (defun sum-list-good (list)
+    (let ((sum 0))
+      (do ((list list (rest list)))
+          ((endp list) sum)
+        (incf sum (first list)))))
+SUM-LIST-GOOD
+? (let ((list (make-list 10000 :initial-element 1)))
+    (time (sum-list-good list)))
+(SUM-LIST-GOOD LIST) took 1 milliseconds (0.001 seconds) to run.
+10000
+? (let ((list (make-list 100000 :initial-element 1)))
+    (time (sum-list-good list)))
+(SUM-LIST-GOOD LIST) took 10 milliseconds (0.010 seconds) to run.
+100000
+</pre> 
+
+<p>The first version, <code>SUM-LIST-BAD-1</code>, harbors a hidden
+inefficiency: <code>(ELT LIST I)</code> must search
+<code>LIST</code> from the beginning for each value of
+<code>I</code>. In other words, <code>ELT</code> must examine one
+element when <code>I</code> is 1, two elements when <code>I</code>
+is 2, and so on. For a list of length <i>N</i>, <code>ELT</code>
+will examine almost <i>N</i>-squared elements.  Have a look at the
+runtimes for 1,000 and 10,000 elements.
+
+<p>The second version is coded using an awareness of how lists are
+accessed; the helper function <code>DO-SUM</code> calls itself
+recursively with the tail of the list it is given. In
+<code>SUM-LIST-BAD-2</code>, the runtime increases linearly with the
+length of the input list. So why is this a <b>bad</b> example?
+
+<p><code>DO-SUM</code> calls itself as the last form it executes;
+this is known as <em>tail recursion</em>. Some compilers can compile
+tail recursion as a jump instruction instead of a function call;
+this eliminates the growth of the control (function return) stack
+that would otherwise occur in a recursive call. However, the Common
+Lisp standard does not <em>require</em> that tail calls be optimized.
+
+<p>The third version shows what can happen when the compiler does
+not optimize tail recursion. The compiler in my Lisp system disables
+tail recursion optimizations when the <code>DEBUG</code>
+optimization is set to 3. Without tail recursion optimization,
+<code>SUM-LIST-BAD-3</code> consumes a function call frame for each
+recursive call, and the program fails -- exhausting stack space --
+before reaching the end of the test list.
+
+<p>The final version, <code>SUM-LIST-GOOD</code>, uses iteration
+instead of recursion for its control loop, and walks down the input
+list element by element. It runs slightly faster than
+<code>SUM-LIST-BAD-2</code> and doesn't fail if the compiler doesn't
+support tail recursion optimization.
+
+<h2>Recognizing inefficiency, profiling; performance vs. readability</h2>
+
+<p>Avoidance is the best defense against inefficiency. Use appropriate 
+data structures and control techniques. When you're not sure, put together
+a <em>small</em> test program and time it with a variety of inputs.
+
+<p>Every Common Lisp implementation will have the <code>TIME</code> macro
+that we used to show the differences in the <code>SUM-LIST-</code><i>xxx</i> 
+functions. You can use this to examine and tune small portions of a program.
+
+<p>Once you have assembled a larger program, you may need to find
+the bottleneck that causes unexpectedly low performance. For this,
+you'll need a profiler. A profiler watches the execution of your whole
+program and generates a report to show where the program spends its time.
+Some profilers also report on memory allocation. A profiler is not a
+standard part of Lisp, but most vendors provide one.  Consult your
+vendor's documentation.
+
+<p>Lisp provides abstractions that help you solve problems. You'll
+find that you don't have to make a tradeoff between readability and
+performance; an efficient Lisp program is usually one that is
+written using the most appropriate abstractions and operations to
+solve a given problem.
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter27.html">Chapter 27</a> | Chapter 28 | <a href="chapter29.html">Chapter 29</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

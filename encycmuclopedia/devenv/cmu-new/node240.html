@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>def-alien-routine Example</TITLE>
+<META NAME="description" CONTENT="def-alien-routine Example">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3736" HREF="node241.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3734" HREF="node237.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3728" HREF="node239.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3738" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3739" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3737" HREF="node241.html">8.7.4 Calling Lisp from </A>
+<B>Up:</B> <A NAME="tex2html3735" HREF="node237.html">8.7 Alien Function Calls</A>
+<B> Previous:</B> <A NAME="tex2html3729" HREF="node239.html">The def-alien-routine Macro</A>
+<BR> <P>
+<H2><A NAME="SECTION00973000000000000000">def-alien-routine Example</A></H2>
+<P>
+Consider the C function <tt>cfoo</tt> with the following calling convention:
+<BLOCKQUOTE> <PRE>cfoo (str, a, i)
+    char *str;
+    char *a; /* update */
+    int *i; /* out */
+{
+/* Body of cfoo. */
+}
+</PRE> </BLOCKQUOTE>
+which can be described by the following call to <tt>def-alien-routine</tt>:
+<BLOCKQUOTE> <PRE>(def-alien-routine &quot;cfoo&quot; void
+  (str c-string)
+  (a char :in-out)
+  (i int :out))
+</PRE> </BLOCKQUOTE>
+The Lisp function <tt>cfoo</tt> will have two arguments (<i>str</i> and <i>a</i>)
+and two return values (<i>a</i> and <i>i</i>).
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

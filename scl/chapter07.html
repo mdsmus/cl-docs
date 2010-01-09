@@ -1,0 +1,563 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 7</title> 
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 7 - A First Look at Objects as Fancy Structures</h1> 
+
+<p>We first encountered structures in <a
+href="chapter03-10.html#structures"> Chapter 3</a>, then learned
+about some of their optional behavior in <a
+href="chapter06.html">Chapter 6</a>. In this chapter we'll start to
+learn about objects in the Common Lisp Object System (CLOS). For
+now, we'll look at just the ways objects can be used to structure
+data. Later, in <a href="chapter14.html">Chapter 14</a>, we'll learn
+more about CLOS.
+
+<h2>Hierarchies: Classification vs. containment</h2>
+
+<p>When you program with objects you will attempt, in some way, to
+create a model of some portion of the real world. When you do this,
+you'll probably notice that some objects are made up of smaller
+parts. Each part has its own identity; the part is identifiable by
+itself, separate from any object that it may be a part of.
+Furthermore, a part may be made from smaller parts. If you drew a
+picture of the component relationships among all the parts of some
+complex object, you'd find that they formed a hierarchy. The
+fully-assembled object will be at the top of the hierarchy (the
+first level), all of its pieces will be at the second level, all of
+the pieces that make up the second-level parts will be at the third
+level, and so on. This hierarchy is a <em>containment
+hierarchy</em>; each level represents an object, and the next lowest
+level represents the objects that are parts of the object at the
+higher level.  An object at a higher level contains (or has as parts)
+some objects at a lower level in the hierarchy, and an object at a
+lower level is contained by (or is part of) some object at a higher
+level.
+
+<p>Containment hierarchies are important because they model "has-a"
+and "is-a-part-of" relationships among objects. These relationships
+simplify your program's model of the real world by letting you think
+in terms of relatively small component parts, rather than having to 
+model a single, highly complex object.  Modeling by containment also
+pays off when you can model a similar object in terms of a different
+combination of components.
+
+<blockquote> An object may have certain characteristics which can
+not be separated from the object. For example, an object may have
+color, size, mass, velocity, and temperature. These characteristics
+are <em>not</em> component parts of the object; they can not be
+separated from the object, nor can they be combined to create new
+objects. These characteristics are <em>attributes</em> of the
+object. </blockquote> 
+
+<p>The other kind of hierarchy you'll work with as an object
+programmer is a <em>classification hierarchy</em>. In a
+classification hierarchy, objects are connected by "is-a-kind-of"
+(or more concisely, "is-a" or "a-k-o") relationships. These
+relationships also have different names depending upon our point of
+view: if A is a kind of B then A is a specialization of B, while B
+is a generalization of A.
+
+<blockquote> With the explosion of interest in object programming,
+many specialized lexicons have grown up to support specific methods
+and languages. After you eliminate the terms that describe special
+features of a particular methodology or language implementation,
+what's left is usually a renaming of containment and classification
+hierarchies (and the relationships supported by each) and some way
+to specify object attributes. In fact, the most common renaming is
+to refer to a classification hierarchy as a "class" hierarchy.
+</blockquote> 
+
+<h2>Use DEFCLASS to define new objects</h2>
+
+<p>A CLOS object is defined by a <code>DEFCLASS</code> form.
+<code>DEFCLASS</code> only <em>describes</em> an object. To create
+an instance of an object, you can use a <code>MAKE-INSTANCE</code>
+form.
+
+<p>Here's how you would define a trivial object:
+
+<pre>
+? (defclass empty-object () ())
+#&lt;STANDARD-CLASS EMPTY-OBJECT&gt;
+</pre> 
+
+<p>This class is not very interesting; the <code>()</code> are
+placeholders for things to come. Also, note that this particular
+Lisp system prints <code>#&lt;STANDARD-CLASS EMPTY-OBJECT&gt;</code> in
+response to the <code>DEFCLASS</code> form.  This is unreadable --
+the reader signals an error whenever it reads a form that begins
+with <code>#&lt;</code> -- but it lets you know that something useful
+happened.
+
+<p>Once you've defined a class, you can use it to make objects.  Most forms
+that require a class will accept the name of the class, or you can use
+<code>FIND-CLASS</code> to retrieve the actual class, given its name.
+<code>MAKE-INSTANCE</code> creates a new object, given a class name or a
+class:
+
+<pre>
+? (make-instance 'empty-object)
+#&lt;EMPTY-OBJECT #x3CA1206&gt;
+? (make-instance 'empty-object)
+#&lt;EMPTY-OBJECT #x3CA1DFE&gt;
+? (find-class 'empty-object)
+#&lt;STANDARD-CLASS EMPTY-OBJECT&gt;
+? (make-instance (find-class 'empty-object))
+#&lt;EMPTY-OBJECT #x3CB397E&gt;
+</pre> 
+
+<p>Again, the Lisp system responds with an unreadable object. This
+time, the response includes the storage address of the object. Most
+Lisp systems have a default printer for CLOS objects that works like
+this, even though the details may differ slightly. The important
+thing to note is that <code>MAKE-INSTANCE</code> creates a new
+object each time it is called.
+
+<blockquote> Even though the object printer shows a different
+address for each object, you should <em>not</em> depend upon the
+printed representation to identify an object. Lisp systems can (and
+do) change the address of objects at runtime. The only way to
+reliably compare the identity of an object is with an identity test
+such as <code>EQ</code> (see <a href="chapter17.html">Chapter
+17</a>). </blockquote> 
+
+<h2>Objects have slots, with more options than structures</h2>
+
+<p>Our first <code>DEFCLASS</code> form defined an object that
+wasn't good for much of anything. Now we'll see how to expand a
+class definition so that our objects will have named slots. These
+serve the same purpose as slots in structures (<a
+href="chapter03-10.html#structures">Chapter 3</a>), they simply
+store data.  The data could be attributes of the object, or
+contained objects, or references to related objects.
+
+<p>To define a class for an object with slots, we start with a 
+<code>DEFCLASS</code> form and add slot definitions, like this:
+
+<pre>
+? (defclass 3d-point () (x y x))
+#&lt;STANDARD-CLASS 3D-POINT&gt;
+</pre> 
+
+<p>Here, we've defined a class <code>3D-POINT</code> whose objects
+will have three slots, named <code>X</code>, <code>Y</code>, and 
+<code>Z</code>.  This looks like it might be similar to a structure
+definition, such as
+
+<pre>
+(defstruct 3d-point-struct x y z)
+</pre> 
+
+<p>but the class actually has <b>less</b> functionality than the
+structure.  The class does not define default accessors for slots.
+To access the slots, you would have to use <code>SLOT-VALUE</code> 
+as in this example:
+
+<pre>
+? (let ((a-point (make-instance '3d-point)))
+    (setf (slot-value a-point 'x) 0)  <i>; set the X slot</i> 
+    (slot-value a-point 'x))          <i>; get the X slot</i> 
+0
+</pre> 
+
+<p>If you try to get the value of a slot before setting it, Lisp will
+signal an error because the slot is unbound (i.e. it has <em>no</em> 
+value).
+
+<pre>
+? (let ((a-point (make-instance '3d-point)))
+    (slot-value a-point 'y))
+&gt; Error: Slot Y is unbound in #&lt;3D-POINT #x3CD3216&gt;
+</pre> 
+
+<h2>Controlling access to a slot helps keep clients honest</h2>
+
+<p>Getting and setting slots with <code>SLOT-VALUE</code> forms is
+slightly cumbersome when compared to the accessors created
+automatically for slots in a structure.  Fortunately, you can specify
+accessors for each slot when you define a class.
+
+<pre>
+(defclass 3d-point ()
+  ((x :accessor point-x)
+   (y :accessor point-y)
+   (z :accessor point-z)))
+</pre> 
+
+<p>Then, object slot access looks just like structure slot access.
+
+<pre>
+? (let ((a-point (make-instance '3d-point)))
+    (setf (point-x a-point) 0)
+    (point-x a-point))
+0
+</pre> 
+
+<p>You can also specify separate accessor names for reading and writing
+a slot.
+
+<pre>
+? (defclass 3d-point ()
+    ((x :reader get-x :writer set-x)
+     (y :reader get-y :writer set-y)
+     (z :reader get-z :writer set-z)))
+#&lt;STANDARD-CLASS 3D-POINT&gt;
+? (let ((a-point (make-instance '3d-point)))
+    (set-z 3 a-point)
+    (get-z a-point))
+3
+</pre> 
+
+<p>Do you see the difference between specifying
+<code>:accessor</code> and <code>:writer</code>? Notice that the
+slot writer is <em>not</em> used with <code>SETF</code>. Also note
+the order of arguments to the slot writer: first the value, then the
+object.
+
+<p>It's useful to have all of these options for slot access when
+you're writing a complex program. Through various combinations of
+slot accessor definitions, you can give a slot read/write,
+read-only, write-only, or no access. You might think that the last
+two cases wouldn't be useful, but they are. A write-only slot might
+provide information that is only useful to establish a state within
+the object in response to a request from the object's client -- a
+seed for a random number generator, for example. A no-access slot
+can maintain information that should be known only by the internal
+workings of the object; functions that manipulate the object's
+internal state can still access the slot using
+<code>SLOT-VALUE</code>.
+
+<p>The existence of <code>SLOT-VALUE</code> is anathema to some
+object designers, who believe that the privacy of an object's
+internal information should be <em>absolutely</em> protected against
+client access. Lisp requires the exercise of programmer discipline
+to protect an object's private information. As a rule of thumb, you
+should use <code>SLOT-VALUE</code> to manipulate private slots, and
+provide appropriate named accessors for all other slots. Having done
+so, any appearance of a <code>SLOT-VALUE</code> form in a client
+program signals a violation of your intent to hide some object's
+private state.
+
+<h2>Override a slot accessor to do things that the client can't</h2>
+
+<p>In this section we'll see how to define special-purpose accessors
+that do more than just read and write slot values.  Think of this as
+a sneak preview of <a href="chapter14.html">Chapter 14</a>.
+
+<p>Let's define a sphere.  A sphere is defined by its position in 
+3-space and by its radius.  We'd like to query the sphere for its 
+volume.  Finally, we'd like to be able to move -- or translate -- 
+the sphere's position by a specified amount without having to 
+explicitly calculate its new coordinates.  We start with this
+class definition:
+
+<pre>
+? (defclass sphere ()
+    ((x :accessor x)
+     (y :accessor y)
+     (z :accessor z)
+     (radius :accessor radius)
+     (volume :reader volume)
+     (translate :writer translate)))
+#&lt;STANDARD-CLASS SPHERE&gt;
+</pre> 
+
+<p>The accessors for <code>X</code>, <code>Y</code>, <code>Z</code>,
+and <code>RADIUS</code> need no further explanation, but the accessors
+for <code>VOLUME</code> and <code>TRANSLATE</code> aren't yet useful;
+the <code>VOLUME</code> reader will fail because its slot is unbound
+and the <code>TRANSLATE</code> writer won't do anything except to set
+its slot.
+
+<p>We'll finish the definition of our sphere by first having
+<code>VOLUME</code> return a value calculated from the sphere's radius.
+There are two ways to do this: have <code>VOLUME</code> read the sphere's
+radius and calculate the corresponding volume, or have <code>RADIUS</code> 
+calculate the volume and set the volume slot for later use by the 
+<code>VOLUME</code> accessor.  Here are both solutions -- if you try this
+out, pick just one:
+
+<pre>
+<i>; Volume from Radius</i> 
+(defmethod volume ((object sphere))
+  (* 4/3 pi (expt (radius object) 3)))
+
+<i>; Radius to Volume</i> 
+(defmethod radius ((new-radius number) (object sphere))
+  (setf (slot-value object 'radius) new-radius)
+  (setf (slot-value object 'volume)
+        (* 4/3 pi (expt new-radius 3))))
+</pre> 
+
+<blockquote>
+This is not the best example of Lisp style.  You're defining a 
+default reader or writer method in the <code>DEFCLASS</code> form, 
+then redefining the method to add special behavior.  Your Lisp 
+system may warn you about the attempted redefinition; it's OK to
+continue from the warning and redefine the method.
+
+<p>One way to avoid the problem is to omit the slot option that
+defines the default <code>:READER</code> (for <code>VOLUME</code>)
+or <code>:WRITER</code> (for <code>TRANSLATE</code>) in the
+<code>DEFCLASS</code> form, but then you lose the documentation
+provided by these declarations. We'll see some other declarations in
+<a href="chapter14.html">Chapter 14</a> that can help to improve
+readability. </blockquote> 
+
+<p>The <code>DEFMETHOD</code> form defines a function which applies only
+to certain argument types.  In this case, the <code>VOLUME</code> method
+applies only to <code>SPHERE</code> objects, and the <code>RADIUS</code> 
+method applies only to a <code>NUMBER</code> (the new radius) and a
+<code>SPHERE</code>.  The <code>VOLUME</code> method computes the volume
+from the sphere's radius each time it is called.  The <code>RADIUS</code> 
+method computes the sphere's volume each time the radius is set; the values
+of both radius and volume are stored in the sphere's slots by the
+<code>SLOT-VALUE</code> forms.
+
+<p>You can think of a default slot reader and writer as being defined like
+this (but the compiler probably generates better code if you just use the
+default accessors created automatically by the <code>:READER</code> and
+<code>:WRITER</code> slot options):
+
+<pre>
+<i>; Default slot reader (illustration only)</i> 
+(defmethod slot-reader ((object object-class))
+  (slot-value object 'slot-name))
+
+<i>; Default slot writer (illustration only)</i> 
+(defmethod slot-writer (new-value (object object-class))
+  (setf (slot-value object 'slot-name) new-value))
+</pre> 
+
+<h2>Define classes with single inheritance for specialization</h2>
+
+<p>Specialization is one of the most important concepts in object
+programming.  Specialization allows you to define an object in terms
+of another object by describing features that are new or different;
+the base functionality of the object is <em>inherited</em> from the
+definition of the parent.
+
+<p>In the simplest kind of specialization, single inheritance, a
+child inherits traits from just one parent. As an example, we'll
+define some basic two dimensional objects using a single inheritance
+hierarchy.
+
+<pre>
+(defclass 2d-object () ())
+
+(defclass 2d-centered-object (2d-object)
+  (x :accessor x)
+  (y :accessor y)
+  (orientation :accessor orientation)
+
+(defclass oval (2d-centered-object)
+  (axis-1 :accessor axis-1)
+  (axis-2 :accessor axis-2))
+
+(defclass regular-polygon (2d-centered-object)
+  (n-sides :accessor number-of-sides)
+  (size :accessor size))
+</pre> 
+
+<p>The inheritance graph for these four classes looks like this:
+
+<p><img src="gifs/2d-object-inheritance.gif">
+
+<p>The <code>2D-OBJECT</code> class is a placeholder from which we
+might later derive other 2D objects, e.g. lines and points. A
+<code>2D-CENTERED-OBJECT</code> has a central reference position
+specified by its <code>X</code> and <code>Y</code> attributes, and
+an orientation -- the amount the object is rotated about its central
+position. The <code>OVAL</code> and <code>REGULAR-POLYGON</code>
+classes inherit from <code>2D-CENTERED-OBJECT</code>, retaining the
+position and orientation attributes of the parent class and adding
+attributes appropriate to the geometry of the derived objects.
+
+<h2>Multiple inheritance allows mix-and-match definition</h2>
+
+<p>CLOS supports multiple inheritance, which lets a class inherit
+traits from more than one parent.  This is useful for a programming
+style that starts with common functionality and then "mixes in"
+extensions to the basic behavior.
+
+<p>As an example, let's suppose that we'd like to write code to 
+render the 2D objects we started to define in the previous section.
+Let's say that we'd like to achieve two goals simultaneously: we'd
+like to render images on either a bitmapped or a Postscript display
+device, and we'd like to render the objects either on a plane surface
+or as a projection in a "2.5D" space, where each 2D object has a Z
+depth, and the system provides a choice of view positions.  These 
+requirements are not at all interdependent; one deals with the details
+of rendering objects on a display device, while the other deals with
+transformations of the objects that must occur prior to rendering.
+
+<p>One way to address these requirements is by using multiple
+inheritance. One set of of mixins handles transforms, while another
+set of mixins handles the details of rendering to a display device.
+With a carefully designed protocol for sharing information, new
+combinations of transforms and renderers can be added to our 2D
+objects without rewriting any existing code.
+
+<p>We saw in the previous section how single inheritance is written
+using <code>DEFCLASS</code>, by putting the parent's class name
+within the first parentheses following the new class name. Classes
+that inherit from multiple parents simply list all of the parents.
+Thus to define all the combinations of transform and rendering for
+our <code>REGULAR-POLYGON</code> class, we could do something like
+this:
+
+<pre>
+(defclass renderer-mixin () (...))
+(defclass bitmap-renderer-mixin (renderer-mixin) (...))
+(defmethod render (description (self bitmap-renderer-mixin)) ...)
+(defclass postscript-renderer-mixin (renderer-mixin) (...))
+(defmethod render (description (self postscript-renderer-mixin)) ...)
+
+(defclass transform-mixin () (...))
+(defclass plane-transform-mixin (transform-mixin) (...))
+(defmethod transform ((self plane-transform-mixin)) ...)
+(defclass z-transform-mixin (transform-mixin) (...))
+(defmethod transform ((self z-transform-mixin)) ...)
+
+(defmethod draw ((self regular-polygon))
+  (render (transform self) self))
+
+(defclass regular-polygon-bmr-pt (regular-polygon
+                                  bitmap-renderer-mixin 
+                                  plane-transform-mixin)
+  (...))
+
+(defclass regular-polygon-psr-pt (regular-polygon
+                                  postscript-renderer-mixin
+                                  plane-transform-mixin)
+  (...))
+
+(defclass regular-polygon-bmr-zt (regular-polygon
+                                  bitmap-renderer-mixin
+                                  z-transform-mixin)
+  (...))
+
+(defclass regular-polygon-psr-zt (regular-polygon
+                                  postscript-renderer-mixin
+                                  z-transform-mixin)
+  (...))
+</pre> 
+
+<p>Now our class hierarchy looks like this:
+
+<p><img src="gifs/2d-object-with-mixins.gif">
+
+<p>I've shown a few method definitions to give you an idea for how
+the drawing protocol interacts with the mixin definitions to
+generate the expected behavior. The <code>DRAW</code> method
+specialized on the <code>REGULAR-POLYGON</code> class provides the
+protocol: it calls <code>TRANSFORM</code> to apply a transform to
+itself, then <code>RENDER</code> to draw itself, using some (as yet
+unspecified) description generated by <code>TRANSFORM</code>.
+
+<p>Now let's assume that we've created an instance of
+<code>REGULAR-POLYGON-BMR-PT</code> and have called the
+<code>DRAW</code> method:
+
+<pre>
+(let ((poly (make-instance 'regular-polygon-bmr-pt ...)))
+  (draw poly))
+</pre> 
+
+<p>The <code>DRAW</code> method is <em>not</em> specialized on the
+<code>REGULAR-POLYGON-BMR-PT</code> class, so we invoke the more
+general method specialized on <code>REGULAR-POLYGON</code>. This
+<code>DRAW</code> method then attempts to invoke methods
+<code>TRANSFORM</code> and <code>RENDER</code> which are specialized
+on the <code>REGULAR-POLYGON-BMR-PT</code> class; these methods are
+defined, so they provide the mixin behavior we'd expect.
+
+<p>As you can see from this very simple example, mixins are a
+powerful tool for object programming. Having predefined a very
+simple protocol -- the <code>DRAW</code> method which invokes
+<code>TRANSFORM</code> and <code>RENDER</code> -- we can add new
+behaviors to our system by defining additional mixins. The original
+code is unchanged. Because Lisp can add definitions dynamically, you
+don't even have to stop your software to extend it in this manner.
+
+<h2>Options control initialization and provide documentation</h2>
+
+<p>By default, an object's slots are unbound in a new object. In
+many cases it would be more useful to give slots some meaningful
+initial value.  For example, our <code>3D-POINT</code> could be
+initialized to the origin.
+
+<pre>
+(defclass 3d-point ()
+  ((x :accessor point-x :initform 0)
+   (y :accessor point-y :initform 0)
+   (z :accessor point-z :initform 0)))
+</pre> 
+
+<p>The <code>:INITFORM</code> slot option provides a value for the
+slot at the time the object is created.  The initialization form is
+evaluated every time it is used to initialize a slot.
+
+<p>You might also want to provide specific initialization arguments
+when an object is created. To do this, use the <code>:INITARG</code>
+slot option.
+
+<pre>
+(defclass 3d-point ()
+  ((x :accessor point-x :initform 0 :initarg :x)
+   (y :accessor point-y :initform 0 :initarg :y)
+   (z :accessor point-z :initform 0 :initarg :z)))
+</pre> 
+
+<p>To create a <code>3D-POINT</code> object using explicit
+initializers, you'd do something like this:
+
+<pre>
+(make-instance '3d-point :x 32 :y 17 :z -5)
+</pre> 
+
+<p>Because the class definition includes both <code>:INITFORM</code>
+and <code>:INITARG</code> options, the slot will still get its
+default value if you omit an explicit initializer.
+
+<p>Slot definitions also allow <code>:DOCUMENTATION</code> and
+<code>:TYPE</code> options.
+
+<pre>
+(defclass 3d-point ()
+  ((x :accessor point-x :initform 0 :initarg :x
+      :documentation "x coordinate" :type real)
+   (y :accessor point-y :initform 0 :initarg :y
+      :documentation "y coordinate" :type real)
+   (z :accessor point-z :initform 0 :initarg :z
+      :documentation "z coordinate" :type real)))
+</pre> 
+
+<p>The <code>:TYPE</code> option may be used by the compiler to
+assist in code optimization or to create runtime tests when setting
+slots. However, this behavior may vary among Lisp compilers, and the
+standard does not require <code>any</code> interpretation of the
+option. Therefore, it is best to think of this as additional
+documentation to the person reading your program.
+
+<h2>This is only the beginning...</h2>
+
+<p>In <a href="chapter14.html">Chapter 14</a> we'll examine methods
+in greater depth and see how to associate behaviors with objects.
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter06.html">Chapter 6</a> | Chapter 7 | <a href="chapter08.html">Chapter 8</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

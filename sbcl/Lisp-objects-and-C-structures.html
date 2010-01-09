@@ -1,0 +1,235 @@
+<html lang="en">
+<head>
+<title>Lisp objects and C structures - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="sb_002dposix.html#sb_002dposix" title="sb-posix">
+<link rel="prev" href="Types.html#Types" title="Types">
+<link rel="next" href="Function-Parameters.html#Function-Parameters" title="Function Parameters">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Lisp-objects-and-C-structures"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Function-Parameters.html#Function-Parameters">Function Parameters</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Types.html#Types">Types</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="sb_002dposix.html#sb_002dposix">sb-posix</a>
+<hr>
+</div>
+
+<h4 class="subsection">15.3.5 Lisp objects and C structures</h4>
+
+<p>Sb-posix provides various Lisp object types to stand in for C
+structures in the POSIX library.  Lisp bindings to C functions that
+accept, manipulate, or return C structures accept, manipulate, or
+return instances of these Lisp types instead of instances of alien
+types.
+
+   <p>The names of the Lisp types are chosen according to the general rules
+described above.  For example Lisp objects of type <code>STAT</code> stand
+in for C structures of type <code>struct stat</code>.
+
+   <p>Accessors are provided for each standard field in the structure. These
+are named <var>structure-name</var><code>-</code><var>field-name</var> where the two
+components are chosen according to the general name conversion rules,
+with the exception that in cases where all fields in a given structure
+have a common prefix, that prefix is omitted. For example,
+<code>stat.st_dev</code> in C becomes <code>STAT-DEV</code> in Lisp.
+
+<!-- This was in the README, but it proves to be false about sb-posix. -->
+   <p>Because sb-posix might not support all semi-standard or
+implementation-dependent members of all structure types on your system
+(patches welcome), here is an enumeration of all supported Lisp
+objects corresponding to supported POSIX structures, and the supported
+slots for those structures.
+
+     <ul>
+<li>flock
+<a name="Class-sb_002dposix_003aflock"></a>
+
+     <div class="defun">
+&mdash; Class: <b>sb-posix:flock</b><var><a name="index-sb_002dposix_003aflock-597"></a></var><br>
+<blockquote> <p><a name="index-sb_002dposix_003aflock-598"></a>Class precedence list: <code>flock, standard-object, t</code>
+
+             <p>Slots:
+               <ul>
+<li><code>type</code> &mdash; initarg: <code>:type<!-- /@w --></code>; reader: <code>sb-posix:flock-type<!-- /@w --></code>; writer: <code>(setf&nbsp;sb-posix:flock-type)<!-- /@w --></code>
+
+               <p>Type of lock; F_RDLCK, F_WRLCK, F_UNLCK. 
+<li><code>whence</code> &mdash; initarg: <code>:whence<!-- /@w --></code>; reader: <code>sb-posix:flock-whence<!-- /@w --></code>; writer: <code>(setf&nbsp;sb-posix:flock-whence)<!-- /@w --></code>
+
+               <p>Flag for starting offset. 
+<li><code>start</code> &mdash; initarg: <code>:start<!-- /@w --></code>; reader: <code>sb-posix:flock-start<!-- /@w --></code>; writer: <code>(setf&nbsp;sb-posix:flock-start)<!-- /@w --></code>
+
+               <p>Relative offset in bytes. 
+<li><code>len</code> &mdash; initarg: <code>:len<!-- /@w --></code>; reader: <code>sb-posix:flock-len<!-- /@w --></code>; writer: <code>(setf&nbsp;sb-posix:flock-len)<!-- /@w --></code>
+
+               <p>Size; if 0 then until <code>eof</code>. 
+<li><code>pid</code> &mdash; reader: <code>sb-posix:flock-pid<!-- /@w --></code>
+
+               <p>Process <code>id</code> of the process holding the lock; returned with F_GETLK. 
+</ul>
+
+             <p>Class representing locks used in fcntl(2). 
+</p></blockquote></div>
+
+     <li>passwd
+<a name="Class-sb_002dposix_003apasswd"></a>
+
+     <div class="defun">
+&mdash; Class: <b>sb-posix:passwd</b><var><a name="index-sb_002dposix_003apasswd-599"></a></var><br>
+<blockquote> <p><a name="index-sb_002dposix_003apasswd-600"></a>Class precedence list: <code>passwd, standard-object, t</code>
+
+             <p>Slots:
+               <ul>
+<li><code>name</code> &mdash; initarg: <code>:name<!-- /@w --></code>; reader: <code>sb-posix:passwd-name<!-- /@w --></code>; writer: <code>(setf&nbsp;sb-posix:passwd-name)<!-- /@w --></code>
+
+               <p>User's login name. 
+<li><code>passwd</code> &mdash; initarg: <code>:passwd<!-- /@w --></code>; reader: <code>sb-posix:passwd-passwd<!-- /@w --></code>; writer: <code>(setf&nbsp;sb-posix:passwd-passwd)<!-- /@w --></code>
+
+               <p>The account's encrypted password. 
+<li><code>uid</code> &mdash; initarg: <code>:uid<!-- /@w --></code>; reader: <code>sb-posix:passwd-uid<!-- /@w --></code>; writer: <code>(setf&nbsp;sb-posix:passwd-uid)<!-- /@w --></code>
+
+               <p>Numerical user <code>id</code>. 
+<li><code>gid</code> &mdash; initarg: <code>:gid<!-- /@w --></code>; reader: <code>sb-posix:passwd-gid<!-- /@w --></code>; writer: <code>(setf&nbsp;sb-posix:passwd-gid)<!-- /@w --></code>
+
+               <p>Numerical group <code>id</code>. 
+<li><code>gecos</code> &mdash; initarg: <code>:gecos<!-- /@w --></code>; reader: <code>sb-posix:passwd-gecos<!-- /@w --></code>; writer: <code>(setf&nbsp;sb-posix:passwd-gecos)<!-- /@w --></code>
+
+               <p>User's name or comment field. 
+<li><code>dir</code> &mdash; initarg: <code>:dir<!-- /@w --></code>; reader: <code>sb-posix:passwd-dir<!-- /@w --></code>; writer: <code>(setf&nbsp;sb-posix:passwd-dir)<!-- /@w --></code>
+
+               <p>Initial working directory. 
+<li><code>shell</code> &mdash; initarg: <code>:shell<!-- /@w --></code>; reader: <code>sb-posix:passwd-shell<!-- /@w --></code>; writer: <code>(setf&nbsp;sb-posix:passwd-shell)<!-- /@w --></code>
+
+               <p>Program to use as shell. 
+</ul>
+
+             <p>Instances of this class represent entries in
+                   the system's user database. 
+</p></blockquote></div>
+
+     <li>stat
+<a name="Class-sb_002dposix_003astat"></a>
+
+     <div class="defun">
+&mdash; Class: <b>sb-posix:stat</b><var><a name="index-sb_002dposix_003astat-601"></a></var><br>
+<blockquote> <p><a name="index-sb_002dposix_003astat-602"></a>Class precedence list: <code>stat, standard-object, t</code>
+
+             <p>Slots:
+               <ul>
+<li><code>mode</code> &mdash; initarg: <code>:mode<!-- /@w --></code>; reader: <code>sb-posix:stat-mode<!-- /@w --></code>
+
+               <p>Mode of file. 
+<li><code>ino</code> &mdash; initarg: <code>:ino<!-- /@w --></code>; reader: <code>sb-posix:stat-ino<!-- /@w --></code>
+
+               <p>File serial number. 
+<li><code>dev</code> &mdash; initarg: <code>:dev<!-- /@w --></code>; reader: <code>sb-posix:stat-dev<!-- /@w --></code>
+
+               <p>Device <code>id</code> of device containing file. 
+<li><code>nlink</code> &mdash; initarg: <code>:nlink<!-- /@w --></code>; reader: <code>sb-posix:stat-nlink<!-- /@w --></code>
+
+               <p>Number of hard links to the file. 
+<li><code>uid</code> &mdash; initarg: <code>:uid<!-- /@w --></code>; reader: <code>sb-posix:stat-uid<!-- /@w --></code>
+
+               <p>User <code>id</code> of file. 
+<li><code>gid</code> &mdash; initarg: <code>:gid<!-- /@w --></code>; reader: <code>sb-posix:stat-gid<!-- /@w --></code>
+
+               <p>Group <code>id</code> of file. 
+<li><code>size</code> &mdash; initarg: <code>:size<!-- /@w --></code>; reader: <code>sb-posix:stat-size<!-- /@w --></code>
+
+               <p>For regular files, the file size in
+                         bytes.  For symbolic links, the length
+                         in bytes of the filename contained in
+                         the symbolic link. 
+<li><code>atime</code> &mdash; initarg: <code>:atime<!-- /@w --></code>; reader: <code>sb-posix:stat-atime<!-- /@w --></code>
+
+               <p>Time of last access. 
+<li><code>mtime</code> &mdash; initarg: <code>:mtime<!-- /@w --></code>; reader: <code>sb-posix:stat-mtime<!-- /@w --></code>
+
+               <p>Time of last data modification. 
+<li><code>ctime</code> &mdash; initarg: <code>:ctime<!-- /@w --></code>; reader: <code>sb-posix:stat-ctime<!-- /@w --></code>
+
+               <p>Time of last status change
+</ul>
+
+             <p>Instances of this class represent Posix file
+                   metadata. 
+</p></blockquote></div>
+
+     <li>termios
+<a name="Class-sb_002dposix_003atermios"></a>
+
+     <div class="defun">
+&mdash; Class: <b>sb-posix:termios</b><var><a name="index-sb_002dposix_003atermios-603"></a></var><br>
+<blockquote> <p><a name="index-sb_002dposix_003atermios-604"></a>Class precedence list: <code>termios, standard-object, t</code>
+
+             <p>Slots:
+               <ul>
+<li><code>iflag</code> &mdash; initarg: <code>:iflag<!-- /@w --></code>; reader: <code>sb-posix:termios-iflag<!-- /@w --></code>; writer: <code>(setf&nbsp;sb-posix:termios-iflag)<!-- /@w --></code>
+
+               <p>Input modes. 
+<li><code>oflag</code> &mdash; initarg: <code>:oflag<!-- /@w --></code>; reader: <code>sb-posix:termios-oflag<!-- /@w --></code>; writer: <code>(setf&nbsp;sb-posix:termios-oflag)<!-- /@w --></code>
+
+               <p>Output modes. 
+<li><code>cflag</code> &mdash; initarg: <code>:cflag<!-- /@w --></code>; reader: <code>sb-posix:termios-cflag<!-- /@w --></code>; writer: <code>(setf&nbsp;sb-posix:termios-cflag)<!-- /@w --></code>
+
+               <p>Control modes. 
+<li><code>lflag</code> &mdash; initarg: <code>:lflag<!-- /@w --></code>; reader: <code>sb-posix:termios-lflag<!-- /@w --></code>; writer: <code>(setf&nbsp;sb-posix:termios-lflag)<!-- /@w --></code>
+
+               <p>Local modes. 
+</ul>
+
+             <p>Instances of this class represent I/O
+                   characteristics of the terminal. 
+</p></blockquote></div>
+
+     <li>timeval
+<a name="Class-sb_002dposix_003atimeval"></a>
+
+     <div class="defun">
+&mdash; Class: <b>sb-posix:timeval</b><var><a name="index-sb_002dposix_003atimeval-605"></a></var><br>
+<blockquote> <p><a name="index-sb_002dposix_003atimeval-606"></a>Class precedence list: <code>timeval, standard-object, t</code>
+
+             <p>Slots:
+               <ul>
+<li><code>sec</code> &mdash; initarg: <code>:tv-sec<!-- /@w --></code>; reader: <code>sb-posix:timeval-sec<!-- /@w --></code>; writer: <code>(setf&nbsp;sb-posix:timeval-sec)<!-- /@w --></code>
+
+               <p>Seconds. 
+<li><code>usec</code> &mdash; initarg: <code>:tv-usec<!-- /@w --></code>; reader: <code>sb-posix:timeval-usec<!-- /@w --></code>; writer: <code>(setf&nbsp;sb-posix:timeval-usec)<!-- /@w --></code>
+
+               <p>Microseconds. 
+</ul>
+
+             <p>Instances of this class represent time values. 
+</p></blockquote></div>
+     </ul>
+
+   </body></html>
+

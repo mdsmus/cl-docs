@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>3.5.2 Source Location Availability</TITLE>
+<META NAME="description" CONTENT="3.5.2 Source Location Availability">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1534" HREF="node75.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1532" HREF="node72.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1528" HREF="node73.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1536" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1537" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1535" HREF="node75.html">3.6 Compiler Policy Control</A>
+<B>Up:</B> <A NAME="tex2html1533" HREF="node72.html">3.5 Source Location Printing</A>
+<B> Previous:</B> <A NAME="tex2html1529" HREF="node73.html">3.5.1 How the Source </A>
+<BR> <P>
+<H2><A NAME="SECTION00452000000000000000">3.5.2 Source Location Availability</A></H2>
+<P>
+<A NAME="8886">&#160;</A>
+Source location information is only available when the <tt>debug</tt>
+optimization quality is at least <tt>2</tt>.  If source location information is
+unavailable, the source commands will give an error message.
+<P>
+If source location information is available, but the source location is
+unknown because of an interrupt or unexpected hardware error
+(see section&nbsp;<A HREF="node68.html#unknownlocations">3.3.6</A>), then the command will print:
+<BLOCKQUOTE> <PRE>Unknown location: using block start.
+</PRE> </BLOCKQUOTE>
+and then proceed to print the source location for the start of the &#305;basic
+block enclosing the code location. <A NAME="8890">&#160;</A> 
+<A NAME="8891">&#160;</A> 
+It's a bit complicated to explain exactly what a basic block is, but
+here are some properties of the block start location:
+<UL>
+<LI> The block start location may be the same as the true location.
+<LI> The block start location will never be later in the the
+  program's flow of control than the true location.
+<LI> No conditional control structures (such as <tt>if</tt>,
+  <tt>cond</tt>, <tt>or</tt>) will intervene between the block start and
+  the true location (but note that some conditionals present in the
+  original source could be optimized away.)  Function calls &#305;do not
+  end basic blocks.
+<LI> The head of a loop will be the start of a block.
+<LI> The programming language concept of ``block structure'' and the
+  Common Lisp <tt>block</tt> special form are totally unrelated to the
+  compiler's basic block.
+</UL>
+<P>
+In other words, the true location lies between the printed location and the
+next conditional (but watch out because the compiler may have changed the
+program on you.)
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

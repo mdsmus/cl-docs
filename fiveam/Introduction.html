@@ -1,0 +1,101 @@
+<html
+  ><head
+    ><title
+      >FiveAM</title
+    ><link href="style.css" rel="stylesheet"
+    /><link title="Print" href="print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><h1 class="title"
+        >FiveAM</h1
+      ><div class="contents"
+        ><h2
+  ><a name="Introduction"
+  >Introduction</a
+>&nbsp;</h2
+><div class="nav-links"
+  ><span class="dead-nav-link"
+  >prev</span
+> | <span class="dead-nav-link"
+  >up</span
+> | <a href="Checks.html"
+  >next</a
+> | <a href="index.html"
+    >toc</a
+  ></div
+>
+<p> FiveAM is a testing framework. It takes care of all the boring
+ bookkeeping associated with managing a test framework allowing
+ the developer to focus on writing tests and code.
+
+<p> FiveAM was designed with the following premises:
+
+<p> - Defining tests should be about writing tests, not
+ infrastructure. The developer should be able to focus on what
+ they're testing, not the testing framework.
+
+<p> - Interactive testing is the norm. Common Lisp is an interactive
+ development environment, the testing environment should allow the
+ developer to quickly and easily redefine, change, remove and run
+ tests.
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>defpackage :it.bese.FiveAM</span><span class"body">
+  <span class="paren">(</span>:use :common-lisp :it.bese.arnesi<span class="paren">)</span>
+  <span class="paren">(</span>:nicknames :5am<span class="paren">)</span>
+  <span class="paren">(</span>:export ;; creating tests and test-suites
+           #:make-suite
+	   #:def-suite
+	   #:in-suite
+	   #:make-test
+	   #:test
+	   #:get-test
+	   #:rem-test
+	   ;; fixtures
+	   #:make-fixture
+	   #:def-fixture
+	   #:with-fixture
+	   #:get-fixture
+	   #:rem-fixture
+	   ;; running checks
+           #:is
+           #:is-true
+           #:is-false
+           #:signals
+           #:finishes
+           #:skip
+	   #:pass
+	   #:fail
+	   #:*test-dribble*
+           #:for-all
+           #:gen-integer
+           #:gen-string
+           #:gen-character
+	   ;; running tests
+           #:run
+           #:run-all-tests
+           #:explain
+           #:explain!
+           #:run!
+           #:!
+           #:!!
+           #:!!!
+	   #:*debug-on-error*
+           #:*debug-on-failure*
+           #:*verbose-failures*<span class="paren">)</span><span class="paren">)</span></span></pre
+>
+
+<p> You can use #+5am to put your test-defining code inline with your
+ other code - and not require people to have fiveam to run your
+ package.
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>pushnew :5am *features*<span class="paren">)</span></span><span class"body"></span></pre
+>
+
+</div
+      ></div
+    ></body
+  ></html
+>

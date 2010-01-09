@@ -1,0 +1,157 @@
+<html lang="en">
+<head>
+<title>Threading basics - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Threading.html#Threading" title="Threading">
+<link rel="next" href="Special-Variables.html#Special-Variables" title="Special Variables">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Threading-basics"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Special-Variables.html#Special-Variables">Special Variables</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Threading.html#Threading">Threading</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">11.1 Threading basics</h3>
+
+<pre class="lisp">     (make-thread (lambda () (write-line "Hello, world")))
+</pre>
+   <p><a name="Structure-sb_002dthread_003athread"></a>
+
+<div class="defun">
+&mdash; Structure: <b>sb-thread:thread</b><var><a name="index-sb_002dthread_003athread-417"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003athread-418"></a>Class precedence list: <code>thread, structure-object, t</code>
+
+        <p>Thread type. Do not rely on threads being structs as it may change
+in future versions. 
+</p></blockquote></div>
+
+   <p><a name="Variable-sb_002dthread_003a_002acurrent_002dthread_002a"></a>
+
+<div class="defun">
+&mdash; Variable: <b>sb-thread:*current-thread*</b><var><a name="index-sb_002dthread_003a_002acurrent_002dthread_002a-419"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003a_002acurrent_002dthread_002a-420"></a>Bound in each thread to the thread itself. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dthread_003amake_002dthread"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-thread:make-thread</b><var> function &amp;key name<a name="index-sb_002dthread_003amake_002dthread-421"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003amake_002dthread-422"></a>Create a new thread of <code>name</code> that runs <code>function</code>. When the function
+returns the thread exits. The return values of <code>function</code> are kept
+around and can be retrieved by <code>join-thread</code>. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dthread_003ajoin_002dthread"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-thread:join-thread</b><var> thread &amp;key default<a name="index-sb_002dthread_003ajoin_002dthread-423"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003ajoin_002dthread-424"></a>Suspend current thread until <code>thread</code> exits. Returns the result
+values of the thread function. If the thread does not exit normally,
+return <code>default</code> if given or else signal <code>join-thread-error</code>. 
+</p></blockquote></div>
+
+   <p><a name="Condition-sb_002dthread_003ajoin_002dthread_002derror"></a>
+
+<div class="defun">
+&mdash; Condition: <b>sb-thread:join-thread-error</b><var><a name="index-sb_002dthread_003ajoin_002dthread_002derror-425"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003ajoin_002dthread_002derror-426"></a>Class precedence list: <code>join-thread-error, error, serious-condition, condition, t</code>
+
+        <p>Joining thread failed. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dthread_003ajoin_002dthread_002derror_002dthread"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-thread:join-thread-error-thread</b><var> condition<a name="index-sb_002dthread_003ajoin_002dthread_002derror_002dthread-427"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003ajoin_002dthread_002derror_002dthread-428"></a>The thread that we failed to join. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dthread_003athread_002dalive_002dp"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-thread:thread-alive-p</b><var> thread<a name="index-sb_002dthread_003athread_002dalive_002dp-429"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003athread_002dalive_002dp-430"></a>Check if <code>thread</code> is running. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dthread_003alist_002dall_002dthreads"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-thread:list-all-threads</b><var><a name="index-sb_002dthread_003alist_002dall_002dthreads-431"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003alist_002dall_002dthreads-432"></a>Return a list of the live threads. 
+</p></blockquote></div>
+
+   <p><a name="Condition-sb_002dthread_003ainterrupt_002dthread_002derror"></a>
+
+<div class="defun">
+&mdash; Condition: <b>sb-thread:interrupt-thread-error</b><var><a name="index-sb_002dthread_003ainterrupt_002dthread_002derror-433"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003ainterrupt_002dthread_002derror-434"></a>Class precedence list: <code>interrupt-thread-error, error, serious-condition, condition, t</code>
+
+        <p>Interrupting thread failed. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dthread_003ainterrupt_002dthread_002derror_002dthread"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-thread:interrupt-thread-error-thread</b><var> condition<a name="index-sb_002dthread_003ainterrupt_002dthread_002derror_002dthread-435"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003ainterrupt_002dthread_002derror_002dthread-436"></a>The thread that was not interrupted. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dthread_003ainterrupt_002dthread"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-thread:interrupt-thread</b><var> thread function<a name="index-sb_002dthread_003ainterrupt_002dthread-437"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003ainterrupt_002dthread-438"></a>Interrupt the live <code>thread</code> and make it run <code>function</code>. A moderate
+degree of care is expected for use of <code>interrupt-thread</code>, due to its
+nature: if you interrupt a thread that was holding important locks
+then do something that turns out to need those locks, you probably
+won't like the effect. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dthread_003aterminate_002dthread"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-thread:terminate-thread</b><var> thread<a name="index-sb_002dthread_003aterminate_002dthread-439"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003aterminate_002dthread-440"></a>Terminate the thread identified by <code>thread</code>, by causing it to run
+<code>sb-ext:quit</code> <code>-</code> the usual cleanup forms will be evaluated
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dthread_003athread_002dyield"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-thread:thread-yield</b><var><a name="index-sb_002dthread_003athread_002dyield-441"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003athread_002dyield-442"></a>Yield the processor to other threads. 
+</p></blockquote></div>
+
+   </body></html>
+

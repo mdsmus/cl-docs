@@ -1,0 +1,67 @@
+<html lang="en">
+<head>
+<title>Stale Extensions - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Beyond-the-ANSI-Standard.html#Beyond-the-ANSI-Standard" title="Beyond the ANSI Standard">
+<link rel="prev" href="Resolution-of-Name-Conflicts.html#Resolution-of-Name-Conflicts" title="Resolution of Name Conflicts">
+<link rel="next" href="Efficiency-Hacks.html#Efficiency-Hacks" title="Efficiency Hacks">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Stale-Extensions"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Efficiency-Hacks.html#Efficiency-Hacks">Efficiency Hacks</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Resolution-of-Name-Conflicts.html#Resolution-of-Name-Conflicts">Resolution of Name Conflicts</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Beyond-the-ANSI-Standard.html#Beyond-the-ANSI-Standard">Beyond the ANSI Standard</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">6.7 Stale Extensions</h3>
+
+<p>SBCL has inherited from CMUCL various hooks to allow the user to
+tweak and monitor the garbage collection process. These are somewhat
+stale code, and their interface might need to be cleaned up. If you
+have urgent need of them, look at the code in <samp><span class="file">src/code/gc.lisp</span></samp>
+and bring it up on the developers' mailing list.
+
+   <p>SBCL has various hooks inherited from CMUCL, like
+<code>sb-ext:float-denormalized-p</code>, to allow a program to take
+advantage of IEEE floating point arithmetic properties which aren't
+conveniently or efficiently expressible using the ANSI standard. These
+look good, and their interface looks good, but IEEE support is
+slightly broken due to a stupid decision to remove some support for
+infinities (because it wasn't in the ANSI spec and it didn't occur to
+me that it was in the IEEE spec). If you need this stuff, take a look
+at the code and bring it up on the developers' mailing
+list.
+
+   </body></html>
+

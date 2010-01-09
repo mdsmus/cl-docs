@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>3.8 Information Commands</TITLE>
+<META NAME="description" CONTENT="3.8 Information Commands">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1570" HREF="node78.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1568" HREF="node59.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1562" HREF="node76.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1572" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1573" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1571" HREF="node78.html">3.9 Breakpoint Commands</A>
+<B>Up:</B> <A NAME="tex2html1569" HREF="node59.html">3 The Debugger</A>
+<B> Previous:</B> <A NAME="tex2html1563" HREF="node76.html">3.7 Exiting Commands</A>
+<BR> <P>
+<H1><A NAME="SECTION00480000000000000000">3.8 Information Commands</A></H1>
+<P>
+Most of these commands print information about the current frame or
+function, but a few show general information.
+<P>
+<DL ><DT><STRONG><tt>help</tt>, <tt>?</tt></STRONG>
+<DD>
+Displays a synopsis of debugger commands.
+<P>
+<DT><STRONG><tt>describe</tt></STRONG>
+<DD>
+Calls <tt>describe</tt> on the current function, displays number of local
+variables, and indicates whether the function is compiled or interpreted.
+<P>
+<DT><STRONG><tt>print</tt></STRONG>
+<DD>
+Displays the current function call as it would be displayed by moving to
+this frame.
+<P>
+<DT><STRONG><tt>vprint</tt> (or <tt>pp</tt>) <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>verbosity</i></i></i><IMG WIDTH=5 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17168" SRC="img6.gif"></STRONG>
+<DD>Displays the current function call using <tt>*print-level*</tt> and
+<tt>*print-length*</tt> instead of <tt>*debug-print-level*</tt> and
+<tt>*debug-print-length*</tt>.  <i>verbosity</i> is a small integer
+(default 2) that controls other dimensions of verbosity.
+<P>
+<DT><STRONG><tt>error</tt></STRONG>
+<DD>
+Prints the condition given to <tt>invoke-debugger</tt> and the active
+proceed cases.
+<P>
+<DT><STRONG><tt>backtrace</tt> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>n</i></i></i><IMG WIDTH=5 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17168" SRC="img6.gif"></STRONG>
+<DD><BR> 
+Displays all the frames from the current to the bottom.  Only shows
+<i>n</i> frames if specified.  The printing is controlled by
+<tt>*debug-print-level*</tt> and <tt>*debug-print-length*</tt>.
+<P>
+</DL><BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

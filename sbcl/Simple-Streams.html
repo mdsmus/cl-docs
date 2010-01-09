@@ -1,0 +1,71 @@
+<html lang="en">
+<head>
+<title>Simple Streams - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Extensible-Streams.html#Extensible-Streams" title="Extensible Streams">
+<link rel="prev" href="Gray-Streams.html#Gray-Streams" title="Gray Streams">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Simple-Streams"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Gray-Streams.html#Gray-Streams">Gray Streams</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Extensible-Streams.html#Extensible-Streams">Extensible Streams</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">9.3 Simple Streams</h3>
+
+<p>Simple streams are an extensible streams protocol that avoids some
+problems with Gray streams.
+
+   <p>Documentation about simple streams is available at:
+
+   <p><a href="http://www.franz.com/support/documentation/6.2/doc/streams.htm">http://www.franz.com/support/documentation/6.2/doc/streams.htm</a>
+
+   <p>The implementation should be considered Alpha-quality; the basic
+framework is there, but many classes are just stubs at the moment.
+
+   <p>See <samp><span class="file">SYS:CONTRIB;SB-SIMPLE-STREAMS;SIMPLE-STREAM-TEST.LISP</span></samp> for
+things that should work.
+
+   <p>Known differences to the ACL behaviour:
+
+     <ul>
+<li><code>open</code> not return a simple-stream by default. This can be
+adjusted; see default-open-class in the file cl.lisp
+
+     <li><code>write-vector</code> is unimplemented.
+
+   </ul>
+
+   </body></html>
+

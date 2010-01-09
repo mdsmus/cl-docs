@@ -1,0 +1,1601 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 4</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 4 - Mastering the Essentials</h1> 
+
+<P>We've explored the fundamental concepts of Lisp through the 
+twelve lessons of <A HREF="chapter03.html">Chapter 3</A>.  If you feel that 
+you have a very strong grasp of these fundamentals, or if you've worked 
+with Lisp before, you may want to skim the remainder of this chapter.</P>
+
+<P>We'll review some of the material from <A HREF="chapter03.html">Chapter 
+3</A> using a hands-on approach.  Along the way, you'll learn some new 
+techniques that have had to wait until all of the fundamentals had been 
+introduced; if you're a beginner and haven't read <A 
+HREF="chapter03.html">Chapter 3</A>, go back and read it before you try to 
+do the exercises in this chapter.</P>
+
+<P>You should have access to a Lisp development system as you work through 
+this chapter.  As you read this chapter, please take the time to run the 
+examples using your Lisp system.  This will give you a chance to learn how 
+your Lisp system responds to input, including any mistakes you may make.  
+(If you don't make any mistakes in transcribing the examples, you should 
+get adventurous and try to modify some of the examples.)  <A 
+HREF="appendix-a.html">Appendix A</A> lists several commercial, shareware, 
+and free Lisp systems for Macintosh, DOS, and Windows computers.</P>
+
+
+<H2>Hands-on! The "toploop"</H2>
+
+<P>You interact with the Lisp system through a built-in piece of code 
+called the toploop, which repeats three simple steps for as long as you run 
+the Lisp system:</P>
+
+<PRE>
+1. Read an expression (you provide the expression).
+2. Evaluate the expression just read.
+3. Print the result(s) of the evaluation.
+</PRE>
+
+<P>This is also called the "read-eval-print" loop.  Some Lisp systems evaluate 
+the expression using a Lisp interpreter; modern systems use a compiling 
+evaluator, which first compiles the expression to machine code then executes 
+the code.  A compiling evaluator is also an incremental compiler, so named 
+because it can compile a program in increments of one expression.</P>
+
+<P>The toploop also provides a minimal user interface -- a prompt to indicate 
+that it's ready to read a new expression -- and a way to gracefully catch any 
+errors you might make.</P>
+
+<P>If you were to write the Lisp code for a toploop, it would look something 
+like this:</P>
+
+<PRE>
+(loop
+   (terpri)
+   (princ 'ready&gt;)
+   (print (eval (read))))
+</PRE>
+
+<BLOCKQUOTE>
+<P>NOTE 1: (terpri) prints a blank line.</P>
+
+<P>NOTE 2: (loop ...)  executes its forms in order, then repeats -- we'll see more 
+of <CODE>LOOP</CODE> in <A HREF="chapter05.html">Chapter 5</A>.</P>
+
+<P>NOTE 3: (eval ...)  returns the result of evaluating a form.  This is one of 
+the few legitimate uses of <CODE>EVAL</CODE> -- you should beware of Lisp code 
+that uses <CODE>EVAL</CODE> for reasons other than evaluating arbitrary Lisp 
+expressions provided at runtime.</P>
+</BLOCKQUOTE>
+
+<P>In fact, you can type this into your Lisp system and temporarily run your 
+own toploop <EM>on top of</EM> Lisp's toploop.  Try it!  You'll see your 
+system's prompt replaced with <TT>READY&gt;</TT>.  Every valid Lisp form you type 
+will be read, evaluated, and printed by <EM>your</EM> toploop.  Depending upon 
+your Lisp system, this may happen as soon as the expression is completed -- 
+either by a space or a matching parenthesis or double quote mark -- or you may 
+have to press the <TT>RETURN</TT> or <TT>ENTER</TT> key.</P>
+
+<P>Your Lisp session may look like the following, where <CODE>?</CODE> is the 
+Lisp system's prompt for input:</P>
+
+<PRE>
+? (loop
+     (terpri)
+     (princ 'ready&gt;)
+     (print (eval (read))))
+
+READY&gt;(+ 1 2 3)
+
+6
+READY&gt;(cons 1 (cons 2 (cons 3 nil)))
+
+(1 2 3)
+READY&gt;
+</PRE>
+
+<P>There are two ways to get out of your toploop.  One is to <EM>abort</EM>, 
+typically using a special keystroke or a menu command -- consult your Lisp 
+system's manual.  The other way is to enter an erroneous expression -- such as 
+<CODE>(+ 'A 1)</CODE> -- at the <TT>READY&gt;</TT> prompt, which will put you into 
+the Lisp debugger.</P>
+
+<P>In Lisp, the debugger is accessed via a "break loop." This behaves just like 
+a toploop, but accepts additional commands to inspect or alter the state of the 
+"broken" computation.  Break loops vary widely among Lisp systems.  The manual 
+will describe the break loop.  Check also under the manual's index entries for 
+"debugger."</P>
+
+
+<H2>Spotting and avoiding common mistakes</H2>
+
+<P>"I entered a Lisp expression, but nothing happened."  The most common 
+cause of this problem is missing a matching delimiter -- typically a right 
+parenthesis or double-quote -- somewhere in your expression.  Unlike some
+development systems which process your input each time you enter a line of
+code, Lisp waits for you to enter a complete expression before attempting to process 
+anything.  What happens if you enter the following code in your system?</P>
+
+<PRE>
+? (defun bad-1 ()
+     (print "This is a bad function definition)
+     (print "But I'll try it anyway..."))
+</PRE>
+
+<P>Looks good, huh?  All the parentheses match, and you press the 
+<CODE>ENTER</CODE> key that one last time, and...  Nothing.  The string 
+argument to the first print statement is missing a closing double-quote, 
+turning the rest of your input into part of the string.  You'll do this 
+more than once (trust me), so the best thing to do is to consult your 
+Lisp system manual to find out how to edit the pending input so you can add 
+the missing double-quote to what you've already typed.</P>
+
+<P>Here's another bit of code that will make your Lisp system appear to 
+sleep:</P>
+
+<PRE>
+? (defun factorial (n)
+     (cond ((&lt;= n 0)  1)
+           (t (* n (factorial (- n 1)))))
+</PRE>
+
+<P>Again, a quick glance shows nothing amiss.  But count the parentheses 
+and you'll find that lefts outnumber rights by one.  When you press the 
+final enter key, the read part of Lisp's read-eval-print loop still needs 
+one more right parenthesis before it can finish its job and pass your 
+expression to the evaluator.</P>
+
+<P>Both of these situations can be avoided if your Lisp system has an 
+editor that matches delimiters as you type.  In some systems, this 
+matching momentarily flashes the left delimiter as you type the matching 
+right delimiter.  Or your system might flash or highlight the matching 
+delimiter of whatever you have under the cursor; some systems even 
+highlight the entire intervening expression.  Again, check your manual -- 
+this feature is <STRONG>essential</STRONG> to comfortable Lisp programming.</P>
+
+<P>"I get confused about when to use <CODE>'</CODE>."  This is a really 
+common problem for people just learning to program, but it manages to 
+puzzle the occasional experienced (non-Lisp) programmer as well.  The rule 
+is simple:</P>
+
+<BLOCKQUOTE>
+<P>If you want a name to stand for a value, <EM>don't</EM> quote it.</P>
+
+<P>If you want a name to stand for its symbol, quote it.</P>
+</BLOCKQUOTE>
+
+<P>There are a few exceptions to the rule, all having to do with 
+self-evaluating symbols.  These symbols always represent themselves.  They 
+are:</P>
+
+<PRE>
+T
+NIL
+</PRE>
+
+<P>and <EM>keyword</EM> symbols.  A keyword symbol is any symbol that 
+begins with a <CODE>:</CODE> character, for reasons that will become clear 
+when we look at <EM>packages</EM> in <A HREF="chapter31.html">Chapter 
+31</A>.  A keyword symbol always evaluates to itself, thus:</P>
+
+<PRE>
+? :foo
+:FOO
+? :some-long-but-nondescript-keyword-symbol
+:SOME-LONG-BUT-NONDESCRIPT-KEYWORD-SYMBOL
+</PRE>
+
+<P>It usually doesn't hurt to quote a self-evaluating symbol.  For example, 
+<CODE>NIL</CODE> is identical to <CODE>'NIL</CODE>.  Adding the quote is 
+a matter of style and preference.</P>
+
+<P>Time for a pop quiz!  What's wrong with the following code?</P>
+
+<PRE>
+? (defun factorial (n)
+     (cond ((&lt;= 'n 0)  1)
+           (t (* 'n (factorial (- 'n 1))))))
+</PRE>
+
+<P>Right.  The <CODE>'N</CODE> expressions are wrong, because we want the 
+value of the symbol (a number which varies with execution of the function), 
+and <em>not</em> the symbol itself.</P>
+
+
+<H2>Defining simple functions</H2>
+
+We've already seen a few function definitions: the
+<code>FACTORIAL</code> function (above) and a function or two in <a
+href="chapter03-07.html">Chapter 3, Lesson 7</a>. To review, a
+function is defined as follows:<p>
+
+<pre>
+(defun <i>function-name</i> (<i>argument-names</i> ...)
+   <i>function-body</i> )
+
+</pre> 
+
+The <code>(</code> <i>argument-names</i> <code>...)</code> is called
+a <dfn>lambda list</dfn>. Names in this list are bound to values when
+the function is called. The body of the function may refer to these
+names; identical names appearing elsewhere in your program (that is,
+outside the function body) are irrelevant to the function. Also, if
+your function changes the binding of an argument inside the function,
+the caller <em>does not</em> receive the changed value. The proper
+way to return values from a Lisp function is to return them as the
+value of the function.<p>
+
+For example:<p>
+
+<pre>
+? (defun quadratic-roots (a b c)
+    "Returns the roots of a quadratic equation aX^2 + bX + c = 0"
+    (let ((discriminant (- (* b b) (* 4 a c))))
+      (values (/ (+ (- b) (sqrt discriminant)) (* 2 a))
+              (/ (- (- b) (sqrt discriminant)) (* 2 a)))))
+QUADRATIC-ROOTS
+
+? (quadratic-roots 1 2 4)
+#c(-1.0 1.7320508075688772)
+#c(-1.0 -1.7320508075688772)
+
+? (quadratic-roots 2 -16 36)
+#c(4.0 1.4142135623730951)
+#c(4.0 -1.4142135623730951)
+
+? (quadratic-roots 1 4 4)
+-2
+-2
+
+? (quadratic-roots 1 -14 49)
+7
+7
+
+? (quadratic-roots 1 8 4)
+-0.5358983848622456
+-7.464101615137754
+
+? (quadratic-roots 1 4 -5)
+1
+-5
+
+</pre> 
+
+The <code>QUADRATIC-ROOTS</code> function shows how to use a
+documentation string. The first form in the function body is a
+string. This does not affect the function result, but it <em>is</em>
+recorded by the Lisp system for later reference:<p>
+
+<pre>
+? (documentation 'quadratic-roots 'function)
+"Returns the roots of a quadratic equation aX^2 + bX + c = 0"
+
+</pre> 
+
+This function also shows how we can return two values from a
+function. You recognize the formula for the roots of a quadratic
+equation:<p>
+
+<pre>
+
+             /--------
+       +    /  2
+   - b -  \/  b  - 4ac
+ ----------------------
+          2a
+
+</pre> 
+
+This tells you that the equation has two solutions (which may be
+coincident in some cases). In Lisp it's a simple matter to return
+both values at once using the form <code>(VALUES <i>value-1</i>
+<i>value-2</i>)</code>.<p>
+
+If you've ever solved this problem in a computer language that
+doesn't support complex number arithmetic, you've had to find a way
+to signal the caller when the roots are imaginary (i.e. when the
+discriminant is less than zero). Lisp just does the right thing: the
+square root of a negative number is a complex number:<p>
+
+<pre>
+? (sqrt -1)
+#c(0 1)
+
+</pre> 
+
+Suppose that you wanted <code>QUADRATIC-ROOTS</code> to only return
+one value if the roots are coincident. Thinking that maybe you can
+return <em>something</em> special as the second value of the
+<code>VALUE</code> form, you try <code>NIL</code> : 
+
+<pre>
+? (values 2 nil)
+2
+NIL
+
+</pre> 
+
+But that doesn't work, because <code>NIL</code> is a value like any
+other in Lisp, and does not get special treatment like a nil pointer
+would, for example, in another language.<p>
+
+So you think about only having one value in the <code>VALUES</code> form:
+
+<pre>
+? (values 3)
+3
+
+</pre> 
+
+Sure enough, that works. So why not <code>(VALUES <i>value-1</i>
+<i>some-form-that-returns-nothing</i>)</code>?  Like this:<p>
+
+<pre>
+? (values)
+
+? (values 4 (values))
+4
+NIL
+
+</pre> 
+
+Unfortunately, this doesn't do what you expect; the outer
+<code>VALUES</code> form expects a value from its second argument,
+<code>(VALUES)</code>, and substitutes <code>NIL</code> for the
+missing value. This is one of the important rules of multiple values.
+The other rule is that forms which receive multiple values (see <a
+href="chapter03-09.html">Chapter 3, Lesson 9)</a> substitute
+<code>NIL</code> for a missing value.<p>
+
+A little reflection convinces you that you can't get
+<code>VALUES</code> to return nothing for something, so you consider
+having two separate returns. This yields the following function:<p>
+
+<pre>
+? (defun quadratic-roots-2 (a b c)
+    "Returns the roots of a quadratic equation aX^2 + bX + c = 0.
+Returns only one value if the roots are coincident."
+    (let ((discriminant (- (* b b) (* 4 a c))))   ; zero if one root
+      (cond ((zerop discriminant)
+             ;; coincident roots -- return one value
+             (/ (+ (- b) (sqrt discriminant)) (* 2 a)))
+            (t
+             ;; two distinct roots
+             (values (/ (+ (- b) (sqrt discriminant)) (* 2 a))
+                     (/ (- (- b) (sqrt discriminant)) (* 2 a)))))))
+QUADRATIC-ROOTS-2
+
+? (quadratic-roots-2 1 -14 49)
+7
+
+? (quadratic-roots-2 1 4 -5)
+1
+-5
+
+</pre> 
+
+<blockquote> NOTE: <code>ZEROP</code> is a <i>predicate</i> (hence
+the <code>P</code> suffix) that is true when its numeric argument is
+zero. Writing <code>(ZEROP <i>n</i>)</code> is the same as writing
+<code>(= <i>n</i> 0)</code>. 
+</blockquote> 
+
+Note how <code>QUADRATIC-ROOTS-2</code> has a two-line documentation
+string. The newline is part of the string:<p>
+
+<pre>
+? (documentation 'quadratic-roots-2 'function)
+"Returns the roots of a quadratic equation aX^2 + bX + c = 0.
+Returns only one value if the roots are coincident."
+
+</pre> 
+
+Also note the use of comments to describe the two return choices. In
+Lisp, a comment begins with a semicolon and continues until the end
+of the line. By convention, comments on a line of their own within a
+function body are indented to the same level as the rest of the code
+and prefixed by two semicolons. A comment on the same line as code
+only has one semicolon (again, by convention).<p>
+
+A lambda list can have a number of additional features. We'll look at
+two of these here, and the rest in <a href="chapter21.html">Chapter
+21</a>.<p>
+
+If you want to make a function that takes one or more optional
+arguments, use the <code>&amp;OPTIONAL</code> keyword followed by a list
+of parameter names, like this:<p>
+
+<pre>
+? (defun silly-list-1 (p1 p2 &amp;optional p3 p4)
+    (list p1 p2 p3 p4))
+SILLY-LIST-1
+
+? (silly-list-1 'foo 'bar)
+(FOO BAR NIL NIL)
+
+? (silly-list-1 'foo 'bar 'baz)
+(FOO BAR BAZ NIL)
+
+? (silly-list-1 'foo 'bar 'baz 'rux)
+(FOO BAR BAZ RUX)
+
+</pre> 
+
+The optional parameters default to NIL when the call does not supply
+a value. Peek ahead to <a href="chapter21.html">Chapter 21</a> to see
+how to change the default value of an optional parameter.<p>
+
+If you supply fewer than the number of required parameters (to the
+left of <code>&amp;OPTIONAL</code> in the example above), or more than
+the total number of required plus optional parameters, you'll get an
+error:<p>
+
+<pre>
+? (silly-list-1 'foo)
+Error: Not enough arguments.
+
+? (silly-list-1 'foo 'bar 'baz 'rux 'qup)
+Error: Too many arguments.
+
+</pre> 
+
+If you want to have an indefinite number of parameters, you can name
+one parameter to receive a list of all the "extras" using the
+<code>&amp;REST</code> symbol in the lambda list, like this:<p>
+
+<pre>
+? (defun silly-list-2 (p1 p2 &amp;rest p3)
+    (list p1 p2 p3))
+
+? (silly-list-2 'foo 'bar)
+(FOO BAR NIL)
+
+? (silly-list-2 'foo 'bar 'baz)
+(FOO BAR (BAZ))
+
+? (silly-list-2 'foo 'bar 'baz 'bob 'tom 'don)
+(FOO BAR (BAZ BOB TOM DON))
+
+</pre> 
+
+The <code>&amp;REST</code> parameter must follow all of the required
+parameters. You can combine <code>&amp;REST</code> and
+<code>&amp;OPTIONAL</code> parameters, observing the following order:<p>
+
+<pre>
+? (defun silly-list-3 (p1 p2 &amp;optional p3 p4 &amp;rest p5)
+    (list p1 p2 p3 p4 p5))
+SILLY-LIST-3
+
+? (silly-list-3 'foo 'bar)
+(FOO BAR NIL NIL NIL)
+
+? (silly-list-3 'foo 'bar 'baz)
+(FOO BAR BAZ NIL NIL)
+
+? (silly-list-3 'foo 'bar 'baz 'bob)
+(FOO BAR BAZ BOB NIL)
+
+? (silly-list-3 'foo 'bar 'baz 'bob 'tom)
+(FOO BAR BAZ BOB (TOM))
+
+? (silly-list-3 'foo 'bar 'baz 'bob 'tom 'don)
+(FOO BAR BAZ BOB (TOM DON))
+
+</pre> 
+
+
+<h2><a name="global-vars-and-consts">Using global variables and constants</a> </h2> 
+
+In <a href="chapter03-03.html">Lesson 3</a>, we used
+<code>SETQ</code> to define global variables. You can do this using a
+top-level form, as in <a href="chapter03-03.html">Lesson 3</a>, or
+from within a function, such as this:<p>
+
+<pre>
+? (defun set-foo-globally (x)
+    (setq foo x))
+SET-FOO-GLOBALLY
+
+? foo
+Error: unbound variable FOO
+
+? (set-foo-globally 3)
+3
+
+? foo
+3
+
+</pre> 
+
+Depending upon your Lisp system, you may have seen a warning message
+when you defined <code>SET-FOO-GLOBALLY</code>:<p>
+
+<pre>
+? (defun set-foo-globally (x)
+    (setq foo x))
+Warning: undeclared free variable FOO, in SET-FOO-GLOBALLY.
+SET-FOO-GLOBALLY
+
+</pre> 
+
+This is not an error -- the function does what we want. But
+<code>FOO</code> is said to be free because the function does not
+create a binding for <code>FOO</code>. Variable bindings are created
+by lambda lists (the function's argument list) and by
+<code>LET</code> forms (see <a href="chapter03-06.html">Lesson
+6</a>), among others.<p>
+
+My Lisp system warns me about free variables in function definitions
+because they could be a symptom of a typographical error:<p>
+
+<pre>
+? (setq *olympic-year* 1996)
+1996
+
+? (defun set-next-olympic-year ()
+    (setq *olympic-year* (+ *olmpic-year* 2)))
+Warning: undeclared free variable *OLMPIC-YEAR*, in SET-NEXT-OLYMPIC-YEAR.
+SET-NEXT-OLYMPIC-YEAR
+
+</pre> 
+
+Here, I misspelled the second instance of my global variable
+<code>*OLYMPIC-YEAR*</code>, and the compiler warned me. Notice that
+I didn't get a warning for the correctly spelled
+<code>*OLYMPIC-YEAR*</code> because I had defined it globally in a
+top-level <code>SETQ</code> form.<p>
+
+There are two more ways to define global variables in Lisp:<p>
+
+<pre>
+? *var1*
+Error: unbound variable
+
+? (defvar *var1* 1)
+*VAR1*
+
+? *var1*
+1
+
+? (defvar *var1* 2)
+*VAR1*
+
+? *var1*
+1
+
+? (defparameter *a-var* 3)
+*A-VAR*
+
+? *a-var*
+3
+
+? (defparameter *a-var* 4)
+*A-VAR*
+
+? *a-var*
+4
+
+</pre> 
+
+<code>DEFVAR</code> sets a global value only the first time -- in
+other words, the variable must not have a value in order for
+<code>DEFVAR</code> to have an effect. This is useful for a variable
+that needs to have an initial value, but shouldn't be reset if you
+re-evaluate the <code>DEFVAR</code> form (as you might if you reload
+the file containing the <code>DEFVAR</code> in addition to other
+code).<p>
+
+<code>DEFPARAMETER</code> sets a global value each time it is used.
+Although the effect is the same as a <code>SETQ</code> form, the
+<code>DEFPARAMETER</code> is preferable because it gives implicit
+documentation as a <i>defining form</i> (in Lisp, any form that
+begins with <code>DEF</code> is most likely a defining form), and
+because it allows you to add documentation to the variable:<p>
+
+<pre>
+? (defparameter *a-var* 3 "The number of things I have to do today.")
+*A-VAR*
+
+? (documentation '*a-var* 'variable)
+"The number of things I have to do today."
+
+</pre> 
+
+You can also add a documentation string to a <code>DEFVAR</code> form.<p>
+
+In the examples above, we've started following the convention of
+making global variable names begin and end with an asterisk. When you
+read other programmers' Lisp code, you'll see that they follow this
+convention. They'll expect you to do the same.<p>
+
+<code>DEFCONSTANT</code> is similar to <code>DEFVAR</code> and
+<code>DEFPARAMETER</code>, except that it defines a name which is
+known globally and has a <i>constant</i> value. This means that
+anywhere you read a name which was defined in a
+<code>DEFCONSTANT</code> form, you can substitute the value given by
+the <code>DEFCONSTANT</code> form. It also means that you can't
+redefine the named constant, not even by using another
+<code>DEFCONSTANT</code> form with a different value.<p>
+
+Some Lisp programmers give constants names which begin and end with
+plus signs. It's helpful to name constants in a distinctive way so
+you don't inadvertently try to use the name for another purpose. Once
+a name has been defined constant, you can't even use it for a
+seemingly innocuous use, such as a parameter in a lambda list or
+<code>LET</code> binding.<p>
+
+<h2>Defining recursive functions</h2> 
+
+A function that calls itself is <em>recursive</em>. The recursive
+call may be direct (the function calls itself) or indirect (the
+function calls another function which -- perhaps after calling still
+more functions -- calls the original function).<p>
+
+You need to follow two simple rules of thumb to make recursive
+functions work. These rules suggest the structure of a recursive
+function -- it must behave appropriately according to its current
+inputs:<p>
+
+<ol>
+<li>One case must <em>not</em> make a recursive call.
+<li>Other cases must <em>reduce</em> the amount of work to be done in a
+ recursive call.
+</ol> 
+
+Let's dig up the <code>FACTORIAL</code> function that we've already used in several examples, and see how it follows these rules:
+
+<pre>
+(defun factorial (n)
+  (cond ((zerop n) 1)
+        (t (* n (factorial (1- n))))))
+</pre> 
+
+This function has two cases, corresponding to the two branches of the
+<code>COND</code>. The first case says that the factorial of zero is
+just one -- no recursive call is needed. The second case says that
+the factorial of some number is the number multiplied by the
+factorial of one less than the number -- this is a recursive call
+which reduces the amount of work remaining because it brings the
+number closer to the terminating condition of the first
+<code>COND</code> clause. (For clarity, I've assumed that the number
+initially given to <code>FACTORIAL</code> is non-negative.)<p>
+
+Let's work through another simple recursive definition. The length of
+an empty list is zero. The length of a non-empty list is one plus the
+length of the list reduced by one element. These two statements state
+exactly what is required by our rules of thumb, above. The first
+statement gives the answer for a list of known length -- the trivial
+case of an empty list. The second statement gives the answer for a
+list of unknown length <em>in terms of the answer for a list of
+reduced length</em>. Here's how it translates into code:<p>
+
+<pre>
+? (defun my-length (list)
+    (cond ((null list) 0)
+          (t (1+ (my-length (rest list))))))
+MY-LENGTH
+
+? (my-length '(a b c d))
+4
+
+</pre> 
+
+<code>NULL</code> is true for an empty list, so the first
+<code>COND</code> clause returns zero for the empty list. The second
+<code>COND</code> clause gets evaluated (if the first clause if
+skipped) because its condition is <code>T</code>; it adds one to the
+result of the recursive call on a list which is one element shorter
+(a list consists of its <code>FIRST</code> element and the
+<code>REST</code> of the list.)<p>
+
+Note the similarities between <code>FACTORIAL</code> and
+<code>MY-LENGTH</code>. The base case is always the first in the
+<code>COND</code> because it must be tested <em>before</em> the
+recursive case -- otherwise, the recursive function calls would never
+end.<p>
+
+If you want to visualize how recursive calls work, you can use you
+Lisp system's <code>TRACE</code> macro:<p>
+
+<pre>
+? (trace my-length)
+NIL
+
+? (my-length '(a b c d))
+; Calling (MY-LENGTH (A B C D)) 
+;  Calling (MY-LENGTH (B C D)) 
+;   Calling (MY-LENGTH (C D)) 
+;    Calling (MY-LENGTH (D)) 
+;     Calling (MY-LENGTH NIL) 
+;     MY-LENGTH returned 0
+;    MY-LENGTH returned 1
+;   MY-LENGTH returned 2
+;  MY-LENGTH returned 3
+; MY-LENGTH returned 4
+4
+
+</pre> 
+
+Here, you can clearly see the recursive calls upon lists of
+decreasing length, the terminating call with the empty list
+(<code>NIL</code>), and the returns each adding one to the length of
+a shorter list.<p>
+
+<blockquote> NOTE: Your Lisp compiler may internally optimize the
+recursive calls to <code>MY-LENGTH</code> so you don't see them using
+<code>TRACE</code>. If this happens, you may be able to disable the
+optimization by evaluating the form <code>(DECLAIM (OPTIMIZE (SPEED
+0) (DEBUG 3)))</code>, then re-evaluating the <code>(DEFUN MY-LIST
+...)</code> form.</blockquote> 
+
+<a name="tail-recursion"></a> 
+<h2>Tail recursion</h2> 
+
+A function that calls itself as its very last action is said to make
+a tail-recursive call. Here are two versions of the factorial
+function to illustrate the difference between a tail-recursive call
+and an ordinary recusive call:<p>
+
+<pre>
+<i>; Normal recursive call</i> 
+
+(defun factorial (n)
+  (cond ((zerop n) 1)
+        (t (*      <i>; * is the last function called</i> 
+            n
+            (factorial (- n 1))))))
+
+<i>; Tail-recursive call</i> 
+
+(defun factorial-tr (n)
+  (factorial-tr-helper n 1))
+
+(defun factorial-tr-helper (n product)
+  (cond ((zerop n) product)
+        (t 
+         <i>; factorial-tr-helper is the last function called</i> 
+         (factorial-tr-helper (- n 1) (* product n)))))
+
+</pre> 
+
+<code>FACTORIAL-TR</code> calls <code>FACTORIAL-TR-HELPER</code>,
+passing the original argument, <code>N</code>, plus an additional
+argument used as the initial value of an accumulator for the product
+which will become the value of the factorial calculation.
+<code>FACTORIAL-TR-HELPER</code> calls itself recursively,
+decrementing <code>N</code> in the process (this moves the
+calculation closer to its terminating condition, <code>(ZEROP
+N)</code>) and at the same time multiplying the product by the
+current value of <code>N</code>.<p>
+
+Because <code>FACTORIAL-TR-HELPER</code> is the last function
+executed in the recursive call, this is a tail-recursive call.
+Compare this to the recursive call in the <code>FACTORIAL</code>
+function, where the result is used by <code>*</code> to produce the
+function's value. A recursive call is tail-recursive only if it is
+the very last function executed in the recursive invocation.<p>
+
+With all that explanation out of the way, you're probably wondering
+"What good is tail-recursion? For the factorial calculation, it only
+seemed to complicate the code." The answer is in two parts: what Lisp
+can do <em>for</em> you, and what Lisp can do <em>to</em> you in the
+presence of tail-recursion.<p>
+
+Some Lisp compilers can optimize tail-recursive calls. To understand
+the benefits of such an optimization, let's first look at what a
+compiler must do for a normal function call: it must generate code to
+evaluate the arguments and push them on a stack (where they can be
+found by the called function), save the address in the code to which
+control will return after the recursive call, and finally call the
+function. One implication of this code sequence is that a function
+which makes a lot of recursive calls (as <code>FACTORIAL</code> will
+do for large value of <code>N</code>) will use a lot of stack space
+-- normally a limited resource.<p>
+
+A compiler that optimizes tail-recursive calls will generate code to
+perform the following operations for a tail-recursive call: evaluate
+the arguments and replace the old argument values with those just
+calculated, and then jump to the beginning of the function. Note that
+this code does not use any additional stack space, and it invokes the
+function with a jump instead of a call instruction -- this is a less
+expensive operation on all computers.<p>
+
+So, that's the answer to the first question, "What can Lisp do
+<em>for</em> me if I write a tail-recursive function call?" You get
+more efficient code -- <strong>if</strong> the compiler performs that
+optimization; it is not required to do so, but the better ones do.<p>
+
+Tail recursion optimization sounds like a good thing. It must be --
+it produces faster code -- but it it may confuse you during
+debugging. The debugger normally displays each function call by
+looking at the stack frame created at entry to the function. So if
+you happen to break in the middle of a recursive function, you'd
+expect to see a stack frame for each recursive call:<p>
+
+<pre> 
+? (defun broken-factorial (n)
+    (cond ((= n 0) 1)
+          ((= n 1) (break))
+          (t (* n (broken-factorial (- n 1))))))
+BROKEN-FACTORIAL
+
+? (broken-factorial 6)
+; Break: While executing: BROKEN-FACTORIAL
+
+&gt; (backtrace)
+1: (BROKEN-FACTORIAL 1)
+2: (BROKEN-FACTORIAL 2)
+3: (BROKEN-FACTORIAL 3)
+4: (BROKEN-FACTORIAL 4)
+5: (BROKEN-FACTORIAL 5)
+6: (BROKEN-FACTORIAL 6)
+7: <i>... more stack frames, unrelated to BROKEN-FACTORIAL ...</i> 
+&gt; (abort)
+; Return to top level
+
+? (defun broken-tr-factorial (n)
+    (broken-tr-factorial-1 n 1))
+BROKEN-TR-FACTORIAL
+
+? (defun broken-tr-factorial-1 (n v)
+    (cond ((= n 0) v)
+          ((= n 1) (break))
+          (t (broken-tr-factorial-1 (- n 1) (* n v)))))
+BROKEN-TR-FACTORIAL
+
+? (broken-tr-factorial 6)
+; Break: While executing: BROKEN-TR-FACTORIAL-1
+
+&gt; (backtrace)
+1: (broken-tr-factorial-1 1)
+2: <i>... more stack frames, unrelated to BROKEN-TR-FACTORIAL ...</i> 
+
+</pre> 
+
+So what happened to all the recursive calls in
+<code>BROKEN-TR-FACTORIAL-1</code>? For that matter, what happened to
+the call to <code>BROKEN-TR-FACTORIAL</code>? The compiler did tail
+recursion elimination in <code>BROKEN-TR-FACTORIAL-1</code>,
+replacing function calls with jumps. The function only generated one
+stack frame, then the tail-recursive calls replaced the values in
+that frame for subsequent calls.<p>
+
+The compiler also noticed that <code>BROKEN-TR-FACTORIAL</code> calls
+<code>BROKEN-TR-FACTORIAL-1</code> and immediately returns its value.
+This is just another tail-recursive call. The compiler arranged to
+build the stack frame using the value provided for the call to
+<code>BROKEN-TR-FACTORIAL</code> and the constant 1; there was no
+need to generate a stack frame for <code>BROKEN-TR-FACTORIAL</code>.<p>
+
+I mention all of this because you may think that your compiler is
+broken the first time you encounter a backtrace with "missing"
+frames. Compilers that do tail recursion usually give you a way to
+disable that optimization; consult the manual for details. You're
+probably better off, however, learning to recognize tail recursion,
+and how to read backtraces in the presence of this optimization. Some
+code which relies on tail recursion could break (by overflowing the
+stack) if you disable the optimization.<p>
+
+
+<h2>Exercises in naming</h2> 
+
+A name in Lisp can be made of any non-whitespace characters except
+for certain characters reserved as reader macro characters (see <a
+href="chapter03-11.html">Chapter 3, Lesson 11</a>), namely
+<code>"</code>, <code>'</code>, <code>(</code>, <code>)</code>,
+<code>,</code>, <code>;</code>, <code>`</code>, and <code>#</code>.
+Furthermore, the name can't be a number in the current number base,
+as set by <code>*READ-BASE*</code>. Thus, FACE is a name when
+<code>*READ-BASE*</code> is 10, but a number when
+<code>*READ-BASE*</code> is 16 (or higher).<p>
+
+Most Lisp programmers follow a few naming conventions to identify the
+names that certain roles. Global variables are almost always written
+with a leading and trailing <code>*</code>, for example:<p>
+
+<pre>
+*next-id*
+*home-directory*
+*software-version*
+</pre> 
+
+Other conventions vary somewhat among Lisp programmers. It is fairly
+common to see the name of a constant written with a leading and
+trailing <code>+</code>, such as:<p>
+
+<pre>
++initial-allocation-count+
++maximum-iteration-limit+
+</pre> 
+
+However, Lisp itself does not follow this convention for
+constants defined by the language:<p>
+
+<pre>
+pi
+most-positive-fixnum
+least-negative-short-float
+</pre> 
+
+Lisp programmers tend to set aside certain characters as prefixes for
+names of functions which use implementation-dependent features of the
+Lisp implementation, or which which are otherwise considered
+"dangerous" because they violate abstraction. The <code>%</code>
+character is most often seen in this role, but others are used -- you
+should be aware that any name which starts with a non-alphabetic
+character <em>may</em> have some special significance to the
+programmer who wrote the code:<p>
+
+<pre>
+%open-file-id
+%structure-slot-names
+$reserve_heap
+_call-event-handler
+@frame-marker
+</pre> 
+
+Don't forget to use the proper forms (<a
+href="#global-vars-and-consts">described earlier in this chapter</a>
+) to declare global variables and constants. Many Lisp compilers will
+let you get away with using a SETQ form to define global variables.
+Although this is convenient for debugging purposes, you should not
+rely on this behavior in your final program, as it is not guaranteed
+to work in all implementations.<p>
+
+If you don't define a constant using a <code>DEFCONSTANT</code> form,
+the compiler can not guarantee that its value will remain constant.
+Even worse is the requirement that a constant name be neither
+assigned (through a <code>SETQ</code> form, for example) nor bound
+(in a <code>LET</code> form or as the name of a function parameter,
+for example). If you don't define your constants using
+<code>DEFCONSTANT</code>, the compiler has no way to enforce these
+requirements.<p>
+
+<h2>Lexical binding, and multiple name spaces</h2> 
+
+The following piece of code illustrates how you can use the same name
+for different purposes. Take a minute to read this, and see how many
+separate uses you can count for the name <code>FUNNY</code>.<p>
+
+<pre>
+(defun funny (funny)
+  "funny..."
+  (if (zerop funny)
+    :funny
+    (list
+     (cons funny 
+           (let ((funny funny))
+             (setq funny (1- funny))
+             (funny funny))) 
+     funny)))
+</pre> 
+
+Here are the five roles played by this one name:<p>
+
+<ol>
+<li>function name
+<li>function argument
+<li>a word in the documentation string
+<li>a constant in the keyword package
+<li>a new lexical variable
+</ol> 
+
+Considering only the symbols named <code>FUNNY</code>, there are
+different values according to its use and position in the code.
+First, there is its value as a function object -- this is created by
+the <code>DEFUN</code> form and called recursively inside the
+<code>LET</code> form. Next, the value of the actual parameter is
+passed in a call to the function and bound to this name. Then,
+there's the constant value of the keyword, appearing as the
+consequent return value of the <code>IF</code> form. And finally,
+inside the <code>LET</code> form, a new binding is created (by the
+<code>LET</code> form) and its value changed (by the
+<code>SETQ</code> form).<p>
+
+Is this hard to follow? Yes. As a rule of thumb, you should be shot
+if you write code that looks like this. I, on the other hand, get to
+do this because it's instructive -- the lesson here is that there are
+a number of different namespaces in Lisp.<p>
+
+And what happens when you invoke this bizarre function? This:<p>
+
+<pre>
+? (funny 3)
+((3 (2 (1 . :FUNNY) 1) 2) 3)
+
+? (funny 0)
+:funny
+</pre> 
+
+Now consider the following Lisp session:<p>
+
+<pre>
+? (defun foo () 1)
+FOO
+    
+? (defun baz ()
+    (flet ((foo () 2)
+           (bar () (foo)))
+      (values (foo) (bar))))
+BAZ
+    
+? (baz)
+2
+1
+
+? (defun raz ()
+    (labels ((foo () 2)
+             (bar () (foo)))
+      (values (foo) (bar))))
+RAZ
+
+? (raz)
+2
+2
+</pre> 
+
+This is pretty subtle, but it's worth understanding because this is
+fairly common practice. Here's what happened:<p>
+
+<ol>
+<li>define function <code>FOO</code> to return 1
+<li>define function <code>BAZ</code>, which
+<ol>
+<li>defines function <code>FOO</code> locally to return 2
+<li>defines function <code>BAR</code> locally to call <code>FOO</code> 
+<li>calls <code>FOO</code> and <code>BAR</code>, and returns their values
+</ol> 
+<li>call <code>BAZ</code>, which returns the values 2 and 1
+<li>define function <code>RAZ</code>, which
+<ol>
+<li>defines function <code>FOO</code> locally to return 2
+<li>defines function <code>BAR</code> locally to call <code>FOO</code> 
+<li>calls <code>FOO</code> and <code>BAR</code>, and returns their values
+</ol> 
+<li>call <code>RAZ</code>, which returns the values 2 and 2
+</ol> 
+
+Even though <code>BAZ</code> and <code>RAZ</code> ostensibly do the
+same thing, they return different values.<p>
+
+<code>BAZ</code> defines its local functions inside an
+<code>FLET</code> form, which does not allow reference to the
+functions it defines. So the <code>FOO</code> called by
+<code>BAR</code> inside <code>BAZ</code> is actually the global
+<code>FOO</code>, which returns 1. The <code>FOO</code> defined
+inside the <code>FLET</code> form is never referenced by
+<code>BAZ</code>.<p>
+
+<code>RAZ</code> defines its local functions inside a
+<code>LABELS</code> form, within which functions defined may refer to
+themselves or each other. Thus, the <code>FOO</code> called by
+<code>BAR</code> inside <code>RAZ</code> is the one defined inside
+the <code>LABELS</code> form, which returns 2. The globally defined
+<code>FOO</code> is shadowed by the <code>FOO</code> named in the
+<code>LABELS</code> form.<p>
+
+In both cases, <code>FOO</code> is lexically apparent at two places:
+globally, and within the local defining form (<code>FLET</code> or
+<code>LABELS</code>). For something to be lexically apparent, or
+lexically scoped, means that its definition can be determined by
+reading the program.<p>
+
+In <code>BAZ</code>, I know that the local
+definition of <code>FOO</code> is not visible within
+<code>BAR</code>, so the global definition must be referenced. (If
+there was an enclosing form within <code>BAZ</code> which defined a
+local function <code>FOO</code>, that would be referenced rather than
+the global definition -- again, because it's lexically apparent to the 
+caller.)<p>
+
+In <code>RAZ</code>, I know that the local definition of
+<code>FOO</code> is visible to <code>BAR</code>, so this is used
+instead of the global definition. Even if there was an enclosing form
+that defined another <code>FOO</code> locally within
+<code>RAZ</code>, it would -- from the viewpoint of <code>BAR</code>
+-- be shadowed by the <code>FOO</code> defined in the
+<code>LABELS</code> form.<p>
+
+<h2>Reading, writing, and arithmetic</h2> 
+
+Your programs usually need to get input and produce output. If you're
+working with a system that supports windows and dialogs, you can
+certainly use these graphical devices. Relying instead on Lisp's
+built-in facilities for reading and writing strings of characters
+will ensure that your program is useful (or at least usable) on all
+kinds of computers.<p>
+
+Most elementary programming texts include a simple program to
+demonstrate the "input, process, output" approach. Our example in
+Lisp reads a series of numbers, adds them, and prints the sum when we
+enter a special token instead of a number:<p>
+
+<pre>
+(defun simple-adding-machine-1 ()
+  (let ((sum 0)
+        next)
+    (loop
+      (setq next (read))
+      (cond ((numberp next)
+             (incf sum next))
+            ((eq '= next)
+             (print sum)
+             (return))
+            (t
+             (format t "~&amp;~A ignored!~%" next))))
+    (values)))
+</pre>
+
+Our <code>SIMPLE-ADDING-MACHINE-1</code> works like this:<p>
+
+<pre>
+(SIMPLE-ADDING-MACHINE-1)
+3
+5
+FOO
+FOO ignored!
+11
+=
+
+19
+</pre> 
+
+<code>SIMPLE-ADDING-MACHINE-1</code> gets its input via the keyboard,
+and writes output to the screen. This happens because <code>READ</code> and
+<code>PRINT</code> have optional arguments which specify a <em>stream</em> 
+(see <a href="chapter19.html">Chapter 19</a>) and because using <code>T</code>
+as the second argument to <code>FORMAT</code> is the same as specifying the
+standard output stream -- the screen.<p>
+
+What if we wanted to read inputs from a file, and write to another file?
+One way is to bind the standard input and output streams to files, and 
+continue to use <code>SIMPLE-ADDING-MACHINE-1</code>:
+
+<pre>
+(let ((*standard-input* (open "infile.dat" :direction :input))
+      (*standard-output* (open "outfile.dat" :direction :output)))
+  (declare (special *standard-input* *standard-output*))
+  (simple-adding-machine-1)
+  (close *standard-input*)
+  (close *standard-output))
+</pre> 
+
+This is almost, but not quite, satisfactory. We bind the standard input
+and output streams to newly opened files, process the data, and close the
+files. We use <code>LET</code> to temporarily bind the standard streams
+to files; upon leaving the <code>LET</code> form, <code>*STANDARD-INPUT*</code> 
+and <code>*STANDARD-OUTPUT*</code> regain their original values. The problem
+lurking in this piece of code is that an abnormal exit -- an error or a
+deliberate interrupt -- can cause one or both of the <code>CLOSE</code> 
+calls to be skipped.<p>
+
+A better way to write this kind of code uses <code>WITH-OPEN-FILE</code>:<p>
+
+<pre>
+(with-open-file (in-stream "infile.dat" :direction :input)
+  (with-open-file (out-stream "outfile.dat" :direction :output)
+    (let ((*standard-input* in-stream)
+          (*standard-output* out-stream))
+      (declare (special *standard-input* *standard-output*))
+      (simple-adding-machine-1))))
+</pre> 
+
+This does exactly the same thing, except that a file opened by
+<code>WITH-OPEN-FILE</code> is guaranteed to be closed upon exiting the
+form, whether the exit is normal or not.  We'll take a look at how this is
+possible in <a href="chapter09.html">Chapter 9</a>.<p>
+
+The technique of rebinding the standard input and output streams can be
+very handy if you have to redirect input and output for a program you
+didn't write, don't want to rewrite, or can't get the source code to.
+If you're writing a program from scratch, you might want to plan for it
+to be used either with the standard streams or streams (perhaps attached
+to files) provided by the caller:<p>
+
+<pre>
+(defun simple-adding-machine-2 (&amp;optional (in-stream *standard-input*)
+                                          (out-stream *standard-output*))
+  (let ((sum 0)
+        next)
+    (loop
+      (setq next (read in-stream))
+      (cond ((numberp next)
+             (incf sum next))
+            ((eq '= next)
+             (print sum out-stream)
+             (return))
+            (t
+             (format out-stream "~&amp;~A ignored!~%" next))))
+    (values)))
+</pre> 
+
+If you want to use <code>SIMPLE-ADDING-MACHINE-2</code> with the keyboard
+and screen, call it without any arguments. To call it with file streams, do
+this:<p>
+
+<pre>
+(with-open-file (in-stream "infile.dat" :direction :input)
+  (with-open-file (out-stream "outfile.dat" :direction :output)
+    (simple-adding-machine-2 in-stream out-stream)))
+</pre> 
+
+We don't have to rebind the standard input and output streams as we did to
+redirect I/O for <code>SIMPLE-ADDING-MACHINE-1</code>. This leaves the 
+standard streams free other purposes -- such as reporting progress or 
+interacting with the user.<p>
+
+To close out this section, let's take a brief look at arithmetic.
+Lisp has an extensive repertoire of mathematical functions, consult a
+reference book for details. <a href="chapter03-10.html">Chapter 3,
+Lesson 10</a> covered numbers very briefly. Now, we're going to look
+at how and when numbers get converted automatically from one type to
+another.<p>
+
+The simplest rule is that of <em>floating point contagion</em>, an 
+ominous-sounding term which means, "If you use a floating point number
+in a calculation, the result will be a floating point number."<p>
+
+The next rule involves floating point components of complex numbers.
+A complex number has a real part and an imaginary part, read (and
+printed) by Lisp as <code>#C(</code><i>real-part
+imaginary-part</i><code>)</code>, where <i>real-part</i> and
+<i>imaginary-part</i> are any kind of Lisp number except for another
+complex number. If either part is a floating point number, then Lisp 
+converts both parts to floating point numbers.<p>
+
+If you reduce the imaginary part of a complex number to zero, you get
+the non-complex value of the real part.<p>
+
+Ratios are read and printed as
+<i>numerator</i><code>/</code><i>denominator</i>, where
+<i>numerator</i> and <i>denominator</i> are always integers. The advantage
+of a ratio is that it is exact -- <code>(/ 1.0 3)</code> is a floating 
+point number which is very close to (but not exactly) one-third, but
+<code>1/3</code> (or <code>(/ 1 3)</code>) is <em>exactly</em> one-third.<p>
+
+A ratio whose numerator is exactly divisible by its denominator will
+be reduced to an integer -- again, this is an exact number.<p>
+
+And finally, an integer is just an integer. If an integer gets too large to
+fit the machine's representation, Lisp converts it to a <em>bignum</em> --
+the number of digits is limited only by the computer's memory.<p>
+
+Just to make sure you understand all of this, try adding some numbers
+of different types to see whether you can invoke all of the
+conversions described above.<p>
+
+<h2>Other data types</h2> 
+
+Let's put together an extended example to show how we might use several
+of Lisp's built-in data types. We'll build a simple application to keep
+track of bank checks as we write them. For each check, we'll track the
+check number, payee, date, amount, and memo. We'll support queries to
+display an individual check, to list all checks paid to a payee, to list
+all the payees, to sum all of the check amounts, and to list all of the
+checks we've paid. We'll also provide a way to void a check once
+written.<p>
+
+Here's the code:<p>
+
+<pre>
+(defvar *checks* (make-array 100 :adjustable t :fill-pointer 0)
+  "A vector of checks.")
+
+(defconstant +first-check-number+ 100 
+  "The number of the first check.")
+
+(defvar *next-check-number* +first-check-number+ 
+  "The number of the next check.")
+
+(defvar *payees* (make-hash-table :test #'equal) 
+  "Payees with checks paid to each.")
+
+(defstruct check
+  number date amount payee memo)
+
+(defun current-date-string ()
+  "Returns current date as a string."
+  (multiple-value-bind (sec min hr day mon yr dow dst-p tz)
+                       (get-decoded-time)
+    (declare (ignore sec min hr dow dst-p tz))
+    (format nil "~A-~A-~A" yr mon day)))
+
+(defun write-check (amount payee memo)
+  "Writes the next check in sequence."
+  (let ((new-check (make-check 
+                    :number *next-check-number*
+                    :date (current-date-string)
+                    :amount amount
+                    :payee payee
+                    :memo memo)))
+    (incf *next-check-number*)
+    (vector-push-extend new-check *checks*)
+    (push new-check (gethash payee *payees*))
+    new-check))
+
+(defun get-check (number)
+  "Returns a check given its number, or NIL if no such check."
+  (when (and (<= +first-check-number+ number) (< number *next-check-number*))
+    (aref *checks* (- number +first-check-number+))))
+
+(defun void-check (number)
+  "Voids a check and returns T.  Returns NIL if no such check."
+  (let ((check (get-check number)))
+    (when check
+      (setf (gethash (check-payee check) *payees*)
+            (delete check (gethash (check-payee check) *payees*)))
+      (setf (aref *checks* (- number +first-check-number+)) nil)
+      t)))
+
+(defun list-checks (payee)
+  "Lists all of the checks written to payee."
+  (gethash payee *payees*))
+
+(defun list-all-checks ()
+  "Lists all checks written."
+  (coerce *checks* 'list))
+
+(defun sum-checks ()
+  (let ((sum 0))
+    (map nil #'(lambda (check)
+                 (when check
+                   (incf sum (check-amount check))))
+         *checks*)
+    sum))
+
+(defun list-payees ()
+  "Lists all payees."
+  (let ((payees ()))
+    (maphash #'(lambda (key value)
+                 (declare (ignore value))
+                 (push key payees))
+             *payees*)
+    payees))
+</pre> 
+
+And here's an example of how it works:<p>
+
+<pre>
+? (write-check 100.00 "Acme" "T-1000 rocket booster")
+#S(CHECK :NUMBER 100 :DATE "1996-11-3" :AMOUNT 100.0 :PAYEE "Acme" :MEMO "T-1000 rocket booster")
+
+? (write-check 50.00 "Acme" "1 gross bungee cords")
+#S(CHECK :NUMBER 101 :DATE "1996-11-3" :AMOUNT 50.0 :PAYEE "Acme" :MEMO "1 gross bungee cords")
+
+? (write-check 300.72 "WB Infirmary" "body cast")
+#S(CHECK :NUMBER 102 :DATE "1996-11-3" :AMOUNT 300.72 :PAYEE "WB Infirmary" :MEMO "body cast")
+
+? (list-checks "Acme")
+(#S(CHECK :NUMBER 101 :DATE "1996-11-3" :AMOUNT 50.0 :PAYEE "Acme" :MEMO "1 gross bungee cords")
+ #S(CHECK :NUMBER 100 :DATE "1996-11-3" :AMOUNT 100.0 :PAYEE "Acme" :MEMO "T-1000 rocket booster"))
+T
+
+? (get-check 101)
+#S(CHECK :NUMBER 101 :DATE "1996-11-3" :AMOUNT 50.0 :PAYEE "Acme" :MEMO "1 gross bungee cords")
+
+? (sum-checks)
+450.72
+
+? (list-all-checks)
+(#S(CHECK :NUMBER 100 :DATE "1996-11-3" :AMOUNT 100.0 :PAYEE "Acme" :MEMO "T-1000 rocket booster")
+ #S(CHECK :NUMBER 101 :DATE "1996-11-3" :AMOUNT 50.0 :PAYEE "Acme" :MEMO "1 gross bungee cords")
+ #S(CHECK :NUMBER 102 :DATE "1996-11-3" :AMOUNT 300.72 :PAYEE "WB Infirmary" :MEMO "body cast"))
+
+? (list-payees)
+("WB Infirmary" "Acme")
+
+? (void-check 101)
+T
+
+? (list-checks "Acme")
+(#S(CHECK :NUMBER 100 :DATE "1996-11-3" :AMOUNT 100.0 :PAYEE "Acme" :MEMO "T-1000 rocket booster"))
+T
+
+? (list-all-checks)
+(#S(CHECK :NUMBER 100 :DATE "1996-11-3" :AMOUNT 100.0 :PAYEE "Acme" :MEMO "T-1000 rocket booster")
+ NIL
+ #S(CHECK :NUMBER 102 :DATE "1996-11-3" :AMOUNT 300.72 :PAYEE "WB Infirmary" :MEMO "body cast"))
+
+? (sum-checks)
+400.72
+</pre> 
+
+In about a page of code, we've built a simple check-writing application
+with efficient data structures to store checks and payees. We also have
+basic I/O facilities without any additional effort on our part. And
+thanks to garbage collection, we don't have to worry at all about
+storage deallocation or memory leaks.<p>
+
+
+<h2>Simple macros</h2> 
+
+The one important feature missing from our check writing program is the
+ability to save and restore its state. Since the state is completely
+contained in three global variables, <code>*CHECKS*</code>,
+<code>*NEXT-CHECK-NUMBER*</code>, and <code>*PAYEES*</code>, all we
+really have to do is to use <code>PRINT</code> to write the values of
+these variables to a file, and <code>READ</code> to reload them at a
+later time.<p>
+
+But with a little more work we can write a macro that will write our
+save and restore functions. Then we can use this macro not only for our
+check writing program, but also for any program which keeps its state in
+global variables.<p>
+
+First take a look at the finished macro, then we'll dissect it:<p>
+
+<pre>
+(defmacro def-i/o (writer-name reader-name (&amp;rest vars))
+  (let ((file-name (gensym))
+        (var (gensym))
+        (stream (gensym)))
+    `(progn
+       (defun ,writer-name (,file-name)
+         (with-open-file (,stream ,file-name
+                                  :direction :output :if-exists :supersede)
+           (dolist (,var (list ,@vars))
+             (declare (special ,@vars))
+             (print ,var ,stream))))
+       (defun ,reader-name (,file-name)
+         (with-open-file (,stream ,file-name
+                                  :direction :input :if-does-not-exist :error)
+           (dolist (,var ',vars)
+             (set ,var (read ,stream)))))
+       t)))
+</pre> 
+
+The initial <code>LET</code> form defines symbols that will appear in the
+expanded macro. Each symbol is created by <code>(GENSYM)</code> so that
+no other symbol can possibly be the same. This avoids a problem which could
+arise if we wrote a macro using a particular symbol as a variable, then 
+called the macro with an argument having the same name as one of the symbols
+in the expansion.<p>
+
+The expanded macro is generated by the <code>`</code> form. The form is
+returned as the macro's expansion, then evaluated. Substitutions take
+place for symbols following <code>,</code> or <code>,@</code>.
+Everything else appears literally in the expanded macro.<p>
+
+The expansion of <code>DEF-I/O</code> is a <code>PROGN</code> form
+containing two <code>DEFUN</code> forms. We wrap the <code>DEFUN</code>s
+like this because a macro's expansion can only be a single form, and we
+need to have this macro define two functions.<p>
+
+The macro defines a writer function which loops over the list of the
+<code>VARS</code> specified in the macro call, printing each in turn to a
+named output file. The reader function loops over the <em>names</em> of
+the <code>VARS</code>, reading values from an input file and assigning the
+values to the named variables. Note that <code>SET</code> evaluates its
+first argument; this lets us use a variable to contain the name of the
+variable to which we want to assign a value.<p>
+
+Here's how the macro expands to create load and save functions for our
+check writer program:<p>
+
+<pre>
+? (pprint (macroexpand '(def-i/o save-checks load-checks (*checks* *next-check-number* *payees*))))
+(PROGN (DEFUN SAVE-CHECKS (#:G2655)
+            (WITH-OPEN-FILE (#:G2657 #:G2655 :DIRECTION :OUTPUT :IF-EXISTS :SUPERSEDE)
+              (DOLIST (#:G2656 (LIST *CHECKS* *NEXT-CHECK-NUMBER* *PAYEES*))
+                (DECLARE (SPECIAL *CHECKS* *NEXT-CHECK-NUMBER* *PAYEES*))
+                (PRINT #:G2656 #:G2657))))
+          (DEFUN LOAD-CHECKS (#:G2655)
+            (WITH-OPEN-FILE (#:G2657 #:G2655 :DIRECTION :INPUT :IF-DOES-NOT-EXIST
+                             :ERROR)
+              (DOLIST (#:G2656 '(*CHECKS* *NEXT-CHECK-NUMBER* *PAYEES*))
+                (SET #:G2656 (READ #:G2657))))))
+</pre> 
+
+And here's how we would use the macro, and the functions it defines, to save
+and restore the state information for our program:<p>
+
+<pre>
+? (def-i/o save-checks load-checks (*checks* *next-check-number* *payees*))
+T
+
+? (save-checks "checks.dat")
+NIL
+
+? (makunbound '*checks*)
+*CHECKS*
+
+? (makunbound '*next-check-number*)
+*NEXT-CHECK-NUMBER*
+
+? (makunbound '*payees*)
+*PAYEES*
+
+? *PAYEES*
+Error: Unbound variable.
+
+? (load-checks "checks.dat")
+NIL
+
+? *PAYEES*
+("WB Infirmary" "Acme")
+</pre> 
+
+
+<h2>Reader macros</h2> 
+
+Our check-writing application has one small problem. If we use floating point
+numbers to represent dollars and cents, our sums could be off by a penny in some
+cases.  What we should really do is to represent all currency in terms of whole
+pennies.  We can make a reader macro to help with the input of dollar and cent
+amounts, converting input like <code>$10.95</code> into the corresponding number
+of pennies.<p>
+
+Here's the code:<p>
+
+<pre>
+(set-macro-character #\$
+                     #'(lambda (stream char)
+                         (declare (ignore char))
+                         (round (* 100 (read stream)))))
+</pre> 
+
+<blockquote>
+The rounding step ensures that the amount is a whole number. Binary
+floating point numbers can not precisely represent all decimal fractions.
+For example, <code>(* 100 9.95)</code> yields
+<code>994.9999999999999</code> and <code>(* 100 1.10)</code> yields
+<code>110.00000000000001</code> on my Lisp system.<p>
+</blockquote> 
+
+This says to set <code>$</code> to be a macro character which, when encountered
+by the reader, calls <code>READ</code> to get a number and return the nearest
+whole number after multiplying by 100.  It's used like this:<p>
+
+<pre>
+? $9.95
+995
+
+? $-7.10
+-710
+</pre> 
+
+Now that you can enter dollar amounts directly, you may want to modify the
+check-writing application to print amounts in whole cents as dollars and
+cents. To do this, you would redefine the <code>CHECK</code> structure
+with a custom print function, as follows:<p>
+
+<pre>
+(defstruct (check
+            (:print-function
+             (lambda (check stream depth)
+               (declare (ignore depth))
+               (format stream "#S(CHECK NUMBER ~S DATE ~S AMOUNT $~,2,-2F PAYEE ~S MEMO ~S)"
+                       (check-number check)
+                       (check-date check)
+                       (check-amount check)
+                       (check-payee check)
+                       (check-memo check)))))
+  number date amount payee memo)
+</pre> 
+
+Then, the <code>$</code> reader macro and the <code>CHECK</code> print function 
+for its <code>AMOUNT</code> slot complement each other perfectly:<p>
+
+<pre>
+? (make-check :amount $9.95)
+#S(CHECK NUMBER NIL DATE NIL AMOUNT $9.95 PAYEE NIL MEMO NIL)
+</pre> 
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter03.html">Chapter 3</a> | Chapter 4 | <a href="chapter05.html">Chapter 5</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

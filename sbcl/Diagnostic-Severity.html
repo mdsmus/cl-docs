@@ -1,0 +1,98 @@
+<html lang="en">
+<head>
+<title>Diagnostic Severity - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Diagnostic-Messages.html#Diagnostic-Messages" title="Diagnostic Messages">
+<link rel="prev" href="Controlling-Verbosity.html#Controlling-Verbosity" title="Controlling Verbosity">
+<link rel="next" href="Understanding-Compiler-Diagnostics.html#Understanding-Compiler-Diagnostics" title="Understanding Compiler Diagnostics">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Diagnostic-Severity"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Understanding-Compiler-Diagnostics.html#Understanding-Compiler-Diagnostics">Understanding Compiler Diagnostics</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Controlling-Verbosity.html#Controlling-Verbosity">Controlling Verbosity</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Diagnostic-Messages.html#Diagnostic-Messages">Diagnostic Messages</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">3.1.2 Diagnostic Severity</h4>
+
+<p><a name="index-Severity-of-compiler-messages-24"></a><a name="index-Compiler-Diagnostic-Severity-25"></a><a name="index-error-26"></a><a name="index-warning-27"></a><a name="index-style_002dwarning-28"></a><a name="index-compiler_002dnote-29"></a><a name="index-code_002ddeletion_002dnote-30"></a>
+There are four levels of compiler diagnostic severity:
+
+     <ol type=1 start=1>
+<li>error
+<li>warning
+<li>style warning
+<li>note
+        </ol>
+
+   <p>The first three levels correspond to condition classes which are
+defined in the ANSI standard for Common Lisp and which have special
+significance to the <code>compile</code> and <code>compile-file</code> functions. 
+These levels of compiler error severity occur when the compiler
+handles conditions of these classes.
+
+   <p>The fourth level of compiler error severity, <em>note</em>, corresponds
+to the <code>sb-ext:compiler-note</code>, and is used for problems which are
+too mild for the standard condition classes, typically hints about how
+efficiency might be improved. The <code>sb-ext:code-deletion-note</code>, a
+subtype of <code>compiler-note</code>, is signalled when the compiler
+deletes user-supplied code, usually after proving that the code in
+question is unreachable.
+
+   <p>Future work for SBCL includes expanding this hierarchy of types to
+allow more fine-grained control over emission of diagnostic messages.
+
+   <p><a name="Condition-sb_002dext_003acompiler_002dnote"></a>
+
+<div class="defun">
+&mdash; Condition: <b>sb-ext:compiler-note</b><var><a name="index-sb_002dext_003acompiler_002dnote-31"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003acompiler_002dnote-32"></a>Class precedence list: <code>compiler-note, condition, t</code>
+
+        <p>Root of the hierarchy of conditions representing information discovered
+by the compiler that the user might wish to know, but which does not merit
+a <code>style-warning</code> (or any more serious condition). 
+</p></blockquote></div>
+
+   <p><a name="Condition-sb_002dext_003acode_002ddeletion_002dnote"></a>
+
+<div class="defun">
+&mdash; Condition: <b>sb-ext:code-deletion-note</b><var><a name="index-sb_002dext_003acode_002ddeletion_002dnote-33"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003acode_002ddeletion_002dnote-34"></a>Class precedence list: <code>code-deletion-note, compiler-note, condition, t</code>
+
+        <p>A condition type signalled when the compiler deletes code that the user
+has written, having proved that it is unreachable. 
+</p></blockquote></div>
+
+   </body></html>
+

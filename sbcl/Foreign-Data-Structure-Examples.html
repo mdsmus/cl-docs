@@ -1,0 +1,108 @@
+<html lang="en">
+<head>
+<title>Foreign Data Structure Examples - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Foreign-Function-Interface.html#Foreign-Function-Interface" title="Foreign Function Interface">
+<link rel="prev" href="Foreign-Variables.html#Foreign-Variables" title="Foreign Variables">
+<link rel="next" href="Loading-Shared-Object-Files.html#Loading-Shared-Object-Files" title="Loading Shared Object Files">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Foreign-Data-Structure-Examples"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Loading-Shared-Object-Files.html#Loading-Shared-Object-Files">Loading Shared Object Files</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Foreign-Variables.html#Foreign-Variables">Foreign Variables</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Foreign-Function-Interface.html#Foreign-Function-Interface">Foreign Function Interface</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">7.5 Foreign Data Structure Examples</h3>
+
+<!-- AKA "Alien Data Structure Example" in the CMU CL manual -->
+<p>Now that we have alien types, operations and variables, we can
+manipulate foreign data structures.  This C declaration
+
+<pre class="example">     struct foo {
+         int a;
+         struct foo *b[100];
+     };
+</pre>
+   <p>can be translated into the following alien type:
+
+<pre class="lisp">     (define-alien-type nil
+       (struct foo
+         (a int)
+         (b (array (* (struct foo)) 100))))
+</pre>
+   <p>Once the <code>foo</code> alien type has been defined as above, the C
+expression
+
+<pre class="example">     struct foo f;
+     f.b[7].a;
+</pre>
+   <p>can be translated in this way:
+
+<pre class="lisp">     (with-alien ((f (struct foo)))
+       (slot (deref (slot f 'b) 7) 'a)
+       ;;
+       ;; Do something with f...
+       )
+</pre>
+   <p>Or consider this example of an external C variable and some accesses:
+
+<pre class="example">     struct c_struct {
+             short x, y;
+             char a, b;
+             int z;
+             c_struct *n;
+     };
+     extern struct c_struct *my_struct;
+     my_struct-&gt;x++;
+     my_struct-&gt;a = 5;
+     my_struct = my_struct-&gt;n;
+</pre>
+   <p>which can be manipulated in Lisp like this:
+
+<pre class="lisp">     (define-alien-type nil
+       (struct c-struct
+               (x short)
+               (y short)
+               (a char)
+               (b char)
+               (z int)
+               (n (* c-struct))))
+     (define-alien-variable "my_struct" (* c-struct))
+     (incf (slot my-struct 'x))
+     (setf (slot my-struct 'a) 5)
+     (setq my-struct (slot my-struct 'n))
+</pre>
+   </body></html>
+

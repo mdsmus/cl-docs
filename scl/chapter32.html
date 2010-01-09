@@ -1,0 +1,317 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 32</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 32 - Dark Corners and Curiosities</h1> 
+
+<P>This chapter is almost at the end of our survey of Lisp.
+Here, we'll examine some Lisp features that are newer, 
+unstandardized, experimental, or controversial.</P>
+
+<h2>Extended LOOP: Another little language</h2>
+
+<p><a href="chapter05.html">Chapter 5</a> described several iterative
+control forms: <code>DO</code>, <code>DOTIMES</code>, <code>DOLIST</code>,
+and a simple <code>LOOP</code>.  We also saw that <code>FORMAT</code> 
+(<a href="chapter24.html">Chapter 24</a>) has its own control constructs
+for iteration.
+
+<p>Recursion is a useful tool for describing (and implementing) some
+algorithms.  But in many cases it's easier to write efficient iterative
+code than it is to write efficient recursive code.  In chapters 
+<a href="chapter04.html#tail-recursion">4</a> 
+and <a href="chapter28.html#efficiency">28</a> we saw how to write
+tail-recursive code, and learned that Lisp is <em>not</em> required
+to optimize tail calls.  Ironically, iteration is very important in
+this implementation of a language originally conceived as a 
+<a href="chapter33.html#mccarthy60">notation for recursive functions</a>.
+
+<p>An <em>extended</em> loop facility was introduced late in the specification
+of Common Lisp.  Extended loop, like <code>FORMAT</code> control strings, breaks
+away from the Lisp tradition of a simple, consistent syntax.  Extended loop
+uses keywords to specify initialization, actions and termination conditions.
+Here are a few examples:
+
+<pre>
+<i>;; Sum the integers from 1 to 100</i> 
+? (loop for n from 1 to 100
+        sum n)
+5050
+
+<i>;; Compute factorial 10 iteratively</i> 
+? (loop for n from 1 to 10
+        with result = 1
+        do (setq result (* result n))
+        finally return result)
+3628800
+
+<i>;; Gather the even numbers from a list</i> 
+? (loop for item in '(1 5 8 9 7 2 3)
+        when (evenp item)
+        collect item)
+(8 2)
+</pre> 
+
+<p>Extended loop inspires heated disagreements among Lisp users.  Its
+detractors point out that the behavior is underspecified for complex
+combinations of options, while its supporters point out that extended
+loop forms are easier to read than most <code>DO</code> forms for
+simple operations.  You should heed the advice of both camps: use
+extended loop to improve readability of simple looping operations.
+
+<h2>TAGBODY: GO if you must</h2>
+
+<p>Ever since the structured programming revolution of the 
+1970's, programmers and language designers alike have been 
+apologetic about the <em>GOTO</em> construct.  Yet there
+are rare cases where a well-placed <em>GOTO</em>, used
+with careful consideration, is the clearest way to structure the
+control flow of an algorithm.
+
+<p>Lisp retains a <em>GOTO</em> as a <code>GO</code> form, but it must be
+used within the lexical scope of a <code>TAGBODY</code> form. A
+<code>TAGBODY</code> may contain Lisp forms and symbols. The forms are
+evaluated, while the symbols (which in other forms might be evaluated for
+their lexical binding or <code>SYMBOL-VALUE</code>) are simply used as
+labels to which a <code>GO</code> form may transfer control.
+
+<h2>Processes & Stack Groups: Juggling multiple tasks</h2>
+
+<p>Leading-edge Lisp systems on dedicated hardware, and more recently on the
+Unix platform, have implemented a feature called "lightweight processes." In the
+C world these are known as "threads." 
+
+<P>Lightweight processes allow you to write pieces of code which share
+the CPU's time along with all of the global variables in your LISP
+environment. Although this is a limited form of multitasking,
+lacking protection between processes, it is very useful for handling
+computations which must run "in the background" or in response to 
+asynchronous events.
+
+<p>In the last few years, low-cost Lisp systems have started to include a
+process facility. Of all the vendors of low-cost Lisp system, Digitool was
+the first to include processes in its product. Starting with its 4.0/3.1
+release, MCL includes a complete implementation of lightweight processes
+including a full range of control, synchronization, and communication
+abstractions. MCL's process API is very close to the API used on the Lisp
+machines. I'll use MCL's API to illustrate the rest of this section.
+
+<p>The MCL processes are fully preemptive -- you can set both priority
+and time slice (the "quantum") for each process. Each process
+can have private variables simply by using local variables in the
+process run function (i.e., Lisp "closures"). As you'll probably
+have a need to access shared data as well, the MCL process facility
+provides locks ("mutexes") to ensure access to critical data by
+only one process at a time; this is especially useful when multiple
+fields of a complex structure must be updated in a single operation
+("atomically").
+
+<a name="dining-philosophers"></a>
+
+<p>The following code implements a solution to 
+<a href="chapter33.html#dijkstra68">Dijkstra's</a> "dining
+philosophers" problem using MCL processes and locks. In case you're
+not familiar with this, imagine a group of philosophers seated
+around a round table. Each philosopher has a plate of food. The food
+can only be eaten if a philosopher holds a fork in each hand. There
+is a fork between each pair of philosophers, so there are exactly as
+many forks as there are philosophers. The objective is to make the
+philosophers behave so that they all get a fair chance to eat. The
+classic solution imposes a protocol on how resources (forks) are
+acquired, in order to prevent deadlock (starvation).
+
+<pre>
+(defstruct philosopher
+  (amount-eaten 0)
+  (task nil))
+
+(defmacro acquire-lock-or-skip (lock post-acquire pre-release &amp;body body)
+  `(progn
+     <i>;; Random sleep makes the output more interesting</i> 
+     <i>;; by introducing variability into the order of</i> 
+     <i>;; execution.  This is a simple way of simulating</i> 
+     <i>;; the nondeterminacy that would result from having</i> 
+     <i>;; additional processes compete for CPU cycles.</i> 
+     (sleep (random 5))
+     (unless (lock-owner ,lock)
+       (process-lock ,lock)
+       ,post-acquire
+       (unwind-protect
+         (progn ,@body)
+         ,pre-release
+         (process-unlock ,lock)))))
+
+(let ((philosophers #())
+      (philosophers-output t))
+
+  (defun dining-philosophers (number-of-philosophers &amp;optional (stream t))
+    (unless (equalp philosophers #())
+      (stop-philosophers))
+    (assert (&gt; number-of-philosophers 1) (number-of-philosophers))
+    (setq philosophers-output stream)
+    (format philosophers-output
+            "~2&amp;Seating ~D philosophers for dinner.~%"
+            number-of-philosophers)
+    (force-output philosophers-output)
+    (flet ((announce-acquire-fork (who fork)
+             (format philosophers-output 
+                     "~&amp;Philosopher ~A has picked up ~A.~%" 
+                     who (lock-name fork)))
+           (announce-release-fork (who fork)
+             (format philosophers-output 
+                     "~&amp;Philosopher ~A is putting down ~A.~%" 
+                     who (lock-name fork)))
+           (eat (who)
+             (format philosophers-output 
+                     "~&amp;Philosopher ~A is EATING bite ~D.~%"
+                     who (incf (philosopher-amount-eaten (aref philosophers who))))))
+      (flet ((philosopher-task (who left-fork right-fork)
+               (loop
+                 (acquire-lock-or-skip left-fork
+                                       (announce-acquire-fork who left-fork)
+                                       (announce-release-fork who left-fork)
+                   (acquire-lock-or-skip right-fork 
+                                         (announce-acquire-fork who right-fork)
+                                         (announce-release-fork who right-fork)
+                     (eat who)))
+                 (force-output stream)
+                 (process-allow-schedule))))
+        (let ((forks (make-sequence 'vector number-of-philosophers)))
+          (dotimes (i number-of-philosophers)
+            (setf (aref forks i) (make-lock (format nil "fork ~D" i))))
+          (flet ((left-fork (who)
+                   (aref forks who))
+                 (right-fork (who)
+                   (aref forks (mod (1+ who) number-of-philosophers))))
+            (setq philosophers (make-sequence 'vector number-of-philosophers))
+            (dotimes (i number-of-philosophers)
+              (setf (aref philosophers i)
+                    (make-philosopher
+                     :task (process-run-function (format nil "Philosopher-~D" i)
+                                                 #'philosopher-task
+                                                 i 
+                                                 (left-fork i) 
+                                                 (right-fork i)))))))))
+    (values))
+
+  (defun stop-philosophers ()
+    (dotimes (i (length philosophers))
+      (process-kill (philosopher-task (aref philosophers i))))
+    (format philosophers-output 
+            "~&amp;Dinner is finished. Amounts eaten: {~{~D~^, ~}}~2%" 
+            (map 'list #'philosopher-amount-eaten philosophers))
+    (force-output philosophers-output)
+    (setq philosophers #())
+    (values))
+  )
+</pre> 
+
+<p>If you evaluate <code>(dining-philosophers 5)</code> and look
+through the actions of any one philosopher, you'll see her
+repeatedly do one of two things:
+
+<ol>
+<li>pick up a fork (the left one) and put it down again because 
+    the other (right) fork was in use, or
+<li>pick up each fork (left, then right), eat, then put down the forks.
+</ol> 
+
+<p>When you evaluate <code>(stop-philosophers)</code> you'll see a
+list of how many times each philosopher has eaten. These numbers
+will be fairly close to each other, illustrating the fairness of the
+algorithm.
+
+<p>MCL also exposes a ``stack group'' abstraction, which is useful
+for implementing coroutines:
+
+<pre>
+<i>;;; Main routine F-FOO</i> 
+(defun f-foo ()
+  (print 'foo-1)
+  (funcall sg-bar nil)        <i>; call 1 to coroutine</i> 
+  (print 'foo-2)
+  (funcall sg-bar nil)        <i>; call 2 to coroutine</i> 
+  (print 'foo-3)
+  (funcall sg-bar nil)        <i>; call 3 to coroutine</i> 
+  nil)
+
+<i>;;; Create a stack group for the coroutine.</i> 
+(defvar sg-bar (make-stack-group "bar"))
+
+<i>;;; Coroutine F-BAR</i> 
+(defun f-bar ()
+  (print 'bar-1)              <i>; do this for call 1</i> 
+  (stack-group-return nil)    <i>; return from call 1</i> 
+  (print 'bar-2)              <i>; do this for call 2</i> 
+  (stack-group-return nil)    <i>; return from call 2</i> 
+  (print 'bar-3)              <i>; do this for call 3</i> 
+  (stack-group-return nil)    <i>; return from call 3</i> 
+  nil)
+
+<i>;;; Initialization and startup</i> 
+(defun run-coroutines ()
+  ;; Initialize the coroutine
+  (stack-group-preset sg-bar #'f-bar)
+  ;; Start main coroutine
+  (f-foo))
+</pre> 
+
+<p>When you run the main routine, its execution is interleaved with
+the coroutine:
+
+<pre>
+? (run-coroutines)
+FOO-1 
+BAR-1 
+FOO-2 
+BAR-2 
+FOO-3 
+BAR-3 
+NIL
+</pre> 
+
+<p>You can easily run any function within a separate lightweight
+process, allowing other computation, compilation, editing, etc. to
+happen concurrently:
+
+<pre>
+(process-run-function "Annoy me" 
+                      #'(lambda (delay)
+                          (loop 
+                            (sleep delay)
+                            (ed-beep)))
+                      5)
+</pre> 
+
+
+<h2>Series: Another approach to iteration and filtering</h2>
+
+<p>Series were formally introduced with the printing of 
+<a href="chapter33.html#cltl2">Common Lisp: The Language (2nd ed)</a> (also
+known as CLtL2), but were not adopted as part of the ANSI Common Lisp
+standard. Still, some Lisp vendors include series in their product because
+customers came to depend upon it during the time between the publication
+of CLtL2 and the ANSI Specification.
+
+<p>Series combine the behaviors of sequences, streams and loops.  Using
+series, you can write iterative code using a functional notation.  Control
+is achieved by selecting or filtering elements as they pass through a 
+<em>series</em> of filters and operators.
+
+<p>The best place to find information and examples is in Appendix A of CLtL2.
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter31.html">Chapter 31</a> | Chapter 32 | <a href="chapter33.html">Chapter 33</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

@@ -1,0 +1,43 @@
+<html
+  ><head
+    ><title
+      >Function MAKE-SUITE</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Function: MAKE-SUITE</h1
+        ><div class="contents"
+          ><h2
+  >Documentation</h2
+><blockquote
+  >Create a new test suite object.</blockquote
+><h2
+            >Source</h2
+          ><pre class="code"
+            >(defun make-suite (name &amp;key description in)
+  &quot;Create a new test suite object.&quot;
+  (let ((suite (make-instance 'test-suite :name name)))
+    (when description
+      (setf (description suite) description))
+    (loop for i in (ensure-list in)
+	  for in-suite = (get-test i)
+	  do (progn
+	       (when (null in-suite)
+		 (cerror &quot;Create a new suite named ~A.&quot; &quot;Unknown suite ~A.&quot; i)
+		 (setf (get-test in-suite) (make-suite i)
+		       in-suite (get-test in-suite)))
+	       (setf (gethash name (tests in-suite)) suite)))
+    (setf (get-test name) suite)
+    suite))</pre
+          ><a href="../Test_0020Suites.html#function_005FIT.BESE.FIVEAM_003A_003AMAKE-SUITE"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

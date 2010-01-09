@@ -1,0 +1,215 @@
+<html lang="en">
+<head>
+<title>Package Lock Dictionary - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Package-Locks.html#Package-Locks" title="Package Locks">
+<link rel="prev" href="Package-Lock-Concepts.html#Package-Lock-Concepts" title="Package Lock Concepts">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Package-Lock-Dictionary"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Package-Lock-Concepts.html#Package-Lock-Concepts">Package Lock Concepts</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Package-Locks.html#Package-Locks">Package Locks</a>
+<hr>
+</div>
+
+<h3 class="section">10.2 Package Lock Dictionary</h3>
+
+<div class="defun">
+&mdash; Declaration: <b>sb-ext:disable-package-locks</b><var><a name="index-sb_002dext_003adisable_002dpackage_002dlocks-389"></a></var><br>
+<blockquote>
+        <p>Syntax: <code>(sb-ext:disable-package-locks symbol*)</code>
+
+        <p>Disables package locks affecting the named symbols during compilation
+in the lexical scope of the declaration. Disabling locks on symbols
+whose home package is unlocked, or disabling an already disabled lock,
+has no effect. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Declaration: <b>sb-ext:enable-package-locks</b><var><a name="index-sb_002dext_003aenable_002dpackage_002dlocks-390"></a></var><br>
+<blockquote>
+        <p>Syntax: <code>(sb-ext:enable-package-locks symbol*)</code>
+
+        <p>Re-enables package locks affecting the named symbols during compilation
+in the lexical scope of the declaration. Enabling locks that were not
+first disabled with <code>sb-ext:disable-package-locks</code> declaration, or
+enabling locks that are already enabled has no effect. 
+</p></blockquote></div>
+
+   <p><a name="Condition-sb_002dext_003apackage_002dlock_002dviolation"></a>
+
+<div class="defun">
+&mdash; Condition: <b>sb-ext:package-lock-violation</b><var><a name="index-sb_002dext_003apackage_002dlock_002dviolation-391"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003apackage_002dlock_002dviolation-392"></a>Class precedence list: <code>package-lock-violation, package-error, error, serious-condition, condition, t</code>
+
+        <p>Subtype of <code>cl:package-error</code>. A subtype of this error is signalled
+when a package-lock is violated. 
+</p></blockquote></div>
+
+   <p><a name="Condition-sb_002dext_003apackage_002dlocked_002derror"></a>
+
+<div class="defun">
+&mdash; Condition: <b>sb-ext:package-locked-error</b><var><a name="index-sb_002dext_003apackage_002dlocked_002derror-393"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003apackage_002dlocked_002derror-394"></a>Class precedence list: <code>package-locked-error, package-lock-violation, package-error, error, serious-condition, condition, t</code>
+
+        <p>Subtype of <code>sb-ext:package-lock-violation</code>. An error of this type is
+signalled when an operation on a package violates a package lock. 
+</p></blockquote></div>
+
+   <p><a name="Condition-sb_002dext_003asymbol_002dpackage_002dlocked_002derror"></a>
+
+<div class="defun">
+&mdash; Condition: <b>sb-ext:symbol-package-locked-error</b><var><a name="index-sb_002dext_003asymbol_002dpackage_002dlocked_002derror-395"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003asymbol_002dpackage_002dlocked_002derror-396"></a>Class precedence list: <code>symbol-package-locked-error, package-lock-violation, package-error, error, serious-condition, condition, t</code>
+
+        <p>Subtype of <code>sb-ext:package-lock-violation</code>. An error of this type is
+signalled when an operation on a symbol violates a package lock. The
+symbol that caused the violation is accessed by the function
+<code>sb-ext:package-locked-error-symbol</code>. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:package-locked-error-symbol</b><var> symbol-package-locked-error<a name="index-sb_002dext_003apackage_002dlocked_002derror_002dsymbol-397"></a></var><br>
+<blockquote>
+        <p>Returns the symbol that caused the <code>symbol-package-locked-error</code>
+condition. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003apackage_002dlocked_002dp"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:package-locked-p</b><var> package<a name="index-sb_002dext_003apackage_002dlocked_002dp-398"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003apackage_002dlocked_002dp-399"></a>Returns <code>t</code> when <code>package</code> is locked, <code>nil</code> otherwise. Signals an error
+if <code>package</code> doesn't designate a valid package. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003alock_002dpackage"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:lock-package</b><var> package<a name="index-sb_002dext_003alock_002dpackage-400"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003alock_002dpackage-401"></a>Locks <code>package</code> and returns <code>t</code>. Has no effect if <code>package</code> was already
+locked. Signals an error if <code>package</code> is not a valid package designator
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003aunlock_002dpackage"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:unlock-package</b><var> package<a name="index-sb_002dext_003aunlock_002dpackage-402"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003aunlock_002dpackage-403"></a>Unlocks <code>package</code> and returns <code>t</code>. Has no effect if <code>package</code> was already
+unlocked. Signals an error if <code>package</code> is not a valid package designator. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003apackage_002dimplemented_002dby_002dlist"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:package-implemented-by-list</b><var> package<a name="index-sb_002dext_003apackage_002dimplemented_002dby_002dlist-404"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003apackage_002dimplemented_002dby_002dlist-405"></a>Returns a list containing the implementation packages of
+<code>package</code>. Signals an error if <code>package</code> is not a valid package designator. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003apackage_002dimplements_002dlist"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:package-implements-list</b><var> package<a name="index-sb_002dext_003apackage_002dimplements_002dlist-406"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003apackage_002dimplements_002dlist-407"></a>Returns the packages that <code>package</code> is an implementation package
+of. Signals an error if <code>package</code> is not a valid package designator. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003aadd_002dimplementation_002dpackage"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:add-implementation-package</b><var> packages-to-add &amp;optional package<a name="index-sb_002dext_003aadd_002dimplementation_002dpackage-408"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003aadd_002dimplementation_002dpackage-409"></a>Adds <code>packages-to-add</code> as implementation packages of <code>package</code>. Signals
+an error if <code>package</code> or any of the <code>packages-to-add</code> is not a valid
+package designator. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003aremove_002dimplementation_002dpackage"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:remove-implementation-package</b><var> packages-to-remove &amp;optional package<a name="index-sb_002dext_003aremove_002dimplementation_002dpackage-410"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003aremove_002dimplementation_002dpackage-411"></a>Removes <code>packages-to-remove</code> from the implementation packages of
+<code>package</code>. Signals an error if <code>package</code> or any of the <code>packages-to-remove</code>
+is not a valid package designator. 
+</p></blockquote></div>
+
+   <p><a name="Macro-sb_002dext_003awithout_002dpackage_002dlocks"></a>
+
+<div class="defun">
+&mdash; Macro: <b>sb-ext:without-package-locks</b><var> &amp;body body<a name="index-sb_002dext_003awithout_002dpackage_002dlocks-412"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003awithout_002dpackage_002dlocks-413"></a>Ignores all runtime package lock violations during the execution of
+body. Body can begin with declarations. 
+</p></blockquote></div>
+
+   <p><a name="Macro-sb_002dext_003awith_002dunlocked_002dpackages"></a>
+
+<div class="defun">
+&mdash; Macro: <b>sb-ext:with-unlocked-packages</b> (<var>&amp;rest packages</var>)<var> &amp;body forms<a name="index-sb_002dext_003awith_002dunlocked_002dpackages-414"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003awith_002dunlocked_002dpackages-415"></a>Unlocks <code>packages</code> for the dynamic scope of the body. Signals an
+error if any of <code>packages</code> is not a valid package designator. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Macro: <b>defpackage</b><var> name </var>[[<var>option</var>]]<var>* &rArr; package<a name="index-defpackage-416"></a></var><br>
+<blockquote>
+        <p>Options are extended to include the following:
+
+          <ul>
+<li><code>:lock</code> <var>boolean</var>
+
+          <p>If the argument to <code>:lock</code> is <code>t</code>, the package is initially
+locked.  If <code>:lock</code> is not provided it defaults to <code>nil</code>.
+
+          <li><code>:implement</code> <var>package-designator</var>*
+
+          <p>The package is added as an implementation package to the packages
+named. If <code>:implement</code> is not provided, it defaults to the
+package itself. 
+</ul>
+
+        <p>Example:
+
+     <pre class="lisp">          (defpackage "FOO" (:export "BAR") (:lock t) (:implement))
+          (defpackage "FOO-INT" (:use "FOO") (:implement "FOO" "FOO-INT"))
+          
+          ;;; is equivalent to
+          
+          (defpackage "FOO") (:export "BAR"))
+          (lock-package "FOO")
+          (remove-implementation-package "FOO" "FOO")
+          (defpackage "FOO-INT" (:use "BAR"))
+          (add-implementation-package "FOO-INT" "FOO")
+</pre>
+        </blockquote></div>
+
+   </body></html>
+

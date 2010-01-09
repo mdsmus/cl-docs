@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.1.1 Types</TITLE>
+<META NAME="description" CONTENT="5.1.1 Types">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2048" HREF="node108.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2046" HREF="node106.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2040" HREF="node106.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2050" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2051" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2049" HREF="node108.html">5.1.2 Optimization</A>
+<B>Up:</B> <A NAME="tex2html2047" HREF="node106.html">5.1 Advanced Compiler Introduction</A>
+<B> Previous:</B> <A NAME="tex2html2041" HREF="node106.html">5.1 Advanced Compiler Introduction</A>
+<BR> <P>
+<H2><A NAME="SECTION00611000000000000000">5.1.1 Types</A></H2>
+<P>
+Python's support for types is unusual in three major ways:
+<UL>
+<LI> Precise type checking encourages the specific use of type
+  declarations as a form of run-time consistency checking.  This
+  speeds development by localizing type errors and giving more
+  meaningful error messages.  See section&nbsp;<A HREF="node98.html#precisetypechecks">4.5.2</A>.  Python
+  produces completely safe code; optimized type checking maintains
+  reasonable efficiency on conventional hardware
+  (see section&nbsp;<A HREF="node130.html#typecheckoptimization">5.3.6</A>.)
+<LI> Comprehensive support for the Common Lisp type system makes complex
+  type specifiers useful.  Using type specifiers such as <tt>or</tt> and
+  <tt>member</tt> has both efficiency and robustness advantages.
+  See section&nbsp;<A HREF="node112.html#advancedtypestuff">5.2</A>.
+<LI> Type inference eliminates the need for some declarations, and
+  also aids compile-time detection of type errors.  Given detailed
+  type declarations, type inference can often eliminate type checks
+  and enable more efficient object representations and code sequences.
+  Checking all types results in fewer type checks.  See sections
+  <A HREF="node124.html#typeinference">5.3</A> and <A HREF="node169.html#nondescriptor">5.11.2</A>.
+</UL><BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>3.3.4 Funny Frames</TITLE>
+<META NAME="description" CONTENT="3.3.4 Funny Frames">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1440" HREF="node67.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1438" HREF="node62.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1432" HREF="node65.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1442" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1443" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1441" HREF="node67.html">3.3.5 Debug Tail Recursion</A>
+<B>Up:</B> <A NAME="tex2html1439" HREF="node62.html">3.3 Stack Frames</A>
+<B> Previous:</B> <A NAME="tex2html1433" HREF="node65.html">3.3.3 Function Names</A>
+<BR> <P>
+<H2><A NAME="SECTION00434000000000000000">3.3.4 Funny Frames</A></H2>
+<P>
+<A NAME="8754">&#160;</A>
+<A NAME="8755">&#160;</A>
+<A NAME="8756">&#160;</A>
+<A NAME="8757">&#160;</A>
+<A NAME="8758">&#160;</A>
+<A NAME="8759">&#160;</A>
+<P>
+Sometimes the evaluator introduces new functions that are used to implement a
+user function, but are not directly specified in the source.  The main place
+this is done is for checking argument type and syntax.  Usually these functions
+do their thing and then go away, and thus are not seen on the stack in the
+debugger.  But when you get some sort of error during lambda-list processing,
+you end up in the debugger on one of these funny frames.
+<P>
+These funny frames are flagged by printing ``<tt>[</tt><i>keyword</i><tt>]</tt>'' after the
+parentheses.  For example, this call:
+<BLOCKQUOTE> <PRE>(car 'a 'b)
+</PRE> </BLOCKQUOTE>
+will look like this:
+<BLOCKQUOTE> <PRE>(CAR 2 A) [:EXTERNAL]
+</PRE> </BLOCKQUOTE>
+And this call:
+<BLOCKQUOTE> <PRE>(string-upcase &quot;test case&quot; :end)
+</PRE> </BLOCKQUOTE>
+would look like this:
+<BLOCKQUOTE> <PRE>(&quot;DEFUN STRING-UPCASE&quot; &quot;test case&quot; 335544424 1) [:OPTIONAL]
+</PRE> </BLOCKQUOTE>
+<P>
+As you can see, these frames have only a vague resemblance to the original
+call.  Fortunately, the error message displayed when you enter the debugger
+will usually tell you what problem is (in these cases, too many arguments
+and odd keyword arguments.)  Also, if you go down the stack to the frame for
+the calling function, you can display the original source (see section&nbsp;<A HREF="node72.html#sourcelocations">3.5</A>.)
+<P>
+With recursive or block compiled functions (see section&nbsp;<A HREF="node148.html#blockcompilation">5.7</A>), an <tt>:EXTERNAL</tt> frame may appear before the frame
+representing the first call to the recursive function or entry to the compiled
+block.  This is a consequence of the way the compiler does block compilation:
+there is nothing odd with your program.  You will also see <tt>:CLEANUP</tt> frames
+during the execution of <tt>unwind-protect</tt> cleanup code.  Note that inline
+expansion and open-coding affect what frames are present in the debugger, see
+sections <A HREF="node75.html#debuggerpolicy">3.6</A> and <A HREF="node104.html#opencoding">4.8</A>.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

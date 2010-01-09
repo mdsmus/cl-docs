@@ -1,0 +1,233 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 5</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 5 - Introducing Iteration</h1> 
+
+<p>Lisp has several ways to do iteration. In this section we'll look at
+the most common looping constructs. Later, in <a href="chapter12.html">Chapter 12</a>, we'll look at mapping, then we'll take a brief look at <i>series</i> in 
+<a href="chapter32.html">Chapter 32</a>; both of these are closely related to
+iteration.<p>
+
+<h2>Simple LOOP loops forever...</h2>
+
+<p>The simplest loop in Lisp is just a <code>LOOP</code> form
+wrapped around whatever you want to repeat. Before you try this next
+bit of code, know how to interrupt execution of your Lisp system;
+normally this is Command-period on a Macintosh or Control-Break on a
+PC.
+
+<pre>
+? (loop
+    (print "Look, I'm looping!"))
+"Look, I'm looping!" 
+"Look, I'm looping!" 
+"Look, I'm looping!" 
+"Look, I'm looping!" 
+"Look, I'm looping!" 
+"Look, I'm looping!" 
+"Look, I'm looping!" 
+"Look, I'm looping!" 
+<i>... and so on, until you interrupt execution...</i> 
+Aborted
+? 
+</pre> 
+
+<p>This kind of endless loop has legitimate applications. You're already
+familiar with one: <code>(LOOP (PRINT (EVAL (READ))))</code>, Lisp's
+read-eval-print loop.<p>
+
+<blockquote>
+Actually, your Lisp system does some extra things in its read-eval-print loop: 
+<ul>
+<li>it catches all errors to prevent you from inadvertently breaking out of the 
+loop
+<li>it provides a controlled way to exit the loop
+<li>it keeps track of the most recently entered expressions, results, and
+printed output
+</ul> 
+</blockquote> 
+
+<h2>But there's a way out!</h2>
+
+<p>Most of the time you write a <code>LOOP</code> form, you'd like to have
+a way out. Fortunately, a <code>RETURN</code> form anywhere inside will cause control to leave the <code>LOOP</code>; any value you specify becomes the
+value of the <code>LOOP</code> form:<p>
+
+<pre>
+? (loop
+    (print "Here I am.")
+    (return 17)
+    (print "I never got here."))
+"Here I am."
+17
+</pre> 
+
+<code>RETURN</code> is normally used in a conditional form, like this:
+
+<pre>
+? (let ((n 0))
+    (loop
+      (when (&gt; n 10) (return))
+      (print n) (prin1 (* n n))
+      (incf n)))
+0 0
+1 1
+2 4
+3 9
+4 16
+5 25
+6 36
+7 49
+8 64
+9 81
+10 100
+NIL
+?
+</pre> 
+
+<p>This example could be done better using a <code>DOTIMES</code>
+form, see below. But the combination of <code>LOOP</code> and
+<code>RETURN</code> offers the flexibility to return from the middle
+of a loop, or even from several places within the loop if need
+be.<p>
+
+<h2>Use DOTIMES for a counted loop</h2>
+
+<p>To simply loop for some fixed number of iterations, the
+<code>DOTIMES</code> form is your best choice. The previous example
+simplifies to:<p>
+
+<pre>
+? (dotimes (n 11)
+    (print n) (prin1 (* n n)))
+0 0
+1 1
+2 4
+3 9
+4 16
+5 25
+6 36
+7 49
+8 64
+9 81
+10 100
+NIL
+?
+</pre> 
+
+<code>DOTIMES</code> always returns NIL (or the result of evaluating
+its optional third argument).</p>
+
+
+<h2>Use DOLIST to process elements of a list</h2>
+
+<p>Another common use for iteration is to process each element of a list.
+<code>DOLIST</code> supports this:<p>
+
+<pre>
+? (dolist (item '(1 2 4 5 9 17 25))
+    (format t "~&amp;~D is~:[n't~;~] a perfect square.~%" item (integerp (sqrt item))))
+1 is a perfect square.
+2 isn't a perfect square.
+4 is a perfect square.
+5 isn't a perfect square.
+9 is a perfect square.
+17 isn't a perfect square.
+25 is a perfect square.
+NIL
+</pre> 
+
+<blockquote> <p>In this example, we've done some fancy things with
+<code>FORMAT</code>. If you want to learn more about what
+<code>FORMAT</code> can do, you should look ahead now to <a
+href="chapter24.html">Chapter 24</a>. </blockquote> 
+
+<p>The preceding code used a list of numbers, but Lisp allows a
+list to contain any kind of object:<p>
+
+<pre>
+? (dolist (item `(1 foo "Hello" 79.3 2/3 ,#'abs))
+    (format t "~&amp;~S is a ~A~%" item (type-of item)))
+1 is a FIXNUM
+FOO is a SYMBOL
+"Hello" is a (SIMPLE-BASE-STRING 5)
+79.3 is a DOUBLE-FLOAT
+2/3 is a RATIO
+#&lt;Compiled-function ABS #x1E9CC3E&gt; is a FUNCTION
+NIL
+? 
+</pre> 
+
+<blockquote>
+Note how we used the backquote and comma to build the list in this example.
+Do you understand why we did this?  All of the list elements up through
+the ratio <code>2/3</code> are self-evaluating; we could have put them in
+a quoted list as we did in the previous example. But <code>#'abs</code> is
+equivalent to <code>(function abs)</code> which, when quoted, is just a list
+of two symbols. To get the function itself into the quoted list, we had to
+force evaluation of the <code>#'abs</code> form, thus the comma inside the
+backquoted list.
+</blockquote> 
+
+<p>Like <code>DOTIMES</code>, <code>DOLIST</code> always returns
+<code>NIL</code> (or the result of its optional third argument).
+
+
+<h2>DO is tricky, but powerful</h2>
+
+<p>The <code>DO</code> form lets you iterate over multiple variables at the
+same time, using arbitrary forms to step each variable to its next value.
+Here's an example which both iterates over the elements of a list and runs
+a counter at the same time:<p>
+
+<pre>
+? (do ((which 1 (1+ which))
+       (list '(foo bar baz qux) (rest list)))
+      ((null list) 'done)
+    (format t "~&amp;Item ~D is ~S.~%" which (first list)))
+Item 1 is FOO.
+Item 2 is BAR.
+Item 3 is BAZ.
+Item 4 is QUX.
+DONE
+? 
+</pre> 
+
+<p>To understand this better, let's look at the general syntax of
+<code>DO</code>, and relate its parts to the example:
+
+<pre>
+(do ((<i>var1 init1 step1</i>)
+     (<i>var2 init2 step2</i>)
+     <i>...</i>)
+    (<i>end-test result</i>)
+  <i>statement1
+  ...</i>)
+
+<i>var1</i>       = which
+<i>init1</i>      = 1
+<i>step1</i>      = (1+ which)
+<i>var2</i>       = list
+<i>init2</i>      = '(foo bar baz qux)
+<i>step2</i>      = (rest list)
+<i>end-test</i>   = (null list)
+<i>result</i>     = 'done
+<i>statement1</i> = (format t "~&amp;Item ~D is ~S.~%" which (first list))
+</pre> 
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter04.html">Chapter 4</a> | Chapter 5 | <a href="chapter06.html">Chapter 6</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

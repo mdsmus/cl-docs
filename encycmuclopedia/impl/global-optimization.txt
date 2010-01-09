@@ -1,0 +1,328 @@
+From Robert_Maclachlan@RAM.IUS.CS.CMU.EDU Tue Jan 23 22:03:19 2001
+Received: from knight.cons.org (knight.cons.org [194.233.237.86])
+	by mailhub.mclink.it (8.9.1/8.9.0) with ESMTP id WAA00902
+	for <amoroso@mclink.it>; Tue, 23 Jan 2001 22:09:15 +0100 (CET)
+Received: from RAM.IUS.CS.CMU.EDU (RAM.IUS.CS.CMU.EDU [128.2.206.16])
+	by knight.cons.org (8.11.1/8.11.1) with SMTP id f0NL3aX08711
+	for <cmucl-imp@cons.org>; Tue, 23 Jan 2001 22:03:36 +0100 (CET)
+Message-Id: <200101232103.f0NL3aX08711@knight.cons.org>
+Received: from RAM.IUS.CS.CMU.EDU by RAM.IUS.CS.CMU.EDU id aa07924;
+          23 Jan 2001 16:03 EST
+To: Marco Antoniotti <marcoxa@cs.nyu.edu>
+cc: cmucl-imp@cons.org
+Subject: Re: Non Vector SIMPLE Arrays. 
+In-reply-to: Your message of Tue, 23 Jan 2001 14:30:21 -0500.
+             <200101231930.OAA32329@octagon.mrl.nyu.edu> 
+Reply-To: ram+@CS.cmu.edu
+Date: Tue, 23 Jan 2001 16:03:19 -0500
+From: Robert Maclachlan <Robert_Maclachlan@RAM.IUS.CS.CMU.EDU>
+
+
+   However, most of the Bioinformatics stuff actually deals with dynamic
+   programming tables which are very naturally kept as 2D arrays.  Having a
+   speedup in my program will help my cause quite a bit.
+
+   So, I am just sending this message to tickle the list. :)
+
+Well, as you probably know, the big overhead with multi-D arrays is the
+index computation, especially the integer multiply which is apt to take
+longer than other instructions.  There is a well known set of optimizations
+which often go under the name of "strength reduction", "loop induction",
+etc. that we developed back in early FORTRAN days.  The basic result is
+converting your typical double-nested loop containing array references into
+a pointer that moves through the array by some stride (fixed for the loop,
+perhaps truly constant.)
+
+This optimization is not entirely trivial, and Lisp imposes some additional
+barriers with dynamic arrays.  If the array is declared with static
+dimensions, then there's no problem, but in practice people rarely deal
+with just fixed-size arrays.  However, the general approach of expanding
+out array index expressions (is as currently done) combined with loop
+invariant optimization can get your pretty much back to the FORTRAN case.
+All of the extra indirections of the array header are trivially loop
+invariant for SIMPLE-ARRAYs.  The only trick is to know where the head of
+the loop is so you know where to stick them.
+
+This starts to get back to my recent comments about where to hook in common
+subexpression optimization, etc.  I've looked back at my old notes, and now
+recall that one of the major reasons I wanted to do global code motion
+optimizations on IR2 instead of IR1 is that considerable error checking
+(type-check VOPs) are emitted during IR2 conversion, and don't even exist
+in IR1.  In many cases type and bounds checking code can be subject to loop
+invariant opimization.  Another more pragmatic reason is that the IR2
+representation is simpler, so it is simpler to do things like copying code
+and introduction new variables to hold invariant expression.
+
+I've appended some stuff from my old notes file about global optimization
+ideas.  This doesn't seem to be in the TeX version of the internals
+documentation, which was derived from it.  There is some investigation of
+an interesting point with loop invariant optimization, namely that it's
+hard to move any code to the head of a loop unless you're sure that loop is
+going to be executed at least once.  I suppose if loop induction stuff were
+done, this would give you a handle on whether a loop will actually run.
+
+
+  Rob
+
+
+			REACHING DEFINITIONS
+
+This phase is optional, but should be done whenever speed or space is more
+important than compile speed.  We use global flow analysis to find the reaching
+definitions for each TN.  This information is used here to eliminate
+unnecessary TNs, and is also used later on by loop invariant optimization.
+
+In some cases, IR2 conversion will unnecessarily copy the value of a TN into
+another TN, since it may not be able to tell that the initial TN has the same
+value at the time the second TN is referenced.  This can happen when IR1
+optimize is unable to eliminate a trivial variable binding, or when the user
+does a setq, or may also result from creation of expression evaluation
+temporaries during IR2 conversion.  Whatever the cause, we would like to avoid
+the unnecessary creation and assignment of these TNs.
+
+What we do is replace TN references whose only reaching definition is a Move
+VOP with a reference to the TN moved from.  This deletion of references can
+cause the TN to be dead at the location of the Move VOP, causing conflict
+analysis to force it into the bit-bucket SC.  The generator for Move will then
+realize that it doesn't have to do anything.
+[Probably should just delete the MOVE VOP.  This way representation selection
+doesn't get confused, etc.]
+
+Some degree of cleverness is probably useful to prevent the flow analysis from
+being too expensive.  As for lifetime analysis, we only need to do flow
+analysis on global packed TNs.  We can't do the real local TN assignment pass
+before this, since we allocate TNs afterward.  Probably we do some kind of
+pre-pass that marks the TNs that are local for our purposes.  We don't care if
+block splitting eventually causes some of them to be considered global.
+
+Note also that we really only are interested in known if there is a unique
+reaching definition, which we could possibly mash into our flow analysis rules
+by doing an intersection somewhere.  Then a definition would only appear in the
+set when it is unique.  And we could propagate only definitions of TNs with
+only one write, which would allow the TN to stand for the definition.
+
+
+			LOOP INVARIANT OPTIMIZATION
+
+This phase is optional, but should be done whenever speed is more important
+than compile speed and space.
+
+We scan the loops from the inside out, moving VOPs to before the head of the
+loop when we can show that they compute the same value every time around the
+loop.  Probably most loop invariant expressions will be due to code implicitly
+emitted by the compiler, the largest contribution being error checking code.
+
+We need to be more careful than lots of compilers, since we must guarantee that
+we don't evaluate the invariant expressions when they would not have been
+previously.  For example, it would be unacceptable to move an error check out
+of the loop when the loop might run zero times.
+
+The simplest solution is to only consider VOPs in blocks that dominate all the
+loop exits.  This is almost worthless, since most loops have the exit test at
+the head.  What we have to do is guard the invariant code with a replication of
+the exit test.  A simple but useful version of this general transformation can
+be implemented when the head is an exit.  We do something like this:
+   LOOP
+    <invariant-1>
+    (if test (go EXIT))
+    <invariant-2>
+    <stuff>
+    .
+    .
+    (go LOOP)
+   EXIT
+
+ ==>
+    <invariant-1>
+    (if test (go EXIT))
+    <invariant-2>
+    (go SKIP)
+   LOOP
+    (if test (go EXIT))
+   SKIP
+    <stuff>
+    .
+    .
+    (go LOOP)
+   EXIT
+
+What we do is remove invariants in the head block, then copy the entire head
+block and use it as a guard for the other invariants, which must dominate every
+other exit, but don't dominate the head.  It makes absolutely no difference
+what the code in the head block is or what the exit test is.  Of course,
+copying blocks can be a major space waste.  We might want to inhibit copying of
+large blocks unless optimize space is 0.
+
+[### Note that this scheme can only only move code out one loop level, since
+the guard on the invariant block prevents it from dominating the loop exits.
+This transformation can be regarded as a special case of the transform:
+ -- Given a loop with an invariant conditional, replicate the loop for each
+    value of the condition and run the correct version.
+The invariant test is "runs more than once".  There is a potential exponential
+blowup here.  To avoid excessive code bloat, we might have one copy of all N
+loops that is invariant optimized and for which we test that *all* levels of
+the loop will run more than once before jumping in.  But that only works if the
+loop control of all loops is independent (as is true in the common
+nested-array-loop case.)  
+Or something...]
+
+We determine what expressions are invariants by doing global flow analysis to
+find the reaching definitions for each TN.  A VOP is a potential invariant when
+every arg is either constant, has all its definitions outside of the loop, or
+has as its only definition an invariant VOP inside the loop.  Such a VOP can be
+moved out of the loop when we know that it isn't affected by any side-effects
+in the loop.  This will be trivially true if the VOP isn't affected by any
+side-effects.  A somewhat more general solution would be to take the union of
+the side-effects of all the VOPs in the loop, and only do the move when the VOP
+is not affected by any of them.
+
+[### Actually, we don't need to use reaching-definitions information: we can
+just use the reference information for each TN.  This won't detect some
+invariants that would be detected by using reaching-definitions, but it isn't
+true for any of the internal subexpressions that we care about, since they all
+have only one definition.
+
+The main case where this would happen is in the "only definition outside" case:
+it could be that only an invariant definition reaches the use even when there
+are definitions inside the loop.  But this would only seem to happen if people
+are gratuitously recycling variables.
+
+If we don't need to use reaching-definitions, then reaching-definitions
+analysis could be relegated to a higher optimization level, and could be tuned
+for the move optimization case, where we only want to know what the definition
+is when there is a single one, and can get away with a simple indication of
+"many" if there is more than one.
+
+The move-deletion action also seems conceptually pretty similar to the stuff
+that register allocation does.  Maybe it could be squeezed in there somehow?
+]
+
+We can relax the "dominates all exits" requirement when we can prove that the
+operation can be successfully executed whenever its operands are available.  Of
+course, any error checking code doesn't fall into this category.  But we also
+need to show that "nothing bad will happen": system integrity will be
+maintained when the operation is done with arguments that it that is might not
+otherwise be done with.
+
+For one, we need to be sure that localized type information didn't influence
+our original decision to emit that particular VOP.  Uses of THE, variable type
+declarations not attached to bindings, and function argument type restrictions
+must be disregarded, since in the original program, the code containing the
+declarations or call might nor have been executed.
+
+In contrast, we can use type information derived from declarations for variable
+bindings.  Since we eagerly check the types of variables, we know that any
+reference to the variable will satisfy the type.  Read this to say we can use
+the variable's Leaf-Type: we have to be more careful about using the Refs
+Node-Derived-Type, since IR1 optimizations may discover local information about
+the variable's type.  For example, type constraint propagation puts localized
+type information in the derived type.  Note that the Leaf-Type is represented
+in the TN-Primitive type, accessible in IR2.
+
+How about this:
+
+For a VOP to be subject to aggressive code motion, it must be explicitly
+declared as such (i.e. :Movable T), and it must have primitive-type
+restrictions on any arguments that must be of a particular type for successful 
+execution.  Motion won't be done unless the TN-Primitive-Type of operands after
+the move satisfy the restrictions.
+
+"Successful execution" means that *no* invocation of that vop with *any*
+argument TNs with the specified primitive types will result in any sort of
+error or in any trap such as illegal memory access, floating point overflow,
+divide by 0.  Also, the result generated must be in the representation demanded
+by the result TN.
+
+If there are any result type restrictions, then it must be harmless for them to
+be violated (as long as nobody uses the result.)  For example, it a lowtag
+scheme, it is harmless for a fixnum output restriction to be violated.  [But
+not in a hightag scheme, since a garbaged type code results from overflow.]
+
+Type coercion operations aren't subject to aggressive motion (i.e.
+coerce-from-t), since coercion requires the argument to be the right type, yet
+coercion operations aren't ever emitted unless the argument type is T.
+ 
+
+Data structure accesses are o.k. as long as we establish that the operand is
+some sort of pointer (boxed in the case of boxed accessors).  [But we can't
+bless the result of moved code as being of the correct type.  If we do a bogus
+reference, we may pick up an some immediate object, rather than the pointer we
+were expecting.  So we can't do aggressive motion of a whole reference
+expression, only of the innermost reference.]
+
+Note that we could still do aggressive motion of structure accesses, even
+though the primitive type discards the exact structure type.  All could
+translate to STRUCTURE, assuming that mixing up accessors doesn't result in
+death.  [Systems that use protected pages to mark the end of the heap could get
+confused, though.]
+
+
+This means that the kinds of operations subject to aggressive motion is
+relatively limited.  Considering the complexity and subtle issues involved, it
+seems questionable whether it is worth attempting.  The only interesting case
+seems to be fixnum arithmetic, and this only works given assumptions about the
+legality of fixnum overflow.
+
+Aggressive motion of special references (including boundp checks) is probably
+culturally acceptable, but the correctness is dubious.  We could do it in
+unsafe code, though.  I guess there also wouldn't be any problem if we factored
+out the boundp check into a special check operation.  
+
+
+		COMMON SUBEXPRESSION ELIMINATION
+
+This phase is optional, but should be done if speed or space is more important
+than compilation speed.
+
+This phase scans each block and combines VOPs that compute the same expression.
+We scan forward, adding VOPs to some kind of hashtable if they have an attribute
+indicating that they are a candidate for a subexpression, and clearing out VOPs
+in the table that are killed by side-effects that we encounter along the way.
+Probably we want a separate table for unaffected VOPs so that we have fewer to
+scan when we notice a side-effect.  We can deal with invalidating VOPs whose
+arguments are clobbered by looking at the Tn-refs for each TN that we see being
+used as a result.  Probably many expressions should be killed by function call,
+since they won't be worth doing two memory references to save.
+
+We do this after all the other optimizations so that we can combine duplicated
+crud that may have been stuck at loop heads by previous optimizations.
+
+We could do global common subexpression elimination, but it seems like a lot
+more trouble that it's worth.  Global common subexpression is computationally
+difficult, both because it uses flow analysis and because it involves creating
+and repeatedly scanning large sets of expressions.  Local common subexpression
+probably gets us most of the win; common subexpression elimination is more of a
+space optimization that a time optimization anyway, since loop invariant
+elimination moves the common subexpressions out of loops.
+
+[### On the other hand, GCS could optimize stuff that safe loop invariant
+optimization is too wimpy to handle.  The problem is that we can only optimize
+invariants that dominate the exit (unless we can somehow prove to ourselves
+that the operation cannot possibly result in an error.)  Also, it isn't clear
+that symbolic programs really do spend most of their time burning in inner
+loops.
+
+With GCS, if the expression has already been computed outside of the loop, then
+we know we can flush the evaluation; there is no need to worry about safety.
+Of course, we are already planning to do GCS-like optimization of of type
+checks in the IR1 type constraint propagation step, so we won't get any type
+checks this way.  Special references and array index calculations (as well as
+garbage macro expansions) are a possibility, though.]
+
+
+Probably we would represent an "expression" by arbitrarily designating the
+first use we see of a particular VOP/argument combination as the "expression".
+A pre-pass would build sets of the operations generated, those killed by
+assignments, and a representation of the aggregate side-effects of the block.
+
+We may want to divide the set of available expressions according to whether the
+expression's VOP is affected by any side-effects.  This is because during flow
+analysis of any block that has side-effects, we need to iterate over all of the
+possibly affected VOPs to see which which expressions need to be killed (since
+we don't the pre-pass to have to compute the set of all expressions killed by
+the side-effects.)  It is likely that the set of available affectable
+expressions will be smaller than the unaffected set, since affected expressions
+tend to be killed by side effects.
+
+
+

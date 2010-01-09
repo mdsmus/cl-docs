@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>9.1.2 Remote Evaluations</TITLE>
+<META NAME="description" CONTENT="9.1.2 Remote Evaluations">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3830" HREF="node248.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3828" HREF="node245.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3822" HREF="node246.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3832" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3833" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3831" HREF="node248.html">9.1.3 Remote Objects</A>
+<B>Up:</B> <A NAME="tex2html3829" HREF="node245.html">9.1 The REMOTE Package</A>
+<B> Previous:</B> <A NAME="tex2html3823" HREF="node246.html">9.1.1 Connecting Servers and </A>
+<BR> <P>
+<H2><A NAME="SECTION001012000000000000000">9.1.2 Remote Evaluations</A></H2>
+<P>
+After the server and client have connected, they each have a wire
+allowing function evaluation in the other process.  This RPC mechanism
+has three flavors: for side-effect only, for a single value, and for
+multiple values.
+<P>
+Only a limited number of data types can be sent across wires as
+arguments for remote function calls and as return values: integers
+inclusively less than 32 bits in length, symbols, lists, and
+<i>remote-objects</i> (see section&nbsp;<A HREF="node248.html#remoteobjs">9.1.3</A>).  The system sends symbols
+as two strings, the package name and the symbol name, and if the
+package doesn't exist remotely, the remote process signals an error.
+The system ignores other slots of symbols.  Lists may be any tree of
+the above valid data types.  To send other data types you must
+represent them in terms of these supported types.  For example, you
+could use <tt>prin1-to-string</tt> locally, send the string, and use
+<tt>read-from-string</tt> remotely.
+<P>
+<b>[Macro]</b><BR> 
+<tt> wire: remote</tt> <em> <i>wire</i> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i>call-specs</i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></em><BR>
+<P>
+  The <tt>remote</tt> macro arranges for the process at the other end of
+  <i>wire</i> to invoke each of the functions in the <i>call-specs</i>.
+  To make sure the system sends the remote evaluation requests over
+  the wire, you must call <tt>wire-force-output</tt>.
+<P>
+  Each of <i>call-specs</i> looks like a function call textually, but
+  it has some odd constraints and semantics.  The function position of
+  the form must be the symbolic name of a function.  <tt>remote</tt>
+  evaluates each of the argument subforms for each of the
+  <i>call-specs</i> locally in the current context, sending these
+  values as the arguments for the functions.
+<P>
+  Consider the following example:
+<PRE>(defun write-remote-string (str)
+  (declare (simple-string str))
+  (wire:remote wire
+    (write-string str)))</PRE>
+  The value of <tt>str</tt> in the local process is passed over the wire
+  with a request to invoke <tt>write-string</tt> on the value.  The
+  system does not expect to remotely evaluate <tt>str</tt> for a value
+  in the remote process.
+<P>
+<b>[Function]</b><BR> 
+<tt> wire: wire-force-output</tt> <em> <i>wire</i></em><BR>
+<P>
+  <tt>wire-force-output</tt> flushes all internal buffers associated
+  with <i>wire</i>, sending the remote requests.  This is necessary
+  after a call to <tt>remote</tt>.
+<P>
+<b>[Macro]</b><BR> 
+<tt> wire: remote-value</tt> <em> <i>wire</i> <i>call-spec</i></em><BR>
+<P>
+  The <tt>remote-value</tt> macro is similar to the <tt>remote</tt> macro.
+  <tt>remote-value</tt> only takes one <i>call-spec</i>, and it returns
+  the value returned by the function call in the remote process.  The
+  value must be a valid type the system can send over a wire, and
+  there is no need to call <tt>wire-force-output</tt> in conjunction
+  with this interface.
+<P>
+  If client unwinds past the call to <tt>remote-value</tt>, the server
+  continues running, but the system ignores the value the server sends
+  back.
+<P>
+  If the server unwinds past the remotely requested call, instead of
+  returning normally, <tt>remote-value</tt> returns two values, <i>nil</i>
+  and <i>t</i>.  Otherwise this returns the result of the remote
+  evaluation and <i>nil</i>.
+<P>
+<b>[Macro]</b><BR> 
+<tt> wire: remote-value-bind</tt> <em> <i>wire</i> (<IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i>variable</i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif">) remote-form
+      <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i>local-forms</i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></em><BR>
+<P>
+  <tt>remote-value-bind</tt> is similar to <tt>multiple-value-bind</tt>
+  except the values bound come from <i>remote-form</i>'s evaluation in
+  the remote process.  The <i>local-forms</i> execute in an implicit
+  <tt>progn</tt>.
+<P>
+  If the client unwinds past the call to <tt>remote-value-bind</tt>, the
+  server continues running, but the system ignores the values the
+  server sends back.
+<P>
+  If the server unwinds past the remotely requested call, instead of
+  returning normally, the <i>local-forms</i> never execute, and
+  <tt>remote-value-bind</tt> returns <i>nil</i>.
+<P>
+<HR><A NAME="tex2html3830" HREF="node248.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3828" HREF="node245.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3822" HREF="node246.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3832" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3833" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3831" HREF="node248.html">9.1.3 Remote Objects</A>
+<B>Up:</B> <A NAME="tex2html3829" HREF="node245.html">9.1 The REMOTE Package</A>
+<B> Previous:</B> <A NAME="tex2html3823" HREF="node246.html">9.1.1 Connecting Servers and </A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

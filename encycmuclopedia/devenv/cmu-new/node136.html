@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.4.5 Unreachable Code Deletion</TITLE>
+<META NAME="description" CONTENT="5.4.5 Unreachable Code Deletion">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2415" HREF="node137.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2413" HREF="node131.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2407" HREF="node135.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2417" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2418" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2416" HREF="node137.html">5.4.6 Multiple Values Optimization</A>
+<B>Up:</B> <A NAME="tex2html2414" HREF="node131.html">5.4 Source Optimization</A>
+<B> Previous:</B> <A NAME="tex2html2408" HREF="node135.html">5.4.4 Control Optimization</A>
+<BR> <P>
+<H2><A NAME="SECTION00645000000000000000">5.4.5 Unreachable Code Deletion</A></H2>
+<P>
+<A NAME="deadcodenotes">&#160;</A>
+<A NAME="10045">&#160;</A>
+<A NAME="10046">&#160;</A>
+<P>
+Python will delete code whenever it can prove that the code can never be
+executed.  Code becomes unreachable when:
+<UL>
+<LI>
+An <tt>if</tt> is optimized away, or
+<LI>
+There is an explicit unconditional control transfer such as <tt>go</tt> or
+<tt>return-from</tt>, or
+<LI>
+The last reference to a local function is deleted (or there never was any
+reference.)
+</UL>
+<P>
+When code that appeared in the original source is deleted, the compiler prints
+a note to indicate a possible problem (or at least unnecessary code.)  For
+example:
+<BLOCKQUOTE> <PRE>(defun foo ()
+  (if t
+      (write-line &quot;True.&quot;)
+      (write-line &quot;False.&quot;)))
+</PRE> </BLOCKQUOTE>
+will result in this note:
+<BLOCKQUOTE> <PRE>In: DEFUN FOO
+  (WRITE-LINE &quot;False.&quot;)
+Note: Deleting unreachable code.
+</PRE> </BLOCKQUOTE>
+<P>
+It is important to pay attention to unreachable code notes, since they often
+indicate a subtle type error.  For example:
+<BLOCKQUOTE> <PRE>(defstruct foo a b)
+<P>
+(defun lose (x)
+  (let ((a (foo-a x))
+        (b (if x (foo-b x) :none)))
+    ...))
+</PRE> </BLOCKQUOTE>
+results in this note:
+<BLOCKQUOTE> <PRE>In: DEFUN LOSE
+  (IF X (FOO-B X) :NONE)
+==&gt;
+  :NONE
+Note: Deleting unreachable code.
+</PRE> </BLOCKQUOTE>
+The <tt>:none</tt> is unreachable, because type inference knows that the argument
+to <tt>foo-a</tt> must be a <tt>foo</tt>, and thus can't be <i>nil</i>.  Presumably the
+programmer forgot that <tt>x</tt> could be <i>nil</i> when he wrote the binding for
+<tt>a</tt>.
+<P>
+Here is an example with an incorrect declaration:
+<BLOCKQUOTE> <PRE>(defun count-a (string)
+  (do ((pos 0 (position #<IMG WIDTH=6 HEIGHT=16 ALIGN=BOTTOM ALT="tex2html_wrap18423" SRC="img1.gif">a string :start (1+ pos)))
+       (count 0 (1+ count)))
+      ((null pos) count)
+    (declare (fixnum pos))))
+</PRE> </BLOCKQUOTE>
+This time our note is:
+<BLOCKQUOTE> <PRE>In: DEFUN COUNT-A
+  (DO ((POS 0 #) (COUNT 0 #))
+      ((NULL POS) COUNT)
+    (DECLARE (FIXNUM POS)))
+-&gt; BLOCK LET TAGBODY RETURN-FROM PROGN 
+==&gt;
+  COUNT
+Note: Deleting unreachable code.
+</PRE> </BLOCKQUOTE>
+The problem here is that <tt>pos</tt> can never be null since it is declared a
+<tt>fixnum</tt>.
+<P>
+It takes some experience with unreachable code notes to be able to
+tell what they are trying to say.  In non-obvious cases, the best
+thing to do is to call the function in a way that should cause the
+unreachable code to be executed.  Either you will get a type error, or
+you will find that there truly is no way for the code to be executed.
+<P>
+Not all unreachable code results in a note:
+<UL>
+<LI> A note is only given when the unreachable code textually appears
+  in the original source.  This prevents spurious notes due to the
+  optimization of macros and inline functions, but sometimes also
+  foregoes a note that would have been useful.
+<LI> Since accurate source information is not available for non-list
+  forms, there is an element of heuristic in determining whether or
+  not to give a note about an atom.  Spurious notes may be given when
+  a macro or inline function defines a variable that is also present
+  in the calling function.  Notes about <i>nil</i> and <i>t</i> are never
+  given, since it is too easy to confuse these constants in expanded
+  code with ones in the original source.
+<LI> Notes are only given about code unreachable due to control flow.
+  There is no note when an expression is deleted because its value is
+  unused, since this is a common consequence of other optimizations.
+</UL>
+<P>
+Somewhat spurious unreachable code notes can also result when a macro
+inserts multiple copies of its arguments in different contexts, for
+example:
+<BLOCKQUOTE> <PRE>(defmacro t-and-f (var form)
+  `(if ,var ,form ,form))
+<P>
+(defun foo (x)
+  (t-and-f x (if x &quot;True.&quot; &quot;False.&quot;)))
+</PRE> </BLOCKQUOTE>
+results in these notes:
+<BLOCKQUOTE> <PRE>In: DEFUN FOO
+  (IF X &quot;True.&quot; &quot;False.&quot;)
+==&gt;
+  &quot;False.&quot;
+Note: Deleting unreachable code.
+<P>
+==&gt;
+  &quot;True.&quot;
+Note: Deleting unreachable code.
+</PRE> </BLOCKQUOTE>
+It seems like it has deleted both branches of the <tt>if</tt>, but it has really
+deleted one branch in one copy, and the other branch in the other copy.  Note
+that these messages are only spurious in not satisfying the intent of the rule
+that notes are only given when the deleted code appears in the original source;
+there is always <i>some</i> code being deleted when a unreachable code note is
+printed.
+<P>
+<HR><A NAME="tex2html2415" HREF="node137.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2413" HREF="node131.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2407" HREF="node135.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2417" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2418" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2416" HREF="node137.html">5.4.6 Multiple Values Optimization</A>
+<B>Up:</B> <A NAME="tex2html2414" HREF="node131.html">5.4 Source Optimization</A>
+<B> Previous:</B> <A NAME="tex2html2408" HREF="node135.html">5.4.4 Control Optimization</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

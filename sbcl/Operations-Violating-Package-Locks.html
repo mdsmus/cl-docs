@@ -1,0 +1,160 @@
+<html lang="en">
+<head>
+<title>Operations Violating Package Locks - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Package-Lock-Concepts.html#Package-Lock-Concepts" title="Package Lock Concepts">
+<link rel="prev" href="Package-Locks-in-Compiled-Code.html#Package-Locks-in-Compiled-Code" title="Package Locks in Compiled Code">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Operations-Violating-Package-Locks"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Package-Locks-in-Compiled-Code.html#Package-Locks-in-Compiled-Code">Package Locks in Compiled Code</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Package-Lock-Concepts.html#Package-Lock-Concepts">Package Lock Concepts</a>
+<hr>
+</div>
+
+<h4 class="subsection">10.1.5 Operations Violating Package Locks</h4>
+
+<h5 class="subsubsection">10.1.5.1 Operations on Packages</h5>
+
+<p>The following actions cause a package lock violation if the package
+operated on is locked, and <code>*package*</code> is not an implementation
+package of that package, and the action would cause a change in the
+state of the package (so e.g. exporting already external symbols is
+never a violation). Package lock violations caused by these operations
+signal errors of type <code>sb-ext:package-locked-error</code>.
+
+     <ol type=1 start=1>
+<li>Shadowing a symbol in a package.
+
+     <li>Importing a symbol to a package.
+
+     <li>Uninterning a symbol from a package.
+
+     <li>Exporting a symbol from a package.
+
+     <li>Unexporting a symbol from a package.
+
+     <li>Changing the packages used by a package.
+
+     <li>Renaming a package.
+
+     <li>Deleting a package.
+
+        </ol>
+
+<h5 class="subsubsection">10.1.5.2 Operations on Symbols</h5>
+
+<p>Following actions cause a package lock violation if the home package
+of the symbol operated on is locked, and <code>*package*</code> is not an
+implementation package of that package. Package lock violations caused
+by these action signal errors of type
+<code>sb-ext:symbol-package-locked-error</code>.
+
+   <p>These actions cause only one package lock violation per lexically
+apparent violated package.
+
+   <p>Example:
+
+<pre class="lisp">     ;;; Packages FOO and BAR are locked.
+     ;;;
+     ;;; Two lexically apparent violated packages: exactly two
+     ;;; package-locked-errors will be signalled.
+     
+     (defclass foo:point ()
+       ((x :accessor bar:x)
+        (y :accessor bar:y)))
+</pre>
+     <ol type=1 start=1>
+<li>Binding or altering its value lexically or dynamically, or
+establishing it as a symbol-macro.
+
+     <p>Exceptions:
+
+          <ul>
+<li>If the symbol is not defined as a constant, global symbol-macro or a
+global dynamic variable, it may be lexically bound or established as a
+local symbol macro.
+
+          <li>If the symbol is defined as a global dynamic variable, it may be
+assigned or bound.
+
+     </ul>
+
+     <li>Defining, undefining, or binding it, or its setf name as a function.
+
+     <p>Exceptions:
+
+          <ul>
+<li>If the symbol is not defined as a function, macro, or special operator
+it and its setf name may be lexically bound as a function.
+
+     </ul>
+
+     <li>Defining, undefining, or binding it as a macro or compiler macro.
+
+     <p>Exceptions:
+
+          <ul>
+<li>If the symbol is not defined as a function, macro, or special operator
+it may be lexically bound as a macro.
+
+     </ul>
+
+     <li>Defining it as a type specifier or structure.
+
+     <li>Defining it as a declaration with a declaration proclamation.
+
+     <li>Declaring or proclaiming it special.
+
+     <li>Declaring or proclaiming its type or ftype.
+
+     <p>Exceptions:
+
+          <ul>
+<li>If the symbol may be lexically bound, the type of that binding may be
+declared.
+
+          <li>If the symbol may be lexically bound as a function, the ftype of that
+binding may be declared.
+
+     </ul>
+
+     <li>Defining a setf expander for it.
+
+     <li>Defining it as a method combination type.
+
+     <li>Using it as the class-name argument to setf of find-class.
+
+        </ol>
+
+   </body></html>
+

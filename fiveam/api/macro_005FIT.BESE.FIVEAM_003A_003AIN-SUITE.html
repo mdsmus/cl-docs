@@ -1,0 +1,48 @@
+<html
+  ><head
+    ><title
+      >Macro IN-SUITE</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Macro: IN-SUITE</h1
+        ><div class="contents"
+          ><h2
+  >Documentation</h2
+><blockquote
+  >Set the *suite* special variable so that all tests defined
+after the execution of this form are, unless specified otherwise,
+in the test-suite named SUITE-NAME.
+
+See also: DEF-SUITE *SUITE*</blockquote
+><h2
+            >Source</h2
+          ><pre class="code"
+            >(defmacro in-suite (suite-name)
+  &quot;Set the *suite* special variable so that all tests defined
+after the execution of this form are, unless specified otherwise,
+in the test-suite named SUITE-NAME.
+
+See also: DEF-SUITE *SUITE*&quot;
+  (with-unique-names (suite)
+    `(progn
+       (if-bind ,suite (get-test ',suite-name)
+           (setf *suite* ,suite)
+	   (progn
+	     (cerror &quot;Create a new suite named ~A.&quot;
+		     &quot;Unkown suite ~A.&quot; ',suite-name)
+	     (setf (get-test ',suite-name) (make-suite ',suite-name)
+		   *suite* (get-test ',suite-name))))
+       ',suite-name)))</pre
+          ><a href="../Test_0020Suites.html#macro_005FIT.BESE.FIVEAM_003A_003AIN-SUITE"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

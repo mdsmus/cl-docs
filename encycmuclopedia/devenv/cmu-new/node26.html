@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>2.3 Packages</TITLE>
+<META NAME="description" CONTENT="2.3 Packages">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html927" HREF="node27.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html925" HREF="node11.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html919" HREF="node25.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html929" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html930" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html928" HREF="node27.html">2.4 The Editor</A>
+<B>Up:</B> <A NAME="tex2html926" HREF="node11.html">2 Design Choices and </A>
+<B> Previous:</B> <A NAME="tex2html920" HREF="node25.html">2.2 Default Interrupts for </A>
+<BR> <P>
+<H1><A NAME="SECTION00330000000000000000">2.3 Packages</A></H1>
+<P>
+When CMU Common Lisp is first started up, the default package is the
+<tt>user</tt> package.  The <tt>user</tt> package uses the
+<tt>common-lisp</tt>, <tt>extensions</tt>, and <tt>pcl</tt> packages.  The
+symbols exported from these three packages can be referenced without
+package qualifiers.  This section describes packages which have
+exported interfaces that may concern users.  The numerous internal
+packages which implement parts of the system are not described here.
+Package nicknames are in parenthesis after the full name.
+<DL ><DT><STRONG><tt>alien</tt>, <tt>c-call</tt></STRONG>
+<DD> Export the features of the Alien
+  foreign data structure facility (see section&nbsp;<A HREF="node221.html#aliens">8</A>.)
+<P>
+<DT><STRONG><tt>pcl</tt></STRONG>
+<DD> This package contains PCL (Portable CommonLoops),
+  which is a portable implementation of CLOS (the Common Lisp Object
+  System.)  This implements most (but not all) of the features in the
+  CLOS chapter of <em>Common Lisp: The Language 2</em>.
+<P>
+<DT><STRONG><tt>debug</tt></STRONG>
+<DD> The <tt>debug</tt> package contains the command-line
+  oriented debugger.  It exports utility various functions and
+  switches.
+<P>
+<DT><STRONG><tt>debug-internals</tt></STRONG>
+<DD> The <tt>debug-internals</tt> package
+  exports the primitives used to write debuggers.
+  See section&nbsp;<A HREF="node255.html#debuginternals">10</A>.
+<P>
+<DT><STRONG><tt>extensions (ext)</tt></STRONG>
+<DD> The <tt>extensions</tt> packages exports
+  local extensions to Common Lisp that are documented in this manual.
+  Examples include the <tt>save-lisp</tt> function and time parsing.
+<P>
+<DT><STRONG><tt>hemlock (ed)</tt></STRONG>
+<DD> The <tt>hemlock</tt> package contains all the
+  code to implement Hemlock commands.  The <tt>hemlock</tt> package
+  currently exports no symbols.
+<P>
+<DT><STRONG><tt>hemlock-internals (hi)</tt></STRONG>
+<DD> The <tt>hemlock-internals</tt>
+  package contains code that implements low level primitives and
+  exports those symbols used to write Hemlock commands.
+<P>
+<DT><STRONG><tt>keyword</tt></STRONG>
+<DD> The <tt>keyword</tt> package contains keywords
+  (e.g., <tt>:start</tt>).  All symbols in the <tt>keyword</tt> package are
+  exported and evaluate to themselves (i.e., the value of the symbol
+  is the symbol itself).
+<P>
+<DT><STRONG><tt>profile</tt></STRONG>
+<DD> The <tt>profile</tt> package exports a simple
+  run-time profiling facility (see section&nbsp;<A HREF="node190.html#profiling">5.14</A>).
+<P>
+<DT><STRONG><tt>common-lisp (cl lisp)</tt></STRONG>
+<DD> The <tt>common-lisp</tt> package
+  exports all the symbols defined by &#305;Common Lisp: the Language and
+  only those symbols.  Strictly portable Lisp code will depend only on
+  the symbols exported from the <tt>lisp</tt> package.
+<P>
+<DT><STRONG><tt>unix</tt>, <tt>mach</tt></STRONG>
+<DD> These packages export system call
+  interfaces to generic BSD Unix and Mach (see section&nbsp;<A HREF="node199.html#unixinterface">6</A>).
+<P>
+<DT><STRONG><tt>system (sys)</tt></STRONG>
+<DD> The <tt>system</tt> package contains
+  functions and information necessary for system interfacing.  This
+  package is used by the <tt>lisp</tt> package and exports several
+  symbols that are necessary to interface to system code.
+<P>
+<DT><STRONG><tt>common-lisp-user (user cl-user)</tt></STRONG>
+<DD> The
+  <tt>common-lisp-user</tt> package is the default package and is where
+  a user's code and data is placed unless otherwise specified.  This
+  package exports no symbols.
+<P>
+<DT><STRONG><tt>xlib</tt></STRONG>
+<DD> The <tt>xlib</tt> package contains the Common Lisp X
+  interface (CLX) to the X11 protocol.  This is mostly Lisp code with
+  a couple of functions that are defined in C to connect to the
+  server.
+<P>
+<DT><STRONG><tt>wire</tt></STRONG>
+<DD> The <tt>wire</tt> package exports a remote procedure
+  call facility (see section&nbsp;<A HREF="node244.html#remote">9</A>).
+<P>
+</DL><HR><A NAME="tex2html927" HREF="node27.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html925" HREF="node11.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html919" HREF="node25.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html929" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html930" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html928" HREF="node27.html">2.4 The Editor</A>
+<B>Up:</B> <A NAME="tex2html926" HREF="node11.html">2 Design Choices and </A>
+<B> Previous:</B> <A NAME="tex2html920" HREF="node25.html">2.2 Default Interrupts for </A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

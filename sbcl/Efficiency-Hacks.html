@@ -1,0 +1,110 @@
+<html lang="en">
+<head>
+<title>Efficiency Hacks - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Beyond-the-ANSI-Standard.html#Beyond-the-ANSI-Standard" title="Beyond the ANSI Standard">
+<link rel="prev" href="Stale-Extensions.html#Stale-Extensions" title="Stale Extensions">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Efficiency-Hacks"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Stale-Extensions.html#Stale-Extensions">Stale Extensions</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Beyond-the-ANSI-Standard.html#Beyond-the-ANSI-Standard">Beyond the ANSI Standard</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">6.8 Efficiency Hacks</h3>
+
+<p>The <code>sb-ext:purify</code> function causes SBCL first to collect all
+garbage, then to mark all uncollected objects as permanent, never again
+attempting to collect them as garbage. This can cause a large increase
+in efficiency when using a primitive garbage collector, or a more
+moderate increase in efficiency when using a more sophisticated garbage
+collector which is well suited to the program's memory usage pattern. It
+also allows permanent code to be frozen at fixed addresses, a
+precondition for using copy-on-write to share code between multiple Lisp
+processes.  This is less important with modern generational garbage
+collectors, but not all SBCL platforms use such a garbage collector.
+
+   <p><a name="Function-sb_002dext_003apurify"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:purify</b><var> &amp;key root-structures environment-name<a name="index-sb_002dext_003apurify-249"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003apurify-250"></a>This function optimizes garbage collection by moving all currently live
+   objects into non-collected storage. <code>root-structures</code> is an optional list of
+   objects which should be copied first to maximize locality.
+
+        <p><code>defstruct</code> structures defined with the (:PURE T) option are moved into
+   read-only storage, further reducing <code>gc</code> cost. List and vector slots of pure
+   structures are also moved into read-only storage.
+
+        <p><code>environment-name</code> is gratuitous documentation for compacted version of the
+   current global environment (as seen in <code>sb</code>!<code>c::*info-environment*</code>.) If <code>nil</code> is
+   supplied, then environment compaction is inhibited.
+
+        <p>This function is a no-op on platforms using the generational garbage
+   collector (x86, x86-64, ppc). 
+</p></blockquote></div>
+
+   <p>The <code>sb-ext:truly-the</code> special form declares the type of the
+result of the operations, producing its argument; the declaration is
+not checked. In short: don't use it.
+
+   <p><a name="Special_002dOperator-sb_002dext_003atruly_002dthe"></a>
+
+<div class="defun">
+&mdash; Special Operator: <b>sb-ext:truly-the</b><var> value-type form<a name="index-sb_002dext_003atruly_002dthe-251"></a></var><br>
+<blockquote><p>Specifies that the values returned by <code>form</code> conform to the
+<code>value-type</code>, and causes the compiler to trust this information
+unconditionally.
+
+        <p>Consequences are undefined if any result is not of the declared type
+<code>--</code> typical symptoms including memory corruptions. Use with great
+care. 
+</p></blockquote></div>
+
+   <p>The <code>sb-ext:freeze-type</code> declaration declares that a
+type will never change, which can make type testing
+(<code>typep</code>, etc.) more efficient for structure types.
+
+   <p>The <code>sb-ext:constant-function</code> declaration specifies
+that a function will always return the same value for the same
+arguments, which may allow the compiler to optimize calls
+to it. This is appropriate for functions like <code>sqrt</code>, but
+is <em>not</em> appropriate for functions like <code>aref</code>,
+which can change their return values when the underlying data are
+changed. 
+<!-- <!- FIXME: This declaration does not seem to be supported in the -->
+<!-- current compiler. -> -->
+
+   </body></html>
+

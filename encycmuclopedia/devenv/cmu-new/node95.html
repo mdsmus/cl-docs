@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>4.4.7 Error Message Parameterization</TITLE>
+<META NAME="description" CONTENT="4.4.7 Error Message Parameterization">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1807" HREF="node96.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1805" HREF="node88.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1801" HREF="node94.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1809" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1810" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1808" HREF="node96.html">4.5 Types in Python</A>
+<B>Up:</B> <A NAME="tex2html1806" HREF="node88.html">4.4 Interpreting Error Messages</A>
+<B> Previous:</B> <A NAME="tex2html1802" HREF="node94.html">4.4.6 Read Errors</A>
+<BR> <P>
+<H2><A NAME="SECTION00547000000000000000">4.4.7 Error Message Parameterization</A></H2>
+<P>
+<A NAME="9475">&#160;</A>
+<A NAME="9476">&#160;</A>
+<P>
+There is some control over the verbosity of error messages.  See also
+<A NAME="9477">&#160;</A><tt>*undefined-warning-limit*</tt> (page&nbsp;<A HREF="node87.html#VRundefinedwarninglimit"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>), <tt>*efficiency-note-limit*</tt> and
+<A NAME="9481">&#160;</A><tt>*efficiency-note-cost-threshold*</tt> (page&nbsp;<A HREF="node189.html#VRefficiencynotecostthreshold"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>).
+<P>
+<b>[Variable]</b><BR> 
+<tt> * enclosing-source-cutoff*</tt><BR> <BR>
+<P>
+  This variable specifies the number of enclosing actual source forms
+  that are printed in full, rather than in the abbreviated processing
+  path format.  Increasing the value from its default of <tt>1</tt>
+  allows you to see more of the guts of the macroexpanded source,
+  which is useful when debugging macros.
+<P>
+<b>[Variable]</b><BR> 
+<tt> * error-print-length*</tt><BR> <BR> 
+  <tt>*error-print-level*</tt><BR>
+<P>
+  These variables are the print level and print length used in
+  printing error messages.  The default values are <tt>5</tt> and
+  <tt>3</tt>.  If null, the global values of <tt>*print-level*</tt> and
+  <tt>*print-length*</tt> are used.
+<P>
+<b>[Macro]</b><BR> 
+<tt> extensions:def-source-context</tt> <em> <i>name</i> <i>lambda-list</i> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i>form</i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></em><BR>
+<P>
+  This macro defines how to extract an abbreviated source context from
+  the <i>name</i>d form when it appears in the compiler input.
+  <i>lambda-list</i> is a <tt>defmacro</tt> style lambda-list used to
+  parse the arguments.  The <i>body</i> should return a list of
+  subforms that can be printed on about one line.  There are
+  predefined methods for <tt>defstruct</tt>, <tt>defmethod</tt>, etc.  If
+  no method is defined, then the first two subforms are returned.
+  Note that this facility implicitly determines the string name
+  associated with anonymous functions.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

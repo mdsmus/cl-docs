@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.6.4 Local Tail Recursion</TITLE>
+<META NAME="description" CONTENT="5.6.4 Local Tail Recursion">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2537" HREF="node147.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2535" HREF="node142.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2529" HREF="node145.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2539" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2540" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2538" HREF="node147.html">5.6.5 Return Values</A>
+<B>Up:</B> <A NAME="tex2html2536" HREF="node142.html">5.6 Local Call</A>
+<B> Previous:</B> <A NAME="tex2html2530" HREF="node145.html">5.6.3 Closures</A>
+<BR> <P>
+<H2><A NAME="SECTION00664000000000000000">5.6.4 Local Tail Recursion</A></H2>
+<P>
+<A NAME="localtailrecursion">&#160;</A>
+<A NAME="10128">&#160;</A>
+<A NAME="10129">&#160;</A>
+<P>
+Tail-recursive local calls are particularly efficient, since they are
+in effect an assignment plus a control transfer.  Scheme programmers
+write loops with tail-recursive local calls, instead of using the
+imperative <tt>go</tt> and <tt>setq</tt>.  This has not caught on in the
+Common Lisp community, since conventional Common Lisp compilers don't
+implement local call.  In Python, users can choose to write loops
+such as:
+<BLOCKQUOTE> <PRE>(defun ! (n)
+  (labels ((loop (n total)
+             (if (zerop n)
+                 total
+                 (loop (1- n) (* n total)))))
+    (loop n 1)))
+</PRE> </BLOCKQUOTE>
+<P>
+<b>[Macro]</b><BR> 
+<tt> extensions:iterate</tt> <em> <i>name</i> (<IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i>(<i>var</i> <i>initial-value</i>)</i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif">)
+      <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>declaration</i></i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>form</i></i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></em><BR>
+<P>
+  This macro provides syntactic sugar for using <A NAME="10161">&#160;</A><tt>labels</tt> to
+  do iteration.  It creates a local function <i>name</i> with the
+  specified <i>var</i>s as its arguments and the <i>declaration</i>s and
+  <i>form</i>s as its body.  This function is then called with the
+  <i>initial-values</i>, and the result of the call is return from the
+  macro.
+<P>
+  Here is our factorial example rewritten using <tt>iterate</tt>:
+<P>
+  <BLOCKQUOTE> <PRE>(defun ! (n)
+      (iterate loop
+               ((n n)
+               (total 1))
+        (if (zerop n)
+          total
+          (loop (1- n) (* n total)))))
+  </PRE> </BLOCKQUOTE>
+<P>
+  The main advantage of using <tt>iterate</tt> over <tt>do</tt> is that
+  <tt>iterate</tt> naturally allows stepping to be done differently
+  depending on conditionals in the body of the loop.  <tt>iterate</tt>
+  can also be used to implement algorithms that aren't really
+  iterative by simply doing a non-tail call.  For example, the
+  standard recursive definition of factorial can be written like this:
+<BLOCKQUOTE> <PRE>(iterate fact
+         ((n n))
+  (if (zerop n)
+      1
+      (* n (fact (1- n)))))
+</PRE> </BLOCKQUOTE><BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

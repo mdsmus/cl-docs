@@ -1,0 +1,93 @@
+<html lang="en">
+<head>
+<title>Package Lock Violations - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Package-Lock-Concepts.html#Package-Lock-Concepts" title="Package Lock Concepts">
+<link rel="prev" href="Implementation-Packages.html#Implementation-Packages" title="Implementation Packages">
+<link rel="next" href="Package-Locks-in-Compiled-Code.html#Package-Locks-in-Compiled-Code" title="Package Locks in Compiled Code">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Package-Lock-Violations"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Package-Locks-in-Compiled-Code.html#Package-Locks-in-Compiled-Code">Package Locks in Compiled Code</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Implementation-Packages.html#Implementation-Packages">Implementation Packages</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Package-Lock-Concepts.html#Package-Lock-Concepts">Package Lock Concepts</a>
+<hr>
+</div>
+
+<h4 class="subsection">10.1.3 Package Lock Violations</h4>
+
+<p><a name="index-sb_002dext_003apackage_002dlock_002dviolation-370"></a><a name="index-sb_002dext_003apackage_002dlocked_002derror-371"></a><a name="index-sb_002dext_003asymbol_002dpackage_002dlocked_002derror-372"></a><a name="index-package_002dlock_002dviolation-373"></a><a name="index-package_002dlocked_002derror-374"></a><a name="index-symbol_002dpackage_002dlocked_002derror-375"></a><a name="index-package_002derror-376"></a>
+
+<h5 class="subsubsection">10.1.3.1 Lexical Bindings and Declarations</h5>
+
+<p><a name="index-let-377"></a><a name="index-let_002a-378"></a><a name="index-flet-379"></a><a name="index-labels-380"></a><a name="index-macrolet-381"></a><a name="index-symbol_002dmacrolet-382"></a><a name="index-declare-383"></a><a name="index-Declarations-384"></a><a name="index-sb_002dext_003adisable_002dpackage_002dlocks-385"></a><a name="index-sb_002dext_003aenable_002dpackage_002dlocks-386"></a><a name="index-disable_002dpackage_002dlocks-387"></a><a name="index-enable_002dpackage_002dlocks-388"></a>
+Lexical bindings or declarations that violate package locks cause
+result in a <code>program-error</code> being signalled at when the form that
+violates package locks would be executed.
+
+   <p>A complete listing of operators affect by this is: <code>let</code>,
+<code>let*</code>, <code>flet</code>, <code>labels</code>, <code>macrolet</code>, and
+<code>symbol-macrolet</code>, <code>declare</code>.
+
+   <p>Package locks affecting both lexical bindings and declarations can be
+disabled locally with <code>sb-ext:disable-package-locks</code> declaration,
+and re-enabled with <code>sb-ext:enable-package-locks</code> declaration.
+
+   <p>Example:
+
+<pre class="lisp">     (in-package :locked)
+     
+     (defun foo () ...)
+     
+     (defmacro with-foo (&amp;body body)
+       `(locally (declare (disable-package-locks locked:foo))
+          (flet ((foo () ...))
+            (declare (enable-package-locks locked:foo)) ; re-enable for body
+            ,@body)))
+</pre>
+   <h5 class="subsubsection">10.1.3.2 Other Operations</h5>
+
+<p>If an non-lexical operation violates a package lock, a continuable
+error that is of a subtype of <code>sb-ext:package-lock-violation</code>
+(subtype of <code>package-error</code>) is signalled when the operation is
+attempted.
+
+   <p>Additional restarts may be established for continuable package lock
+violations for interactive use.
+
+   <p>The actual type of the error depends on circumstances that caused the
+violation: operations on packages signal errors of type
+<code>sb-ext:package-locked-error</code>, and operations on symbols signal
+errors of type <code>sb-ext:symbol-package-locked-error</code>.
+
+   </body></html>
+

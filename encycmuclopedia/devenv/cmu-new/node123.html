@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.2.11 Type Style Recommendations</TITLE>
+<META NAME="description" CONTENT="5.2.11 Type Style Recommendations">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2247" HREF="node124.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2245" HREF="node112.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2241" HREF="node122.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2249" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2250" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2248" HREF="node124.html">5.3 Type Inference</A>
+<B>Up:</B> <A NAME="tex2html2246" HREF="node112.html">5.2 More About Types </A>
+<B> Previous:</B> <A NAME="tex2html2242" HREF="node122.html">5.2.10 Type Restrictions</A>
+<BR> <P>
+<H2><A NAME="SECTION006211000000000000000">5.2.11 Type Style Recommendations</A></H2>
+<P>
+<A NAME="9861">&#160;</A>
+<P>
+Python provides good support for some currently unconventional ways of
+using the Common Lisp type system.  With Python, it is desirable to make
+declarations as precise as possible, but type inference also makes
+some declarations unnecessary.  Here are some general guidelines for
+maximum robustness and efficiency:
+<UL>
+<LI> Declare the types of all function arguments and structure slots
+  as precisely as possible (while avoiding <tt>not</tt>, <tt>and</tt> and
+  <tt>satisfies</tt>).  Put these declarations in during initial coding
+  so that type assertions can find bugs for you during debugging.
+<LI> Use the <A NAME="9865">&#160;</A><tt>member</tt> type specifier where there are a small
+  number of possible symbol values, for example: <tt>(member :red
+      :blue :green)</tt>.
+<LI> Use the <A NAME="9870">&#160;</A><tt>or</tt> type specifier in situations where the
+  type is not certain, but there are only a few possibilities, for
+  example: <tt>(or list vector)</tt>.
+<LI> Declare integer types with the tightest bounds that you can,
+  such as <tt>(integer 3 7)</tt>.
+<LI> Define <A NAME="9878">&#160;</A><tt>deftype</tt> or <A NAME="9880">&#160;</A><tt>defstruct</tt> types before
+  they are used.  Definition after use is legal (producing no
+  ``undefined type'' warnings), but type tests and structure
+  operations will be compiled much less efficiently.
+<LI> Use the <tt>extensions:freeze-type</tt> declaration to speed up
+  type testing for structure types which won't have new subtypes added
+  later. See section&nbsp;<A HREF="node121.html#freezetype">5.2.9</A>
+<LI> In addition to declaring the array element type and simpleness,
+  also declare the dimensions if they are fixed, for example:
+  <BLOCKQUOTE> <PRE>(simple-array single-float (1024 1024))
+  </PRE> </BLOCKQUOTE>
+  This bounds information allows array indexing for multi-dimensional
+  arrays to be compiled much more efficiently, and may also allow
+  array bounds checking to be done at compile time.
+  See section&nbsp;<A HREF="node163.html#arraytypes">5.10.3</A>.
+<LI> Avoid use of the <A NAME="9885">&#160;</A><tt>the</tt> declaration within expressions.
+  Not only does it clutter the code, but it is also almost worthless
+  under safe policies.  If the need for an output type assertion is
+  revealed by efficiency notes during tuning, then you can consider
+  <tt>the</tt>, but it is preferable to constrain the argument types
+  more, allowing the compiler to prove the desired result type.
+<LI> Don't bother declaring the type of <A NAME="9888">&#160;</A><tt>let</tt> or other
+  non-argument variables unless the type is non-obvious.  If you
+  declare function return types and structure slot types, then the
+  type of a variable is often obvious both to the programmer and to
+  the compiler.  An important case where the type isn't obvious, and a
+  declaration is appropriate, is when the value for a variable is
+  pulled out of untyped structure (e.g., the result of <tt>car</tt>), or
+  comes from some weakly typed function, such as <tt>read</tt>.
+<LI> Declarations are sometimes necessary for integer loop variables,
+  since the compiler can't always prove that the value is of a good
+  integer type.  These declarations are best added during tuning, when
+  an efficiency note indicates the need.
+</UL><HR><A NAME="tex2html2247" HREF="node124.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2245" HREF="node112.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2241" HREF="node122.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2249" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2250" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2248" HREF="node124.html">5.3 Type Inference</A>
+<B>Up:</B> <A NAME="tex2html2246" HREF="node112.html">5.2 More About Types </A>
+<B> Previous:</B> <A NAME="tex2html2242" HREF="node122.html">5.2.10 Type Restrictions</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

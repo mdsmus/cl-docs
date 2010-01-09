@@ -1,0 +1,88 @@
+<html lang="en">
+<head>
+<title>Debugger Invocation - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Debugger-Entry.html#Debugger-Entry" title="Debugger Entry">
+<link rel="prev" href="Debugger-Banner.html#Debugger-Banner" title="Debugger Banner">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Debugger-Invocation"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Debugger-Banner.html#Debugger-Banner">Debugger Banner</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Debugger-Entry.html#Debugger-Entry">Debugger Entry</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">4.1.2 Debugger Invocation</h4>
+
+<p>The debugger is invoked when:
+
+     <ul>
+<li><code>error</code> is called, and the condition it signals is not handled.
+
+     <li><code>break</code> is called, or <code>signal</code> is called with a condition
+that matches the current <code>*break-on-signals*</code>.
+
+     <li>the debugger is explicitly entered with the <code>invoke-debugger</code>
+function.
+
+   </ul>
+
+   <p>When the debugger is invoked by a condition, ANSI mandates that the
+value of <code>*debugger-hook*</code>, if any, be called with two arguments:
+the condition that caused the debugger to be invoked and the previous
+value of <code>*debugger-hook*</code>. When this happens,
+<code>*debugger-hook*</code> is bound to NIL to prevent recursive errors. 
+However, ANSI also mandates that <code>*debugger-hook*</code> not be invoked
+when the debugger is to be entered by the <code>break</code> function. For
+users who wish to provide an alternate debugger interface (and thus
+catch <code>break</code> entries into the debugger), SBCL provides
+<code>sb-ext:*invoke-debugger-hook*</code>, which is invoked during any
+entry into the debugger.
+
+   <p><a name="Variable-sb_002dext_003a_002ainvoke_002ddebugger_002dhook_002a"></a>
+
+<div class="defun">
+&mdash; Variable: <b>sb-ext:*invoke-debugger-hook*</b><var><a name="index-sb_002dext_003a_002ainvoke_002ddebugger_002dhook_002a-61"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003a_002ainvoke_002ddebugger_002dhook_002a-62"></a>This is either <code>nil</code> or a designator for a function of two arguments,
+   to be run when the debugger is about to be entered.  The function is
+   run with <code>*invoke-debugger-hook*</code> bound to <code>nil</code> to minimize recursive
+   errors, and receives as arguments the condition that triggered
+   debugger entry and the previous value of <code>*invoke-debugger-hook*</code>
+
+        <p>This mechanism is an <code>sbcl</code> extension similar to the standard <code>*debugger-hook*</code>. 
+   In contrast to <code>*debugger-hook*</code>, it is observed by <code>invoke-debugger</code> even when
+   called by <code>break</code>. 
+</p></blockquote></div>
+
+   </body></html>
+

@@ -1,0 +1,213 @@
+<html
+  ><head
+    ><title
+      >FiveAM</title
+    ><link href="style.css" rel="stylesheet"
+    /><link title="Print" href="print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><h1 class="title"
+        >FiveAM</h1
+      ><div class="contents"
+        ><h2
+  ><a name="FiveAM_0020Example_0020_0028poor_0020man_0027s_0020tutorial_0029"
+  >FiveAM Example (poor man's tutorial)</a
+>&nbsp;</h2
+><div class="nav-links"
+  ><a class="nav-link" href="Colophon.html#COPYRIGHT"
+  >prev</a
+> | <span class="dead-nav-link"
+  >up</span
+> | <span class="nav-link"
+  >next</span
+> | <a href="index.html"
+    >toc</a
+  ></div
+>
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>asdf:oos 'asdf:load-op :FiveAM<span class="paren">)</span></span><span class"body"></span></pre
+>
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>defpackage :it.bese.FiveAM.example</span><span class"body">
+  <span class="paren">(</span>:use :common-lisp
+	:it.bese.FiveAM<span class="paren">)</span><span class="paren">)</span></span></pre
+>
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>in-package :it.bese.FiveAM.example<span class="paren">)</span></span><span class"body"></span></pre
+>
+
+<p> First we need some functions to test.
+
+<div class="computational-element-link computational-element-link-function"
+  ><p
+    ><a href="api/function_005FIT.BESE.FIVEAM.EXAMPLE_003A_003AADD-_0032.html" name="function_005FIT.BESE.FIVEAM.EXAMPLE_003A_003AADD-_0032"
+      >Function ADD-2</a
+    > </p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-function"
+  ><p
+    ><a href="api/function_005FIT.BESE.FIVEAM.EXAMPLE_003A_003AADD-_0034.html" name="function_005FIT.BESE.FIVEAM.EXAMPLE_003A_003AADD-_0034"
+      >Function ADD-4</a
+    > </p
+  ></div
+>
+
+<p> Now we need to create a test which makes sure that add-2 and add-4
+ work as specified.
+
+<p> we create a test named ADD-2 and supply a short description.
+</p>
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>test add-2</span><span class"body">
+ &quot;Test the ADD-2 function&quot; ;; a short description
+ ;; the checks
+ <span class="paren">(</span>is <span class="paren">(</span>= 2 <span class="paren">(</span>add-2 0<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span>
+ <span class="paren">(</span>is <span class="paren">(</span>= 0 <span class="paren">(</span>add-2 -2<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span><span class="paren">)</span></span></pre
+>
+
+<p> we can already run add-2. This will return the list of test
+ results, it should be a list of two test-passed objects.
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>run 'add-2<span class="paren">)</span></span><span class"body"></span></pre
+> 
+
+<p> since we'd like to have some kind of readbale output we'll explain
+ the results
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>explain! <span class="paren">(</span>run 'add-2<span class="paren">)</span><span class="paren">)</span></span><span class"body"></span></pre
+>
+
+<p> or we could do both at once:
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>run! 'add-2<span class="paren">)</span></span><span class"body"></span></pre
+>
+
+<p> So now we've defined and run a single test. Since we plan on
+ having more than one test and we'd like to run them together let's
+ create a simple test suite.
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>def-suite example-suite :description &quot;The example test suite.&quot;<span class="paren">)</span></span><span class"body"></span></pre
+>
+
+<p> we could explictly specify that every test we create is in the the
+ example-suite suite, but it's easier to just change the default
+ suite:
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>in-suite example-suite<span class="paren">)</span></span><span class"body"></span></pre
+>
+
+<p> now we'll create a new test for the add-4 function.
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>test add-4</span><span class"body">
+  <span class="paren">(</span>is <span class="paren">(</span>= 0 <span class="paren">(</span>add-4 -4<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span><span class="paren">)</span></span></pre
+>
+
+<p> now let's run the test
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>run! 'add-4<span class="paren">)</span></span><span class"body"></span></pre
+>
+
+<p> we can get the same effect by running the suite:
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>run! 'example-suite<span class="paren">)</span></span><span class"body"></span></pre
+>
+
+<p> since we'd like both add-2 and add-4 to be in the same suite, let's
+ redefine add-2 to be in this suite:
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>test add-2 &quot;Test the ADD-2 function&quot;</span><span class"body">
+ <span class="paren">(</span>is <span class="paren">(</span>= 2 <span class="paren">(</span>add-2 0<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span>
+ <span class="paren">(</span>is <span class="paren">(</span>= 0 <span class="paren">(</span>add-2 -2<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span><span class="paren">)</span></span></pre
+>
+
+<p> now we can run the suite and we'll see that both add-2 and add-4
+ have been run (we know this since we no get 4 checks as opposed to
+ 2 as before.
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>run! 'example-suite<span class="paren">)</span></span><span class"body"></span></pre
+>
+
+<p> Just for fun let's see what happens when a test fails. Again we'll
+ redefine add-2, but add in a third, failing, check:
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>test add-2 &quot;Test the ADD-2 function&quot;</span><span class"body">
+ <span class="paren">(</span>is <span class="paren">(</span>= 2 <span class="paren">(</span>add-2 0<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span>
+ <span class="paren">(</span>is <span class="paren">(</span>= 0 <span class="paren">(</span>add-2 -2<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span>
+ <span class="paren">(</span>is <span class="paren">(</span>= 0 <span class="paren">(</span>add-2 0<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span><span class="paren">)</span></span></pre
+>
+
+<p> Finally let's try out the specification based testing.
+
+<div class="computational-element-link computational-element-link-function"
+  ><p
+    ><a href="api/function_005FIT.BESE.FIVEAM.EXAMPLE_003A_003ADUMMY-ADD.html" name="function_005FIT.BESE.FIVEAM.EXAMPLE_003A_003ADUMMY-ADD"
+      >Function DUMMY-ADD</a
+    > </p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-function"
+  ><p
+    ><a href="api/function_005FIT.BESE.FIVEAM.EXAMPLE_003A_003ADUMMY-STRCAT.html" name="function_005FIT.BESE.FIVEAM.EXAMPLE_003A_003ADUMMY-STRCAT"
+      >Function DUMMY-STRCAT</a
+    > </p
+  ></div
+>
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>test dummy-add</span><span class"body">
+  <span class="paren">(</span>for-all <span class="paren">(</span><span class="paren">(</span>a <span class="paren">(</span>gen-integer<span class="paren">)</span><span class="paren">)</span>
+            <span class="paren">(</span>b <span class="paren">(</span>gen-integer<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span>
+    ;; assuming we have an &quot;oracle&quot; to compare our function results to
+    ;; we can use it:
+    <span class="paren">(</span>is <span class="paren">(</span>= <span class="paren">(</span>+ a b<span class="paren">)</span> <span class="paren">(</span>dummy-add a b<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span>
+    ;; if we don't have an oracle <span class="paren">(</span>as in most cases<span class="paren">)</span> we just ensure
+    ;; that certain properties hold:
+    <span class="paren">(</span>is <span class="paren">(</span>= <span class="paren">(</span>dummy-add a b<span class="paren">)</span>
+           <span class="paren">(</span>dummy-add b a<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span>
+    <span class="paren">(</span>is <span class="paren">(</span>= a <span class="paren">(</span>dummy-add a 0<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span>
+    <span class="paren">(</span>is <span class="paren">(</span>= 0 <span class="paren">(</span>dummy-add a <span class="paren">(</span>- a<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span><span class="paren">)</span>
+    <span class="paren">(</span>is <span class="paren">(</span>&lt; a <span class="paren">(</span>dummy-add a 1<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span>
+    <span class="paren">(</span>is <span class="paren">(</span>= <span class="paren">(</span>* 2 a<span class="paren">)</span> <span class="paren">(</span>dummy-add a a<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span><span class="paren">)</span><span class="paren">)</span></span></pre
+>
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>test dummy-strcat</span><span class"body">
+  <span class="paren">(</span>for-all <span class="paren">(</span><span class="paren">(</span>result <span class="paren">(</span>gen-string<span class="paren">)</span><span class="paren">)</span>
+            <span class="paren">(</span>split-point <span class="paren">(</span>gen-integer :min 0 :max 10000<span class="paren">)</span>
+                         <span class="paren">(</span>&lt; split-point <span class="paren">(</span>length result<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span><span class="paren">)</span>
+    <span class="paren">(</span>is <span class="paren">(</span>string= result <span class="paren">(</span>dummy-strcat <span class="paren">(</span>subseq result 0 split-point<span class="paren">)</span>
+                                      <span class="paren">(</span>subseq result split-point<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span><span class="paren">)</span><span class="paren">)</span><span class="paren">)</span></span></pre
+>
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>test random-failure</span><span class"body">
+  <span class="paren">(</span>for-all <span class="paren">(</span><span class="paren">(</span>result <span class="paren">(</span>gen-integer :min 0 :max 1<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span>
+    <span class="paren">(</span>is <span class="paren">(</span>plusp result<span class="paren">)</span><span class="paren">)</span>
+    <span class="paren">(</span>is <span class="paren">(</span>= result 0<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span><span class="paren">)</span></span></pre
+>
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>run! 'example-suite<span class="paren">)</span></span><span class"body"></span></pre
+>
+</div
+      ></div
+    ></body
+  ></html
+>

@@ -1,0 +1,105 @@
+<html lang="en">
+<head>
+<title>asdf Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name=description content="asdf Manual">
+<meta name=generator content="makeinfo 4.2">
+<link href="http://www.gnu.org/software/texinfo/" rel=generator-home>
+<!--
+This manual describes asdf, a system definition facility for Common
+Lisp programs and libraries.
+
+<p>asdf Copyright &copy; 2001-2004 Daniel Barlow and contributors
+
+<p>This manual Copyright &copy; 2001-2004 Daniel Barlow and
+contributors
+
+<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+-->
+</head>
+<body>
+<p>
+Node:<a name="Operations">Operations</a>,
+Next:<a rel=next accesskey=n href="Components.html#Components">Components</a>,
+Previous:<a rel=previous accesskey=p href="The-object-model-of-asdf.html#The%20object%20model%20of%20asdf">The object model of asdf</a>,
+Up:<a rel=up accesskey=u href="The-object-model-of-asdf.html#The%20object%20model%20of%20asdf">The object model of asdf</a>
+<hr><br>
+
+<h3>Operations</h3>
+
+<p>An <dfn>operation</dfn> object of the appropriate type is instantiated
+whenever the user wants to do something with a system like
+
+<ul>
+<li>compile all its files
+<li>load the files into a running lisp environment
+<li>copy its source files somewhere else
+</ul>
+
+<p>Operations can be invoked directly, or examined to see what their
+effects would be without performing them.  <em>FIXME: document how!</em>  There
+are a bunch of methods specialised on operation and component type
+that actually do the grunt work.
+
+<p>The operation object contains whatever state is relevant for this
+purpose (perhaps a list of visited nodes, for example) but primarily
+is a nice thing to specialise operation methods on and easier than
+having them all be EQL methods.
+
+<p>Operations are invoked on systems via <code>operate</code>.
+
+<p>
+<table width="100%">
+<tr>
+<td align="left"><b>operate</b><i> operation system &amp;rest initargs
+</i></td>
+<td align="right">Generic function</td>
+</tr>
+
+<tr>
+<td align="left"><b>oos</b><i> operation system &amp;rest initargs
+</i></td>
+<td align="right">Generic function</td>
+</tr>
+</table>
+<table width="95%" align="center">
+<tr><td>
+<code>operate</code> invokes <var>operation</var> on <var>system</var>.  <code>oos</code>
+is a synonym for <code>operate</code>.
+
+<p><var>operation</var> is a symbol that is passed, along with the supplied
+<var>initargs</var>, to <code>make-instance</code> to create the operation object. 
+<var>system</var> is a system designator.
+
+<p>The initargs are passed to the <code>make-instance</code> call when creating
+the operation object.  Note that dependencies may cause the operation
+to invoke other operations on the system or its components: the new
+operations will be created with the same initargs as the original one.
+
+</td></tr>
+</table>
+
+<ul>
+<li><a accesskey=1 href="Predefined-operations-of-asdf.html#Predefined%20operations%20of%20asdf">Predefined operations of asdf</a>: 
+<li><a accesskey=2 href="Creating-new-operations.html#Creating%20new%20operations">Creating new operations</a>: 
+</ul>
+
+</body></html>
+

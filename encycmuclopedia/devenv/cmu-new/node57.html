@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>2.16.2 New Generator</TITLE>
+<META NAME="description" CONTENT="2.16.2 New Generator">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1305" HREF="node58.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1303" HREF="node55.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1299" HREF="node56.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1307" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1308" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1306" HREF="node58.html">2.17 Lisp Library</A>
+<B>Up:</B> <A NAME="tex2html1304" HREF="node55.html">2.16 Random Number Generation</A>
+<B> Previous:</B> <A NAME="tex2html1300" HREF="node56.html">2.16.1 Original Generator</A>
+<BR> <P>
+<H2><A NAME="SECTION003162000000000000000">2.16.2 New Generator</A></H2>
+<P>
+<A NAME="8684">&#160;</A>
+<P>
+In some versions of CMU Common Lisp, the original generator above has been
+replaced with a subtract-with-borrow generator
+combined with a Weyl generator.<A NAME="tex2html2" HREF="footnode.html#6890"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>  The
+reason for the change was to use a documented generator which has
+passed tests for randomness.
+<P>
+The subtract-with-borrow generator is described by the following
+equation
+<BR><IMG WIDTH=348 HEIGHT=16 ALIGN=BOTTOM ALT="displaymath1209" SRC="img9.gif"><BR>
+where <I>z</I>[<I>i</I>] is the <I>i</I>'th random number, which is a
+<tt>double-float</tt>.  All of the indices in this equation are
+interpreted modulo 32.  The quantity <I>b</I> is carried over from the
+previous iteration and is either 0 or <tt>double-float-epsilon</tt>.  If
+<I>z</I>[<I>i</I>] is positive, <I>b</I> is set to zero.  Otherwise, <I>b</I> is set to
+<tt>double-float-epsilon</tt>.
+<P>
+To increase the randomness of this generator, this generator is
+combined with a Weyl generator defined by
+<BR><IMG WIDTH=336 HEIGHT=16 ALIGN=BOTTOM ALT="displaymath1213" SRC="img10.gif"><BR>
+where <IMG WIDTH=207 HEIGHT=26 ALIGN=MIDDLE ALT="tex2html_wrap_inline17338" SRC="img11.gif">.  Thus, the resulting
+random number <I>r</I>[<I>i</I>] is
+<BR><IMG WIDTH=333 HEIGHT=16 ALIGN=BOTTOM ALT="displaymath1216" SRC="img12.gif"><BR>
+<P>
+This generator has been tested by Peter VanEynde using Marsaglia's
+diehard test suite for random number generators;  this generator
+passes the test suite.
+<P>
+This generator is designed for generating floating-point random
+numbers.  To obtain integers, the bits from the significand of the
+floating-point number are used as the bits of the integer.  As many
+floating-point numbers as needed are generated to obtain the desired
+number of bits in the random integer.
+<P>
+For floating-point numbers, this generator can by significantly faster 
+than the original generator.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,1780 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+"http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+<meta name="generator" content=
+"HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 13), see www.w3.org">
+<meta http-equiv="Content-Type" content=
+"text/html; charset=us-ascii">
+<meta name="GENERATOR" content="hevea 1.06">
+<link rel="stylesheet" href="cmucl.css" type="text/css">
+<meta http-equiv="Content-Language" content="en">
+<title>CMUCL User's Manual: The Debugger</title>
+</head>
+<body>
+<a href="extensions.html"><img src="previous_motif.gif" alt=
+"Previous"></a> <a href="index.html"><img src="contents_motif.gif"
+alt="Up"></a> <a href="compiler.html"><img src="next_motif.gif"
+alt="Next"></a>
+<hr>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFBC">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc79" id="htoc79"><b><font size=
+"6">Chapter&nbsp;3</font></b></a></td>
+<td width="100%" align="center"><b><font size="6">The
+Debugger</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<ul>
+<li><a href="debugger.html#toc89">Debugger Introduction</a></li>
+<li><a href="debugger.html#toc90">The Command Loop</a></li>
+<li><a href="debugger.html#toc91">Stack Frames</a>
+<ul>
+<li><a href="debugger.html#toc92">Stack Motion</a></li>
+<li><a href="debugger.html#toc93">How Arguments are
+Printed</a></li>
+<li><a href="debugger.html#toc94">Function Names</a></li>
+<li><a href="debugger.html#toc95">Funny Frames</a></li>
+<li><a href="debugger.html#toc96">Debug Tail Recursion</a></li>
+<li><a href="debugger.html#toc97">Unknown Locations and
+Interrupts</a></li>
+</ul>
+</li>
+<li><a href="debugger.html#toc98">Variable Access</a>
+<ul>
+<li><a href="debugger.html#toc99">Variable Value
+Availability</a></li>
+<li><a href="debugger.html#toc100">Note On Lexical Variable
+Access</a></li>
+</ul>
+</li>
+<li><a href="debugger.html#toc101">Source Location Printing</a>
+<ul>
+<li><a href="debugger.html#toc102">How the Source is Found</a></li>
+<li><a href="debugger.html#toc103">Source Location
+Availability</a></li>
+</ul>
+</li>
+<li><a href="debugger.html#toc104">Compiler Policy Control</a></li>
+<li><a href="debugger.html#toc105">Exiting Commands</a></li>
+<li><a href="debugger.html#toc106">Information Commands</a></li>
+<li><a href="debugger.html#toc107">Breakpoint Commands</a>
+<ul>
+<li><a href="debugger.html#toc108">Breakpoint Example</a></li>
+</ul>
+</li>
+<li><a href="debugger.html#toc109">Function Tracing</a>
+<ul>
+<li><a href="debugger.html#toc110">Encapsulation Functions</a></li>
+</ul>
+</li>
+<li><a href="debugger.html#toc111">Specials</a></li>
+</ul>
+<a name="@concept50"></a> <a name="debugger" id="debugger"></a><br>
+<div align="center"><b>by Robert MacLachlan</b></div>
+<br>
+<a name="toc89" id="toc89"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc80" id="htoc80"><b><font size=
+"5">3.1</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Debugger
+Introduction</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+The CMUCL debugger is unique in its level of support for
+source-level debugging of compiled code. Although some other
+debuggers allow access of variables by name, this seems to be the
+first Common Lisp debugger that:
+<ul>
+<li>Tells you when a variable doesn't have a value because it
+hasn't been initialized yet or has already been deallocated, or<br>
+<br></li>
+<li>Can display the precise source location corresponding to a code
+location in the debugged program.</li>
+</ul>
+These features allow the debugging of compiled code to be made
+almost indistinguishable from interpreted code debugging.<br>
+<br>
+The debugger is an interactive command loop that allows a user to
+examine the function call stack. The debugger is invoked when:
+<ul>
+<li>A <a name="@types18"></a><tt class=
+"code">serious-condition</tt> is signaled, and it is not handled,
+or<br>
+<br></li>
+<li><a name="@funs99"></a><tt class="code">error</tt> is called,
+and the condition it signals is not handled, or<br>
+<br></li>
+<li>The debugger is explicitly invoked with the Common Lisp
+<a name="@funs100"></a><tt class="code">break</tt> or <a name=
+"@funs101"></a><tt class="code">debug</tt> functions.</li>
+</ul>
+<i>Note: there are two debugger interfaces in CMUCL: the TTY
+debugger (described below) and the Motif debugger. Since the
+difference is only in the user interface, much of this chapter also
+applies to the Motif version. See section&nbsp;</i><a href=
+"extensions.html#motif-interface"><i>2.9.1</i></a> <i>for a very
+brief discussion of the graphical interface.</i><br>
+<br>
+When you enter the TTY debugger, it looks something like this:
+<blockquote class="example">
+<pre>
+Error in function CAR.
+Wrong type argument, 3, should have been of type LIST.
+
+Restarts:
+  0: Return to Top-Level.
+
+Debug  (type H for help)
+
+(CAR 3)
+0]
+</pre></blockquote>
+The first group of lines describe what the error was that put us in
+the debugger. In this case <tt class="code">car</tt> was called on
+<tt class="code">3</tt>. After <tt class="code">Restarts:</tt> is a
+list of all the ways that we can restart execution after this
+error. In this case, the only option is to return to top-level.
+After printing its banner, the debugger prints the current frame
+and the debugger prompt.<br>
+<br>
+<a name="toc90" id="toc90"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc81" id="htoc81"><b><font size=
+"5">3.2</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">The Command
+Loop</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+The debugger is an interactive read-eval-print loop much like the
+normal top-level, but some symbols are interpreted as debugger
+commands instead of being evaluated. A debugger command starts with
+the symbol name of the command, possibly followed by some arguments
+on the same line. Some commands prompt for additional input.
+Debugger commands can be abbreviated by any unambiguous prefix:
+<tt class="code">help</tt> can be typed as <tt class="code">h</tt>,
+<tt class="code">he</tt>, etc. For convenience, some commands have
+ambiguous one-letter abbreviations: <tt class="code">f</tt> for
+<tt class="code">frame</tt>.<br>
+<br>
+The package is not significant in debugger commands; any symbol
+with the name of a debugger command will work. If you want to show
+the value of a variable that happens also to be the name of a
+debugger command, you can use the <tt class="code">list-locals</tt>
+command or the <tt class="code">debug:var</tt> function, or you can
+wrap the variable in a <tt class="code">progn</tt> to hide it from
+the command loop.<br>
+<br>
+The debugger prompt is ``<tt class="variable">frame</tt><tt class=
+"code">]</tt>'', where <tt class="variable">frame</tt> is the
+number of the current frame. Frames are numbered starting from zero
+at the top (most recent call), increasing down to the bottom. The
+current frame is the frame that commands refer to. The current
+frame also provides the lexical environment for evaluation of
+non-command forms.<br>
+<br>
+<a name="@concept51"></a> The debugger evaluates forms in the
+lexical environment of the functions being debugged. The debugger
+can only access variables. You can't <tt class="code">go</tt> or
+<tt class="code">return-from</tt> into a function, and you can't
+call local functions. Special variable references are evaluated
+with their current value (the innermost binding around the debugger
+invocation)---you don't get the value that the special had in the
+current frame. See section&nbsp;<a href="#debug-vars">3.4</a> for
+more information on debugger variable access.<br>
+<br>
+<a name="toc91" id="toc91"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc82" id="htoc82"><b><font size=
+"5">3.3</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Stack
+Frames</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="@concept52"></a> <a name="@concept53"></a><br>
+A stack frame is the run-time representation of a call to a
+function; the frame stores the state that a function needs to
+remember what it is doing. Frames have:
+<ul>
+<li>Variables (see section&nbsp;<a href="#debug-vars">3.4</a>),
+which are the values being operated on, and<br>
+<br></li>
+<li>Arguments to the call (which are really just particularly
+interesting variables), and<br>
+<br></li>
+<li>A current location (see section&nbsp;<a href=
+"#source-locations">3.5</a>), which is the place in the program
+where the function was running when it stopped to call another
+function, or because of an interrupt or error.</li>
+</ul>
+<a name="toc92" id="toc92"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc83" id="htoc83"><b><font size=
+"4">3.3.1</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Stack
+Motion</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+These commands move to a new stack frame and print the name of the
+function and the values of its arguments in the style of a Lisp
+function call:
+<dl compact="compact">
+<dt><tt class="code">up</tt><br></dt>
+<dd>Move up to the next higher frame. More recent function calls
+are considered to be higher on the stack.<br>
+<br></dd>
+<dt><tt class="code">down</tt><br></dt>
+<dd>Move down to the next lower frame.<br>
+<br></dd>
+<dt><tt class="code">top</tt><br></dt>
+<dd>Move to the highest frame.<br>
+<br></dd>
+<dt><tt class="code">bottom</tt><br></dt>
+<dd>Move to the lowest frame.<br>
+<br></dd>
+<dt><tt class="code">frame</tt> [<i>n</i><br></dt>
+<dd>] Move to the frame with the specified number. Prompts for the
+number if not supplied.</dd>
+</dl>
+<a name="toc93" id="toc93"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc84" id="htoc84"><b><font size=
+"4">3.3.2</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">How Arguments are
+Printed</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+A frame is printed to look like a function call, but with the
+actual argument values in the argument positions. So the frame for
+this call in the source:
+<blockquote class="lisp">
+<pre>
+(myfun (+ 3 4) 'a)
+</pre></blockquote>
+would look like this:
+<blockquote class="example">
+<pre>
+(MYFUN 7 A)
+</pre></blockquote>
+All keyword and optional arguments are displayed with their actual
+values; if the corresponding argument was not supplied, the value
+will be the default. So this call:
+<blockquote class="lisp">
+<pre>
+(subseq "foo" 1)
+</pre></blockquote>
+would look like this:
+<blockquote class="example">
+<pre>
+(SUBSEQ "foo" 1 3)
+</pre></blockquote>
+And this call:
+<blockquote class="lisp">
+<pre>
+(string-upcase "test case")
+</pre></blockquote>
+would look like this:
+<blockquote class="example">
+<pre>
+(STRING-UPCASE "test case" :START 0 :END NIL)
+</pre></blockquote>
+The arguments to a function call are displayed by accessing the
+argument variables. Although those variables are initialized to the
+actual argument values, they can be set inside the function; in
+this case the new value will be displayed.<br>
+<br>
+<tt class="code"><tt class="code">&amp;rest</tt></tt> arguments are
+handled somewhat differently. The value of the rest argument
+variable is displayed as the spread-out arguments to the call, so:
+<blockquote class="lisp">
+<pre>
+(format t "~A is a ~A." "This" 'test)
+</pre></blockquote>
+would look like this:
+<blockquote class="example">
+<pre>
+(FORMAT T "~A is a ~A." "This" 'TEST)
+</pre></blockquote>
+Rest arguments cause an exception to the normal display of keyword
+arguments in functions that have both <tt class="code"><tt class=
+"code">&amp;rest</tt></tt> and <tt class="code">&amp;key</tt>
+arguments. In this case, the keyword argument variables are not
+displayed at all; the rest arg is displayed instead. So for these
+functions, only the keywords actually supplied will be shown, and
+the values displayed will be the argument values, not values of the
+(possibly modified) variables.<br>
+<br>
+If the variable for an argument is never referenced by the
+function, it will be deleted. The variable value is then
+unavailable, so the debugger prints <tt class=
+"code">#unused-arg</tt> instead of the value. Similarly, if for any
+of a number of reasons (described in more detail in section
+<a href="#debug-vars">3.4</a>) the value of the variable is
+unavailable or not known to be available, then <tt class=
+"code">#unavailable-arg</tt> will be printed instead of the
+argument value.<br>
+<br>
+Printing of argument values is controlled by <tt class=
+"code">*debug-print-level*</tt> and <a name=
+"@vars25"></a><tt class="code">*debug-print-length*</tt>.<br>
+<br>
+<a name="toc94" id="toc94"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc85" id="htoc85"><b><font size=
+"4">3.3.3</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Function
+Names</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="@concept54"></a> <a name="@concept55"></a><br>
+If a function is defined by <tt class="code">defun</tt>, <tt class=
+"code">labels</tt>, or <tt class="code">flet</tt>, then the
+debugger will print the actual function name after the open
+parenthesis, like:
+<blockquote class="example">
+<pre>
+(STRING-UPCASE "test case" :START 0 :END NIL)
+((SETF AREF) #\a "for" 1)
+</pre></blockquote>
+Otherwise, the function name is a string, and will be printed in
+quotes:
+<blockquote class="example">
+<pre>
+("DEFUN MYFUN" BAR)
+("DEFMACRO DO" (DO ((I 0 (1+ I))) ((= I 13))) NIL)
+("SETQ *GC-NOTIFY-BEFORE*")
+</pre></blockquote>
+This string name is derived from the <tt class=
+"code">def</tt><tt class="variable">mumble</tt> form that encloses
+or expanded into the lambda, or the outermost enclosing form if
+there is no <tt class="code">def</tt><tt class=
+"variable">mumble</tt>.<br>
+<br>
+<a name="toc95" id="toc95"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc86" id="htoc86"><b><font size=
+"4">3.3.4</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Funny
+Frames</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="@concept56"></a> <a name="@concept57"></a> <a name=
+"@concept58"></a> <a name="@concept59"></a> <a name=
+"@concept60"></a> <a name="@concept61"></a><br>
+Sometimes the evaluator introduces new functions that are used to
+implement a user function, but are not directly specified in the
+source. The main place this is done is for checking argument type
+and syntax. Usually these functions do their thing and then go
+away, and thus are not seen on the stack in the debugger. But when
+you get some sort of error during lambda-list processing, you end
+up in the debugger on one of these funny frames.<br>
+<br>
+These funny frames are flagged by printing ``<tt class=
+"code">[</tt><tt class="variable">keyword</tt><tt class=
+"code">]</tt>'' after the parentheses. For example, this call:
+<blockquote class="lisp">
+<pre>
+(car 'a 'b)
+</pre></blockquote>
+will look like this:
+<blockquote class="example">
+<pre>
+(CAR 2 A) [:EXTERNAL]
+</pre></blockquote>
+And this call:
+<blockquote class="lisp">
+<pre>
+(string-upcase "test case" :end)
+</pre></blockquote>
+would look like this:
+<blockquote class="example">
+<pre>
+("DEFUN STRING-UPCASE" "test case" 335544424 1) [:OPTIONAL]
+</pre></blockquote>
+As you can see, these frames have only a vague resemblance to the
+original call. Fortunately, the error message displayed when you
+enter the debugger will usually tell you what problem is (in these
+cases, too many arguments and odd keyword arguments.) Also, if you
+go down the stack to the frame for the calling function, you can
+display the original source (see section&nbsp;<a href=
+"#source-locations">3.5</a>.)<br>
+<br>
+With recursive or block compiled functions (see
+section&nbsp;<a href=
+"compiler-hint.html#block-compilation">5.7</a>), an <tt class=
+"code">:EXTERNAL</tt> frame may appear before the frame
+representing the first call to the recursive function or entry to
+the compiled block. This is a consequence of the way the compiler
+does block compilation: there is nothing odd with your program. You
+will also see <tt class="code">:CLEANUP</tt> frames during the
+execution of <tt class="code">unwind-protect</tt> cleanup code.
+Note that inline expansion and open-coding affect what frames are
+present in the debugger, see sections <a href=
+"#debugger-policy">3.6</a> and <a href=
+"compiler.html#open-coding">4.8</a>.<br>
+<br>
+<a name="toc96" id="toc96"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc87" id="htoc87"><b><font size=
+"4">3.3.5</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Debug Tail
+Recursion</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="debug-tail-recursion" id="debug-tail-recursion"></a>
+<a name="@concept62"></a> <a name="@concept63"></a><br>
+Both the compiler and the interpreter are ``properly tail
+recursive.'' If a function call is in a tail-recursive position,
+the stack frame will be deallocated <em>at the time of the
+call</em>, rather than after the call returns. Consider this
+backtrace:
+<blockquote class="example">
+<pre>
+(BAR ...) 
+(FOO ...)
+</pre></blockquote>
+Because of tail recursion, it is not necessarily the case that
+<tt class="code">FOO</tt> directly called <tt class=
+"code">BAR</tt>. It may be that <tt class="code">FOO</tt> called
+some other function <tt class="code">FOO2</tt> which then called
+<tt class="code">BAR</tt> tail-recursively, as in this example:
+<blockquote class="example">
+<pre>
+(defun foo ()
+  ...
+  (foo2 ...)
+  ...)
+
+(defun foo2 (...)
+  ...
+  (bar ...))
+
+(defun bar (...)
+  ...)
+</pre></blockquote>
+Usually the elimination of tail-recursive frames makes debugging
+more pleasant, since theses frames are mostly uninformative. If
+there is any doubt about how one function called another, it can
+usually be eliminated by finding the source location in the calling
+frame (section <a href="#source-locations">3.5</a>.)<br>
+<br>
+The elimination of tail-recursive frames can be prevented by
+disabling tail-recursion optimization, which happens when the
+<tt class="code">debug</tt> optimization quality is greater than
+<tt class="code">2</tt> (see section&nbsp;<a href=
+"#debugger-policy">3.6</a>.)<br>
+<br>
+For a more thorough discussion of tail recursion, see
+section&nbsp;<a href=
+"compiler-hint.html#tail-recursion">5.5</a>.<br>
+<br>
+<a name="toc97" id="toc97"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc88" id="htoc88"><b><font size=
+"4">3.3.6</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Unknown Locations
+and Interrupts</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="unknown-locations" id="unknown-locations"></a> <a name=
+"@concept64"></a> <a name="@concept65"></a> <a name=
+"@concept66"></a> <a name="@concept67"></a><br>
+The debugger operates using special debugging information attached
+to the compiled code. This debug information tells the debugger
+what it needs to know about the locations in the code where the
+debugger can be invoked. If the debugger somehow encounters a
+location not described in the debug information, then it is said to
+be <tt class="variable">unknown</tt>. If the code location for a
+frame is unknown, then some variables may be inaccessible, and the
+source location cannot be precisely displayed.<br>
+<br>
+There are three reasons why a code location could be unknown:
+<ul>
+<li>There is inadequate debug information due to the value of the
+<tt class="code">debug</tt> optimization quality. See
+section&nbsp;<a href="#debugger-policy">3.6</a>.<br>
+<br></li>
+<li>The debugger was entered because of an interrupt such as
+<tt class="code"><i>C</i></tt>.<br>
+<br></li>
+<li>A hardware error such as ``<tt class="code">bus error</tt>''
+occurred in code that was compiled unsafely due to the value of the
+<tt class="code">safety</tt> optimization quality. See
+section&nbsp;<a href=
+"compiler.html#optimize-declaration">4.7.1</a>.</li>
+</ul>
+In the last two cases, the values of argument variables are
+accessible, but may be incorrect. See section&nbsp;<a href=
+"#debug-var-validity">3.4.1</a> for more details on when variable
+values are accessible.<br>
+<br>
+It is possible for an interrupt to happen when a function call or
+return is in progress. The debugger may then flame out with some
+obscure error or insist that the bottom of the stack has been
+reached, when the real problem is that the current stack frame
+can't be located. If this happens, return from the interrupt and
+try again.<br>
+<br>
+When running interpreted code, all locations should be known.
+However, an interrupt might catch some subfunction of the
+interpreter at an unknown location. In this case, you should be
+able to go up the stack a frame or two and reach an interpreted
+frame which can be debugged.<br>
+<br>
+<a name="toc98" id="toc98"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc89" id="htoc89"><b><font size=
+"5">3.4</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Variable
+Access</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="debug-vars" id="debug-vars"></a> <a name="@concept68"></a>
+<a name="@concept69"></a><br>
+There are three ways to access the current frame's local variables
+in the debugger. The simplest is to type the variable's name into
+the debugger's read-eval-print loop. The debugger will evaluate the
+variable reference as though it had appeared inside that frame.<br>
+<br>
+The debugger doesn't really understand lexical scoping; it has just
+one namespace for all the variables in a function. If a symbol is
+the name of multiple variables in the same function, then the
+reference appears ambiguous, even though lexical scoping specifies
+which value is visible at any given source location. If the scopes
+of the two variables are not nested, then the debugger can resolve
+the ambiguity by observing that only one variable is
+accessible.<br>
+<br>
+When there are ambiguous variables, the evaluator assigns each one
+a small integer identifier. The <tt class="code">debug:var</tt>
+function and the <tt class="code">list-locals</tt> command use this
+identifier to distinguish between ambiguous variables:
+<dl compact="compact">
+<dt><tt class="code">list-locals</tt> <tt class="code">{<tt class=
+"variable">prefix</tt>}</tt><br></dt>
+<dd>This command prints the name and value of all variables in the
+current frame whose name has the specified <tt class=
+"variable">prefix</tt>. <tt class="variable">prefix</tt> may be a
+string or a symbol. If no <tt class="variable">prefix</tt> is
+given, then all available variables are printed. If a variable has
+a potentially ambiguous name, then the name is printed with a
+``<tt class="code">#</tt><tt class="variable">identifier</tt>''
+suffix, where <tt class="variable">identifier</tt> is the small
+integer used to make the name unique.</dd>
+</dl>
+<br>
+<a name="@funs102"></a><a name="FN:var" id="FN:var"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">debug:</tt><tt class=
+"function-name">var</tt> <tt class="variable">name</tt> <tt class=
+"code">&amp;optional</tt> <tt class="variable">identifier</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This function returns the value of the variable in the current
+frame with the specified <tt class="variable">name</tt>. If
+supplied, <tt class="variable">identifier</tt> determines which
+value to return when there are ambiguous variables.<br>
+<br>
+When <tt class="variable">name</tt> is a symbol, it is interpreted
+as the symbol name of the variable, i.e. the package is
+significant. If <tt class="variable">name</tt> is an uninterned
+symbol (gensym), then return the value of the uninterned variable
+with the same name. If <tt class="variable">name</tt> is a string,
+<tt class="code">debug:var</tt> interprets it as the prefix of a
+variable name, and must unambiguously complete to the name of a
+valid variable.<br>
+<br>
+This function is useful mainly for accessing the value of
+uninterned or ambiguous variables, since most variables can be
+evaluated directly.</blockquote>
+<a name="toc99" id="toc99"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc90" id="htoc90"><b><font size=
+"4">3.4.1</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Variable Value
+Availability</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="debug-var-validity" id="debug-var-validity"></a> <a name=
+"@concept70"></a> <a name="@concept71"></a> <a name=
+"@concept72"></a><br>
+The value of a variable may be unavailable to the debugger in
+portions of the program where Common Lisp says that the variable is
+defined. If a variable value is not available, the debugger will
+not let you read or write that variable. With one exception, the
+debugger will never display an incorrect value for a variable.
+Rather than displaying incorrect values, the debugger tells you the
+value is unavailable.<br>
+<br>
+The one exception is this: if you interrupt (e.g., with <tt class=
+"code"><i>C</i></tt>) or if there is an unexpected hardware error
+such as ``<tt class="code">bus error</tt>'' (which should only
+happen in unsafe code), then the values displayed for arguments to
+the interrupted frame might be incorrect.<sup><a name="text5" href=
+"#note5" id="text5"><font size="2">1</font></a></sup> This
+exception applies only to the interrupted frame: any frame farther
+down the stack will be fine.<br>
+<br>
+The value of a variable may be unavailable for these reasons:
+<ul>
+<li>The value of the <tt class="code">debug</tt> optimization
+quality may have omitted debug information needed to determine
+whether the variable is available. Unless a variable is an
+argument, its value will only be available when <tt class=
+"code">debug</tt> is at least <tt class="code">2</tt>.<br>
+<br></li>
+<li>The compiler did lifetime analysis and determined that the
+value was no longer needed, even though its scope had not been
+exited. Lifetime analysis is inhibited when the <tt class=
+"code">debug</tt> optimization quality is <tt class=
+"code">3</tt>.<br>
+<br></li>
+<li>The variable's name is an uninterned symbol (gensym). To save
+space, the compiler only dumps debug information about uninterned
+variables when the <tt class="code">debug</tt> optimization quality
+is <tt class="code">3</tt>.<br>
+<br></li>
+<li>The frame's location is unknown (see section&nbsp;<a href=
+"#unknown-locations">3.3.6</a>) because the debugger was entered
+due to an interrupt or unexpected hardware error. Under these
+conditions the values of arguments will be available, but might be
+incorrect. This is the exception above.<br>
+<br></li>
+<li>The variable was optimized out of existence. Variables with no
+reads are always optimized away, even in the interpreter. The
+degree to which the compiler deletes variables will depend on the
+value of the <tt class="code">compile-speed</tt> optimization
+quality, but most source-level optimizations are done under all
+compilation policies.</li>
+</ul>
+Since it is especially useful to be able to get the arguments to a
+function, argument variables are treated specially when the
+<tt class="code">speed</tt> optimization quality is less than
+<tt class="code">3</tt> and the <tt class="code">debug</tt> quality
+is at least <tt class="code">1</tt>. With this compilation policy,
+the values of argument variables are almost always available
+everywhere in the function, even at unknown locations. For
+non-argument variables, <tt class="code">debug</tt> must be at
+least <tt class="code">2</tt> for values to be available, and even
+then, values are only available at known locations.<br>
+<br>
+<a name="toc100" id="toc100"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc91" id="htoc91"><b><font size=
+"4">3.4.2</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Note On Lexical
+Variable Access</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="@concept73"></a><br>
+When the debugger command loop establishes variable bindings for
+available variables, these variable bindings have lexical scope and
+dynamic extent.<sup><a name="text6" href="#note6" id=
+"text6"><font size="2">2</font></a></sup> You can close over them,
+but such closures can't be used as upward funargs.<br>
+<br>
+You can also set local variables using <tt class="code">setq</tt>,
+but if the variable was closed over in the original source and
+never set, then setting the variable in the debugger may not change
+the value in all the functions the variable is defined in. Another
+risk of setting variables is that you may assign a value of a type
+that the compiler proved the variable could never take on. This may
+result in bad things happening.<br>
+<br>
+<a name="toc101" id="toc101"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc92" id="htoc92"><b><font size=
+"5">3.5</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Source Location
+Printing</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="source-locations" id="source-locations"></a> <a name=
+"@concept74"></a><br>
+One of CMUCL's unique capabilities is source level debugging of
+compiled code. These commands display the source location for the
+current frame:
+<dl compact="compact">
+<dt><tt class="code">source</tt> <tt class="code">{<tt class=
+"variable">context</tt>}</tt><br></dt>
+<dd>This command displays the file that the current frame's
+function was defined from (if it was defined from a file), and then
+the source form responsible for generating the code that the
+current frame was executing. If <tt class="variable">context</tt>
+is specified, then it is an integer specifying the number of
+enclosing levels of list structure to print.<br>
+<br></dd>
+<dt><tt class="code">vsource</tt> <tt class="code">{<tt class=
+"variable">context</tt>}</tt><br></dt>
+<dd>This command is identical to <tt class="code">source</tt>,
+except that it uses the global values of <tt class=
+"code">*print-level*</tt> and <tt class="code">*print-length*</tt>
+instead of the debugger printing control variables <tt class=
+"code">*debug-print-level*</tt> and <tt class=
+"code">*debug-print-length*</tt>.</dd>
+</dl>
+The source form for a location in the code is the innermost list
+present in the original source that encloses the form responsible
+for generating that code. If the actual source form is not a list,
+then some enclosing list will be printed. For example, if the
+source form was a reference to the variable <tt class=
+"code">*some-random-special*</tt>, then the innermost enclosing
+evaluated form will be printed. Here are some possible enclosing
+forms:
+<blockquote class="example">
+<pre>
+(let ((a *some-random-special*))
+  ...)
+
+(+ *some-random-special* ...)
+</pre></blockquote>
+If the code at a location was generated from the expansion of a
+macro or a source-level compiler optimization, then the form in the
+original source that expanded into that code will be printed.
+Suppose the file <tt class="filename">/usr/me/mystuff.lisp</tt>
+looked like this:
+<blockquote class="example">
+<pre>
+(defmacro mymac ()
+  '(myfun))
+
+(defun foo ()
+  (mymac)
+  ...)
+</pre></blockquote>
+If <tt class="code">foo</tt> has called <tt class=
+"code">myfun</tt>, and is waiting for it to return, then the
+<tt class="code">source</tt> command would print:
+<blockquote class="example">
+<pre>
+; File: /usr/me/mystuff.lisp
+
+(MYMAC)
+</pre></blockquote>
+Note that the macro use was printed, not the actual function call
+form, <tt class="code">(myfun)</tt>.<br>
+<br>
+If enclosing source is printed by giving an argument to <tt class=
+"code">source</tt> or <tt class="code">vsource</tt>, then the
+actual source form is marked by wrapping it in a list whose first
+element is <tt class="code">#:***HERE***</tt>. In the previous
+example, <tt class="code">source 1</tt> would print:
+<blockquote class="example">
+<pre>
+; File: /usr/me/mystuff.lisp
+
+(DEFUN FOO ()
+  (#:***HERE***
+   (MYMAC))
+  ...)
+</pre></blockquote>
+<a name="toc102" id="toc102"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc93" id="htoc93"><b><font size=
+"4">3.5.1</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">How the Source is
+Found</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+If the code was defined from Common Lisp by <tt class=
+"code">compile</tt> or <tt class="code">eval</tt>, then the source
+can always be reliably located. If the code was defined from a
+<tt class="code">fasl</tt> file created by <a name=
+"@funs103"></a><tt class="code">compile-file</tt>, then the
+debugger gets the source forms it prints by reading them from the
+original source file. This is a potential problem, since the source
+file might have moved or changed since the time it was
+compiled.<br>
+<br>
+The source file is opened using the <tt class="code">truename</tt>
+of the source file pathname originally given to the compiler. This
+is an absolute pathname with all logical names and symbolic links
+expanded. If the file can't be located using this name, then the
+debugger gives up and signals an error.<br>
+<br>
+If the source file can be found, but has been modified since the
+time it was compiled, the debugger prints this warning:
+<blockquote class="example">
+<pre>
+; File has been modified since compilation:
+;   <tt class="variable">filename</tt>
+; Using form offset instead of character position.
+</pre></blockquote>
+where <tt class="variable">filename</tt> is the name of the source
+file. It then proceeds using a robust but not foolproof heuristic
+for locating the source. This heuristic works if:
+<ul>
+<li>No top-level forms before the top-level form containing the
+source have been added or deleted, and<br>
+<br></li>
+<li>The top-level form containing the source has not been modified
+much. (More precisely, none of the list forms beginning before the
+source form have been added or deleted.)</li>
+</ul>
+If the heuristic doesn't work, the displayed source will be wrong,
+but will probably be near the actual source. If the ``shape'' of
+the top-level form in the source file is too different from the
+original form, then an error will be signaled. When the heuristic
+is used, the the source location commands are noticeably
+slowed.<br>
+<br>
+Source location printing can also be confused if (after the source
+was compiled) a read-macro you used in the code was redefined to
+expand into something different, or if a read-macro ever returns
+the same <tt class="code">eq</tt> list twice. If you don't define
+read macros and don't use <tt class="code">##</tt> in perverted
+ways, you don't need to worry about this.<br>
+<br>
+<a name="toc103" id="toc103"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc94" id="htoc94"><b><font size=
+"4">3.5.2</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Source Location
+Availability</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+<a name="@concept75"></a> Source location information is only
+available when the <tt class="code">debug</tt> optimization quality
+is at least <tt class="code">2</tt>. If source location information
+is unavailable, the source commands will give an error message.<br>
+<br>
+If source location information is available, but the source
+location is unknown because of an interrupt or unexpected hardware
+error (see section&nbsp;<a href="#unknown-locations">3.3.6</a>),
+then the command will print:
+<blockquote class="example">
+<pre>
+Unknown location: using block start.
+</pre></blockquote>
+and then proceed to print the source location for the start of the
+<em>basic block</em> enclosing the code location. <a name=
+"@concept76"></a> <a name="@concept77"></a> It's a bit complicated
+to explain exactly what a basic block is, but here are some
+properties of the block start location:
+<ul>
+<li>The block start location may be the same as the true
+location.<br>
+<br></li>
+<li>The block start location will never be later in the the
+program's flow of control than the true location.<br>
+<br></li>
+<li>No conditional control structures (such as <tt class=
+"code">if</tt>, <tt class="code">cond</tt>, <tt class=
+"code">or</tt>) will intervene between the block start and the true
+location (but note that some conditionals present in the original
+source could be optimized away.) Function calls <em>do not</em> end
+basic blocks.<br>
+<br></li>
+<li>The head of a loop will be the start of a block.<br>
+<br></li>
+<li>The programming language concept of ``block structure'' and the
+Common Lisp <tt class="code">block</tt> special form are totally
+unrelated to the compiler's basic block.</li>
+</ul>
+In other words, the true location lies between the printed location
+and the next conditional (but watch out because the compiler may
+have changed the program on you.)<br>
+<br>
+<a name="toc104" id="toc104"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc95" id="htoc95"><b><font size=
+"5">3.6</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Compiler Policy
+Control</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="debugger-policy" id="debugger-policy"></a> <a name=
+"@concept78"></a> <a name="@concept79"></a> <a name=
+"@concept80"></a><br>
+The compilation policy specified by <tt class="code">optimize</tt>
+declarations affects the behavior seen in the debugger. The
+<tt class="code">debug</tt> quality directly affects the debugger
+by controlling the amount of debugger information dumped. Other
+optimization qualities have indirect but observable effects due to
+changes in the way compilation is done.<br>
+<br>
+Unlike the other optimization qualities (which are compared in
+relative value to evaluate tradeoffs), the <tt class=
+"code">debug</tt> optimization quality is directly translated to a
+level of debug information. This absolute interpretation allows the
+user to count on a particular amount of debug information being
+available even when the values of the other qualities are changed
+during compilation. These are the levels of debug information that
+correspond to the values of the <tt class="code">debug</tt>
+quality:
+<dl compact="compact">
+<dt><tt class="code">0</tt><br></dt>
+<dd>Only the function name and enough information to allow the
+stack to be parsed.<br>
+<br></dd>
+<dt><tt class="code">&gt; 0</tt><br></dt>
+<dd>Any level greater than <tt class="code">0</tt> gives level
+<tt class="code">0</tt> plus all argument variables. Values will
+only be accessible if the argument variable is never set and
+<tt class="code">speed</tt> is not <tt class="code">3</tt>. CMUCL
+allows any real value for optimization qualities. It may be useful
+to specify <tt class="code">0.5</tt> to get backtrace argument
+display without argument documentation.<br>
+<br></dd>
+<dt><tt class="code">1</tt><br></dt>
+<dd>Level <tt class="code">1</tt> provides argument documentation
+(printed arglists) and derived argument/result type information.
+This makes <a name="@funs104"></a><tt class="code">describe</tt>
+more informative, and allows the compiler to do compile-time
+argument count and type checking for any calls compiled at
+run-time.<br>
+<br></dd>
+<dt><tt class="code">2</tt><br></dt>
+<dd>Level <tt class="code">1</tt> plus all interned local
+variables, source location information, and lifetime information
+that tells the debugger when arguments are available (even when
+<tt class="code">speed</tt> is <tt class="code">3</tt> or the
+argument is set.) This is the default.<br>
+<br></dd>
+<dt><tt class="code">&gt; 2</tt><br></dt>
+<dd>Any level greater than <tt class="code">2</tt> gives level
+<tt class="code">2</tt> and in addition disables tail-call
+optimization, so that the backtrace will contain frames for all
+invoked functions, even those in tail positions.<br>
+<br></dd>
+<dt><tt class="code">3</tt><br></dt>
+<dd>Level <tt class="code">2</tt> plus all uninterned variables. In
+addition, lifetime analysis is disabled (even when <tt class=
+"code">speed</tt> is <tt class="code">3</tt>), ensuring that all
+variable values are available at any known location within the
+scope of the binding. This has a speed penalty in addition to the
+obvious space penalty.</dd>
+</dl>
+As you can see, if the <tt class="code">speed</tt> quality is
+<tt class="code">3</tt>, debugger performance is degraded. This
+effect comes from the elimination of argument variable
+special-casing (see section&nbsp;<a href=
+"#debug-var-validity">3.4.1</a>.) Some degree of
+speed/debuggability tradeoff is unavoidable, but the effect is not
+too drastic when <tt class="code">debug</tt> is at least <tt class=
+"code">2</tt>.<br>
+<br>
+<a name="@concept81"></a> <a name="@concept82"></a> In addition to
+<tt class="code">inline</tt> and <tt class="code">notinline</tt>
+declarations, the relative values of the <tt class=
+"code">speed</tt> and <tt class="code">space</tt> qualities also
+change whether functions are inline expanded (see
+section&nbsp;<a href=
+"compiler-hint.html#inline-expansion">5.8</a>.) If a function is
+inline expanded, then there will be no frame to represent the call,
+and the arguments will be treated like any other local variable.
+Functions may also be ``semi-inline'', in which case there is a
+frame to represent the call, but the call is to an optimized local
+version of the function, not to the original function.<br>
+<br>
+<a name="toc105" id="toc105"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc96" id="htoc96"><b><font size=
+"5">3.7</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Exiting
+Commands</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+These commands get you out of the debugger.<br>
+<br>
+<dl compact="compact">
+<dt><tt class="code">quit</tt><br></dt>
+<dd>Throw to top level.<br>
+<br></dd>
+<dt><tt class="code">restart</tt> <tt class="code">{<tt class=
+"variable">n</tt>}</tt><br></dt>
+<dd>Invokes the <tt class="variable">n</tt>th restart case as
+displayed by the <tt class="code">error</tt> command. If <tt class=
+"variable">n</tt> is not specified, the available restart cases are
+reported.<br>
+<br></dd>
+<dt><tt class="code">go</tt><br></dt>
+<dd>Calls <tt class="code">continue</tt> on the condition given to
+<tt class="code">debug</tt>. If there is no restart case named
+<tt class="variable">continue</tt>, then an error is signaled.<br>
+<br></dd>
+<dt><tt class="code">abort</tt><br></dt>
+<dd>Calls <tt class="code">abort</tt> on the condition given to
+<tt class="code">debug</tt>. This is useful for popping debug
+command loop levels or aborting to top level, as the case may
+be.</dd>
+</dl>
+<a name="toc106" id="toc106"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc97" id="htoc97"><b><font size=
+"5">3.8</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Information
+Commands</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+Most of these commands print information about the current frame or
+function, but a few show general information.<br>
+<br>
+<dl compact="compact">
+<dt><tt class="code">help</tt>, <tt class="code">?</tt><br></dt>
+<dd>Displays a synopsis of debugger commands.<br>
+<br></dd>
+<dt><tt class="code">describe</tt><br></dt>
+<dd>Calls <tt class="code">describe</tt> on the current function,
+displays number of local variables, and indicates whether the
+function is compiled or interpreted.<br>
+<br></dd>
+<dt><tt class="code">print</tt><br></dt>
+<dd>Displays the current function call as it would be displayed by
+moving to this frame.<br>
+<br></dd>
+<dt><tt class="code">vprint</tt> (or <tt class="code">pp</tt>)
+<tt class="code">{<tt class=
+"variable">verbosity</tt>}</tt><br></dt>
+<dd>Displays the current function call using <tt class=
+"code">*print-level*</tt> and <tt class="code">*print-length*</tt>
+instead of <tt class="code">*debug-print-level*</tt> and <tt class=
+"code">*debug-print-length*</tt>. <tt class=
+"variable">verbosity</tt> is a small integer (default 2) that
+controls other dimensions of verbosity.<br>
+<br></dd>
+<dt><tt class="code">error</tt><br></dt>
+<dd>Prints the condition given to <tt class=
+"code">invoke-debugger</tt> and the active proceed cases.<br>
+<br></dd>
+<dt><tt class="code">backtrace</tt> <tt class="code">{<tt class=
+"variable">n</tt>}</tt><br></dt>
+<dd><br>
+Displays all the frames from the current to the bottom. Only shows
+<tt class="variable">n</tt> frames if specified. The printing is
+controlled by <tt class="code">*debug-print-level*</tt> and
+<tt class="code">*debug-print-length*</tt>.</dd>
+</dl>
+<a name="toc107" id="toc107"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc98" id="htoc98"><b><font size=
+"5">3.9</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Breakpoint
+Commands</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="@concept83"></a><br>
+CMUCL supports setting of breakpoints inside compiled functions and
+stepping of compiled code. Breakpoints can only be set at at known
+locations (see section&nbsp;<a href=
+"#unknown-locations">3.3.6</a>), so these commands are largely
+useless unless the <tt class="code">debug</tt> optimize quality is
+at least <tt class="code">2</tt> (see section&nbsp;<a href=
+"#debugger-policy">3.6</a>). These commands manipulate breakpoints:
+<dl compact="compact">
+<dt><tt class="code">breakpoint</tt> <tt class=
+"variable">location</tt> <tt class="code">{<tt class=
+"variable">option</tt> <tt class=
+"variable">value</tt>}</tt><sup><font size=
+"2">*</font></sup><br></dt>
+<dd>Set a breakpoint in some function. <tt class=
+"variable">location</tt> may be an integer code location number (as
+displayed by <tt class="code">list-locations</tt>) or a keyword.
+The keyword can be used to indicate setting a breakpoint at the
+function start (<tt class="code">:start</tt>, <tt class=
+"code">:s</tt>) or function end (<tt class="code">:end</tt>,
+<tt class="code">:e</tt>). The <tt class="code">breakpoint</tt>
+command has <tt class="code">:condition</tt>, <tt class=
+"code">:break</tt>, <tt class="code">:print</tt> and <tt class=
+"code">:function</tt> options which work similarly to the
+<tt class="code">trace</tt> options.<br>
+<br></dd>
+<dt><tt class="code">list-locations</tt> (or <tt class=
+"code">ll</tt>) <tt class="code">{<tt class=
+"variable">function</tt>}</tt><br></dt>
+<dd>List all the code locations in the current frame's function, or
+in <tt class="variable">function</tt> if it is supplied. The
+display format is the code location number, a colon and then the
+source form for that location:
+<blockquote class="example">
+<pre>
+3: (1- N)
+</pre></blockquote>
+If consecutive locations have the same source, then a numeric range
+like <tt class="code">3-5:</tt> will be printed. For example, a
+default function call has a known location both immediately before
+and after the call, which would result in two code locations with
+the same source. The listed function becomes the new default
+function for breakpoint setting (via the <tt class=
+"code">breakpoint</tt>) command.<br>
+<br></dd>
+<dt><tt class="code">list-breakpoints</tt> (or <tt class=
+"code">lb</tt>)<br></dt>
+<dd>List all currently active breakpoints with their breakpoint
+number.<br>
+<br></dd>
+<dt><tt class="code">delete-breakpoint</tt> (or <tt class=
+"code">db</tt>) <tt class="code">{<tt class=
+"variable">number</tt>}</tt><br></dt>
+<dd>Delete a breakpoint specified by its breakpoint number. If no
+number is specified, delete all breakpoints.<br>
+<br></dd>
+<dt><tt class="code">step</tt><br></dt>
+<dd>Step to the next possible breakpoint location in the current
+function. This always steps over function calls, instead of
+stepping into them</dd>
+</dl>
+<a name="toc108" id="toc108"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc99" id="htoc99"><b><font size=
+"4">3.9.1</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Breakpoint
+Example</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+Consider this definition of the factorial function:
+<blockquote class="lisp">
+<pre>
+(defun ! (n)
+  (if (zerop n)
+      1
+      (* n (! (1- n)))))
+</pre></blockquote>
+This debugger session demonstrates the use of breakpoints:
+<blockquote class="example">
+<pre>
+common-lisp-user&gt; (break) ; Invoke debugger
+
+Break
+
+Restarts:
+  0: [CONTINUE] Return from BREAK.
+  1: [ABORT   ] Return to Top-Level.
+
+Debug  (type H for help)
+
+(INTERACTIVE-EVAL (BREAK))
+0] ll #'!
+0: #'(LAMBDA (N) (BLOCK ! (IF # 1 #)))
+1: (ZEROP N)
+2: (* N (! (1- N)))
+3: (1- N)
+4: (! (1- N))
+5: (* N (! (1- N)))
+6: #'(LAMBDA (N) (BLOCK ! (IF # 1 #)))
+0] br 2
+(* N (! (1- N)))
+1: 2 in !
+Added.
+0] q
+
+common-lisp-user&gt; (! 10) ; Call the function
+
+*Breakpoint hit*
+
+Restarts:
+  0: [CONTINUE] Return from BREAK.
+  1: [ABORT   ] Return to Top-Level.
+
+Debug  (type H for help)
+
+(! 10) ; We are now in first call (arg 10) before the multiply
+Source: (* N (! (1- N)))
+3] st
+
+*Step*
+
+(! 10) ; We have finished evaluation of (1- n)
+Source: (1- N)
+3] st
+
+*Breakpoint hit*
+
+Restarts:
+  0: [CONTINUE] Return from BREAK.
+  1: [ABORT   ] Return to Top-Level.
+
+Debug  (type H for help)
+
+(! 9) ; We hit the breakpoint in the recursive call
+Source: (* N (! (1- N)))
+3] 
+</pre></blockquote>
+<a name="toc109" id="toc109"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc100" id="htoc100"><b><font size=
+"5">3.10</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Function
+Tracing</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="@concept84"></a> <a name="@concept85"></a><br>
+The tracer causes selected functions to print their arguments and
+their results whenever they are called. Options allow conditional
+printing of the trace information and conditional breakpoints on
+function entry or exit.<br>
+<br>
+<br>
+<a name="@funs105"></a><a name="FN:trace" id="FN:trace"></a>
+<div align="left">[Macro]<br>
+<tt class="function-name">trace</tt> <tt class="code">{option
+global-value}</tt><sup><font size="2">*</font></sup> <tt class=
+"code">{name <tt class="code">{option value}</tt><sup><font size=
+"2">*</font></sup>}</tt><sup><font size="2">*</font></sup>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+<br>
+<tt class="code">trace</tt> is a debugging tool that prints
+information when specified functions are called. In its simplest
+form:
+<blockquote class="example">
+<pre>
+    (trace <tt class="variable">name-1</tt> <tt class=
+"variable">name-2</tt> ...)
+  
+</pre></blockquote>
+<tt class="code">trace</tt> causes a printout on <a name=
+"@vars26"></a><tt class="code">*trace-output*</tt> each time that
+one of the named functions is entered or returns (the <tt class=
+"variable">names</tt> are not evaluated.) Trace output is indented
+according to the number of pending traced calls, and this trace
+depth is printed at the beginning of each line of output. Printing
+verbosity of arguments and return values is controlled by <a name=
+"@vars27"></a><tt class="code">*debug-print-level*</tt> and
+<a name="@vars28"></a><tt class=
+"code">*debug-print-length*</tt>.<br>
+<br>
+Local functions defined by <tt class="code">flet</tt> and
+<tt class="code">labels</tt> can be traced using the syntax
+<tt class="code">(flet f f1 f2 ...)</tt> or <tt class=
+"code">(labels f f1 f2 ...)</tt> where <tt class="code">f</tt> is
+the <tt class="code">flet</tt> or <tt class="code">labels</tt>
+function we want to trace and <tt class="code">f1</tt>, <tt class=
+"code">f2</tt>, are the functions containing the local function
+<tt class="code">f</tt>. Invidiual methods can also be traced using
+the syntax <tt class="code">(method <tt class="variable">name</tt>
+<tt class="variable">qualifiers</tt> <tt class=
+"variable">specializers</tt>)</tt>. See&nbsp;<a href=
+"extensions.html#sec:method-tracing">2.23.7</a> for more
+information.<br>
+<br>
+If no <tt class="variable">names</tt> or <tt class=
+"variable">options</tt> are are given, <tt class="code">trace</tt>
+returns the list of all currently traced functions, <tt class=
+"code">*traced-function-list*</tt>.<br>
+<br>
+Trace options can cause the normal printout to be suppressed, or
+cause extra information to be printed. Each option is a pair of an
+option keyword and a value form. Options may be interspersed with
+function names. Options only affect tracing of the function whose
+name they appear immediately after. Global options are specified
+before the first name, and affect all functions traced by a given
+use of <tt class="code">trace</tt>. If an already traced function
+is traced again, any new options replace the old options. The
+following options are defined:
+<dl compact="compact">
+<dt><tt class="code">:condition</tt> <tt class=
+"variable">form</tt>, <tt class="code">:condition-after</tt>
+<tt class="variable">form</tt>, <tt class=
+"code">:condition-all</tt> <tt class="variable">form</tt><br></dt>
+<dd>If <tt class="code">:condition</tt> is specified, then
+<tt class="code">trace</tt> does nothing unless <tt class=
+"variable">form</tt> evaluates to true at the time of the call.
+<tt class="code">:condition-after</tt> is similar, but suppresses
+the initial printout, and is tested when the function returns.
+<tt class="code">:condition-all</tt> tries both before and
+after.<br>
+<br></dd>
+<dt><tt class="code">:wherein</tt> <tt class=
+"variable">names</tt><br></dt>
+<dd>If specified, <tt class="variable">names</tt> is a function
+name or list of names. <tt class="code">trace</tt> does nothing
+unless a call to one of those functions encloses the call to this
+function (i.e. it would appear in a backtrace.) Anonymous functions
+have string names like <tt class="code">"DEFUN FOO"</tt>.
+Individual methods can also be traced. See section&nbsp;<a href=
+"extensions.html#sec:method-tracing">2.23.7</a>.<br>
+<br></dd>
+<dt><tt class="code">:wherein-only</tt> <tt class=
+"variable">names</tt><br></dt>
+<dd>If specified, this is just like <tt class="code">:wherein</tt>,
+but trace produces output only if the immediate caller of the
+traced function is one of the functions listed in <tt class=
+"variable">names</tt>.<br>
+<br></dd>
+<dt><tt class="code">:break</tt> <tt class="variable">form</tt>,
+<tt class="code">:break-after</tt> <tt class="variable">form</tt>,
+<tt class="code">:break-all</tt> <tt class=
+"variable">form</tt><br></dt>
+<dd>If specified, and <tt class="variable">form</tt> evaluates to
+true, then the debugger is invoked at the start of the function, at
+the end of the function, or both, according to the respective
+option.<br>
+<br></dd>
+<dt><tt class="code">:print</tt> <tt class="variable">form</tt>,
+<tt class="code">:print-after</tt> <tt class="variable">form</tt>,
+<tt class="code">:print-all</tt> <tt class=
+"variable">form</tt><br></dt>
+<dd>In addition to the usual printout, the result of evaluating
+<tt class="variable">form</tt> is printed at the start of the
+function, at the end of the function, or both, according to the
+respective option. Multiple print options cause multiple values to
+be printed.<br>
+<br></dd>
+<dt><tt class="code">:function</tt> <tt class=
+"variable">function-form</tt><br></dt>
+<dd>This is a not really an option, but rather another way of
+specifying what function to trace. The <tt class=
+"variable">function-form</tt> is evaluated immediately, and the
+resulting function is traced.<br>
+<br></dd>
+<dt><tt class="code">:encapsulate <tt class="code">{:default | t |
+nil}</tt></tt><br></dt>
+<dd>In CMUCL, tracing can be done either by temporarily redefining
+the function name (encapsulation), or using breakpoints. When
+breakpoints are used, the function object itself is destructively
+modified to cause the tracing action. The advantage of using
+breakpoints is that tracing works even when the function is
+anonymously called via <tt class="code">funcall</tt>.<br>
+<br>
+When <tt class="code">:encapsulate</tt> is true, tracing is done
+via encapsulation. <tt class="code">:default</tt> is the default,
+and means to use encapsulation for interpreted functions and
+funcallable instances, breakpoints otherwise. When encapsulation is
+used, forms are <i>not</i> evaluated in the function's lexical
+environment, but <tt class="code">debug:arg</tt> can still be
+used.<br>
+<br>
+Note that if you trace using <tt class="code">:encapsulate</tt>,
+you will only get a trace or breakpoint at the outermost call to
+the traced function, not on recursive calls.</dd>
+</dl>
+In the case of functions where the known return convention is used
+to optimize, encapsulation may be necessary in order to make
+tracing work at all. The symptom of this occurring is an error
+stating
+<blockquote class="example">
+<pre>
+    Error in function <tt class=
+"variable">foo</tt>: :FUNCTION-END breakpoints are
+    currently unsupported for the known return convention.
+  
+</pre></blockquote>
+in such cases we recommend using <tt class="code">(trace <tt class=
+"variable">foo</tt> :encapsulate t)</tt><br>
+<br>
+<a name="@concept86"></a> <a name="@concept87"></a> <a name=
+"@concept88"></a> <a name="@concept89"></a> <a name=
+"@concept90"></a><br>
+<br>
+<tt class="code">:condition</tt>, <tt class="code">:break</tt> and
+<tt class="code">:print</tt> forms are evaluated in the lexical
+environment of the called function; <tt class="code">debug:var</tt>
+and <tt class="code">debug:arg</tt> can be used. The <tt class=
+"code">-after</tt> and <tt class="code">-all</tt> forms are
+evaluated in the null environment.</blockquote>
+<br>
+<a name="@funs106"></a><a name="FN:untrace" id="FN:untrace"></a>
+<div align="left">[Macro]<br>
+<tt class="function-name">untrace</tt> <tt class=
+"code">&amp;rest</tt> <tt class="variable">function-names</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This macro turns off tracing for the specified functions, and
+removes their names from <tt class=
+"code">*traced-function-list*</tt>. If no <tt class=
+"variable">function-names</tt> are given, then all currently traced
+functions are untraced.</blockquote>
+<br>
+<a name="@vars29"></a><a name="VR:traced-function-list" id=
+"VR:traced-function-list"></a>
+<div align="left">[Variable]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">*traced-function-list*</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+A list of function names maintained and used by <tt class=
+"code">trace</tt>, <tt class="code">untrace</tt>, and <tt class=
+"code">untrace-all</tt>. This list should contain the names of all
+functions currently being traced.</blockquote>
+<br>
+<a name="@vars30"></a><a name="VR:max-trace-indentation" id=
+"VR:max-trace-indentation"></a>
+<div align="left">[Variable]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">*max-trace-indentation*</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+The maximum number of spaces which should be used to indent trace
+printout. This variable is initially set to 40.</blockquote>
+<br>
+<a name="@vars31"></a><a name="VR:trace-encapsulate-package-names"
+id="VR:trace-encapsulate-package-names"></a>
+<div align="left">[Variable]<br>
+<tt class="function-name">debug:</tt><tt class=
+"function-name">*trace-encapsulate-package-names*</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+A list of package names. Functions from these packages are traced
+using encapsulation instead of function-end breakpoints. This list
+should at least include those packages containing functions used
+directly or indirectly in the implementation of <tt class=
+"code">trace</tt>.</blockquote>
+<a name="toc110" id="toc110"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc101" id="htoc101"><b><font size=
+"4">3.10.1</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Encapsulation
+Functions</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="@concept91"></a> <a name="@concept92"></a><br>
+The encapsulation functions provide a mechanism for intercepting
+the arguments and results of a function. <tt class=
+"code">encapsulate</tt> changes the function definition of a
+symbol, and saves it so that it can be restored later. The new
+definition normally calls the original definition. The Common Lisp
+<a name="@funs107"></a><tt class="code">fdefinition</tt> function
+always returns the original definition, stripping off any
+encapsulation.<br>
+<br>
+The original definition of the symbol can be restored at any time
+by the <tt class="code">unencapsulate</tt> function. <tt class=
+"code">encapsulate</tt> and <tt class="code">unencapsulate</tt>
+allow a symbol to be multiply encapsulated in such a way that
+different encapsulations can be completely transparent to each
+other.<br>
+<br>
+Each encapsulation has a type which may be an arbitrary lisp
+object. If a symbol has several encapsulations of different types,
+then any one of them can be removed without affecting more recent
+ones. A symbol may have more than one encapsulation of the same
+type, but only the most recent one can be undone.<br>
+<br>
+<br>
+<a name="@funs108"></a><a name="FN:encapsulate" id=
+"FN:encapsulate"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">encapsulate</tt> <tt class="variable">symbol</tt>
+<tt class="variable">type</tt> <tt class="variable">body</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Saves the current definition of <tt class="variable">symbol</tt>,
+and replaces it with a function which returns the result of
+evaluating the form, <tt class="variable">body</tt>. <tt class=
+"variable">Type</tt> is an arbitrary lisp object which is the type
+of encapsulation.<br>
+<br>
+When the new function is called, the following variables are bound
+for the evaluation of <tt class="variable">body</tt>:
+<dl compact="compact">
+<dt><tt class="code">extensions:argument-list</tt><br></dt>
+<dd>A list of the arguments to the function.<br>
+<br></dd>
+<dt><tt class="code">extensions:basic-definition</tt><br></dt>
+<dd>The unencapsulated definition of the function.</dd>
+</dl>
+The unencapsulated definition may be called with the original
+arguments by including the form
+<blockquote class="lisp">
+<pre>
+    (apply extensions:basic-definition extensions:argument-list)
+  
+</pre></blockquote>
+<br>
+<br>
+<tt class="code">encapsulate</tt> always returns <tt class=
+"variable">symbol</tt>.</blockquote>
+<br>
+<a name="@funs109"></a><a name="FN:unencapsulate" id=
+"FN:unencapsulate"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">unencapsulate</tt> <tt class="variable">symbol</tt>
+<tt class="variable">type</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Undoes <tt class="variable">symbol</tt>'s most recent encapsulation
+of type <tt class="variable">type</tt>. <tt class=
+"variable">Type</tt> is compared with <tt class="code">eq</tt>.
+Encapsulations of other types are left in place.</blockquote>
+<br>
+<a name="@funs110"></a><a name="FN:encapsulated-p" id=
+"FN:encapsulated-p"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">encapsulated-p</tt> <tt class=
+"variable">symbol</tt> <tt class="variable">type</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Returns <tt class="code">t</tt> if <tt class="variable">symbol</tt>
+has an encapsulation of type <tt class="variable">type</tt>.
+Returns <tt class="code">nil</tt> otherwise. <tt class=
+"variable">type</tt> is compared with <tt class=
+"code">eq</tt>.</blockquote>
+<a name="toc111" id="toc111"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc102" id="htoc102"><b><font size=
+"5">3.11</font></b></a></td>
+<td width="100%" align="center"><b><font size=
+"5">Specials</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+These are the special variables that control the debugger
+action.<br>
+<br>
+<br>
+<a name="@vars32"></a><a name="VR:debug-print-level" id=
+"VR:debug-print-level"></a>
+<div align="left">[Variable]<br>
+<tt class="function-name">debug:</tt><tt class=
+"function-name">*debug-print-level*</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+<a name="@vars33"></a><a name="VR:debug-print-length" id=
+"VR:debug-print-length"></a>
+<div align="left">[Variable]<br>
+<tt class="function-name">debug:</tt><tt class=
+"function-name">*debug-print-length*</tt> &nbsp;&nbsp;&nbsp;</div>
+<br>
+<br>
+<tt class="code">*print-level*</tt> and <tt class=
+"code">*print-length*</tt> are bound to these values during the
+execution of some debug commands. When evaluating arbitrary
+expressions in the debugger, the normal values of <tt class=
+"code">*print-level*</tt> and <tt class="code">*print-length*</tt>
+are in effect. These variables are initially set to 3 and 5,
+respectively.</blockquote>
+<hr width="50%" size="1">
+<dl>
+<dt><a name="note5" href="#text5" id="note5"><font size=
+"5">1</font></a></dt>
+<dd>Since the location of an interrupt or hardware error will
+always be an unknown location (see section&nbsp;<a href=
+"#unknown-locations">3.3.6</a>), non-argument variable values will
+never be available in the interrupted frame.</dd>
+<dt><a name="note6" href="#text6" id="note6"><font size=
+"5">2</font></a></dt>
+<dd>The variable bindings are actually created using the Common
+Lisp <tt class="code">symbol-macrolet</tt> special form.</dd>
+</dl>
+<hr>
+<a href="extensions.html"><img src="previous_motif.gif" alt=
+"Previous"></a> <a href="index.html"><img src="contents_motif.gif"
+alt="Up"></a> <a href="compiler.html"><img src="next_motif.gif"
+alt="Next"></a>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>usocket API documentation</title>
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
+  <style type="text/css">
+dt.sym {
+  font-weight: normal;
+  background-color: #8ca;
+  border-bottom: 1px solid gray;
+  border-left:  1px solid #bbb;
+  padding-left: 1ex;
+}
+.function-name { font-weight: bold }
+.class-name { font-weight: bold }
+.slot-name { font-weight: bold }
+.var-name { font-weight: bold }
+dl.faq dt {
+  margin-top: 1em;
+  font-weight: bold;
+  font-size: larger;
+}
+pre {
+  background-color: #ace;
+  padding: 1ex;
+  border: 1px solid black;
+}
+  </style>
+</head>
+<body>
+
+<ul>
+<li><a href="#docs">API documentation</a></li>
+<li><a href="#faqs">How do I ... (FAQ)</a></li>
+</ul>
+
+<h1><a name="docs">usocket API documentation</a></h1>
+
+<p style="font-size:8px">$Id: api-docs.shtml 340 2008-06-12 19:46:00Z ehuelsmann $ <br />
+  Work in progress.</p>
+
+<p><em>Please note that we're committed to the interface described
+below for the entire 0.x phase of the library.  When 1.0 comes
+some of the functionality may be split up in different functions
+and guarantees may change because of it.</em></p>
+
+
+<h2>Conventions</h2>
+
+
+<dl>
+<dt>Specification of a <em>host</em> parameter</dt>
+<dd>A <em>host</em> parameter may be any one of 
+    <ul>
+    <li>32-bit positive integer,</li>
+    <li>a string containing an IP addres in dotted notation, or</li>
+    <li> a host name to be resolved through DNS lookup.</li>
+    </ul>
+</dd>
+</dl>
+
+<h2>Functions for socket creation and manipulation</h2>
+
+<dl>
+<dt class="sym"><span class="function-name">socket-connect</span> host port &amp;key element-type =&gt; socket</dt>
+
+<dd>
+<p>Creates a tcp (stream) socket to the <em>host</em> and <em>port</em> specified. The return value is
+a socket object of class <em><a href="#stream-usocket">stream-usocket</a></em>.</p>
+
+<p>The <em>element-type</em> argument is used in the
+construction of the associated stream.</p></dd>
+
+<dt class="sym">
+<span class="function-name">socket-listen</span> host port &amp;key reuse-address backlog element-type =&gt; socket</dt>
+<dd><p>Creates and returns a passive (&quot;server&quot;) socket associated with <em>host</em> and <em>port</em>.
+       The object returned is of subtype <a href="#stream-server-usocket">stream-server-usocket</a>.</p>
+    <p><em>host</em> names a local interface.<br />
+       <em>port</em> names a local port, or 0 (zero) to request a random free port.<br />
+       <em>reuse-address</em> is a boolean (t, nil) value signalling reuse of the address is requested (or not).<br />
+       <em>backlog</em> is the length of the queue containing connections which haven't actually been accepted yet.<br />
+       <em>element-type</em> is the default element type used for sockets created by socket-accept. <em>character</em> is
+           the default when it's not explicitly provided.
+    </p></dd>
+
+
+<dt class="sym"><span class="function-name"><a name="socket-accept">socket-accept</a></span> socket &amp;key element-type =&gt; new-socket</dt>
+<dd><p>Creates and returns an active (&quot;connected&quot;) stream socket <em>new-socket</em> from the
+       <em>socket</em> passed. The return value is a socket object of class 
+       <em><a href="#stream-usocket">stream-usocket</a></em>.</p>
+    <p><em>element-type</em> is the element type used to construct the associated stream. If it's not specified,
+           the element-type of <em>socket</em> (as used when it was created by the call to socket-listen) is
+           used.
+    </p>
+</dd>
+
+<dt class="sym"><span class="function-name">socket-close</span> socket</dt>
+<dd><p>Flushes the stream associated with the socket and closes the socket connection.</p></dd>
+
+
+<!-- Items to document:
+
+Informational functions:
+get-local-address 
+get-peer-address 
+get-local-port 
+get-peer-port 
+get-local-name 
+get-peer-name 
+
+
+ -->
+
+</dl>
+
+<h2>Classes</h2>
+
+<dl>
+  <dt class="sym"><span class="class-name"><a name="usocket">usocket</a></span></dt>
+  <dd>Slots:
+    <dl>
+    <dt><span class="slot-name">socket</span> :accessor socket</dt>
+    <dd><p>Used to store sockets as used by the current implementation - may be any of socket handles, socket objects and stream objects</p></dd></dl>
+  </dd>
+
+<dt class="sym"><span class="class-name"><a name="stream-usocket">stream-usocket</a></span></dt>
+<dd>Parent classes: usocket<br />
+    Slots:
+    <dl>
+    <dt><span class="slot-name">stream</span> :accessor socket-stream</dt>
+    <dd><p>Used to store the stream associated with the tcp socket connection.<br />
+           When you want to write to the socket stream, use this function.</p></dd></dl>
+</dd>
+
+<dt class="sym"><span class="class-name"><a name="stream-server-usocket">stream-server-usocket</a></span></dt>
+<dd>Parent classes: usocket<br />
+    Slots:
+    <dl>
+    <dt><span class="slot-name">element-type</span> :reader element-type</dt>
+    <dd><p>Indicates the default element-type to be used when constructing streams off this socket when
+        no element type is specified in the call to <em><a href="#socket-accept">socket-accept</a></em>.</p></dd></dl>
+</dd>
+</dl>
+
+<h2>Variables / constants</h2>
+
+<dl>
+<dt class="sym"><span class="var-name">*wildcard-host*</span></dt>
+<dd><p>The host to use with socket-listen to make the socket listen on all available interfaces.</p></dd>
+<dt class="sym"><span class="var-name">*auto-port*</span></dt>
+<dd><p>The port number to use with socket-listen to make the socket listen on a random available port. The port number assigned can be 
+               retrieved from the returned socket by calling <em><a href="#get-local-port">get-local-port</a></em>.</p></dd>
+</dl>
+
+
+<h1><a name="faqs">How do I ...</a></h1>
+
+<dl class="faq">
+<dt>... check whether the other end has closed my socket stream?
+</dt>
+<dd>Reading from a stream which has been closed at the remote end
+  signals an END-OF-FILE condition, meaning that reading from the stream
+  and detecting that condition is the way to do it.
+</dd>
+<dt>... check whether reading from a socket stream will block?
+</dt>
+<dd>When you want to check <b>one</b> stream for readiness of input,
+  call the
+  <a href="http://www.lisp.org/HyperSpec/Body/fun_listen.html">listen</a>
+  function on the stream object associated with the socket.<br />
+  Example:
+<pre>(listen (usocket:socket-stream your-socket))
+ ==&gt; NIL (if no input is available)
+</pre>
+</dd>
+<dt>... wait for input to become available on (at least) one stream (of a set)
+</dt>
+<dd>Currently, that's hard to do efficiently if you want to use releases.
+  The next minor release (0.4.0) will include this functionality and
+  for all platforms (except SBCL and LispWorks; both Win32) it's already
+  available in trunk (svn://common-lisp.net/project/usocket/svn/usocket/trunk).
+  <br />
+  If you want to use this code you're most welcome and feedback is appreciated.<br />
+  Example to be used with trunk:
+<pre>(usocket:wait-for-input (list socket1 socket2 socket3) :timeout &lt;your optional timeout value&gt;)
+ ==&gt; list-of-sockets-to-read-from</pre>
+</dd>
+<dt>... convert my existing trivial-sockets based application to usocket?
+</dt>
+<dd>There are actually 3 answers to that question.
+  <ol>
+    <li>Rewrite your code to keep a usocket object instead of the stream
+      object returned by trivial-sockets.</li>
+    <li>The quick conversion with the good performance characteristics
+      (use only when you don't want to use the socket object):<br />
+      Replace all your invocations of
+<pre>
+  (trivial-sockets:open-socket-stream ....)
+
+with
+  (usocket:socket-stream (usocket:socket-connect ...))
+</pre>
+
+And replace all invocations of
+<pre>
+  (trivial-sockets:socket-accept ...)
+
+with
+  (usocket:socket-stream (usocket:socket-accept ...))
+</pre>
+
+And replace all invocations of
+<pre>
+  (trivial-sockets:open-server ...)
+
+with
+  (usocket:socket-listen ...)
+</pre></li>
+    <li>And the last option which provides a compatible
+      (but slower, because it uses Gray streams) interface is to use
+      trivial-usocket.<br />
+      The trivial-usocket package provides a 1-1 mapped interface to
+      trivial-sockets, but uses Gray streams; that way, it's later possible
+      to retrieve the socket object from the stream returned and to use that
+      socket for other usocket operations. Use this approach as a migration
+      path where you're not rewriting your application at once, but in
+      small steps.
+      </li>
+    </ol>
+</dd>
+
+</dl>
+
+
+<div style="float:left;font-size:x-small;font-weight:bold">
+Back to <a href="http://common-lisp.net/">Common-lisp.net</a>.
+</div>
+ <div class="check" style="float:right">
+   <a href="http://validator.w3.org/check/referer">Valid XHTML 1.0 Strict</a>
+ </div>
+</body>
+</html>

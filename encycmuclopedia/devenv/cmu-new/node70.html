@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>3.4.1 Variable Value Availability</TITLE>
+<META NAME="description" CONTENT="3.4.1 Variable Value Availability">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1488" HREF="node71.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1486" HREF="node69.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1480" HREF="node69.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1490" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1491" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1489" HREF="node71.html">3.4.2 Note On Lexical </A>
+<B>Up:</B> <A NAME="tex2html1487" HREF="node69.html">3.4 Variable Access</A>
+<B> Previous:</B> <A NAME="tex2html1481" HREF="node69.html">3.4 Variable Access</A>
+<BR> <P>
+<H2><A NAME="SECTION00441000000000000000">3.4.1 Variable Value Availability</A></H2>
+<P>
+<A NAME="debugvarvalidity">&#160;</A>
+<A NAME="8818">&#160;</A>
+<A NAME="8819">&#160;</A>
+<A NAME="8820">&#160;</A>
+<P>
+The value of a variable may be unavailable to the debugger in portions of the
+program where Common Lisp says that the variable is defined.  If a variable value is
+not available, the debugger will not let you read or write that variable.  With
+one exception, the debugger will never display an incorrect value for a
+variable.  Rather than displaying incorrect values, the debugger tells you the
+value is unavailable.
+<P>
+The one exception is this: if you interrupt (e.g., with <tt><IMG WIDTH=14 HEIGHT=11 ALIGN=BOTTOM ALT="tex2html_wrap_inline15951" SRC="img13.gif"></tt>) or if there is
+an unexpected hardware error such as ``<tt>bus error</tt>'' (which should only happen
+in unsafe code), then the values displayed for arguments to the interrupted
+frame might be incorrect.<A NAME="tex2html3" HREF="footnode.html#6898"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+This exception applies only to the interrupted frame: any frame farther down
+the stack will be fine.
+<P>
+The value of a variable may be unavailable for these reasons:
+<UL>
+<LI>
+The value of the <tt>debug</tt> optimization quality may have omitted debug
+information needed to determine whether the variable is available.
+Unless a variable is an argument, its value will only be available when
+<tt>debug</tt> is at least <tt>2</tt>.
+<LI>
+The compiler did lifetime analysis and determined that the value was no longer
+needed, even though its scope had not been exited.  Lifetime analysis is
+inhibited when the <tt>debug</tt> optimization quality is <tt>3</tt>.
+<LI>
+The variable's name is an uninterned symbol (gensym).  To save space, the
+compiler only dumps debug information about uninterned variables when the
+<tt>debug</tt> optimization quality is <tt>3</tt>.
+<LI>
+The frame's location is unknown (see section&nbsp;<A HREF="node68.html#unknownlocations">3.3.6</A>) because
+the debugger was entered due to an interrupt or unexpected hardware error.
+Under these conditions the values of arguments will be available, but might be
+incorrect.  This is the exception above.
+<LI>
+The variable was optimized out of existence.  Variables with no reads are
+always optimized away, even in the interpreter.  The degree to which the
+compiler deletes variables will depend on the value of the <tt>compile-speed</tt>
+optimization quality, but most source-level optimizations are done under all
+compilation policies.
+</UL>
+<P>
+Since it is especially useful to be able to get the arguments to a function,
+argument variables are treated specially when the <tt>speed</tt> optimization
+quality is less than <tt>3</tt> and the <tt>debug</tt> quality is at least <tt>1</tt>.
+With this compilation policy, the values of argument variables are almost
+always available everywhere in the function, even at unknown locations.  For
+non-argument variables, <tt>debug</tt> must be at least <tt>2</tt> for values to be
+available, and even then, values are only available at known locations.
+<P>
+<HR><A NAME="tex2html1488" HREF="node71.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1486" HREF="node69.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1480" HREF="node69.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1490" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1491" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1489" HREF="node71.html">3.4.2 Note On Lexical </A>
+<B>Up:</B> <A NAME="tex2html1487" HREF="node69.html">3.4 Variable Access</A>
+<B> Previous:</B> <A NAME="tex2html1481" HREF="node69.html">3.4 Variable Access</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

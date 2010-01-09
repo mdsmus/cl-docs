@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>6.8 Making Sense of Mach Return Codes</TITLE>
+<META NAME="description" CONTENT="6.8 Making Sense of Mach Return Codes">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3305" HREF="node208.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3303" HREF="node199.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3297" HREF="node206.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3307" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3308" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3306" HREF="node208.html">6.9 Unix Interrupts</A>
+<B>Up:</B> <A NAME="tex2html3304" HREF="node199.html">6 UNIX Interface</A>
+<B> Previous:</B> <A NAME="tex2html3298" HREF="node206.html">6.7 File Descriptor Streams</A>
+<BR> <P>
+<H1><A NAME="SECTION00780000000000000000">6.8 Making Sense of Mach Return Codes</A></H1>
+<P>
+Whenever a remote procedure call returns a Unix error code (such as
+<tt>kern_return_t</tt>), it is usually prudent to check that code to
+see if the call was successful.  To relieve the programmer of the
+hassle of testing this value himself, and to centralize the
+information about the meaning of non-success return codes, CMU Common
+Lisp provides a number of macros and functions.  See also
+<A NAME="11095">&#160;</A><tt>get-unix-error-msg</tt> (page&nbsp;<A HREF="node205.html#FNgetunixerrormsg"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>).
+<P>
+<b>[Function]</b><BR> 
+<tt> system:gr-error</tt> <em> <i>function</i> <i>gr</i> <i>&amp;optional</i> <i>context</i></em><BR>
+<P>
+  Signals a Lisp error, printing a message indicating that the call to
+  the specified <i>function</i> failed, with the return code <i>gr</i>.
+  If supplied, the <i>context</i> string is printed after the
+  <i>function</i> name and before the string associated with the
+  <i>gr</i>.  For example:
+<BLOCKQUOTE> <PRE>* (gr-error 'nukegarbage 3 &quot;lost big&quot;)
+<P>
+Error in function GR-ERROR:
+NUKEGARBAGE lost big, no space.
+Proceed cases:
+0: Return to Top-Level.
+Debug  (type H for help)
+(Signal #&lt;Conditions:Simple-Error.5FDE0&gt;)
+0] 
+</PRE> </BLOCKQUOTE>
+<P>
+<b>[Macro]</b><BR> 
+<tt> system:gr-call</tt> <em> <i>function</i> <i>&amp;rest</i> <i>args</i></em><BR> 
+  <tt>system:gr-call*</tt> <EM></EM><i>function</i> <i>&amp;rest</i> </EM><i>args</i><BR>
+<P>
+  These macros can be used to call a function and automatically check
+  the GeneralReturn code and signal an appropriate error in case of
+  non-successful return.  <tt>gr-call</tt> returns <i>nil</i> if no error
+  occurs, while <tt>gr-call*</tt> returns the second value of the
+  function called.
+<BLOCKQUOTE> <PRE>* (gr-call mach:port_allocate *task-self*)
+NIL
+* 
+</PRE> </BLOCKQUOTE>
+<P>
+<b>[Macro]</b><BR> 
+<tt> system:gr-bind</tt> <em> 
+    <tt>(</tt><IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>var</i></i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"><tt>)</tt>
+      <tt>(</tt><i>function</i> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>arg</i></i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"><tt>)</tt>
+      <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>form</i></i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></em><BR>
+<P>
+  This macro can be used much like <tt>multiple-value-bind</tt> to bind
+  the <i>var</i>s to return values resulting from calling the
+  <i>function</i> with the given <i>arg</i>s.  The first return value is
+  not bound to a variable, but is checked as a GeneralReturn code, as
+  in <tt>gr-call</tt>.
+<BLOCKQUOTE> <PRE>* (gr-bind (port_list port_list_cnt)
+           (mach:port_select *task-self*)
+    (format t &quot;The port count is &nbsp;S.&quot; port_list_cnt)
+    port_list)
+The port count is 0.
+#&lt;Alien value&gt;
+* 
+</PRE> </BLOCKQUOTE><BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,47 @@
+<html
+  ><head
+    ><title
+      >Function PARTITION-RESULTS</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Function: PARTITION-RESULTS</h1
+        ><div class="contents"
+          ><h2
+            >Source</h2
+          ><pre class="code"
+            >(defun partition-results (results-list)
+  (let ((num-checks (length results-list)))
+    (destructuring-bind (passed skipped failed unknown)
+	(partitionx results-list
+		    (lambda (res)
+		      (typep res 'test-passed))
+		    (lambda (res)
+		      (typep res 'test-skipped))
+		    (lambda (res)
+		      (typep res 'test-failure))
+		    t)
+      (if (zerop num-checks)
+	  (values 0
+		  nil 0 0
+		  nil 0 0
+		  nil 0 0
+		  nil 0 0)
+	  (values
+	   num-checks
+	   passed (length passed) (floor (* 100 (/ (length passed) num-checks)))
+	   skipped (length skipped) (floor (* 100 (/ (length skipped) num-checks)))
+	   failed (length failed) (floor (* 100 (/ (length failed) num-checks)))
+	   unknown (length unknown) (floor (* 100 (/ (length failed) num-checks))))))))</pre
+          ><a href="../Analyzing_0020the_0020results.html#function_005FIT.BESE.FIVEAM_003A_003APARTITION-RESULTS"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

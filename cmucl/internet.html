@@ -1,0 +1,592 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+"http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+<meta name="generator" content=
+"HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 13), see www.w3.org">
+<meta http-equiv="Content-Type" content=
+"text/html; charset=us-ascii">
+<meta name="GENERATOR" content="hevea 1.06">
+<link rel="stylesheet" href="cmucl.css" type="text/css">
+<meta http-equiv="Content-Language" content="en">
+<title>CMUCL User's Manual: Networking Support</title>
+</head>
+<body>
+<a href="ipc.html"><img src="previous_motif.gif" alt=
+"Previous"></a> <a href="index.html"><img src="contents_motif.gif"
+alt="Up"></a> <a href="debug-internals.html"><img src=
+"next_motif.gif" alt="Next"></a>
+<hr>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFBC">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc274" id="htoc274"><b><font size=
+"6">Chapter&nbsp;10</font></b></a></td>
+<td width="100%" align="center"><b><font size="6">Networking
+Support</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<ul>
+<li><a href="internet.html#toc278">Byte Order Converters</a></li>
+<li><a href="internet.html#toc279">Domain Name Services
+(DNS)</a></li>
+<li><a href="internet.html#toc280">Binding to Interfaces</a></li>
+<li><a href="internet.html#toc281">Accepting Connections</a></li>
+<li><a href="internet.html#toc282">Connecting</a></li>
+<li><a href="internet.html#toc283">Out-of-Band Data</a></li>
+<li><a href="internet.html#toc284">Unbound Sockets, Socket Options,
+and Closing Sockets</a></li>
+<li><a href="internet.html#toc285">Unix Datagrams</a></li>
+<li><a href="internet.html#toc286">Errors</a></li>
+</ul>
+<a name="internet" id="internet"></a><br>
+<div align="center"><b>by Mario S. Mommer</b></div>
+<br>
+This chapter documents the IPv4 networking and local sockets
+support offered by CMUCL. It covers most of the basic sockets
+interface functionality in a convenient and transparent way.<br>
+<br>
+For reasons of space it would be impossible to include a thorough
+introduction to network programming, so we assume some basic
+knowledge of the matter.<br>
+<br>
+<a name="toc278" id="toc278"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc275" id="htoc275"><b><font size=
+"5">10.1</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Byte Order
+Converters</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+These are the functions that convert integers from host byte order
+to network byte order (big-endian).<br>
+<br>
+<br>
+<a name="@funs248"></a><a name="FN:htonl" id="FN:htonl"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">htonl</tt> <tt class="variable">integer</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Converts a 32 bit integer from host byte order to network byte
+order.</blockquote>
+<br>
+<a name="@funs249"></a><a name="FN:htons" id="FN:htons"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">htons</tt> <tt class="variable">integer</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Converts a 16 bit integer from host byte order to network byte
+order.</blockquote>
+<br>
+<a name="@funs250"></a><a name="FN:ntohs" id="FN:ntohs"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">ntohs</tt> <tt class="variable">integer</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Converts a 32 bit integer from network byte order to host byte
+order.</blockquote>
+<br>
+<a name="@funs251"></a><a name="FN:ntohl" id="FN:ntohl"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">ntohl</tt> <tt class="variable">integer</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Converts a 32 bit integer from network byte order to host byte
+order.</blockquote>
+<a name="toc279" id="toc279"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc276" id="htoc276"><b><font size=
+"5">10.2</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Domain Name
+Services (DNS)</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+The networking support of CMUCL includes the possibility of doing
+DNS lookups. The function<br>
+<br>
+<br>
+<a name="@funs252"></a><a name="FN:lookup-host-entry" id=
+"FN:lookup-host-entry"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">lookup-host-entry</tt> <tt class=
+"variable">host</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+returns a structure of type <tt class="variable">host-entry</tt>
+(explained below) for the given <tt class="variable">host</tt>. If
+<tt class="variable">host</tt> is an integer, it will be assumed to
+be the IP address in host (byte-)order. If it is a string, it can
+contain either the host name or the IP address in dotted
+format.<br>
+<br>
+This function works by completing the structure <tt class=
+"variable">host-entry</tt>. That is, if the user provides the IP
+address, then the structure will contain that information and also
+the domain names. If the user provides the domain name, the
+structure will be complemented with the IP addresses along with the
+any aliases the host might have.</blockquote>
+<br>
+<br>
+<a name="@types46"></a>
+<div align="left">[structure]<br>
+<tt class="function-name">host-entry</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><tt class="variable">name</tt> <tt class=
+"variable">aliases</tt> <tt class="variable">addr-type</tt>
+<tt class="variable">addr-list</tt><br>
+<br>
+This structure holds all information available at request time on a
+given host. The entries are self-explanatory. Aliases is a list of
+strings containing alternative names of the host, and addr-list a
+list of addresses stored in host byte order. The field <tt class=
+"variable">addr-type</tt> contains the number of the address
+family, as specified in <tt>socket.h</tt>, to which the addresses
+belong. Since only addresses of the IPv4 family are currently
+supported, this slot always has the value 2.</blockquote>
+<br>
+<a name="@funs253"></a><a name="FN:ip-string" id=
+"FN:ip-string"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">ip-string</tt> <tt class="variable">addr</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This function takes an IP address in host order and returns a
+string containing it in dotted format.</blockquote>
+<a name="toc280" id="toc280"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc277" id="htoc277"><b><font size=
+"5">10.3</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Binding to
+Interfaces</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+In this section, functions for creating sockets bound to an
+interface are documented.<br>
+<br>
+<br>
+<a name="@funs254"></a><a name="FN:create-inet-listener" id=
+"FN:create-inet-listener"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">create-inet-listener</tt> <tt class=
+"variable">port</tt> <tt class="code">&amp;optional</tt> <tt class=
+"variable">kind</tt> <tt class="code">&amp;key</tt> <tt class=
+"code">:reuse-address</tt> <tt class="code">:backlog</tt>
+<tt class="code">:host</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Creates a socket and binds it to a port, prepared to receive
+connections of kind <tt class="variable">kind</tt> (which defaults
+to <tt class="code">:stream</tt>), queuing up to <tt class=
+"variable">backlog</tt> of them. If <tt class=
+"code">:reuse-address</tt> <tt class="variable">T</tt> is used, the
+option SO_REUSEADDR is used in the call to <tt class=
+"variable">bind</tt>. If no value is given for <tt class=
+"code">:host</tt>, it will try to bind to the default IP address of
+the machine where the Lisp process is running.</blockquote>
+<br>
+<a name="@funs255"></a><a name="FN:create-unix-listener" id=
+"FN:create-unix-listener"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">create-unix-listener</tt> <tt class=
+"variable">path</tt> <tt class="code">&amp;optional</tt> <tt class=
+"variable">kind</tt> <tt class="code">:reuse-address</tt>
+<tt class="code">:backlog</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Creates a socket and binds it to the file name given by <tt class=
+"variable">path</tt>, prepared to receive connections of kind
+<tt class="variable">kind</tt> (which defaults to <tt class=
+"code">:stream</tt>), queuing up to <tt class=
+"variable">backlog</tt> of them. If <tt class=
+"code">:reuse-address</tt> <tt class="variable">T</tt> is used,
+then the file given by <tt class="variable">path</tt> is unlinked
+first.</blockquote>
+<a name="toc281" id="toc281"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc278" id="htoc278"><b><font size=
+"5">10.4</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Accepting
+Connections</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+Once a socket is bound to its interface, we have to explicitly
+accept connections. This task is performed by the functions we
+document here.<br>
+<br>
+<br>
+<a name="@funs256"></a><a name="FN:accept-tcp-connection" id=
+"FN:accept-tcp-connection"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">accept-tcp-connection</tt> <tt class=
+"variable">unconnected</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Waits until a connection arrives on the (internet family) socket
+<tt class="variable">unconnected</tt>. Returns the file descriptor
+of the connection. These can be conveniently encapsulated using
+file descriptor streams; see <a href=
+"unix.html#sec:fds">6.7</a>.</blockquote>
+<br>
+<a name="@funs257"></a><a name="FN:accept-unix-connection" id=
+"FN:accept-unix-connection"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">accept-unix-connection</tt> <tt class=
+"variable">unconnected</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Waits until a connection arrives on the (unix family) socket
+<tt class="variable">unconnected</tt>. Returns the file descriptor
+of the connection. These can be conveniently encapsulated using
+file descriptor streams; see <a href=
+"unix.html#sec:fds">6.7</a>.</blockquote>
+<a name="toc282" id="toc282"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc279" id="htoc279"><b><font size=
+"5">10.5</font></b></a></td>
+<td width="100%" align="center"><b><font size=
+"5">Connecting</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+The task performed by the functions we present next is connecting
+to remote hosts.<br>
+<br>
+<br>
+<a name="@funs258"></a><a name="FN:connect-to-inet-socket" id=
+"FN:connect-to-inet-socket"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">connect-to-inet-socket</tt> <tt class=
+"variable">host</tt> <tt class="variable">port</tt> <tt class=
+"code">&amp;optional</tt> <tt class="variable">kind</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Tries to open a connection to the remote host <tt class=
+"variable">host</tt> (which may be an IP address in host order, or
+a string with either a host name or an IP address in dotted format)
+on port <tt class="variable">port</tt>. Returns the file descriptor
+of the connection. The optional parameter <tt class=
+"variable">kind</tt> can be either <tt class="code">:stream</tt>
+(the default) or <tt class="code">:datagram</tt>.</blockquote>
+<br>
+<a name="@funs259"></a><a name="FN:connect-to-unix-socket" id=
+"FN:connect-to-unix-socket"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">connect-to-unix-socket</tt> <tt class=
+"variable">path</tt> <tt class="code">&amp;optional</tt> <tt class=
+"variable">kind</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Opens a connection to the unix ``adress'' given by <tt class=
+"variable">path</tt>. Returns the file descriptor of the
+connection. The type of connection is given by <tt class=
+"variable">kind</tt>, which can be either <tt class=
+"code">:stream</tt> (the default) or <tt class=
+"code">:datagram</tt>.</blockquote>
+<a name="toc283" id="toc283"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc280" id="htoc280"><b><font size=
+"5">10.6</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Out-of-Band
+Data</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="internet-oob" id="internet-oob"></a><br>
+Out-of-band data is data transmitted with a higher priority than
+ordinary data. This is usually used by either side of the
+connection to signal exceptional conditions. Due to the fact that
+most TCP/IP implementations are broken in this respect, only single
+characters can reliably be sent this way.<br>
+<br>
+<br>
+<a name="@funs260"></a><a name="FN:add-oob-handler" id=
+"FN:add-oob-handler"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">add-oob-handler</tt> <tt class="variable">fd</tt>
+<tt class="variable">char</tt> <tt class="variable">handler</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Sets the function passed in <tt class="variable">handler</tt> as a
+handler for the character <tt class="variable">char</tt> on the
+connection whose descriptor is <tt class="variable">fd</tt>. In
+case this character arrives, the function in <tt class=
+"variable">handler</tt> is called without any
+argument.</blockquote>
+<br>
+<a name="@funs261"></a><a name="FN:remove-oob-handler" id=
+"FN:remove-oob-handler"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">remove-oob-handler</tt> <tt class=
+"variable">fd</tt> <tt class="variable">char</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Removes the handler for the character <tt class=
+"variable">char</tt> from the connection with the file descriptor
+<tt class="variable">fd</tt></blockquote>
+<br>
+<a name="@funs262"></a><a name="FN:remove-all-oob-handlers" id=
+"FN:remove-all-oob-handlers"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">remove-all-oob-handlers</tt> <tt class=
+"variable">fd</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+After calling this function, the connection whose descriptor is
+<tt class="variable">fd</tt> will ignore any out-of-band character
+it receives.</blockquote>
+<br>
+<a name="@funs263"></a><a name="FN:send-character-out-of-band" id=
+"FN:send-character-out-of-band"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">send-character-out-of-band</tt> <tt class=
+"variable">fd</tt> <tt class="variable">char</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Sends the character <tt class="variable">char</tt> through the
+connection <tt class="variable">fd</tt> out of band.</blockquote>
+<a name="toc284" id="toc284"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc281" id="htoc281"><b><font size=
+"5">10.7</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Unbound Sockets,
+Socket Options, and Closing Sockets</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+These functions create unbound sockets. This is usually not
+necessary, since connectors and listeners create their own.<br>
+<br>
+<br>
+<a name="@funs264"></a><a name="FN:create-unix-socket" id=
+"FN:create-unix-socket"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">create-unix-socket</tt> <tt class=
+"code">&amp;optional</tt> <tt class="variable">type</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Creates a unix socket for the unix address family, of type
+<tt class="variable">:stream</tt> and (on success) returns its file
+descriptor.</blockquote>
+<br>
+<a name="@funs265"></a><a name="FN:create-inet-socket" id=
+"FN:create-inet-socket"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">create-inet-socket</tt> <tt class=
+"code">&amp;optional</tt> <tt class="variable">type</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Creates a unix socket for the internet address family, of type
+<tt class="variable">:stream</tt> and (on success) returns its file
+descriptor.</blockquote>
+Further, it is desirable to be able to change socket options. This
+is performed by the following two functions, which are essentially
+wrappers for system calls to <tt>getsockopt</tt> and
+<tt>setsockopt</tt>.<br>
+<br>
+<br>
+<a name="@funs266"></a><a name="FN:get-socket-option" id=
+"FN:get-socket-option"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">get-socket-option</tt> <tt class=
+"variable">socket</tt> <tt class="variable">level</tt> <tt class=
+"variable">optname</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Gets the value of option <tt class="variable">optname</tt> from the
+socket <tt class="variable">socket</tt>.</blockquote>
+<br>
+<a name="@funs267"></a><a name="FN:set-socket-option" id=
+"FN:set-socket-option"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">set-socket-option</tt> <tt class=
+"variable">socket</tt> <tt class="variable">level</tt> <tt class=
+"variable">optname</tt> <tt class="variable">optval</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Sets the value of option <tt class="variable">optname</tt> from the
+socket <tt class="variable">socket</tt> to the value <tt class=
+"variable">optval</tt>.</blockquote>
+For information on possible options and values we refer to the
+manpages of <tt>getsockopt</tt> and <tt>setsockopt</tt>, and to
+<tt>socket.h</tt><br>
+<br>
+Finally, the function<br>
+<br>
+<br>
+<a name="@funs268"></a><a name="FN:close-socket" id=
+"FN:close-socket"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">close-socket</tt> <tt class="variable">socket</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Closes the socket given by the file descriptor <tt class=
+"variable">socket</tt>.</blockquote>
+<a name="toc285" id="toc285"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc282" id="htoc282"><b><font size=
+"5">10.8</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Unix
+Datagrams</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+Datagram network is supported with the following functions.<br>
+<br>
+<br>
+<a name="@funs269"></a><a name="FN:inet-recvfrom" id=
+"FN:inet-recvfrom"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">unix:</tt><tt class=
+"function-name">inet-recvfrom</tt> <tt class="variable">fd</tt>
+<tt class="variable">buffer</tt> <tt class="variable">size</tt>
+<tt class="code">&amp;key</tt> <tt class="variable">flags</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote>A simple interface to the Unix <tt class=
+"code">recvfrom</tt> function.</blockquote>
+<br>
+<a name="@funs270"></a><a name="FN:inet-sendto" id=
+"FN:inet-sendto"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">unix:</tt><tt class=
+"function-name">inet-sendto</tt> <tt class="variable">fd</tt>
+<tt class="variable">buffer</tt> <tt class="variable">size</tt>
+<tt class="variable">port</tt> <tt class="code">&amp;key</tt>
+<tt class="variable">flags</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote>A simple interface to the Unix <tt class=
+"code">sendto</tt> function.</blockquote>
+<br>
+<a name="@funs271"></a><a name="FN:inet-shutdown" id=
+"FN:inet-shutdown"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">unix:</tt><tt class=
+"function-name">inet-shutdown</tt> <tt class="variable">fd</tt>
+<tt class="variable">level</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+A simple interface to the Unix <tt class="code">shutdown</tt>
+function. For <tt class="code">level</tt>, you may use the
+following symbols to close one or both ends of a socket: <tt class=
+"code">shut-rd</tt>, <tt class="code">shut-wr</tt>, <tt class=
+"code">shut-rdwr</tt>.</blockquote>
+<a name="toc286" id="toc286"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc283" id="htoc283"><b><font size=
+"5">10.9</font></b></a></td>
+<td width="100%" align="center"><b><font size=
+"5">Errors</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+Errors that occur during socket operations signal a <tt class=
+"code">socket-error</tt> condition, a subtype of the <tt class=
+"code">error</tt> condition. Currently this condition includes just
+the Unix <tt class="code">errno</tt> associated with the error.
+<hr>
+<a href="ipc.html"><img src="previous_motif.gif" alt=
+"Previous"></a> <a href="index.html"><img src="contents_motif.gif"
+alt="Up"></a> <a href="debug-internals.html"><img src=
+"next_motif.gif" alt="Next"></a>
+</body>
+</html>

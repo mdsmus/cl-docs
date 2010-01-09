@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.3.5 Dynamic Type Inference</TITLE>
+<META NAME="description" CONTENT="5.3.5 Dynamic Type Inference">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2325" HREF="node130.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2323" HREF="node124.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2317" HREF="node128.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2327" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2328" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2326" HREF="node130.html">5.3.6 Type Check Optimization</A>
+<B>Up:</B> <A NAME="tex2html2324" HREF="node124.html">5.3 Type Inference</A>
+<B> Previous:</B> <A NAME="tex2html2318" HREF="node128.html">5.3.4 Operation Specific Type </A>
+<BR> <P>
+<H2><A NAME="SECTION00635000000000000000">5.3.5 Dynamic Type Inference</A></H2>
+<P>
+<A NAME="constraintpropagation">&#160;</A>
+<A NAME="9931">&#160;</A>
+<A NAME="9932">&#160;</A>
+<A NAME="9933">&#160;</A>
+<P>
+Python uses flow analysis to infer types in dynamically typed
+programs.  For example:
+<BLOCKQUOTE> <PRE>(ecase x
+  (list (length x))
+  ...)
+</PRE> </BLOCKQUOTE>
+Here, the compiler knows the argument to <tt>length</tt> is a list,
+because the call to <tt>length</tt> is only done when <tt>x</tt> is a
+list.  The most significant efficiency effect of inference from
+assertions is usually in type check optimization.
+<P>
+Dynamic type inference has two inputs: explicit conditionals and
+implicit or explicit type assertions.  Flow analysis propagates these
+constraints on variable type to any code that can be executed only
+after passing though the constraint.  Explicit type constraints come
+from <A NAME="9937">&#160;</A><tt>if</tt>s where the test is either a lexical variable or a
+function of lexical variables and constants, where the function is
+either a type predicate, a numeric comparison or <tt>eq</tt>.
+<P>
+If there is an <tt>eq</tt> (or <tt>eql</tt>) test, then the compiler will
+actually substitute one argument for the other in the true branch.
+For example:
+<BLOCKQUOTE> <PRE>(when (eq x :yow!) (return x))
+</PRE> </BLOCKQUOTE>
+becomes:
+<BLOCKQUOTE> <PRE>(when (eq x :yow!) (return :yow!))
+</PRE> </BLOCKQUOTE>
+This substitution is done when one argument is a constant, or one
+argument has better type information than the other.  This
+transformation reveals opportunities for constant folding or
+type-specific optimizations.  If the test is against a constant, then
+the compiler can prove that the variable is not that constant value in
+the false branch, or <tt>(not (member :yow!))</tt>  in the example
+above.  This can eliminate redundant tests, for example:
+<BLOCKQUOTE> <PRE>(if (eq x nil)
+    ...
+    (if x a b))
+</PRE> </BLOCKQUOTE>
+is transformed to this:
+<BLOCKQUOTE> <PRE>(if (eq x nil)
+    ...
+    a)
+</PRE> </BLOCKQUOTE>
+Variables appearing as <tt>if</tt> tests are interpreted as
+<tt>(not (eq <i>var</i> nil))</tt> tests.  The compiler also converts
+<tt>=</tt> into <tt>eql</tt> where possible.  It is difficult to do
+inference directly on <tt>=</tt> since it does implicit coercions.
+<P>
+When there is an explicit <tt>&lt;</tt> or <tt>&gt;</tt> test on 
+<BR><IMG WIDTH=104 HEIGHT=24 ALIGN=BOTTOM ALT="change_begin" SRC="change_begin.gif"><BR>
+numeric
+<P>
+<BR><IMG WIDTH=104 HEIGHT=24 ALIGN=BOTTOM ALT="change_end" SRC="change_end.gif"><BR>
+
+variables, the compiler makes inferences about the ranges the
+variables can assume in the true and false branches.  This is mainly
+useful when it proves that the values are small enough in magnitude to
+allow open-coding of arithmetic operations.  For example, in many uses
+of <tt>dotimes</tt> with a <tt>fixnum</tt> repeat count, the compiler
+proves that fixnum arithmetic can be used.
+<P>
+Implicit type assertions are quite common, especially if you declare
+function argument types.  Dynamic inference from implicit type
+assertions sometimes helps to disambiguate programs to a useful
+degree, but is most noticeable when it detects a dynamic type error.
+For example:
+<BLOCKQUOTE> <PRE>(defun foo (x)
+  (+ (car x) x))
+</PRE> </BLOCKQUOTE> 
+results in this warning:
+<BLOCKQUOTE> <PRE>In: DEFUN FOO
+  (+ (CAR X) X)
+==&gt;
+  X
+Warning: Result is a LIST, not a NUMBER.
+</PRE> </BLOCKQUOTE>
+<P>
+Note that Common Lisp's dynamic type checking semantics make dynamic type
+inference useful even in programs that aren't really dynamically
+typed, for example:
+<BLOCKQUOTE> <PRE>(+ (car x) (length x))
+</PRE> </BLOCKQUOTE>
+Here, <tt>x</tt> presumably always holds a list, but in the absence of a
+declaration the compiler cannot assume <tt>x</tt> is a list simply
+because list-specific operations are sometimes done on it.  The
+compiler must consider the program to be dynamically typed until it
+proves otherwise.  Dynamic type inference proves that the argument to
+<tt>length</tt> is always a list because the call to <tt>length</tt> is
+only done after the list-specific <tt>car</tt> operation.
+<P>
+<HR><A NAME="tex2html2325" HREF="node130.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2323" HREF="node124.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2317" HREF="node128.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2327" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2328" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2326" HREF="node130.html">5.3.6 Type Check Optimization</A>
+<B>Up:</B> <A NAME="tex2html2324" HREF="node124.html">5.3 Type Inference</A>
+<B> Previous:</B> <A NAME="tex2html2318" HREF="node128.html">5.3.4 Operation Specific Type </A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5 Advanced Compiler Use and Efficiency Hints</TITLE>
+<META NAME="description" CONTENT="5 Advanced Compiler Use and Efficiency Hints">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1926" HREF="node106.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1924" HREF="cmu-new.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1918" HREF="node104.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1928" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1929" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1927" HREF="node106.html">5.1 Advanced Compiler Introduction</A>
+<B>Up:</B> <A NAME="tex2html1925" HREF="cmu-new.html">CMU Common Lisp User's </A>
+<B> Previous:</B> <A NAME="tex2html1919" HREF="node104.html">4.8 Open Coding and </A>
+<BR> <P>
+<H1><A NAME="SECTION00600000000000000000">5 Advanced Compiler Use and Efficiency Hints</A></H1>
+<P>
+By Robert MacLachlan
+
+<A NAME="advancedcompiler">&#160;</A>
+<P>
+<BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html1930" HREF="node106.html#SECTION00610000000000000000">5.1 Advanced Compiler Introduction</A>
+<UL>
+<LI> <A NAME="tex2html1931" HREF="node107.html#SECTION00611000000000000000">5.1.1 Types</A>
+<LI> <A NAME="tex2html1932" HREF="node108.html#SECTION00612000000000000000">5.1.2 Optimization</A>
+<LI> <A NAME="tex2html1933" HREF="node109.html#SECTION00613000000000000000">5.1.3 Function Call</A>
+<LI> <A NAME="tex2html1934" HREF="node110.html#SECTION00614000000000000000">5.1.4 Representation of Objects</A>
+<LI> <A NAME="tex2html1935" HREF="node111.html#SECTION00615000000000000000">5.1.5 Writing Efficient Code</A>
+</UL> 
+<LI> <A NAME="tex2html1936" HREF="node112.html#SECTION00620000000000000000">5.2 More About Types in Python</A>
+<UL>
+<LI> <A NAME="tex2html1937" HREF="node113.html#SECTION00621000000000000000">5.2.1 More Types Meaningful</A>
+<LI> <A NAME="tex2html1938" HREF="node114.html#SECTION00622000000000000000">5.2.2 Canonicalization</A>
+<LI> <A NAME="tex2html1939" HREF="node115.html#SECTION00623000000000000000">5.2.3 Member Types</A>
+<LI> <A NAME="tex2html1940" HREF="node116.html#SECTION00624000000000000000">5.2.4 Union Types</A>
+<LI> <A NAME="tex2html1941" HREF="node117.html#SECTION00625000000000000000">5.2.5 The Empty Type</A>
+<LI> <A NAME="tex2html1942" HREF="node118.html#SECTION00626000000000000000">5.2.6 Function Types</A>
+<LI> <A NAME="tex2html1943" HREF="node119.html#SECTION00627000000000000000">5.2.7 The Values Declaration</A>
+<LI> <A NAME="tex2html1944" HREF="node120.html#SECTION00628000000000000000">5.2.8 Structure Types</A>
+<LI> <A NAME="tex2html1945" HREF="node121.html#SECTION00629000000000000000">The Freeze-Type Declaration</A>
+<LI> <A NAME="tex2html1946" HREF="node122.html#SECTION006210000000000000000">5.2.10 Type Restrictions</A>
+<LI> <A NAME="tex2html1947" HREF="node123.html#SECTION006211000000000000000">5.2.11 Type Style Recommendations</A>
+</UL> 
+<LI> <A NAME="tex2html1948" HREF="node124.html#SECTION00630000000000000000">5.3 Type Inference</A>
+<UL>
+<LI> <A NAME="tex2html1949" HREF="node125.html#SECTION00631000000000000000">5.3.1 Variable Type Inference</A>
+<LI> <A NAME="tex2html1950" HREF="node126.html#SECTION00632000000000000000">5.3.2 Local Function Type Inference</A>
+<LI> <A NAME="tex2html1951" HREF="node127.html#SECTION00633000000000000000">5.3.3 Global Function Type Inference</A>
+<LI> <A NAME="tex2html1952" HREF="node128.html#SECTION00634000000000000000">5.3.4 Operation Specific Type Inference</A>
+<LI> <A NAME="tex2html1953" HREF="node129.html#SECTION00635000000000000000">5.3.5 Dynamic Type Inference</A>
+<LI> <A NAME="tex2html1954" HREF="node130.html#SECTION00636000000000000000">5.3.6 Type Check Optimization</A>
+</UL> 
+<LI> <A NAME="tex2html1955" HREF="node131.html#SECTION00640000000000000000">5.4 Source Optimization</A>
+<UL>
+<LI> <A NAME="tex2html1956" HREF="node132.html#SECTION00641000000000000000">5.4.1 Let Optimization</A>
+<LI> <A NAME="tex2html1957" HREF="node133.html#SECTION00642000000000000000">5.4.2 Constant Folding</A>
+<LI> <A NAME="tex2html1958" HREF="node134.html#SECTION00643000000000000000">5.4.3 Unused Expression Elimination</A>
+<LI> <A NAME="tex2html1959" HREF="node135.html#SECTION00644000000000000000">5.4.4 Control Optimization</A>
+<LI> <A NAME="tex2html1960" HREF="node136.html#SECTION00645000000000000000">5.4.5 Unreachable Code Deletion</A>
+<LI> <A NAME="tex2html1961" HREF="node137.html#SECTION00646000000000000000">5.4.6 Multiple Values Optimization</A>
+<LI> <A NAME="tex2html1962" HREF="node138.html#SECTION00647000000000000000">5.4.7 Source to Source Transformation</A>
+<LI> <A NAME="tex2html1963" HREF="node139.html#SECTION00648000000000000000">5.4.8 Style Recommendations</A>
+</UL> 
+<LI> <A NAME="tex2html1964" HREF="node140.html#SECTION00650000000000000000">5.5 Tail Recursion</A>
+<UL>
+<LI> <A NAME="tex2html1965" HREF="node141.html#SECTION00651000000000000000">5.5.1 Tail Recursion Exceptions</A>
+</UL> 
+<LI> <A NAME="tex2html1966" HREF="node142.html#SECTION00660000000000000000">5.6 Local Call</A>
+<UL>
+<LI> <A NAME="tex2html1967" HREF="node143.html#SECTION00661000000000000000">Self-Recursive Calls</A>
+<LI> <A NAME="tex2html1968" HREF="node144.html#SECTION00662000000000000000">5.6.2 Let Calls</A>
+<LI> <A NAME="tex2html1969" HREF="node145.html#SECTION00663000000000000000">5.6.3 Closures</A>
+<LI> <A NAME="tex2html1970" HREF="node146.html#SECTION00664000000000000000">5.6.4 Local Tail Recursion</A>
+<LI> <A NAME="tex2html1971" HREF="node147.html#SECTION00665000000000000000">5.6.5 Return Values</A>
+</UL> 
+<LI> <A NAME="tex2html1972" HREF="node148.html#SECTION00670000000000000000">5.7 Block Compilation</A>
+<UL>
+<LI> <A NAME="tex2html1973" HREF="node149.html#SECTION00671000000000000000">5.7.1 Block Compilation Semantics</A>
+<LI> <A NAME="tex2html1974" HREF="node150.html#SECTION00672000000000000000">5.7.2 Block Compilation Declarations</A>
+<LI> <A NAME="tex2html1975" HREF="node151.html#SECTION00673000000000000000">5.7.3 Compiler Arguments</A>
+<LI> <A NAME="tex2html1976" HREF="node152.html#SECTION00674000000000000000">5.7.4 Practical Difficulties</A>
+<LI> <A NAME="tex2html1977" HREF="node153.html#SECTION00675000000000000000">5.7.5 Context Declarations</A>
+<LI> <A NAME="tex2html1978" HREF="node154.html#SECTION00676000000000000000">5.7.6 Context Declaration Example</A>
+</UL> 
+<LI> <A NAME="tex2html1979" HREF="node155.html#SECTION00680000000000000000">5.8 Inline Expansion</A>
+<UL>
+<LI> <A NAME="tex2html1980" HREF="node156.html#SECTION00681000000000000000">5.8.1 Inline Expansion Recording</A>
+<LI> <A NAME="tex2html1981" HREF="node157.html#SECTION00682000000000000000">Semi-Inline Expansion</A>
+<LI> <A NAME="tex2html1982" HREF="node158.html#SECTION00683000000000000000">The Maybe-Inline Declaration</A>
+</UL> 
+<LI> <A NAME="tex2html1983" HREF="node159.html#SECTION00690000000000000000">5.9 Byte Coded Compilation</A>
+<LI> <A NAME="tex2html1984" HREF="node160.html#SECTION006100000000000000000">5.10 Object Representation</A>
+<UL>
+<LI> <A NAME="tex2html1985" HREF="node161.html#SECTION006101000000000000000">5.10.1 Think Before You Use a List</A>
+<LI> <A NAME="tex2html1986" HREF="node162.html#SECTION006102000000000000000">5.10.2 Structure Representation</A>
+<LI> <A NAME="tex2html1987" HREF="node163.html#SECTION006103000000000000000">5.10.3 Arrays</A>
+<LI> <A NAME="tex2html1988" HREF="node164.html#SECTION006104000000000000000">5.10.4 Vectors</A>
+<LI> <A NAME="tex2html1989" HREF="node165.html#SECTION006105000000000000000">Bit-Vectors</A>
+<LI> <A NAME="tex2html1990" HREF="node166.html#SECTION006106000000000000000">5.10.6 Hashtables</A>
+</UL> 
+<LI> <A NAME="tex2html1991" HREF="node167.html#SECTION006110000000000000000">5.11 Numbers</A>
+<UL>
+<LI> <A NAME="tex2html1992" HREF="node168.html#SECTION006111000000000000000">5.11.1 Descriptors</A>
+<LI> <A NAME="tex2html1993" HREF="node169.html#SECTION006112000000000000000">Non-Descriptor Representations</A>
+<LI> <A NAME="tex2html1994" HREF="node170.html#SECTION006113000000000000000">5.11.3 Variables</A>
+<LI> <A NAME="tex2html1995" HREF="node171.html#SECTION006114000000000000000">5.11.4 Generic Arithmetic</A>
+<LI> <A NAME="tex2html1996" HREF="node172.html#SECTION006115000000000000000">5.11.5 Fixnums</A>
+<LI> <A NAME="tex2html1997" HREF="node173.html#SECTION006116000000000000000">5.11.6 Word Integers</A>
+<LI> <A NAME="tex2html1998" HREF="node174.html#SECTION006117000000000000000">5.11.7 Floating Point Efficiency</A>
+<LI> <A NAME="tex2html1999" HREF="node175.html#SECTION006118000000000000000">5.11.8 Specialized Arrays</A>
+<LI> <A NAME="tex2html2000" HREF="node176.html#SECTION006119000000000000000">5.11.9 Specialized Structure Slots</A>
+<LI> <A NAME="tex2html2001" HREF="node177.html#SECTION0061110000000000000000">5.11.10 Interactions With Local Call</A>
+<LI> <A NAME="tex2html2002" HREF="node178.html#SECTION0061111000000000000000">5.11.11 Representation of Characters</A>
+</UL> 
+<LI> <A NAME="tex2html2003" HREF="node179.html#SECTION006120000000000000000">5.12 General Efficiency Hints</A>
+<UL>
+<LI> <A NAME="tex2html2004" HREF="node180.html#SECTION006121000000000000000">5.12.1 Compile Your Code</A>
+<LI> <A NAME="tex2html2005" HREF="node181.html#SECTION006122000000000000000">5.12.2 Avoid Unnecessary Consing</A>
+<LI> <A NAME="tex2html2006" HREF="node182.html#SECTION006123000000000000000">5.12.3 Complex Argument Syntax</A>
+<LI> <A NAME="tex2html2007" HREF="node183.html#SECTION006124000000000000000">5.12.4 Mapping and Iteration</A>
+<LI> <A NAME="tex2html2008" HREF="node184.html#SECTION006125000000000000000">5.12.5 Trace Files and Disassembly</A>
+</UL> 
+<LI> <A NAME="tex2html2009" HREF="node185.html#SECTION006130000000000000000">5.13 Efficiency Notes</A>
+<UL>
+<LI> <A NAME="tex2html2010" HREF="node186.html#SECTION006131000000000000000">5.13.1 Type Uncertainty</A>
+<LI> <A NAME="tex2html2011" HREF="node187.html#SECTION006132000000000000000">5.13.2 Efficiency Notes and Type Checking</A>
+<LI> <A NAME="tex2html2012" HREF="node188.html#SECTION006133000000000000000">5.13.3 Representation Efficiency Notes</A>
+<LI> <A NAME="tex2html2013" HREF="node189.html#SECTION006134000000000000000">5.13.4 Verbosity Control</A>
+</UL> 
+<LI> <A NAME="tex2html2014" HREF="node190.html#SECTION006140000000000000000">5.14 Profiling</A>
+<UL>
+<LI> <A NAME="tex2html2015" HREF="node191.html#SECTION006141000000000000000">5.14.1 Profile Interface</A>
+<LI> <A NAME="tex2html2016" HREF="node192.html#SECTION006142000000000000000">5.14.2 Profiling Techniques</A>
+<LI> <A NAME="tex2html2017" HREF="node193.html#SECTION006143000000000000000">5.14.3 Nested or Recursive Calls</A>
+<LI> <A NAME="tex2html2018" HREF="node194.html#SECTION006144000000000000000">5.14.4 Clock resolution</A>
+<LI> <A NAME="tex2html2019" HREF="node195.html#SECTION006145000000000000000">5.14.5 Profiling overhead</A>
+<LI> <A NAME="tex2html2020" HREF="node196.html#SECTION006146000000000000000">5.14.6 Additional Timing Utilities</A>
+<LI> <A NAME="tex2html2021" HREF="node197.html#SECTION006147000000000000000">5.14.7 A Note on Timing</A>
+<LI> <A NAME="tex2html2022" HREF="node198.html#SECTION006148000000000000000">5.14.8 Benchmarking Techniques</A>
+</UL>
+</UL>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

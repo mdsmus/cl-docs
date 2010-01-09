@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>33.18. The FastCGI Interface</title><link rel="stylesheet" href="impnotes.css" type="text/css" /><link rev="made" href="mailto:clisp-list@lists.sourceforge.net" /><meta name="generator" content="DocBook XSL Stylesheets Vsnapshot_7566" /><link rel="start" href="index.html" title="Implementation Notes for GNU CLISP" /><link rel="up" href="ext-modules.html" title="Chapter 33. Extensions Implemented as Modules" /><link rel="prev" href="rawsock.html" title="33.17. Raw Socket Access" /><link rel="next" href="gtk.html" title="33.19. GTK Interface" /><link rel="copyright" href="legalese.html" title="Legal Status of the CLISP Implementation Notes" /><meta name="date" content="'generated: 2008-07-02 11:52:30-04:00'" /><link rel="author" title="Authors" href="index.html#authors" /><link rel="contents" title="Table of Contents" href="index.html" /><link rel="glossary" href="glossary.html" /><link rel="help" href="faq.html#faq-help" title="How do I ask for help?" /><link rel="home" title="Home" href="http://clisp.cons.org" /><link rel="index" href="idx.html" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">33.18. The FastCGI Interface</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="rawsock.html">Prev</a> </td><th width="60%" align="center">Chapter 33. Extensions Implemented as Modules</th><td width="20%" align="right"> <a accesskey="n" href="gtk.html">Next</a></td></tr></table><hr /></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="fastcgi"></a>33.18. The <a class="ulink" href="http://www.fastcgi.com" target="_top">FastCGI</a> Interface</h2></div></div></div><div class="toc"><dl><dt><span class="section"><a href="fastcgi.html#fcgi-overview">33.18.1. Overview of FastCGI</a></span></dt><dt><span class="section"><a href="fastcgi.html#fcgi-functionality">33.18.2. Functions in Package FASTCGI</a></span></dt><dt><span class="section"><a href="fastcgi.html#fcgi-example">33.18.3. FastCGI Example</a></span></dt><dt><span class="section"><a href="fastcgi.html#fcgi-build">33.18.4. Building and configuring the
+  FastCGI Interface</a></span></dt></dl></div><p>
+The <a class="ulink" href="http://www.fastcgi.com" target="_top">FastCGI</a> module speeds up <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> CGI
+scripts launched by a Web server.  Working with a
+<a class="ulink" href="http://www.fastcgi.com" target="_top">FastCGI</a>-enabled Web server such as <a class="ulink" href="http://www.apache.org/" target="_top">Apache</a> with
+<a class="ulink" href="http://www.fastcgi.com/mod_fastcgi/docs/mod_fastcgi.html" target="_top">mod_fastcgi</a>, a <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> program using the <a class="ulink" href="http://www.fastcgi.com" target="_top">FastCGI</a>
+protocol will run many times faster than a conventional CGI program.
+The performance improvements stem from the fact that the script's
+process remains running across <a class="ulink" href="http://www.w3.org/Protocols/" target="_top"><span class="command"><strong>HTTP</strong></span></a> requests, eliminating startup
+overhead and allowing for caching of data structures and other resources.  This
+is the same approach used is in other languages (e.g., <a class="ulink" href="http://perl.apache.org" target="_top">mod_perl</a> for Perl).  </p><p>When this module is present, <a href="features.html" class="olink"><code class="varname">*FEATURES*</code></a> contains the
+ symbol <code class="constant">:FASTCGI</code>.</p><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="fcgi-overview"></a>33.18.1. Overview of <a class="ulink" href="http://www.fastcgi.com" target="_top">FastCGI</a></h3></div></div></div><p>
+Traditional CGI programs work by doing input/output with the Web
+server via the following channels:
+</p><div class="orderedlist"><ol type="1"><li>
+Examining environment variables; e.g., <code class="envar">HTTP_USER_AGENT</code> is the
+variable set by the Web server to name the browser used
+</li><li>
+Reading from standard input.  E.g., to get input data in a "method=POST" request
+</li><li>
+Writing an <a class="ulink" href="http://www.w3.org/Protocols/" target="_top"><span class="command"><strong>HTTP</strong></span></a> response document (usually "Content-type:
+text/html") to the standard output, for eventual transmission
+back to the browser client
+</li><li>
+Writing error messages to the standard error, usually captured
+by the Web server and logged in its log files.
+</li></ol></div><p>
+</p><p>
+<a class="ulink" href="http://www.fastcgi.com" target="_top">FastCGI</a> involves replacing calls the standard routines to do
+the above with calls in the <strong class="package">“<span class="quote">FASTCGI</span>”</strong> package.  These calls will then
+work exactly as before when the program is invoked as a CGI, but will
+also work when invoked by a <a class="ulink" href="http://www.fastcgi.com" target="_top">FastCGI</a>-enabled Web server.
+</p><p>
+<a class="ulink" href="http://www.fastcgi.com" target="_top">FastCGI</a> programs persist across <a class="ulink" href="http://www.w3.org/Protocols/" target="_top"><span class="command"><strong>HTTP</strong></span></a> requests, and thus incur
+startup overhead costs only once.  For Lisp Web programs, this overhead
+can be substantial: code must be
+compiled and loaded, files and databases must be opened, etc.  Further,
+because the program stays running from <a class="ulink" href="http://www.w3.org/Protocols/" target="_top"><span class="command"><strong>HTTP</strong></span></a> request to <a class="ulink" href="http://www.w3.org/Protocols/" target="_top"><span class="command"><strong>HTTP</strong></span></a> request,
+it can cache information in memory such as database connections
+or large in-memory data structures.
+
+</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="fcgi-functionality"></a>33.18.2. Functions in Package <strong class="package">“<span class="quote">FASTCGI</span>”</strong></h3></div></div></div><p>Access to
+<a class="ulink" href="http://www.fastcgi.com" target="_top">FastCGI</a> is via these functions in package <strong class="package">“<span class="quote">FASTCGI</span>”</strong>.
+
+</p><div class="variablelist">
+<!--IS-CGI-->
+<dl><dt><span class="term"><code class="code">(FASTCGI:IS-CGI)</code></span></dt><dd>
+Returns <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_t.html" target="_top"><code class="constant">T</code></a> if the <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> program has been launched as a traditional
+CGI rather than in <a class="ulink" href="http://www.fastcgi.com" target="_top">FastCGI</a>.  In traditional CGI, program I/O is
+via operating system environment variables and standard file streams.
+Under <a class="ulink" href="http://www.fastcgi.com" target="_top">FastCGI</a>, I/O is done directly with the Web server via
+the <a class="ulink" href="http://www.fastcgi.com" target="_top">FastCGI</a> protocol.
+</dd>
+<!--ACCEPT-->
+<dt><span class="term">
+<code class="code">(FASTCGI:ACCEPT)</code> <em class="replaceable"><code>cgi-forms</code></em>
+<code class="code">(FASTCGI:FINISH)</code>
+</span></dt><dd><p>
+In <a class="ulink" href="http://www.fastcgi.com" target="_top">FastCGI</a> mode, the program loops,
+<code class="function">ACCEPT</code>ing to begin the execution of an <a class="ulink" href="http://www.w3.org/Protocols/" target="_top"><span class="command"><strong>HTTP</strong></span></a>
+request, and <code class="function">FINISH</code>ing to signal that the script
+is finished writing its response to the <a class="ulink" href="http://www.w3.org/Protocols/" target="_top"><span class="command"><strong>HTTP</strong></span></a> request.  <code class="function">ACCEPT</code>
+blocks until the next <a class="ulink" href="http://www.w3.org/Protocols/" target="_top"><span class="command"><strong>HTTP</strong></span></a> request comes in, returning <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_t.html" target="_top"><code class="constant">T</code></a> if there is
+a new request to handle, and <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_nil.html" target="_top"><code class="constant">NIL</code></a> if no more <a class="ulink" href="http://www.w3.org/Protocols/" target="_top"><span class="command"><strong>HTTP</strong></span></a> requests will
+occur, usually because the Web server itself has terminated, in which
+case the <a class="ulink" href="http://www.fastcgi.com" target="_top">FastCGI</a> server loop should also exit.
+</p><p>
+A typical <a class="ulink" href="http://www.fastcgi.com" target="_top">FastCGI</a> top-level server loop looks like:
+</p><pre class="programlisting">
+(do ()
+    ((not (fastcgi:accept)))
+  (run-my-script)
+  (fastcgi:finish))
+</pre><p>
+
+</p></dd>
+<!--GETENV-->
+<dt><span class="term"><code class="code">(FASTCGI:GETENV
+<em class="replaceable"><code>varname</code></em>)</code></span></dt><dd>
+Use in place of <a class="link" href="getenv.html" title="32.7. Operating System Environment"><code class="function">EXT:GETENV</code></a> to get the value of the environment variable
+named <em class="replaceable"><code>varname</code></em>, which should be a string.
+Unlike <a class="link" href="getenv.html" title="32.7. Operating System Environment"><code class="function">EXT:GETENV</code></a>, which accesses the actual host operating system environment,
+<code class="function">FASTCGI:GETENV</code> obtains its environment via
+the Web server, over its FastCGI communications channel.
+For more information, see the <a class="ulink" href="http://www.fastcgi.com" target="_top">FastCGI</a> Web site.
+Returns <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_nil.html" target="_top"><code class="constant">NIL</code></a> if <em class="replaceable"><code>varname</code></em> is not defined in
+the operating system environment.  See <a class="ulink" href="http://www.cgi101.com/class/ch3/text.html" target="_top">here</a> for a
+list of useful variables.  You must first have called
+<code class="function">ACCEPT</code> and not yet have called
+<code class="function">FINISH</code>.  </dd>
+<!--WRITE-STDOUT-->
+<dt><span class="term"><code class="code">(FASTCGI:WRITE-STDOUT
+<em class="replaceable"><code>string</code></em>)</code></span></dt><dd>
+Use in place of standard Lisp calls which print to standard output
+(i.e., as part of the <a class="ulink" href="http://www.w3.org/Protocols/" target="_top"><span class="command"><strong>HTTP</strong></span></a> response).
+You must first have called <code class="function">ACCEPT</code> and not yet have
+called <code class="function">FINISH</code>.
+</dd>
+<!--WRITE-STDERR-->
+<dt><span class="term"><code class="code">(FASTCGI:WRITE-STDERR
+<em class="replaceable"><code>string</code></em>)</code></span></dt><dd>
+Use in place of standard Lisp calls which print to
+standard error. Rather than being part of
+the <a class="ulink" href="http://www.w3.org/Protocols/" target="_top"><span class="command"><strong>HTTP</strong></span></a> response, data written to standard error are usually
+collected by the Web server in its error log.  This is useful
+for diagnostic purposes.
+</dd>
+<!--SLURP-STDIN-->
+<dt><span class="term"><code class="code">(FASTCGI:SLURP-STDIN)</code></span></dt><dd>
+Reads in the entirety of standard input and returns it as a string.
+This is usually done for <a class="ulink" href="http://www.w3.org/Protocols/" target="_top"><span class="command"><strong>HTTP</strong></span></a> requests with
+<code class="literal">METHOD="post"</code>, when the data are passed to the CGI
+script via standard input rather than via the environment variable
+<code class="envar">QUERY_STRING</code>.  There is no way to read standard input
+in pieces, which could be a problem, say, for <a class="ulink" href="http://www.w3.org/Protocols/" target="_top"><span class="command"><strong>HTTP</strong></span></a> uploads of very large files.
+</dd>
+<!--OUT-->
+<dt><span class="term"><code class="code">(FASTCGI:OUT
+<em class="replaceable"><code>tree</code></em>)</code></span></dt><dd>
+Like <code class="function">WRITE-STDOUT</code>, except that
+<em class="replaceable"><code>tree</code></em>
+may be an arbitrarily nested list structure containing (at the leaves)
+numbers and strings.  For example,
+<code class="literal">(FASTCGI:OUT '("foo" (" " 10 " " 20)))</code>
+will write the string <code class="literal">"foo 10 20"</code>.  This function
+is useful when building strings in memory for display.
+</dd></dl></div><p>
+
+</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="fcgi-example"></a>33.18.3. <a class="ulink" href="http://www.fastcgi.com" target="_top">FastCGI</a> Example</h3></div></div></div><p>
+
+Below is a simple example CGI script using <a class="ulink" href="http://www.fastcgi.com" target="_top">FastCGI</a>.
+
+</p><pre class="programlisting">
+#!/usr/local/bin/clisp -q -K full
+
+(do ((count 1 (1+ count)))
+    ((not (fastcgi:accept)) nil)
+  (fastcgi:out "Content-type: text/plain" #\Newline #\Newline)
+  (fastcgi:out
+   "I am running in mode: " (if (fastcgi:is-cgi) "CGI" "FastCGI") #\Newline
+   "This is execution no.: " count #\Newline
+   "The browser string is '" (fastcgi:getenv "HTTP_USER_AGENT") "'" #\Newline)
+  (fastcgi:finish))
+</pre><p>
+
+</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="fcgi-build"></a>33.18.4. Building and configuring the
+  <a class="ulink" href="http://www.fastcgi.com" target="_top">FastCGI</a> Interface</h3></div></div></div><p>
+It is necessary to download the <a class="ulink" href="http://www.fastcgi.com" target="_top">FastCGI</a> developers' kit, build it,
+and install it, before building <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> with <a class="ulink" href="http://www.fastcgi.com" target="_top">FastCGI</a> support.
+You also need to upgrade your Web server to speak the <a class="ulink" href="http://www.fastcgi.com" target="_top">FastCGI</a>
+protocol.  For <a class="ulink" href="http://www.apache.org/" target="_top">Apache</a> this means building in <a class="ulink" href="http://www.fastcgi.com/mod_fastcgi/docs/mod_fastcgi.html" target="_top">mod_fastcgi</a>, either statically
+or dynamically, and then adding a line to your <a class="ulink" href="http://www.apache.org/" target="_top">Apache</a> config like:
+</p><pre class="programlisting">
+     Addhandler fastcgi-script .fcgi
+</pre><p>
+After that, you can convert <code class="filename">foo.cgi</code> by linking it
+to a script names <code class="filename">foo.fcgi</code>.  Since a <a class="ulink" href="http://www.fastcgi.com" target="_top">FastCGI</a>
+script is also a valid CGI script, it can be run unmodified in either
+mode.
+</p></div></div><div class="bookinfo"><hr /><table width="100%" summary="impnotes meta info"><th><td align="left">These notes document <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> version 2.46</td><td align="right">Last modified: 2008-07-02</td></th></table></div><div class="custom-footer"><hr /><table width="100%"><tr><td align="left"><a href="http://clisp.cons.org"><img src="clisp.png" width="48" height="48" alt="[CLISP home]" /></a></td><td align="center"><a href="http://sourceforge.net/donate/index.php?group_id=1355"><img src="http://images.sourceforge.net/images/project-support.jpg" width="88" height="32" alt="[Support CLISP]" /></a></td><td align="right"><a href="http://sourceforge.net"><img width="125" height="37" alt="[SourceForge]" src="http://sflogo.sourceforge.net/sflogo.php?group_id=1355&amp;type=2&amp;page=fastcgi" /></a></td></tr></table></div><hr /><form method="get" action="http://www.google.com/custom" target="_top"><table width="100%" border="0"><tr><td nowrap="nowrap" align="center"><input type="hidden" name="domains" value="clisp.cons.org;clisp.podval.org;www.lisp.org" /><label for="sbi" style="display: none">Enter your search terms</label><input type="text" name="q" size="50" maxlength="255" id="sbi" value="33.18. The FastCGI Interface" /><label for="sbb" style="display: none">Submit search form</label><input type="submit" name="sa" value="Google Search" id="sbb" /></td></tr><tr><td nowrap="nowrap" align="center"><input type="radio" name="sitesearch" value="" checked="1" id="ss0" /><label for="ss0" title="Search the Web"><small>Web</small></label><input type="radio" name="sitesearch" value="clisp.cons.org" id="ss1" /><label for="ss1" title="Search clisp.cons.org"><small>clisp.cons.org</small></label><input type="radio" name="sitesearch" value="clisp.podval.org" id="ss2" /><label for="ss2" title="Search clisp.podval.org"><small>clisp.podval.org</small></label><input type="radio" name="sitesearch" value="www.lisp.org" id="ss3" /><label for="ss3" title="Search www.lisp.org"><small>www.lisp.org</small></label><input type="hidden" name="client" value="pub-4445255502750357" /><input type="hidden" name="forid" value="1" /><input type="hidden" name="ie" value="UTF-8" /><input type="hidden" name="oe" value="UTF-8" /><input type="hidden" name="cof" value="GALT:#008000;GL:1;DIV:#336699;VLC:663399;AH:center;BGC:FFFFFF;LBGC:000000;ALC:0000FF;LC:0000FF;T:000000;GFNT:0000FF;GIMP:0000FF;LH:48;LW:48;L:http://clisp.cons.org/clisp.png;S:http://clisp.cons.org;FORID:1" /><input type="hidden" name="hl" value="en" /></td></tr></table></form><hr /><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="rawsock.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="ext-modules.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="gtk.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">33.17. Raw Socket Access </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 33.19. GTK Interface</td></tr></table></div></body></html>

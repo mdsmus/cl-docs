@@ -1,0 +1,78 @@
+<html lang="en">
+<head>
+<title>Entry Point Details - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Function-Names.html#Function-Names" title="Function Names">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Entry-Point-Details"></a>
+<p>
+Up:&nbsp;<a rel="up" accesskey="u" href="Function-Names.html#Function-Names">Function Names</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h5 class="subsubsection">4.3.3.1 Entry Point Details</h5>
+
+<p><a name="index-External-entry-points-71"></a><a name="index-Entry-points_002c-external-72"></a><a name="index-Block-compilation_002c-debugger-implications-73"></a><a name="index-External_002c-stack-frame-kind-74"></a><a name="index-Optional_002c-stack-frame-kind-75"></a><a name="index-Cleanup_002c-stack-frame-kind-76"></a>
+Sometimes the compiler introduces new functions that are used to
+implement a user function, but are not directly specified in the
+source. This is mostly done for argument type and count checking.
+
+   <p>The debugger will normally show these entry point functions as if
+they were the normal main entry point, but more detail can be obtained
+by setting <code>sb-debug:*show-entry-point-details*</code> to true; this is
+primarily useful for debugging SBCL itself, but may help pinpoint
+problems that occur during lambda-list processing.
+
+<!-- FIXME: the following bits talked about block-compilation, but -->
+<!-- we don't currently support it... -->
+<!-- With recursive -->
+<!-- or block compiled -->
+<!-- functions, an additional @code{:EXTERNAL} frame -->
+<!-- may appear before the frame representing the first call to the -->
+<!-- recursive function -->
+<!-- or entry to the compiled block. -->
+<!-- This is a -->
+<!-- consequence of the way the compiler works: there is -->
+<!-- nothing odd with your program. You will also see @code{:CLEANUP} -->
+<!-- frames during the execution of @code{unwind-protect} cleanup -->
+<!-- code. -->
+   <p>With recursive functions, an additional <code>:EXTERNAL</code> frame may
+appear before the frame representing the first call to the recursive
+function. This is a consequence of the way the compiler works: there
+is nothing odd with your program. You will also see <code>:CLEANUP</code>
+frames during the execution of <code>unwind-protect</code> cleanup code. 
+The <code>:EXTERNAL</code> and <code>:CLEANUP</code> above are entry-point types,
+visible only if <code>sb-debug:*show-entry-point-details*</code> os true.
+
+   </body></html>
+

@@ -1,0 +1,170 @@
+<html lang="en">
+<head>
+<title>The Parts of a Compiler Diagnostic - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Understanding-Compiler-Diagnostics.html#Understanding-Compiler-Diagnostics" title="Understanding Compiler Diagnostics">
+<link rel="next" href="The-Original-and-Actual-Source.html#The-Original-and-Actual-Source" title="The Original and Actual Source">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="The-Parts-of-a-Compiler-Diagnostic"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="The-Original-and-Actual-Source.html#The-Original-and-Actual-Source">The Original and Actual Source</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Understanding-Compiler-Diagnostics.html#Understanding-Compiler-Diagnostics">Understanding Compiler Diagnostics</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h5 class="subsubsection">3.1.3.1 The Parts of a Compiler Diagnostic</h5>
+
+<p>When processing this program, the compiler will produce this warning:
+
+<pre class="example">     ; file: /tmp/foo.lisp
+     ; in: DEFUN FOO
+     ;     (ZOQ Y)
+     ; --&gt; ROQ PLOQ
+     ; ==&gt;
+     ;   (+ Y 3)
+     ;
+     ; caught WARNING:
+     ;   Asserted type NUMBER conflicts with derived type (VALUES SYMBOL &amp;OPTIONAL).
+</pre>
+   <p>In this example we see each of the six possible parts of a compiler
+diagnostic:
+
+     <ol type=1 start=1>
+
+     <li><a name="index-with_002dcompilation_002dunit-35"></a>&lsquo;<samp><span class="samp">file: /tmp/foo.lisp</span></samp>&rsquo; This is the name of the file that the
+compiler read the relevant code from.  The file name is displayed
+because it may not be immediately obvious when there is an error
+during compilation of a large system, especially when
+<code>with-compilation-unit</code> is used to delay undefined warnings.
+
+     <li>&lsquo;<samp><span class="samp">in: DEFUN FOO</span></samp>&rsquo; This is the definition top level form responsible
+for the diagnostic. It is obtained by taking the first two elements of
+the enclosing form whose first element is a symbol beginning with
+&ldquo;&lsquo;<samp><span class="samp">def</span></samp>&rsquo;&rdquo;. If there is no such enclosing &ldquo;&lsquo;<samp><span class="samp">def</span></samp>&rsquo;&rdquo; form,
+then the outermost form is used. If there are multiple &lsquo;<samp><span class="samp">def</span></samp>&rsquo;
+forms, then they are all printed from the outside in, separated by
+&lsquo;<samp><span class="samp">=&gt;</span></samp>&rsquo;'s. In this example, the problem was in the <code>defun</code> for
+<code>foo</code>.
+
+     <li><a name="index-Original-Source-36"></a>&lsquo;<samp><span class="samp">(ZOQ Y)</span></samp>&rsquo; This is the <dfn>original source</dfn> form responsible for
+the diagnostic. Original source means that the form directly appeared
+in the original input to the compiler, i.e. in the lambda passed to
+<code>compile</code> or in the top level form read from the source file. In
+this example, the expansion of the <code>zoq</code> macro was responsible
+for the message.
+
+     <li><a name="index-Processing-Path-37"></a>&lsquo;<samp><span class="samp">--&gt; ROQ PLOQ</span></samp>&rsquo; This is the <dfn>processing path</dfn> that the
+compiler used to produce the code that caused the message to be
+emitted. The processing path is a representation of the evaluated
+forms enclosing the actual source that the compiler encountered when
+processing the original source. The path is the first element of each
+form, or the form itself if the form is not a list. These forms result
+from the expansion of macros or source-to-source transformation done
+by the compiler. In this example, the enclosing evaluated forms are
+the calls to <code>roq</code> and <code>ploq</code>. These calls resulted from the
+expansion of the <code>zoq</code> macro.
+
+     <li><a name="index-Actual-Source-38"></a>&lsquo;<samp><span class="samp">==&gt; (+ Y 3)</span></samp>&rsquo; This is the <dfn>actual source</dfn> responsible for the
+diagnostic. If the actual source appears in the explanation, then we
+print the next enclosing evaluated form, instead of printing the
+actual source twice. (This is the form that would otherwise have been
+the last form of the processing path.) In this example, the problem is
+with the evaluation of the reference to the variable <code>y</code>.
+
+     <li>&lsquo;<samp><span class="samp">caught WARNING: Asserted type NUMBER conflicts with derived type
+(VALUES SYMBOL &amp;OPTIONAL).</span></samp>&rsquo;  This is the <dfn>explanation</dfn> of the
+problem. In this example, the problem is that, while the call to
+<code>+</code> requires that its arguments are all of type <code>number</code>,
+the compiler has derived that <code>y</code> will evaluate to a
+<code>symbol</code>.  Note that &lsquo;<samp><span class="samp">(VALUES SYMBOL &amp;OPTIONAL)</span></samp>&rsquo; expresses
+that <code>y</code> evaluates to precisely one value.
+
+        </ol>
+
+   <p>Note that each part of the message is distinctively marked:
+
+     <ul>
+<li> &lsquo;<samp><span class="samp">file:</span></samp>&rsquo; and &lsquo;<samp><span class="samp">in:</span></samp>&rsquo; mark the file and definition,
+respectively.
+
+     <li>The original source is an indented form with no prefix.
+
+     <li>Each line of the processing path is prefixed with &lsquo;<samp><span class="samp">--&gt;</span></samp>&rsquo;
+
+     <li>The actual source form is indented like the original source, but is
+marked by a preceding &lsquo;<samp><span class="samp">==&gt;</span></samp>&rsquo; line. 
+<!-- no it isn't. -->
+
+     <li>The explanation is prefixed with the diagnostic severity, which can be
+&lsquo;<samp><span class="samp">caught ERROR:</span></samp>&rsquo;, &lsquo;<samp><span class="samp">caught WARNING:</span></samp>&rsquo;, &lsquo;<samp><span class="samp">caught
+STYLE-WARNING:</span></samp>&rsquo;, or &lsquo;<samp><span class="samp">note:</span></samp>&rsquo;.
+
+   </ul>
+
+   <p>Each part of the message is more specific than the preceding one. If
+consecutive messages are for nearby locations, then the front part of
+the messages would be the same. In this case, the compiler omits as
+much of the second message as in common with the first. For example:
+
+<pre class="example">     ; file: /tmp/foo.lisp
+     ; in: DEFUN FOO
+     ;     (ZOQ Y)
+     ; --&gt; ROQ
+     ; ==&gt;
+     ;   (PLOQ (+ Y 3))
+     ;
+     ; caught STYLE-WARNING:
+     ;   undefined function: PLOQ
+     
+     ; ==&gt;
+     ;   (ROQ (PLOQ (+ Y 3)))
+     ;
+     ; caught STYLE-WARNING:
+     ;   undefined function: ROQ
+</pre>
+   <!-- fixing that weird blank line might be good -->
+   <p>In this example, the file, definition and original source are
+identical for the two messages, so the compiler omits them in the
+second message. If consecutive messages are entirely identical, then
+the compiler prints only the first message, followed by: &lsquo;<samp><span class="samp">[Last
+message occurs </span><var>repeats</var><span class="samp"> times]</span></samp>&rsquo; where <var>repeats</var> is the number
+of times the message was given.
+
+   <p>If the source was not from a file, then no file line is printed. If
+the actual source is the same as the original source, then the
+processing path and actual source will be omitted. If no forms
+intervene between the original source and the actual source, then the
+processing path will also be omitted.
+
+   </body></html>
+

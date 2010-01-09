@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>2.11 Running Programs from Lisp</TITLE>
+<META NAME="description" CONTENT="2.11 Running Programs from Lisp">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1084" HREF="node40.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1082" HREF="node11.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1076" HREF="node38.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1086" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1087" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1085" HREF="node40.html">2.11.1 Process Accessors</A>
+<B>Up:</B> <A NAME="tex2html1083" HREF="node11.html">2 Design Choices and </A>
+<B> Previous:</B> <A NAME="tex2html1077" HREF="node38.html">2.10 Stream Extensions</A>
+<BR> <P>
+<H1><A NAME="SECTION003110000000000000000">2.11 Running Programs from Lisp</A></H1>
+<P>
+It is possible to run programs from Lisp by using the following function.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:run-program</tt> <em> <i>program</i> <i>args</i>
+      <tt>&amp;key</tt> <tt>:env</tt> <tt>:wait</tt> <tt>:pty</tt> <tt>:input</tt>
+      <tt>:if-input-does-not-exist</tt>
+      <tt>:output</tt> <tt>:if-output-exists</tt>
+      <tt>:error</tt> <tt>:if-error-exists</tt>
+      <tt>:status-hook</tt> <tt>:before-execve</tt></em><BR>
+<P>
+  <tt>run-program</tt> runs <i>program</i> in a child process.
+  <i>Program</i> should be a pathname or string naming the program.
+  <i>Args</i> should be a list of strings which this passes to
+  <i>program</i> as normal Unix parameters.  For no arguments, specify
+  <i>args</i> as <i>nil</i>.  The value returned is either a process
+  structure or <i>nil</i>.  The process interface follows the description of
+  <tt>run-program</tt>.  If <tt>run-program</tt> fails to fork the child
+  process, it returns <i>nil</i>.
+<P>
+  Except for sharing file descriptors as explained in keyword argument
+  descriptions, <tt>run-program</tt> closes all file descriptors in the
+  child process before running the program.  When you are done using a
+  process, call <tt>process-close</tt> to reclaim system resources.  You
+  only need to do this when you supply <tt>:stream</tt> for one of
+  <tt>:input</tt>, <tt>:output</tt>, or <tt>:error</tt>, or you supply <tt>:pty</tt>
+  non-<i>nil</i>.  You can call <tt>process-close</tt> regardless of whether
+  you must to reclaim resources without penalty if you feel safer.
+<P>
+  <tt>run-program</tt> accepts the following keyword arguments:
+  <DL ><DT><STRONG><tt>:env</tt></STRONG>
+<DD> This is an a-list mapping keywords and
+    simple-strings.  The default is <tt>ext:*environment-list*</tt>.  If
+    <tt>:env</tt> is specified, <tt>run-program</tt> uses the value given
+    and does not combine the environment passed to Lisp with the one
+    specified.
+<P>
+  <DT><STRONG><tt>:wait</tt></STRONG>
+<DD> If non-<i>nil</i> (the default), wait until the child
+    process terminates.  If <i>nil</i>, continue running Lisp while the
+    child process runs.
+<P>
+  <DT><STRONG><tt>:pty</tt></STRONG>
+<DD> This should be one of <i>t</i>, <i>nil</i>, or a stream.  If
+    specified non-<i>nil</i>, the subprocess executes under a Unix &#305;PTY.
+    If specified as a stream, the system collects all output to this
+    pty and writes it to this stream.  If specified as <i>t</i>, the
+    <tt>process-pty</tt> slot contains a stream from which you can read
+    the program's output and to which you can write input for the
+    program.  The default is <i>nil</i>.
+<P>
+  <DT><STRONG><tt>:input</tt></STRONG>
+<DD> This specifies how the program gets its input.
+    If specified as a string, it is the name of a file that contains
+    input for the child process.  <tt>run-program</tt> opens the file as
+    standard input.  If specified as <i>nil</i> (the default), then
+    standard input is the file `<tt>/dev/null</tt>'.  If specified as
+    <i>t</i>, the program uses the current standard input.  This may
+    cause some confusion if <tt>:wait</tt> is <i>nil</i> since two processes
+    may use the terminal at the same time.  If specified as
+    <tt>:stream</tt>, then the <tt>process-input</tt> slot contains an
+    output stream.  Anything written to this stream goes to the
+    program as input.  <tt>:input</tt> may also be an input stream that
+    already contains all the input for the process.  In this case
+    <tt>run-program</tt> reads all the input from this stream before
+    returning, so this cannot be used to interact with the process.
+<P>
+  <DT><STRONG><tt>:if-input-does-not-exist</tt></STRONG>
+<DD> This specifies what to do if
+    the input file does not exist.  The following values are valid:
+    <i>nil</i> (the default) causes <tt>run-program</tt> to return <i>nil</i>
+    without doing anything; <tt>:create</tt> creates the named file; and
+    <tt>:error</tt> signals an error.
+<P>
+  <DT><STRONG><tt>:output</tt></STRONG>
+<DD> This specifies what happens with the program's
+    output.  If specified as a pathname, it is the name of a file that
+    contains output the program writes to its standard output.  If
+    specified as <i>nil</i> (the default), all output goes to
+    `<tt>/dev/null</tt>'.  If specified as <i>t</i>, the program writes to
+    the Lisp process's standard output.  This may cause confusion if
+    <tt>:wait</tt> is <i>nil</i> since two processes may write to the terminal
+    at the same time.  If specified as <tt>:stream</tt>, then the
+    <tt>process-output</tt> slot contains an input stream from which you
+    can read the program's output.
+<P>
+  <DT><STRONG><tt>:if-output-exists</tt></STRONG>
+<DD> This specifies what to do if the
+    output file already exists.  The following values are valid:
+    <i>nil</i> causes <tt>run-program</tt> to return <i>nil</i> without doing
+    anything; <tt>:error</tt> (the default) signals an error;
+    <tt>:supersede</tt> overwrites the current file; and <tt>:append</tt>
+    appends all output to the file.
+<P>
+  <DT><STRONG><tt>:error</tt></STRONG>
+<DD> This is similar to <tt>:output</tt>, except the file
+    becomes the program's standard error.  Additionally, <tt>:error</tt>
+    can be <tt>:output</tt> in which case the program's error output is
+    routed to the same place specified for <tt>:output</tt>.  If specified
+    as <tt>:stream</tt>, the <tt>process-error</tt> contains a stream
+    similar to the <tt>process-output</tt> slot when specifying the
+    <tt>:output</tt> argument.
+<P>
+  <DT><STRONG><tt>:if-error-exists</tt></STRONG>
+<DD> This specifies what to do if the error
+    output file already exists.  It accepts the same values as
+    <tt>:if-output-exists</tt>.
+<P>
+  <DT><STRONG><tt>:status-hook</tt></STRONG>
+<DD> This specifies a function to call whenever
+    the process changes status.  This is especially useful when
+    specifying <tt>:wait</tt> as <i>nil</i>.  The function takes the process as
+    a required argument.
+<P>
+  <DT><STRONG><tt>:before-execve</tt></STRONG>
+<DD> This specifies a function to run in the
+    child process before it becomes the program to run.  This is
+    useful for actions such as authenticating the child process
+    without modifying the parent Lisp process.
+<P>
+</DL><BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html1088" HREF="node40.html#SECTION003111000000000000000">2.11.1 Process Accessors</A>
+</UL>
+<HR><A NAME="tex2html1084" HREF="node40.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1082" HREF="node11.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1076" HREF="node38.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1086" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1087" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1085" HREF="node40.html">2.11.1 Process Accessors</A>
+<B>Up:</B> <A NAME="tex2html1083" HREF="node11.html">2 Design Choices and </A>
+<B> Previous:</B> <A NAME="tex2html1077" HREF="node38.html">2.10 Stream Extensions</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

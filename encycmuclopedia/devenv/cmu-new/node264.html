@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Code-locations</TITLE>
+<META NAME="description" CONTENT="Code-locations">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html4042" HREF="node265.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html4040" HREF="node255.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html4034" HREF="node263.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html4044" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html4045" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html4043" HREF="node265.html">Debug-sources</A>
+<B>Up:</B> <A NAME="tex2html4041" HREF="node255.html">10 Debugger Programmer's Interface</A>
+<B> Previous:</B> <A NAME="tex2html4035" HREF="node263.html">10.6 Breakpoints</A>
+<BR> <P>
+<H1><A NAME="SECTION001170000000000000000">Code-locations</A></H1>
+<P>
+Code-locations represent places in functions where the system has correct
+information about the function's environment and where interesting operations
+can occur--asking for a local variable's value, setting breakpoints,
+evaluating forms within the function's environment, etc.
+<P>
+Sometimes the interface returns unknown code-locations.  These
+represent places in functions, but there is no debug information
+associated with them.  Some operations accept these since they may
+succeed even with missing debug data.  These operations' argument is
+named <i>basic-code-location</i> indicating they take known and unknown
+code-locations.  If an operation names its argument
+<i>code-location</i>, and you supply an unknown one, it will signal an
+error.  For example, <tt>frame-code-location</tt> may return an unknown
+code-location if someone interrupted Lisp in the given frame.  The
+system knows where execution will continue, but this place in the code
+may not be a place for which the compiler dumped debug information.
+<P>
+<b>[Function]</b><BR> 
+<tt>  code-location-debug-function</tt> <em> <i>basic-code-location</i></em><BR>
+<P>
+  This function returns the debug-function representing information
+  about the function corresponding to the code-location.
+<P>
+<b>[Function]</b><BR> 
+<tt>  code-location-debug-block</tt> <em> <i>basic-code-location</i></em><BR>
+<P>
+  This function returns the debug-block containing code-location if it
+  is available.  Some debug policies inhibit debug-block information,
+  and if none is available, then this signals a <tt>no-debug-blocks</tt>
+  condition.
+<P>
+<b>[Function]</b><BR> 
+<tt>  code-location-top-level-form-offset</tt> <em> <i>code-location</i></em><BR>
+<P>
+  This function returns the number of top-level forms before the one
+  containing <i>code-location</i> as seen by the compiler in some
+  compilation unit.  A compilation unit is not necessarily a single
+  file, see the section on debug-sources.
+<P>
+<b>[Function]</b><BR> 
+<tt>  code-location-form-number</tt> <em> <i>code-location</i></em><BR>
+<P>
+  This function returns the number of the form corresponding to
+  <i>code-location</i>.  The form number is derived by walking the
+  subforms of a top-level form in depth-first order.  While walking
+  the top-level form, count one in depth-first order for each subform
+  that is a cons.  See <A NAME="12448">&#160;</A><tt>form-number-translations</tt> (page&nbsp;<A HREF="node266.html#FNformnumbertranslations"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>).
+<P>
+<b>[Function]</b><BR> 
+<tt>  code-location-debug-source</tt> <em> <i>code-location</i></em><BR>
+<P>
+  This function returns <i>code-location</i>'s debug-source.
+<P>
+<b>[Function]</b><BR> 
+<tt>  code-location-unknown-p</tt> <em> <i>basic-code-location</i></em><BR>
+<P>
+  This function returns whether <i>basic-code-location</i> is unknown.
+  It returns <i>nil</i> when the code-location is known.
+<P>
+<b>[Function]</b><BR> 
+<tt>  code-location=</tt> <em> <i>code-location1</i>
+      <i>code-location2</i></em><BR>
+<P>
+  This function returns whether the two code-locations are the same.
+<P>
+<HR><A NAME="tex2html4042" HREF="node265.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html4040" HREF="node255.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html4034" HREF="node263.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html4044" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html4045" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html4043" HREF="node265.html">Debug-sources</A>
+<B>Up:</B> <A NAME="tex2html4041" HREF="node255.html">10 Debugger Programmer's Interface</A>
+<B> Previous:</B> <A NAME="tex2html4035" HREF="node263.html">10.6 Breakpoints</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

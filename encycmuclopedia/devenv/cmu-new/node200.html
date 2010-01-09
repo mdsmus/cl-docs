@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>6.1 Reading the Command Line</TITLE>
+<META NAME="description" CONTENT="6.1 Reading the Command Line">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3221" HREF="node201.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3219" HREF="node199.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3213" HREF="node199.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3223" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3224" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3222" HREF="node201.html">6.2 Useful Variables</A>
+<B>Up:</B> <A NAME="tex2html3220" HREF="node199.html">6 UNIX Interface</A>
+<B> Previous:</B> <A NAME="tex2html3214" HREF="node199.html">6 UNIX Interface</A>
+<BR> <P>
+<H1><A NAME="SECTION00710000000000000000">6.1 Reading the Command Line</A></H1>
+<P>
+The shell parses the command line with which Lisp is invoked, and
+passes a data structure containing the parsed information to Lisp.
+This information is then extracted from that data structure and put
+into a set of Lisp data structures.
+<P>
+<b>[Variable]</b><BR> 
+<tt> extensions:*command-line-strings*</tt><BR> <BR> 
+  <tt>extensions:*command-line-utility-name*</tt><BR> 
+  <tt>extensions:*command-line-words*</tt><BR> 
+  <tt>extensions:*command-line-switches*</tt><BR>
+<P>
+  The value of <tt>*command-line-words*</tt> is a list of strings that
+  make up the command line, one word per string.  The first word on
+  the command line, i.e.  the name of the program invoked (usually
+  <tt>lisp</tt>) is stored in <tt>*command-line-utility-name*</tt>.  The
+  value of <tt>*command-line-switches*</tt> is a list of
+  <tt>command-line-switch</tt> structures, with a structure for each
+  word on the command line starting with a hyphen.  All the command
+  line words between the program name and the first switch are stored
+  in <tt>*command-line-words*</tt>.
+<P>
+The following functions may be used to examine <tt>command-line-switch</tt>
+structures.
+<b>[Function]</b><BR> 
+<tt> extensions:cmd-switch-name</tt> <em> <i>switch</i></em><BR>
+<P>
+  Returns the name of the switch, less the preceding hyphen and
+  trailing equal sign (if any).
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:cmd-switch-value</tt> <em> <i>switch</i></em><BR>
+<P>
+  Returns the value designated using an embedded equal sign, if any.
+  If the switch has no equal sign, then this is null.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:cmd-switch-words</tt> <em> <i>switch</i></em><BR>
+<P>
+  Returns a list of the words between this switch and the next switch
+  or the end of the command line.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:cmd-switch-arg</tt> <em> <i>switch</i></em><BR>
+<P>
+  Returns the first non-null value from <tt>cmd-switch-value</tt>, the
+  first element in <tt>cmd-switch-words</tt>, or the first word in
+  <i>command-line-words</i>.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:get-command-line-switch</tt> <em> <i>sname</i></em><BR>
+<P>
+  This function takes the name of a switch as a string and returns the
+  value of the switch given on the command line.  If no value was
+  specified, then any following words are returned.  If there are no
+  following words, then <i>t</i> is returned.  If the switch was not
+  specified, then <i>nil</i> is returned.
+<P>
+<b>[Macro]</b><BR> 
+<tt> extensions:defswitch</tt> <em> <i>name</i> <i>&amp;optional</i> <i>function</i></em><BR>
+<P>
+  This macro causes <i>function</i> to be called when the switch
+  <i>name</i> appears in the command line.  Name is a simple-string
+  that does not begin with a hyphen (unless the switch name really
+  does begin with one.)
+<P>
+  If <i>function</i> is not supplied, then the switch is parsed into
+  <i>command-line-switches</i>, but otherwise ignored.  This suppresses
+  the undefined switch warning which would otherwise take place.  THe
+  warning can also be globally suppressed by
+  <i>complain-about-illegal-switches</i>.
+<P>
+<HR><A NAME="tex2html3221" HREF="node201.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3219" HREF="node199.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3213" HREF="node199.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3223" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3224" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3222" HREF="node201.html">6.2 Useful Variables</A>
+<B>Up:</B> <A NAME="tex2html3220" HREF="node199.html">6 UNIX Interface</A>
+<B> Previous:</B> <A NAME="tex2html3214" HREF="node199.html">6 UNIX Interface</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

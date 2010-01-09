@@ -1,0 +1,93 @@
+<html lang="en">
+<head>
+<title>asdf Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name=description content="asdf Manual">
+<meta name=generator content="makeinfo 4.2">
+<link href="http://www.gnu.org/software/texinfo/" rel=generator-home>
+<!--
+This manual describes asdf, a system definition facility for Common
+Lisp programs and libraries.
+
+<p>asdf Copyright &copy; 2001-2004 Daniel Barlow and contributors
+
+<p>This manual Copyright &copy; 2001-2004 Daniel Barlow and
+contributors
+
+<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+-->
+</head>
+<body>
+<p>
+Node:<a name="TODO%20list">TODO list</a>,
+Next:<a rel=next accesskey=n href="missing-bits-in-implementation.html#missing%20bits%20in%20implementation">missing bits in implementation</a>,
+Previous:<a rel=previous accesskey=p href="Getting-the-latest-version.html#Getting%20the%20latest%20version">Getting the latest version</a>,
+Up:<a rel=up accesskey=u href="index.html#Top">Top</a>
+<hr><br>
+
+<h2>TODO list</h2>
+
+<p>* Outstanding spec questions, things to add
+
+<p>** packaging systems
+
+<p>*** manual page component?
+
+<p>** style guide for .asd files
+
+<p>You should either use keywords or be careful with the package that you
+evaluate defsystem forms in.  Otherwise (defsystem partition ...) 
+being read in the cl-user package will intern a cl-user:partition
+symbol, which will then collide with the partition:partition symbol.
+
+<p>Actually there's a hairier packages problem to think about too. 
+in-order-to is not a keyword: if you read defsystem forms in a package
+that doesn't use ASDF, odd things might happen
+
+<p>** extending defsystem with new options
+
+<p>You might not want to write a whole parser, but just to add options to
+the existing syntax.  Reinstate parse-option or something akin
+
+<p>** document all the error classes
+
+<p>** what to do with compile-file failure
+
+<p>Should check the primary return value from compile-file and see if
+that gets us any closer to a sensible error handling strategy
+
+<p>** foreign files
+
+<p>lift unix-dso stuff from db-sockets
+
+<p>** Diagnostics
+
+<p>A "dry run" of an operation can be made with the following form:
+
+<br><pre>(traverse (make-instance '&lt;operation-name&gt;)
+          (find-system &lt;system-name&gt;)
+          'explain)
+</pre>
+
+<p>This uses unexported symbols.  What would be a nice interface for this
+functionality?
+
+</body></html>
+

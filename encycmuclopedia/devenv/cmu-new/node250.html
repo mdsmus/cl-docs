@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>9.2 The WIRE Package</TITLE>
+<META NAME="description" CONTENT="9.2 The WIRE Package">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3864" HREF="node251.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3862" HREF="node244.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3856" HREF="node249.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3866" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3867" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3865" HREF="node251.html">9.2.1 Untagged Data</A>
+<B>Up:</B> <A NAME="tex2html3863" HREF="node244.html">9 Interprocess Communication under </A>
+<B> Previous:</B> <A NAME="tex2html3857" HREF="node249.html">9.1.4 Host Addresses</A>
+<BR> <P>
+<H1><A NAME="SECTION001020000000000000000">9.2 The WIRE Package</A></H1>
+<P>
+The <tt>wire</tt> package provides for sending data along wires.  The
+<tt>remote</tt> package sits on top of this package.  All data sent
+with a given output routine must be read in the remote process with
+the complementary fetching routine.  For example, if you send so a
+string with <tt>wire-output-string</tt>, the remote process must know
+to use <tt>wire-get-string</tt>.  To avoid rigid data transfers and
+complicated code, the interface supports sending
+<i>tagged</i> data.  With tagged data, the system sends a tag
+announcing the type of the next data, and the remote system takes
+care of fetching the appropriate type.
+<P>
+When using interfaces at the wire level instead of the RPC level,
+the remote process must read everything sent by these routines.  If
+the remote process leaves any input on the wire, it will later
+mistake the data for an RPC request causing unknown lossage.
+<P>
+<BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html3868" HREF="node251.html#SECTION001021000000000000000">9.2.1 Untagged Data</A>
+<LI> <A NAME="tex2html3869" HREF="node252.html#SECTION001022000000000000000">9.2.2 Tagged Data</A>
+<LI> <A NAME="tex2html3870" HREF="node253.html#SECTION001023000000000000000">9.2.3 Making Your Own Wires</A>
+</UL>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

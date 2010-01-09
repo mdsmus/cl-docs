@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Bit-Vectors</TITLE>
+<META NAME="description" CONTENT="Bit-Vectors">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2774" HREF="node166.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2772" HREF="node160.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2766" HREF="node164.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2776" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2777" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2775" HREF="node166.html">5.10.6 Hashtables</A>
+<B>Up:</B> <A NAME="tex2html2773" HREF="node160.html">5.10 Object Representation</A>
+<B> Previous:</B> <A NAME="tex2html2767" HREF="node164.html">5.10.4 Vectors</A>
+<BR> <P>
+<H2><A NAME="SECTION006105000000000000000">Bit-Vectors</A></H2>
+<P>
+<A NAME="10495">&#160;</A>
+<P>
+Another thing that lists have been used for is set manipulation.  In
+applications where there is a known, reasonably small universe of
+items bit-vectors can be used to improve performance.  This is much
+less convenient than using lists, because instead of symbols, each
+element in the universe must be assigned a numeric index into the bit
+vector.  Using a bit-vector will nearly always be faster, and can be
+tremendously faster if the number of elements in the set is not small.
+The logical operations on <tt>simple-bit-vector</tt>s are efficient,
+since they operate on a word at a time.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

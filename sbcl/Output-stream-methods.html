@@ -1,0 +1,84 @@
+<html lang="en">
+<head>
+<title>Output stream methods - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Gray-Streams.html#Gray-Streams" title="Gray Streams">
+<link rel="prev" href="Input-stream-methods.html#Input-stream-methods" title="Input stream methods">
+<link rel="next" href="Binary-stream-methods.html#Binary-stream-methods" title="Binary stream methods">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Output-stream-methods"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Binary-stream-methods.html#Binary-stream-methods">Binary stream methods</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Input-stream-methods.html#Input-stream-methods">Input stream methods</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Gray-Streams.html#Gray-Streams">Gray Streams</a>
+<hr>
+</div>
+
+<h4 class="subsection">9.2.5 Output stream methods</h4>
+
+<p>These generic functions are used to implement subclasses of
+fundamental-output-stream:
+
+   <p><a name="Generic_002dFunction-sb_002dgray_003astream_002dclear_002doutput"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-gray:stream-clear-output</b><var> stream<a name="index-sb_002dgray_003astream_002dclear_002doutput-339"></a></var><br>
+<blockquote><p><a name="index-sb_002dgray_003astream_002dclear_002doutput-340"></a>This is like <code>cl:clear-output</code>, but for Gray streams: clear the given
+  output <code>stream</code>. The default method does nothing. 
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dgray_003astream_002dfinish_002doutput"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-gray:stream-finish-output</b><var> stream<a name="index-sb_002dgray_003astream_002dfinish_002doutput-341"></a></var><br>
+<blockquote><p><a name="index-sb_002dgray_003astream_002dfinish_002doutput-342"></a>Attempts to ensure that all output sent to the Stream has reached
+  its destination, and only then returns false. Implements
+  <code>finish-output</code>. The default method does nothing. 
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dgray_003astream_002dforce_002doutput"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-gray:stream-force-output</b><var> stream<a name="index-sb_002dgray_003astream_002dforce_002doutput-343"></a></var><br>
+<blockquote><p><a name="index-sb_002dgray_003astream_002dforce_002doutput-344"></a>Attempts to force any buffered output to be sent. Implements
+  <code>force-output</code>. The default method does nothing. 
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dgray_003astream_002dwrite_002dsequence"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-gray:stream-write-sequence</b><var> stream seq &amp;optional start end<a name="index-sb_002dgray_003astream_002dwrite_002dsequence-345"></a></var><br>
+<blockquote><p><a name="index-sb_002dgray_003astream_002dwrite_002dsequence-346"></a>This is like <code>cl:write-sequence</code>, but for Gray streams. 
+</p></blockquote></div>
+
+   </body></html>
+

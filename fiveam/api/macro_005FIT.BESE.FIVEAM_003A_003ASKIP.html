@@ -1,0 +1,33 @@
+<html
+  ><head
+    ><title
+      >Macro SKIP</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Macro: SKIP</h1
+        ><div class="contents"
+          ><h2
+  >Documentation</h2
+><blockquote
+  >Generates a TEST-SKIPPED result.</blockquote
+><h2
+            >Source</h2
+          ><pre class="code"
+            >(defmacro skip (&amp;rest reason)
+  &quot;Generates a TEST-SKIPPED result.&quot;
+  `(progn
+     (format *test-dribble* &quot;s&quot;)
+     (add-result 'test-skipped :reason (format nil ,@reason))))</pre
+          ><a href="../Checks.html#macro_005FIT.BESE.FIVEAM_003A_003ASKIP"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

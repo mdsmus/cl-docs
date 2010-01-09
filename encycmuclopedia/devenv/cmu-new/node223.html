@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>8.2 Alien Types</TITLE>
+<META NAME="description" CONTENT="8.2 Alien Types">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3524" HREF="node224.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3522" HREF="node221.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3516" HREF="node222.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3526" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3527" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3525" HREF="node224.html">8.2.1 Defining Alien Types</A>
+<B>Up:</B> <A NAME="tex2html3523" HREF="node221.html">8 Alien Objects</A>
+<B> Previous:</B> <A NAME="tex2html3517" HREF="node222.html">8.1 Introduction to Aliens</A>
+<BR> <P>
+<H1><A NAME="SECTION00920000000000000000">8.2 Alien Types</A></H1>
+<P>
+Alien types have a description language based on nested list structure.  For
+example:
+<BLOCKQUOTE> <PRE>struct foo {
+    int a;
+    struct foo *b[100];
+};
+</PRE> </BLOCKQUOTE>
+has the corresponding Alien type:
+<BLOCKQUOTE> <PRE>(struct foo
+  (a int)
+  (b (array (* (struct foo)) 100)))
+</PRE> </BLOCKQUOTE><BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html3528" HREF="node224.html#SECTION00921000000000000000">8.2.1 Defining Alien Types</A>
+<LI> <A NAME="tex2html3529" HREF="node225.html#SECTION00922000000000000000">8.2.2 Alien Types and Lisp Types</A>
+<LI> <A NAME="tex2html3530" HREF="node226.html#SECTION00923000000000000000">8.2.3 Alien Type Specifiers</A>
+<LI> <A NAME="tex2html3531" HREF="node227.html#SECTION00924000000000000000">The C-Call Package</A>
+</UL>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

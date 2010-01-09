@@ -1,0 +1,73 @@
+========================== C M U C L  18 c =============================
+
+December 25, 2000
+
+The CMUCL project is pleased to announce the release of CMUCL 18c.
+This is a major release which contains numerous enhancements and
+bugfixes from the 18b release.
+
+CMUCL is a free, high performance implementation of the Common Lisp
+programming language which runs on most major Unix platforms. It
+mainly conforms to the ANSI Common Lisp standard. CMUCL provides a
+sophisticated native code compiler; a powerful foreign function
+interface; an implementation of CLOS; the Common Lisp Object System;
+which includes multimethods and a metaobject protocol; a source-level
+debugger and code profiler; and an Emacs-like editor implemented in
+Common Lisp. CMUCL is maintained by a team of volunteers collaborating
+over the Internet, and is in the public domain.
+
+Features new in this release:
+           
+   o Every platform now supports (complex single-float) and (complex
+     double-float) (and long-float for the x86).
+   o Every platform now supports signed-array's with elements of type
+     (signed-byte 8), (signed-byte 16), (signed-byte 30), and
+     (signed-byte 32).
+   o On the x86 and sparc platform, much larger heaps are available.
+   o Support for glibc2 on x86.
+   o Support for FreeBSD 4.x, Solaris 2.7 & 8.
+   o Better support for Sparc V9 machines (UltraSparc II and later).
+   o Better handling of logical pathnames and pathnames in general.
+   o equalp hash tables implemented.
+   o New implementations of some sequence functions to run significantly
+     faster.
+   o Specialized arrays and various other objects can be printed readably
+     now, using a CMUCL extension.
+   o LOCALLY is a special form, not a macro.
+   o compiler-let is now in the extension package.
+   o PRINT-OBJECT methods can be used with structures.  (But the
+     :print-object option to defstruct is still not accepted.)
+   o The dynamic heap size is now controllable from the command line with
+     the -dynamic-space-size option on the x86 and sparc ports.
+   o The -batch commandline option flushes all output on exit, and
+     causes exit upon error also when using -load.
+   o A new -quiet commandline to suppress informational messages.
+   o :cmu17 is no longer a *feature*.  This may break existing code.  A
+     simple possible workaround is to replace :cmu17 with (or :cmu17
+     :cmu18) everywhere in the offending code.
+
+Some sparc-specific changes:
+
+   o Bigger spaces:
+     o 256 MB for read-only and static spaces
+     o 128 MB for binding and control stacks
+     o Upto 1 GB for the lisp heap.  Default is 256 MB
+   o Added VOPS for complex single/double-float operations.
+   o Try not to use deprecated instructions in the V9 architecture.
+   o In certain situations, use conditional move instructions available
+     in the V9 architecture.
+   
+And finally,
+
+   o Lots and lots of bug fixes, improvements to ANSI CL conformance
+     and lots and lots of compiler enhancements. 
+
+
+This release is not binary compatible with code compiled using CMUCL
+18b; you will need to recompile FASL files. 
+
+See <URL:http://cmucl.cons.org/> for download information, guidelines
+on reporting bugs, and mailing list details.
+
+
+We hope you enjoy using this release of CMUCL!

@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.10.6 Hashtables</TITLE>
+<META NAME="description" CONTENT="5.10.6 Hashtables">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2784" HREF="node167.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2782" HREF="node160.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2778" HREF="node165.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2786" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2787" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2785" HREF="node167.html">5.11 Numbers</A>
+<B>Up:</B> <A NAME="tex2html2783" HREF="node160.html">5.10 Object Representation</A>
+<B> Previous:</B> <A NAME="tex2html2779" HREF="node165.html">Bit-Vectors</A>
+<BR> <P>
+<H2><A NAME="SECTION006106000000000000000">5.10.6 Hashtables</A></H2>
+<P>
+<A NAME="10497">&#160;</A>
+<P>
+Hashtables are an efficient and general mechanism for maintaining associations
+such as the association between an object and its name.  Although hashtables
+are usually the best way to maintain associations, efficiency and style
+considerations sometimes favor the use of an association list (a-list).
+<P>
+<tt>assoc</tt> is fairly fast when the <i>test</i> argument is <tt>eq</tt>
+or <tt>eql</tt> and there are only a few elements, but the time goes up
+in proportion with the number of elements.  In contrast, the
+hash-table lookup has a somewhat higher overhead, but the speed is
+largely unaffected by the number of entries in the table.  For an
+<tt>equal</tt> hash-table or alist, hash-tables have an even greater
+advantage, since the test is more expensive.  Whatever you do, be sure
+to use the most restrictive test function possible.
+<P>
+The style argument observes that although hash-tables and alists
+overlap in function, they do not do all things equally well.
+<UL>
+<LI> Alists are good for maintaining scoped environments.  They were
+  originally invented to implement scoping in the Lisp interpreter,
+  and are still used for this in Python.  With an alist one can
+  non-destructively change an association simply by consing a new
+  element on the front.  This is something that cannot be done with
+  hash-tables.
+<LI> Hashtables are good for maintaining a global association.  The
+  value associated with an entry can easily be changed with
+  <tt>setf</tt>.  With an alist, one has to go through contortions,
+  either <tt>rplacd</tt>'ing the cons if the entry exists, or pushing a
+  new one if it doesn't.  The side-effecting nature of hash-table
+  operations is an advantage here.
+</UL>
+<P>
+Historically, symbol property lists were often used for global name
+associations.  Property lists provide an awkward and error-prone
+combination of name association and record structure.  If you must use
+the property list, please store all the related values in a single
+structure under a single property, rather than using many properties.
+This makes access more efficient, and also adds a modicum of typing
+and abstraction.  See section&nbsp;<A HREF="node112.html#advancedtypestuff">5.2</A> for information on types
+in CMU Common Lisp.
+<P>
+<HR><A NAME="tex2html2784" HREF="node167.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2782" HREF="node160.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2778" HREF="node165.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2786" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2787" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2785" HREF="node167.html">5.11 Numbers</A>
+<B>Up:</B> <A NAME="tex2html2783" HREF="node160.html">5.10 Object Representation</A>
+<B> Previous:</B> <A NAME="tex2html2779" HREF="node165.html">Bit-Vectors</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

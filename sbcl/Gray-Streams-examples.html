@@ -1,0 +1,60 @@
+<html lang="en">
+<head>
+<title>Gray Streams examples - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Gray-Streams.html#Gray-Streams" title="Gray Streams">
+<link rel="prev" href="Character-output-stream-methods.html#Character-output-stream-methods" title="Character output stream methods">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Gray-Streams-examples"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Character-output-stream-methods.html#Character-output-stream-methods">Character output stream methods</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Gray-Streams.html#Gray-Streams">Gray Streams</a>
+<hr>
+</div>
+
+<h4 class="subsection">9.2.8 Gray Streams examples</h4>
+
+<p>Below are two classes of stream that can be conveniently defined as
+wrappers for Common Lisp streams.  These are meant to serve as
+examples of minimal implementations of the protocols that must be
+followed when defining Gray streams.  Realistic uses of the Gray
+Streams API would implement the various methods that can do I/O in
+batches, such as <code>stream-read-line<!-- /@w --></code>, <code>stream-write-string<!-- /@w --></code>,
+<code>stream-read-sequence<!-- /@w --></code>, and <code>stream-write-sequence<!-- /@w --></code>.
+
+<ul class="menu">
+<li><a accesskey="1" href="Character-counting-input-stream.html#Character-counting-input-stream">Character counting input stream</a>
+<li><a accesskey="2" href="Output-prefixing-character-stream.html#Output-prefixing-character-stream">Output prefixing character stream</a>
+</ul>
+
+   </body></html>
+

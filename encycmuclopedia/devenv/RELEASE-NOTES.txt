@@ -1,0 +1,124 @@
+From the fifth release onwards, I've been making debian packages, 
+see the changelog for details..
+
+This is the fifth release of CMUCL for Linux.
+
+New:
+- Lisp .x86f files can be executed from the shell (with a 
+  kernel version 2.1.X)
+- Generation GC.
+- new hash-tables
+- better random generator
+- libc6 support
+- more packages
+- signed-array support
+- multi-processing
+
+Old-New:
+- Fixed calling of inline functions.
+- Removed propagation of trig functions.
+- Some other fixes.
+
+Old-New:
+- fp faults now _really_,_really_ works. (there is a bug in the 
+Linux kernel that resets the control world of the FPU
+in a signal handler)
+- html intro's
+- lisp-tk interface
+- a lot of bugfixes
+
+Old-new: (release 3)
+- improved type progation, now also for floating point numbers (if enabled).
+- numerous small fixes. 
+
+Old-New: (release 2)
+- ELF support. The executable is fully ELF, and you can use 
+dlopen and friends.
+- fp faults now work:
+
+Script started on Sun Sep 15 21:42:46 1996
+# lisp -core /usr/lib/cmucl/lisp.core
+Validating memory ... done.
+Mapping 6762496 bytes at 0x1000000.
+Mapping 11182080 bytes at 0x5000000.
+CMU Common Lisp 17f x86-linux 1.02, running on slartibartfast.org
+Send bug reports and questions to your local CMU CL maintainer, 
+or to pw@snoopy.mv.com,
+or to natst3@uia.ac.be
+or to cmucl-bugs@cs.cmu.edu.
+Loaded subsystems:
+    Python 1.0, target Intel x86
+    CLOS based on PCL version:  September 16 92 PCL (f)
+    CLX X Library MIT R5.02
+    Hemlock 3.5
+* (get-floating-point-modes )
+
+(:TRAPS (:OVERFLOW :INVALID :DIVIDE-BY-ZERO) :ROUNDING-MODE :NEAREST
+ :CURRENT-EXCEPTIONS NIL :ACCRUED-EXCEPTIONS NIL :FAST-MODE NIL)
+* (set-floating-point-modes :traps '(:inexact))
+
+* (get-floating-point-modes )
+
+(:TRAPS (:INEXACT) :ROUNDING-MODE :NEAREST :CURRENT-EXCEPTIONS NIL
+ :ACCRUED-EXCEPTIONS NIL :FAST-MODE NIL)
+* (/ 4.0 0.0)
+
+#.EXT:SINGLE-FLOAT-POSITIVE-INFINITY
+* (tan (/ Pi 2))
+
+Arithmetic error FLOATING-POINT-INEXACT signalled.
+
+Restarts:
+  0: [ABORT] Return to Top-Level.
+
+Debug  (type H for help)
+
+(X86:SIGFPE-HANDLER #<unavailable-arg>
+                    #<unavailable-arg>
+                    #.(SYSTEM:INT-SAP #x500FFD18))
+0] (get-floating-point-modes )
+
+(:TRAPS NIL :ROUNDING-MODE :NEAREST :CURRENT-EXCEPTIONS NIL :ACCRUED-EXCEPTIONS
+ NIL :FAST-MODE NIL)
+0] 0
+
+* (set-floating-point-modes :traps '(:divide-by-zero ))
+
+* (get-floating-point-modes )
+
+(:TRAPS (:DIVIDE-BY-ZERO) :ROUNDING-MODE :NEAREST :CURRENT-EXCEPTIONS NIL
+ :ACCRUED-EXCEPTIONS NIL :FAST-MODE NIL)
+* (/ 4.0 0.0)
+
+
+Arithmetic error DIVISION-BY-ZERO signalled.
+
+Restarts:
+  0: [ABORT] Return to Top-Level.
+
+Debug  (type H for help)
+
+(X86:SIGFPE-HANDLER #<unavailable-arg>
+                    #<unavailable-arg>
+                    #.(SYSTEM:INT-SAP #x500FFD00))
+0] 0
+
+* (quit)
+
+/mnt/sda/fake-root/usr/doc/cmucl $exit
+exit
+
+Script done on Sun Sep 15 21:44:21 1996
+
+Nice, ain't it. Especially the inexact! (search for it in C...)
+
+- packages: clx, clm (no server yet, so untested), hemlock
+- more kernels: with and without pcl (clos)
+- a lot of fixes
+- fsstnd 
+
+This release is based on CMUCL-FreeBSD-1.03.7.tar.gz from Paul 
+F. Werkowski <pw@snoopy.mv.com>.
+
+Peter
+

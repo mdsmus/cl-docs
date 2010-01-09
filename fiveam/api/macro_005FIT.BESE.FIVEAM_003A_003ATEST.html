@@ -1,0 +1,98 @@
+<html
+  ><head
+    ><title
+      >Macro TEST</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Macro: TEST</h1
+        ><div class="contents"
+          ><h2
+  >Documentation</h2
+><blockquote
+  >Create a suite named NAME. If NAME is a list it must be of the
+form:
+
+  (name &amp;key depends-on suite)
+
+NAME is the symbol which names the test.
+
+DEPENDS-ON is a list of the form:
+
+ (AND . test-names) - This test is run only if all of the tests
+ in TEST-NAMES have passed, otherwise a single test-skipped
+ result is generated.
+
+ (OR . test-names) - If any of TEST-NAMES has passed this test is
+ run, otherwise a test-skipped result is generated.
+
+ (NOT test-name) - This is test is run only if TEST-NAME failed.
+
+AND, OR and NOT can be combined to produce complex dependencies.
+
+If DEPENDS-ON is a symbol it is interpreted as `(AND
+,depends-on), this is accomadate the common case of one test
+depending on another.
+
+SUITE defaults to the current value of *SUITE*.</blockquote
+><h2
+            >Source</h2
+          ><pre class="code"
+            >(defmacro test (name &amp;body body)
+  &quot;Create a suite named NAME. If NAME is a list it must be of the
+form:
+
+  (name &amp;key depends-on suite)
+
+NAME is the symbol which names the test.
+
+DEPENDS-ON is a list of the form:
+
+ (AND . test-names) - This test is run only if all of the tests
+ in TEST-NAMES have passed, otherwise a single test-skipped
+ result is generated.
+
+ (OR . test-names) - If any of TEST-NAMES has passed this test is
+ run, otherwise a test-skipped result is generated.
+
+ (NOT test-name) - This is test is run only if TEST-NAME failed.
+
+AND, OR and NOT can be combined to produce complex dependencies.
+
+If DEPENDS-ON is a symbol it is interpreted as `(AND
+,depends-on), this is accomadate the common case of one test
+depending on another.
+
+SUITE defaults to the current value of *SUITE*.&quot;
+  (destructuring-bind (name &amp;key depends-on (suite nil suite-supplied-p))
+      (ensure-list name)
+    (let (lambda description)
+      (setf description (if (stringp (car body))
+			    (pop body)
+			    &quot;&quot;)
+	    lambda body)
+      `(progn
+	 (setf (get-test ',name)
+	       (make-instance 'test-case
+			      :name ',name
+			      :test-lambda (lambda () ,@lambda)
+			      :description ,description
+			      :depends-on ',depends-on))
+	 ,(if suite-supplied-p
+	      `(setf (gethash ',name (tests (get-test ',suite)))
+		     ',name)
+	      `(setf (gethash ',name (tests (or *suite* (get-test 'NIL))))
+		     ',name))
+	 ',name))))</pre
+          ><a href="../Tests.html#macro_005FIT.BESE.FIVEAM_003A_003ATEST"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.11.10 Interactions With Local Call</TITLE>
+<META NAME="description" CONTENT="5.11.10 Interactions With Local Call">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2927" HREF="node178.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2925" HREF="node167.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2919" HREF="node176.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2929" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2930" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2928" HREF="node178.html">5.11.11 Representation of Characters</A>
+<B>Up:</B> <A NAME="tex2html2926" HREF="node167.html">5.11 Numbers</A>
+<B> Previous:</B> <A NAME="tex2html2920" HREF="node176.html">5.11.9 Specialized Structure Slots</A>
+<BR> <P>
+<H2><A NAME="SECTION0061110000000000000000">5.11.10 Interactions With Local Call</A></H2>
+<P>
+<A NAME="numberlocalcall">&#160;</A>
+<A NAME="10688">&#160;</A>
+<A NAME="10689">&#160;</A>
+<A NAME="10690">&#160;</A>
+<P>
+Local call has many advantages (see section&nbsp;<A HREF="node142.html#localcall">5.6</A>); one relevant to
+our discussion here is that local call extends the usefulness of
+non-descriptor representations.  If the compiler knows from the
+argument type that an argument has a non-descriptor representation,
+then the argument will be passed in that representation.  The easiest
+way to ensure that the argument type is known at compile time is to
+always declare the argument type in the called function, like:
+<BLOCKQUOTE> <PRE>(defun 2+f (x)
+  (declare (single-float x))
+  (+ x 2.0))
+</PRE> </BLOCKQUOTE>
+The advantages of passing arguments and return values in a non-descriptor
+representation are the same as for non-descriptor representations in general:
+reduced consing and memory access (see section&nbsp;<A HREF="node169.html#nondescriptor">5.11.2</A>.)  This
+extends the applicative programming styles discussed in section
+<A HREF="node142.html#localcall">5.6</A> to numeric code.  Also, if source files are kept reasonably
+small, block compilation can be used to reduce number consing to a minimum.
+<P>
+Note that non-descriptor return values can only be used with the known return
+convention (section <A HREF="node147.html#localcallreturn">5.6.5</A>.)  If the compiler can't prove that
+a function always returns the same number of values, then it must use the
+unknown values return convention, which requires a descriptor representation.
+Pay attention to the known return efficiency notes to avoid number consing.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

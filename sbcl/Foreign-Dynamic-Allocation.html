@@ -1,0 +1,102 @@
+<html lang="en">
+<head>
+<title>Foreign Dynamic Allocation - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Operations-On-Foreign-Values.html#Operations-On-Foreign-Values" title="Operations On Foreign Values">
+<link rel="prev" href="Coercing-Foreign-Values.html#Coercing-Foreign-Values" title="Coercing Foreign Values">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Foreign-Dynamic-Allocation"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Coercing-Foreign-Values.html#Coercing-Foreign-Values">Coercing Foreign Values</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Operations-On-Foreign-Values.html#Operations-On-Foreign-Values">Operations On Foreign Values</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">7.3.3 Foreign Dynamic Allocation</h4>
+
+<p>Lisp code can call the C standard library functions <code>malloc</code> and
+<code>free</code> to dynamically allocate and deallocate foreign
+variables. The Lisp code shares the same allocator with foreign C
+code, so it's OK for foreign code to call <code>free</code> on the result of
+Lisp <code>sb-alien:make-alien</code>, or for Lisp code to call
+<code>sb-alien:free-alien</code> on foreign objects allocated by C
+code.
+
+<div class="defun">
+&mdash; Macro: <b>sb-alien:make-alien</b><var> type size<a name="index-sb_002dalien_003amake_002dalien-270"></a></var><br>
+<blockquote><p><a name="index-make_002dalien-271"></a>
+The <code>sb-alien:make-alien</code> macro
+returns a dynamically allocated foreign value of the specified
+<var>type</var> (which is not evaluated.)  The allocated memory is not
+initialized, and may contain arbitrary junk.  If supplied,
+<var>size</var> is an expression to evaluate to compute the size of the
+allocated object.  There are two major cases:
+
+          <ul>
+<li>When <var>type</var> is a foreign array type, an array of that type is
+allocated and a pointer to it is returned.  Note that you must use
+<code>deref</code> to change the result to an array before you can use
+<code>deref</code> to read or write elements:
+
+          <pre class="lisp">               (cl:in-package "CL-USER") ; which USEs package "SB-ALIEN"
+               (defvar *foo* (make-alien (array char 10)))
+               (type-of *foo*) &rArr; (alien (* (array (signed 8) 10)))
+               (setf (deref (deref foo) 0) 10) &rArr; 10
+</pre>
+          <p>If supplied, <var>size</var> is used as the first dimension for the
+    array.
+
+          <li>When <var>type</var> is any other foreign type, then an object for that
+type is allocated, and a pointer to it is returned.  So
+<code>(make-alien int)</code> returns a <code>(* int)</code>.  If <var>size</var> is
+specified, then a block of that many objects is allocated, with the
+result pointing to the first one.
+
+        </ul>
+
+        </blockquote></div>
+
+<div class="defun">
+&mdash; Function: <b>sb-alien:free-alien</b><var> foreign-value<a name="index-sb_002dalien_003afree_002dalien-272"></a></var><br>
+<blockquote><p><a name="index-free_002dalien-273"></a>
+The <code>sb-alien:free-alien</code> function
+frees the storage for <var>foreign-value</var>,
+which must have been allocated with Lisp <code>make-alien</code>
+or C <code>malloc</code>.
+
+        <p>See also the <code>sb-alien:with-alien</code> macro, which allocates foreign
+values on the stack. 
+</p></blockquote></div>
+
+   </body></html>
+

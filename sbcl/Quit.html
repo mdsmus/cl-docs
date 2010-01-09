@@ -1,0 +1,62 @@
+<html lang="en">
+<head>
+<title>Quit - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Stopping-SBCL.html#Stopping-SBCL" title="Stopping SBCL">
+<link rel="next" href="End-of-File.html#End-of-File" title="End of File">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Quit"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="End-of-File.html#End-of-File">End of File</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Stopping-SBCL.html#Stopping-SBCL">Stopping SBCL</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">2.2.1 Quit</h4>
+
+<p>SBCL can be stopped at any time by calling <code>sb-ext:quit</code>,
+optionally returning a specified numeric value to the calling process. 
+See notes in <a href="Threading.html#Threading">Threading</a> about the interaction between this
+feature and sessions.
+
+   <p><a name="Function-sb_002dext_003aquit"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:quit</b><var> &amp;key recklessly-p unix-status<a name="index-sb_002dext_003aquit-6"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003aquit-7"></a>Terminate the current Lisp. <code>*exit-hooks*</code> are pending unwind-protect
+cleanup forms are run unless <code>recklessly-p</code> is true. On UNIX-like
+systems, <code>unix-status</code> is used as the status code. 
+</p></blockquote></div>
+
+   </body></html>
+

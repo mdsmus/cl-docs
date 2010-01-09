@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Using SERVE-EVENT with the CLX Interface to X</TITLE>
+<META NAME="description" CONTENT="Using SERVE-EVENT with the CLX Interface to X">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3408" HREF="node216.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3406" HREF="node211.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3400" HREF="node214.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3410" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3411" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3409" HREF="node216.html">7.4.1 Without Object Sets</A>
+<B>Up:</B> <A NAME="tex2html3407" HREF="node211.html">Event Dispatching with SERVE-EVENT</A>
+<B> Previous:</B> <A NAME="tex2html3401" HREF="node214.html">Using SERVE-EVENT with Unix </A>
+<BR> <P>
+<H1><A NAME="SECTION00840000000000000000">Using SERVE-EVENT with the CLX Interface to X</A></H1>
+<P>
+<A NAME="xservemumbles">&#160;</A>
+Remember from section <A HREF="node212.html#objectsets">7.1</A>, an object set is a collection of
+objects, CLX windows in this case, with some set of operations, event keywords,
+with corresponding implementations, the same handler functions.  Since X allows
+multiple display connections from a given process, you can avoid using object
+sets if every window in an application or display connection behaves the same.
+If a particular X application on a single display connection has windows that
+want to handle certain events differently, then using object sets is a
+convenient way to organize this since you need some way to map the window/event
+combination to the appropriate functionality.
+<P>
+The following is a discussion of functions exported from the <tt>extensions</tt>
+package that facilitate handling CLX events through <tt>system:serve-event</tt>.
+The first two routines are useful regardless of whether you use
+<tt>system:serve-event</tt>:
+<b>[Function]</b><BR> 
+<tt> ext: open-clx-display</tt> <em> <i>&amp;optional</i> <i>string</i></em><BR>
+<P>
+  This function parses <i>string</i> for an X display specification
+  including display and screen numbers.  <i>String</i> defaults to the
+  following:
+  <BLOCKQUOTE> <PRE>(cdr (assoc :display ext:*environment-list* :test #'eq))
+  </PRE> </BLOCKQUOTE>
+  If any field in the display specification is missing, this signals
+  an error.  <tt>ext:open-clx-display</tt> returns the CLX display and
+  screen.
+<P>
+<b>[Function]</b><BR> 
+<tt> ext: flush-display-events</tt> <em> <i>display</i></em><BR>
+<P>
+  This function flushes all the events in <i>display</i>'s event queue
+  including the current event, in case the user calls this from within
+  an event handler.
+<P>
+<BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html3412" HREF="node216.html#SECTION00841000000000000000">7.4.1 Without Object Sets</A>
+<LI> <A NAME="tex2html3413" HREF="node217.html#SECTION00842000000000000000">7.4.2 With Object Sets</A>
+</UL>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

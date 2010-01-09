@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>8.3.3 Alien Dynamic Allocation</TITLE>
+<META NAME="description" CONTENT="8.3.3 Alien Dynamic Allocation">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3623" HREF="node232.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3621" HREF="node228.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3617" HREF="node230.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3625" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3626" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3624" HREF="node232.html">8.4 Alien Variables</A>
+<B>Up:</B> <A NAME="tex2html3622" HREF="node228.html">8.3 Alien Operations</A>
+<B> Previous:</B> <A NAME="tex2html3618" HREF="node230.html">8.3.2 Alien Coercion Operations</A>
+<BR> <P>
+<H2><A NAME="SECTION00933000000000000000">8.3.3 Alien Dynamic Allocation</A></H2>
+<P>
+Dynamic Aliens are allocated using the <tt>malloc</tt> library, so foreign code
+can call <tt>free</tt> on the result of <tt>make-alien</tt>, and Lisp code can
+call <tt>free-alien</tt> on objects allocated by foreign code.
+<P>
+<b>[Macro]</b><BR> 
+<tt> alien: make-alien</tt> <em> <i>type</i> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>size</i></i></i><IMG WIDTH=5 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17168" SRC="img6.gif"></em><BR>
+<P>
+  This macro returns a dynamically allocated Alien of the specified
+  <i>type</i> (which is not evaluated.)  The allocated memory is not
+  initialized, and may contain arbitrary junk.  If supplied,
+  <i>size</i> is an expression to evaluate to compute the size of the
+  allocated object.  There are two major cases:
+  <UL>
+<LI> When <i>type</i> is an array type, an array of that type is
+    allocated and a <i>pointer</i> to it is returned.  Note that you
+    must use <tt>deref</tt> to change the result to an array before you
+    can use <tt>deref</tt> to read or write elements:
+    <BLOCKQUOTE> <PRE>(defvar *foo* (make-alien (array char 10)))
+<P>
+      (type-of *foo*) <IMG WIDTH=14 HEIGHT=10 ALIGN=BOTTOM ALT="tex2html_wrap_inline15923" SRC="img3.gif"> (alien (* (array (signed 8) 10)))
+<P>
+      (setf (deref (deref foo) 0) 10) <IMG WIDTH=14 HEIGHT=10 ALIGN=BOTTOM ALT="tex2html_wrap_inline15923" SRC="img3.gif"> 10
+    </PRE> </BLOCKQUOTE>
+    If supplied, <i>size</i> is used as the first dimension for the
+    array.
+<LI> When <i>type</i> is any other type, then then an object for
+    that type is allocated, and a <i>pointer</i> to it is returned.  So
+    <tt>(make-alien int)</tt> returns a <tt>(* int)</tt>.  If <i>size</i>
+    is specified, then a block of that many objects is allocated, with
+    the result pointing to the first one.
+  </UL>
+<P>
+<b>[Function]</b><BR> 
+<tt> alien: free-alien</tt> <em> <i>alien</i></em><BR>
+<P>
+  This function frees the storage for <i>alien</i> (which must have
+  been allocated with <tt>make-alien</tt> or <tt>malloc</tt>.)
+<P>
+See also <A NAME="11685">&#160;</A><tt>with-alien</tt> (page&nbsp;<A HREF="node233.html#FNwithalien"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>), which stack-allocates Aliens.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

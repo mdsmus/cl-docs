@@ -1,0 +1,454 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>CMU Common Lisp User's Manual</TITLE>
+<META NAME="description" CONTENT="CMU Common Lisp User's Manual">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html15" HREF="node1.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif_gr.gif"> <IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"> <A NAME="tex2html17" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html18" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html16" HREF="node1.html">Contents</A>
+<BR> <P>
+<P>
+  <h1 align=center>CMU Common Lisp User's Manual</h1>
+  
+    <p align=center>Robert A. MacLachlan, <EM>Editor</EM>
+    </p>
+    <p align=center>
+      July 1992 <BR>
+      CMU-CS-92-161 <BR>
+    </p>
+    <br>
+    <p align=center>
+      July 1997 <BR> 
+      Net Version <BR> 
+    </p>
+
+    <p align=center>
+      School of Computer Science <BR> 
+      Carnegie Mellon University <BR> 
+      Pittsburgh, PA 15213 <BR>
+    </p>
+    <br>
+    <p>  
+      Supersedes Technical Reports CMU-CS-87-156 and
+      CMU-CS-91-108.<BR> 
+    </p>
+
+    <p align=center>
+      <b>Abstract</b>
+    <blockquote>
+      CMU Common Lisp is an implementation of that Common Lisp runs on
+      various Unix workstations.  See the README file in the
+      distribution for current platforms.  The largest single part of
+      this document describes the Python compiler and the programming
+      styles and techniques that the compiler encourages.  The rest of
+      the document describes extensions and the implementation
+      dependent choices made in developing this implementation of
+      Common Lisp.  We have added several extensions, including a
+      source level debugger, an interface to Unix system calls, a
+      foreign function call interface, support for interprocess
+      communication and remote procedure call, and other features that
+      provide a good environment for developing Lisp code. 
+    </blockquote>
+    </p>
+    <blockquote><font size=-1>
+    This research was sponsored by the Defense Advanced Research
+    Projects Agency, Information Science and Technology Office, under
+    the title <em>Research on Parallel Computing</em> issued by DARPA/CMO
+    under Contract MDA972-90-C-0035 ARPA Order No.  7330.
+    <p>
+    The views and conclusions contained in this document are those of
+    the authors and should not be interpreted as representing the
+    official policies, either expressed or implied, of the Defense
+    Advanced Research Projects Agency or the U.S. government.
+    </p></font>
+  </blockquote>
+    </p>
+<P>
+<b>Keywords:</b> lisp, Common Lisp, manual, compiler, 
+programming language implementation, programming environment
+<P>
+<BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html19" HREF="node1.html#SECTION00100000000000000000">Contents</A>
+<LI> <A NAME="tex2html20" HREF="node2.html#SECTION00200000000000000000">1 Introduction</A>
+<UL>
+<LI> <A NAME="tex2html21" HREF="node3.html#SECTION00210000000000000000">1.1 Support</A>
+<LI> <A NAME="tex2html22" HREF="node4.html#SECTION00220000000000000000">1.2 Local Distribution of CMU Common Lisp</A>
+<LI> <A NAME="tex2html23" HREF="node5.html#SECTION00230000000000000000">1.3 Net Distribution of CMU Common Lisp</A>
+<UL>
+<LI> <A NAME="tex2html24" HREF="node6.html#SECTION00231000000000000000">1.3.1 CMU Distribution</A>
+<LI> <A NAME="tex2html25" HREF="node7.html#SECTION00232000000000000000">1.3.2 Net Distribution</A>
+</UL> 
+<LI> <A NAME="tex2html26" HREF="node8.html#SECTION00240000000000000000">1.4 Source Availability</A>
+<LI> <A NAME="tex2html27" HREF="node9.html#SECTION00250000000000000000">1.5 Command Line Options</A>
+<LI> <A NAME="tex2html28" HREF="node10.html#SECTION00260000000000000000">1.6 Credits</A>
+</UL> 
+<LI> <A NAME="tex2html29" HREF="node11.html#SECTION00300000000000000000">2 Design Choices and Extensions</A>
+<UL>
+<LI> <A NAME="tex2html30" HREF="node12.html#SECTION00310000000000000000">2.1 Data Types</A>
+<UL>
+<LI> <A NAME="tex2html31" HREF="node13.html#SECTION00311000000000000000">2.1.1 Symbols</A>
+<LI> <A NAME="tex2html32" HREF="node14.html#SECTION00312000000000000000">2.1.2 Integers</A>
+<LI> <A NAME="tex2html33" HREF="node15.html#SECTION00313000000000000000">2.1.3 Floats</A>
+<UL>
+<LI> <A NAME="tex2html34" HREF="node16.html#SECTION00313100000000000000">2.1.3.1 IEEE Special Values</A>
+<LI> <A NAME="tex2html35" HREF="node17.html#SECTION00313200000000000000">2.1.3.2 Negative Zero</A>
+<LI> <A NAME="tex2html36" HREF="node18.html#SECTION00313300000000000000">2.1.3.3 Denormalized Floats</A>
+<LI> <A NAME="tex2html37" HREF="node19.html#SECTION00313400000000000000">2.1.3.4 Floating Point Exceptions</A>
+<LI> <A NAME="tex2html38" HREF="node20.html#SECTION00313500000000000000">2.1.3.5 Floating Point Rounding Mode</A>
+<LI> <A NAME="tex2html39" HREF="node22.html#SECTION00313600000000000000">2.1.3.6 Accessing the Floating Point Modes</A>
+</UL> 
+<LI> <A NAME="tex2html40" HREF="node23.html#SECTION00314000000000000000">2.1.4 Characters</A>
+<LI> <A NAME="tex2html41" HREF="node24.html#SECTION00315000000000000000">2.1.5 Array Initialization</A>
+</UL> 
+<LI> <A NAME="tex2html42" HREF="node25.html#SECTION00320000000000000000">2.2 Default Interrupts for Lisp</A>
+<LI> <A NAME="tex2html43" HREF="node26.html#SECTION00330000000000000000">2.3 Packages</A>
+<LI> <A NAME="tex2html44" HREF="node27.html#SECTION00340000000000000000">2.4 The Editor</A>
+<LI> <A NAME="tex2html45" HREF="node28.html#SECTION00350000000000000000">2.5 Garbage Collection</A>
+<UL>
+<LI> <A NAME="tex2html46" HREF="node29.html#SECTION00351000000000000000">2.5.1 GC Parameters</A>
+<LI> <A NAME="tex2html47" HREF="node30.html#SECTION00352000000000000000">2.5.2 Weak Pointers</A>
+<LI> <A NAME="tex2html48" HREF="node31.html#SECTION00353000000000000000">2.5.3 Finalization</A>
+</UL> 
+<LI> <A NAME="tex2html49" HREF="node32.html#SECTION00360000000000000000">2.6 Describe</A>
+<LI> <A NAME="tex2html50" HREF="node33.html#SECTION00370000000000000000">2.7 The Inspector</A>
+<UL>
+<LI> <A NAME="tex2html51" HREF="node34.html#SECTION00371000000000000000">2.7.1 The Graphical Interface</A>
+<LI> <A NAME="tex2html52" HREF="node35.html#SECTION00372000000000000000">2.7.2 The TTY Inspector</A>
+</UL> 
+<LI> <A NAME="tex2html53" HREF="node36.html#SECTION00380000000000000000">2.8 Load</A>
+<LI> <A NAME="tex2html54" HREF="node37.html#SECTION00390000000000000000">2.9 The Reader</A>
+<LI> <A NAME="tex2html55" HREF="node38.html#SECTION003100000000000000000">2.10 Stream Extensions</A>
+<LI> <A NAME="tex2html56" HREF="node39.html#SECTION003110000000000000000">2.11 Running Programs from Lisp</A>
+<UL>
+<LI> <A NAME="tex2html57" HREF="node40.html#SECTION003111000000000000000">2.11.1 Process Accessors</A>
+</UL> 
+<LI> <A NAME="tex2html58" HREF="node41.html#SECTION003120000000000000000">2.12 Saving a Core Image</A>
+<LI> <A NAME="tex2html59" HREF="node42.html#SECTION003130000000000000000">2.13 Pathnames</A>
+<UL>
+<LI> <A NAME="tex2html60" HREF="node43.html#SECTION003131000000000000000">2.13.1 Unix Pathnames</A>
+<LI> <A NAME="tex2html61" HREF="node44.html#SECTION003132000000000000000">2.13.2 Wildcard Pathnames</A>
+<LI> <A NAME="tex2html62" HREF="node45.html#SECTION003133000000000000000">2.13.3 Logical Pathnames</A>
+<LI> <A NAME="tex2html63" HREF="node46.html#SECTION003134000000000000000">2.13.4 Search Lists</A>
+<LI> <A NAME="tex2html64" HREF="node47.html#SECTION003135000000000000000">Predefined Search-Lists</A>
+<LI> <A NAME="tex2html65" HREF="node48.html#SECTION003136000000000000000">Search-List Operations</A>
+<LI> <A NAME="tex2html66" HREF="node49.html#SECTION003137000000000000000">2.13.7 Search List Example</A>
+</UL> 
+<LI> <A NAME="tex2html67" HREF="node50.html#SECTION003140000000000000000">2.14 Filesystem Operations</A>
+<UL>
+<LI> <A NAME="tex2html68" HREF="node51.html#SECTION003141000000000000000">2.14.1 Wildcard Matching</A>
+<LI> <A NAME="tex2html69" HREF="node52.html#SECTION003142000000000000000">2.14.2 File Name Completion</A>
+<LI> <A NAME="tex2html70" HREF="node53.html#SECTION003143000000000000000">2.14.3 Miscellaneous Filesystem Operations</A>
+</UL> 
+<LI> <A NAME="tex2html71" HREF="node54.html#SECTION003150000000000000000">2.15 Time Parsing and Formatting</A>
+<LI> <A NAME="tex2html72" HREF="node55.html#SECTION003160000000000000000">2.16 Random Number Generation</A>
+<UL>
+<LI> <A NAME="tex2html73" HREF="node56.html#SECTION003161000000000000000">2.16.1 Original Generator</A>
+<LI> <A NAME="tex2html74" HREF="node57.html#SECTION003162000000000000000">2.16.2 New Generator</A>
+</UL> 
+<LI> <A NAME="tex2html75" HREF="node58.html#SECTION003170000000000000000">2.17 Lisp Library</A>
+</UL> 
+<LI> <A NAME="tex2html76" HREF="node59.html#SECTION00400000000000000000">3 The Debugger</A>
+<UL>
+<LI> <A NAME="tex2html77" HREF="node60.html#SECTION00410000000000000000">3.1 Debugger Introduction</A>
+<LI> <A NAME="tex2html78" HREF="node61.html#SECTION00420000000000000000">3.2 The Command Loop</A>
+<LI> <A NAME="tex2html79" HREF="node62.html#SECTION00430000000000000000">3.3 Stack Frames</A>
+<UL>
+<LI> <A NAME="tex2html80" HREF="node63.html#SECTION00431000000000000000">3.3.1 Stack Motion</A>
+<LI> <A NAME="tex2html81" HREF="node64.html#SECTION00432000000000000000">3.3.2 How Arguments are Printed</A>
+<LI> <A NAME="tex2html82" HREF="node65.html#SECTION00433000000000000000">3.3.3 Function Names</A>
+<LI> <A NAME="tex2html83" HREF="node66.html#SECTION00434000000000000000">3.3.4 Funny Frames</A>
+<LI> <A NAME="tex2html84" HREF="node67.html#SECTION00435000000000000000">3.3.5 Debug Tail Recursion</A>
+<LI> <A NAME="tex2html85" HREF="node68.html#SECTION00436000000000000000">3.3.6 Unknown Locations and Interrupts</A>
+</UL> 
+<LI> <A NAME="tex2html86" HREF="node69.html#SECTION00440000000000000000">3.4 Variable Access</A>
+<UL>
+<LI> <A NAME="tex2html87" HREF="node70.html#SECTION00441000000000000000">3.4.1 Variable Value Availability</A>
+<LI> <A NAME="tex2html88" HREF="node71.html#SECTION00442000000000000000">3.4.2 Note On Lexical Variable Access</A>
+</UL> 
+<LI> <A NAME="tex2html89" HREF="node72.html#SECTION00450000000000000000">3.5 Source Location Printing</A>
+<UL>
+<LI> <A NAME="tex2html90" HREF="node73.html#SECTION00451000000000000000">3.5.1 How the Source is Found</A>
+<LI> <A NAME="tex2html91" HREF="node74.html#SECTION00452000000000000000">3.5.2 Source Location Availability</A>
+</UL> 
+<LI> <A NAME="tex2html92" HREF="node75.html#SECTION00460000000000000000">3.6 Compiler Policy Control</A>
+<LI> <A NAME="tex2html93" HREF="node76.html#SECTION00470000000000000000">3.7 Exiting Commands</A>
+<LI> <A NAME="tex2html94" HREF="node77.html#SECTION00480000000000000000">3.8 Information Commands</A>
+<LI> <A NAME="tex2html95" HREF="node78.html#SECTION00490000000000000000">3.9 Breakpoint Commands</A>
+<UL>
+<LI> <A NAME="tex2html96" HREF="node79.html#SECTION00491000000000000000">3.9.1 Breakpoint Example</A>
+</UL> 
+<LI> <A NAME="tex2html97" HREF="node80.html#SECTION004100000000000000000">3.10 Function Tracing</A>
+<UL>
+<LI> <A NAME="tex2html98" HREF="node81.html#SECTION004101000000000000000">3.10.1 Encapsulation Functions</A>
+</UL> 
+<LI> <A NAME="tex2html99" HREF="node82.html#SECTION004110000000000000000">3.11 Specials</A>
+</UL> 
+<LI> <A NAME="tex2html100" HREF="node83.html#SECTION00500000000000000000">4 The Compiler</A>
+<UL>
+<LI> <A NAME="tex2html101" HREF="node84.html#SECTION00510000000000000000">4.1 Compiler Introduction</A>
+<LI> <A NAME="tex2html102" HREF="node85.html#SECTION00520000000000000000">4.2 Calling the Compiler</A>
+<LI> <A NAME="tex2html103" HREF="node86.html#SECTION00530000000000000000">4.3 Compilation Units</A>
+<UL>
+<LI> <A NAME="tex2html104" HREF="node87.html#SECTION00531000000000000000">4.3.1 Undefined Warnings</A>
+</UL> 
+<LI> <A NAME="tex2html105" HREF="node88.html#SECTION00540000000000000000">4.4 Interpreting Error Messages</A>
+<UL>
+<LI> <A NAME="tex2html106" HREF="node89.html#SECTION00541000000000000000">4.4.1 The Parts of the Error Message</A>
+<LI> <A NAME="tex2html107" HREF="node90.html#SECTION00542000000000000000">4.4.2 The Original and Actual Source</A>
+<LI> <A NAME="tex2html108" HREF="node91.html#SECTION00543000000000000000">4.4.3 The Processing Path</A>
+<LI> <A NAME="tex2html109" HREF="node92.html#SECTION00544000000000000000">4.4.4 Error Severity</A>
+<LI> <A NAME="tex2html110" HREF="node93.html#SECTION00545000000000000000">4.4.5 Errors During Macroexpansion</A>
+<LI> <A NAME="tex2html111" HREF="node94.html#SECTION00546000000000000000">4.4.6 Read Errors</A>
+<LI> <A NAME="tex2html112" HREF="node95.html#SECTION00547000000000000000">4.4.7 Error Message Parameterization</A>
+</UL> 
+<LI> <A NAME="tex2html113" HREF="node96.html#SECTION00550000000000000000">4.5 Types in Python</A>
+<UL>
+<LI> <A NAME="tex2html114" HREF="node97.html#SECTION00551000000000000000">4.5.1 Compile Time Type Errors</A>
+<LI> <A NAME="tex2html115" HREF="node98.html#SECTION00552000000000000000">4.5.2 Precise Type Checking</A>
+<LI> <A NAME="tex2html116" HREF="node99.html#SECTION00553000000000000000">4.5.3 Weakened Type Checking</A>
+</UL> 
+<LI> <A NAME="tex2html117" HREF="node100.html#SECTION00560000000000000000">4.6 Getting Existing Programs to Run</A>
+<LI> <A NAME="tex2html118" HREF="node101.html#SECTION00570000000000000000">4.7 Compiler Policy</A>
+<UL>
+<LI> <A NAME="tex2html119" HREF="node102.html#SECTION00571000000000000000">4.7.1 The Optimize Declaration</A>
+<LI> <A NAME="tex2html120" HREF="node103.html#SECTION00572000000000000000">The Optimize-Interface Declaration</A>
+</UL> 
+<LI> <A NAME="tex2html121" HREF="node104.html#SECTION00580000000000000000">4.8 Open Coding and Inline Expansion</A>
+</UL> 
+<LI> <A NAME="tex2html122" HREF="node105.html#SECTION00600000000000000000">5 Advanced Compiler Use and Efficiency Hints</A>
+<UL>
+<LI> <A NAME="tex2html123" HREF="node106.html#SECTION00610000000000000000">5.1 Advanced Compiler Introduction</A>
+<UL>
+<LI> <A NAME="tex2html124" HREF="node107.html#SECTION00611000000000000000">5.1.1 Types</A>
+<LI> <A NAME="tex2html125" HREF="node108.html#SECTION00612000000000000000">5.1.2 Optimization</A>
+<LI> <A NAME="tex2html126" HREF="node109.html#SECTION00613000000000000000">5.1.3 Function Call</A>
+<LI> <A NAME="tex2html127" HREF="node110.html#SECTION00614000000000000000">5.1.4 Representation of Objects</A>
+<LI> <A NAME="tex2html128" HREF="node111.html#SECTION00615000000000000000">5.1.5 Writing Efficient Code</A>
+</UL> 
+<LI> <A NAME="tex2html129" HREF="node112.html#SECTION00620000000000000000">5.2 More About Types in Python</A>
+<UL>
+<LI> <A NAME="tex2html130" HREF="node113.html#SECTION00621000000000000000">5.2.1 More Types Meaningful</A>
+<LI> <A NAME="tex2html131" HREF="node114.html#SECTION00622000000000000000">5.2.2 Canonicalization</A>
+<LI> <A NAME="tex2html132" HREF="node115.html#SECTION00623000000000000000">5.2.3 Member Types</A>
+<LI> <A NAME="tex2html133" HREF="node116.html#SECTION00624000000000000000">5.2.4 Union Types</A>
+<LI> <A NAME="tex2html134" HREF="node117.html#SECTION00625000000000000000">5.2.5 The Empty Type</A>
+<LI> <A NAME="tex2html135" HREF="node118.html#SECTION00626000000000000000">5.2.6 Function Types</A>
+<LI> <A NAME="tex2html136" HREF="node119.html#SECTION00627000000000000000">5.2.7 The Values Declaration</A>
+<LI> <A NAME="tex2html137" HREF="node120.html#SECTION00628000000000000000">5.2.8 Structure Types</A>
+<LI> <A NAME="tex2html138" HREF="node121.html#SECTION00629000000000000000">The Freeze-Type Declaration</A>
+<LI> <A NAME="tex2html139" HREF="node122.html#SECTION006210000000000000000">5.2.10 Type Restrictions</A>
+<LI> <A NAME="tex2html140" HREF="node123.html#SECTION006211000000000000000">5.2.11 Type Style Recommendations</A>
+</UL> 
+<LI> <A NAME="tex2html141" HREF="node124.html#SECTION00630000000000000000">5.3 Type Inference</A>
+<UL>
+<LI> <A NAME="tex2html142" HREF="node125.html#SECTION00631000000000000000">5.3.1 Variable Type Inference</A>
+<LI> <A NAME="tex2html143" HREF="node126.html#SECTION00632000000000000000">5.3.2 Local Function Type Inference</A>
+<LI> <A NAME="tex2html144" HREF="node127.html#SECTION00633000000000000000">5.3.3 Global Function Type Inference</A>
+<LI> <A NAME="tex2html145" HREF="node128.html#SECTION00634000000000000000">5.3.4 Operation Specific Type Inference</A>
+<LI> <A NAME="tex2html146" HREF="node129.html#SECTION00635000000000000000">5.3.5 Dynamic Type Inference</A>
+<LI> <A NAME="tex2html147" HREF="node130.html#SECTION00636000000000000000">5.3.6 Type Check Optimization</A>
+</UL> 
+<LI> <A NAME="tex2html148" HREF="node131.html#SECTION00640000000000000000">5.4 Source Optimization</A>
+<UL>
+<LI> <A NAME="tex2html149" HREF="node132.html#SECTION00641000000000000000">5.4.1 Let Optimization</A>
+<LI> <A NAME="tex2html150" HREF="node133.html#SECTION00642000000000000000">5.4.2 Constant Folding</A>
+<LI> <A NAME="tex2html151" HREF="node134.html#SECTION00643000000000000000">5.4.3 Unused Expression Elimination</A>
+<LI> <A NAME="tex2html152" HREF="node135.html#SECTION00644000000000000000">5.4.4 Control Optimization</A>
+<LI> <A NAME="tex2html153" HREF="node136.html#SECTION00645000000000000000">5.4.5 Unreachable Code Deletion</A>
+<LI> <A NAME="tex2html154" HREF="node137.html#SECTION00646000000000000000">5.4.6 Multiple Values Optimization</A>
+<LI> <A NAME="tex2html155" HREF="node138.html#SECTION00647000000000000000">5.4.7 Source to Source Transformation</A>
+<LI> <A NAME="tex2html156" HREF="node139.html#SECTION00648000000000000000">5.4.8 Style Recommendations</A>
+</UL> 
+<LI> <A NAME="tex2html157" HREF="node140.html#SECTION00650000000000000000">5.5 Tail Recursion</A>
+<UL>
+<LI> <A NAME="tex2html158" HREF="node141.html#SECTION00651000000000000000">5.5.1 Tail Recursion Exceptions</A>
+</UL> 
+<LI> <A NAME="tex2html159" HREF="node142.html#SECTION00660000000000000000">5.6 Local Call</A>
+<UL>
+<LI> <A NAME="tex2html160" HREF="node143.html#SECTION00661000000000000000">Self-Recursive Calls</A>
+<LI> <A NAME="tex2html161" HREF="node144.html#SECTION00662000000000000000">5.6.2 Let Calls</A>
+<LI> <A NAME="tex2html162" HREF="node145.html#SECTION00663000000000000000">5.6.3 Closures</A>
+<LI> <A NAME="tex2html163" HREF="node146.html#SECTION00664000000000000000">5.6.4 Local Tail Recursion</A>
+<LI> <A NAME="tex2html164" HREF="node147.html#SECTION00665000000000000000">5.6.5 Return Values</A>
+</UL> 
+<LI> <A NAME="tex2html165" HREF="node148.html#SECTION00670000000000000000">5.7 Block Compilation</A>
+<UL>
+<LI> <A NAME="tex2html166" HREF="node149.html#SECTION00671000000000000000">5.7.1 Block Compilation Semantics</A>
+<LI> <A NAME="tex2html167" HREF="node150.html#SECTION00672000000000000000">5.7.2 Block Compilation Declarations</A>
+<LI> <A NAME="tex2html168" HREF="node151.html#SECTION00673000000000000000">5.7.3 Compiler Arguments</A>
+<LI> <A NAME="tex2html169" HREF="node152.html#SECTION00674000000000000000">5.7.4 Practical Difficulties</A>
+<LI> <A NAME="tex2html170" HREF="node153.html#SECTION00675000000000000000">5.7.5 Context Declarations</A>
+<LI> <A NAME="tex2html171" HREF="node154.html#SECTION00676000000000000000">5.7.6 Context Declaration Example</A>
+</UL> 
+<LI> <A NAME="tex2html172" HREF="node155.html#SECTION00680000000000000000">5.8 Inline Expansion</A>
+<UL>
+<LI> <A NAME="tex2html173" HREF="node156.html#SECTION00681000000000000000">5.8.1 Inline Expansion Recording</A>
+<LI> <A NAME="tex2html174" HREF="node157.html#SECTION00682000000000000000">Semi-Inline Expansion</A>
+<LI> <A NAME="tex2html175" HREF="node158.html#SECTION00683000000000000000">The Maybe-Inline Declaration</A>
+</UL> 
+<LI> <A NAME="tex2html176" HREF="node159.html#SECTION00690000000000000000">5.9 Byte Coded Compilation</A>
+<LI> <A NAME="tex2html177" HREF="node160.html#SECTION006100000000000000000">5.10 Object Representation</A>
+<UL>
+<LI> <A NAME="tex2html178" HREF="node161.html#SECTION006101000000000000000">5.10.1 Think Before You Use a List</A>
+<LI> <A NAME="tex2html179" HREF="node162.html#SECTION006102000000000000000">5.10.2 Structure Representation</A>
+<LI> <A NAME="tex2html180" HREF="node163.html#SECTION006103000000000000000">5.10.3 Arrays</A>
+<LI> <A NAME="tex2html181" HREF="node164.html#SECTION006104000000000000000">5.10.4 Vectors</A>
+<LI> <A NAME="tex2html182" HREF="node165.html#SECTION006105000000000000000">Bit-Vectors</A>
+<LI> <A NAME="tex2html183" HREF="node166.html#SECTION006106000000000000000">5.10.6 Hashtables</A>
+</UL> 
+<LI> <A NAME="tex2html184" HREF="node167.html#SECTION006110000000000000000">5.11 Numbers</A>
+<UL>
+<LI> <A NAME="tex2html185" HREF="node168.html#SECTION006111000000000000000">5.11.1 Descriptors</A>
+<LI> <A NAME="tex2html186" HREF="node169.html#SECTION006112000000000000000">Non-Descriptor Representations</A>
+<LI> <A NAME="tex2html187" HREF="node170.html#SECTION006113000000000000000">5.11.3 Variables</A>
+<LI> <A NAME="tex2html188" HREF="node171.html#SECTION006114000000000000000">5.11.4 Generic Arithmetic</A>
+<LI> <A NAME="tex2html189" HREF="node172.html#SECTION006115000000000000000">5.11.5 Fixnums</A>
+<LI> <A NAME="tex2html190" HREF="node173.html#SECTION006116000000000000000">5.11.6 Word Integers</A>
+<LI> <A NAME="tex2html191" HREF="node174.html#SECTION006117000000000000000">5.11.7 Floating Point Efficiency</A>
+<LI> <A NAME="tex2html192" HREF="node175.html#SECTION006118000000000000000">5.11.8 Specialized Arrays</A>
+<LI> <A NAME="tex2html193" HREF="node176.html#SECTION006119000000000000000">5.11.9 Specialized Structure Slots</A>
+<LI> <A NAME="tex2html194" HREF="node177.html#SECTION0061110000000000000000">5.11.10 Interactions With Local Call</A>
+<LI> <A NAME="tex2html195" HREF="node178.html#SECTION0061111000000000000000">5.11.11 Representation of Characters</A>
+</UL> 
+<LI> <A NAME="tex2html196" HREF="node179.html#SECTION006120000000000000000">5.12 General Efficiency Hints</A>
+<UL>
+<LI> <A NAME="tex2html197" HREF="node180.html#SECTION006121000000000000000">5.12.1 Compile Your Code</A>
+<LI> <A NAME="tex2html198" HREF="node181.html#SECTION006122000000000000000">5.12.2 Avoid Unnecessary Consing</A>
+<LI> <A NAME="tex2html199" HREF="node182.html#SECTION006123000000000000000">5.12.3 Complex Argument Syntax</A>
+<LI> <A NAME="tex2html200" HREF="node183.html#SECTION006124000000000000000">5.12.4 Mapping and Iteration</A>
+<LI> <A NAME="tex2html201" HREF="node184.html#SECTION006125000000000000000">5.12.5 Trace Files and Disassembly</A>
+</UL> 
+<LI> <A NAME="tex2html202" HREF="node185.html#SECTION006130000000000000000">5.13 Efficiency Notes</A>
+<UL>
+<LI> <A NAME="tex2html203" HREF="node186.html#SECTION006131000000000000000">5.13.1 Type Uncertainty</A>
+<LI> <A NAME="tex2html204" HREF="node187.html#SECTION006132000000000000000">5.13.2 Efficiency Notes and Type Checking</A>
+<LI> <A NAME="tex2html205" HREF="node188.html#SECTION006133000000000000000">5.13.3 Representation Efficiency Notes</A>
+<LI> <A NAME="tex2html206" HREF="node189.html#SECTION006134000000000000000">5.13.4 Verbosity Control</A>
+</UL> 
+<LI> <A NAME="tex2html207" HREF="node190.html#SECTION006140000000000000000">5.14 Profiling</A>
+<UL>
+<LI> <A NAME="tex2html208" HREF="node191.html#SECTION006141000000000000000">5.14.1 Profile Interface</A>
+<LI> <A NAME="tex2html209" HREF="node192.html#SECTION006142000000000000000">5.14.2 Profiling Techniques</A>
+<LI> <A NAME="tex2html210" HREF="node193.html#SECTION006143000000000000000">5.14.3 Nested or Recursive Calls</A>
+<LI> <A NAME="tex2html211" HREF="node194.html#SECTION006144000000000000000">5.14.4 Clock resolution</A>
+<LI> <A NAME="tex2html212" HREF="node195.html#SECTION006145000000000000000">5.14.5 Profiling overhead</A>
+<LI> <A NAME="tex2html213" HREF="node196.html#SECTION006146000000000000000">5.14.6 Additional Timing Utilities</A>
+<LI> <A NAME="tex2html214" HREF="node197.html#SECTION006147000000000000000">5.14.7 A Note on Timing</A>
+<LI> <A NAME="tex2html215" HREF="node198.html#SECTION006148000000000000000">5.14.8 Benchmarking Techniques</A>
+</UL> 
+</UL> 
+<LI> <A NAME="tex2html216" HREF="node199.html#SECTION00700000000000000000">6 UNIX Interface</A>
+<UL>
+<LI> <A NAME="tex2html217" HREF="node200.html#SECTION00710000000000000000">6.1 Reading the Command Line</A>
+<LI> <A NAME="tex2html218" HREF="node201.html#SECTION00720000000000000000">6.2 Useful Variables</A>
+<LI> <A NAME="tex2html219" HREF="node202.html#SECTION00730000000000000000">6.3 Lisp Equivalents for C Routines</A>
+<LI> <A NAME="tex2html220" HREF="node203.html#SECTION00740000000000000000">6.4 Type Translations</A>
+<LI> <A NAME="tex2html221" HREF="node204.html#SECTION00750000000000000000">6.5 System Area Pointers</A>
+<LI> <A NAME="tex2html222" HREF="node205.html#SECTION00760000000000000000">6.6 Unix System Calls</A>
+<LI> <A NAME="tex2html223" HREF="node206.html#SECTION00770000000000000000">6.7 File Descriptor Streams</A>
+<LI> <A NAME="tex2html224" HREF="node207.html#SECTION00780000000000000000">6.8 Making Sense of Mach Return Codes</A>
+<LI> <A NAME="tex2html225" HREF="node208.html#SECTION00790000000000000000">6.9 Unix Interrupts</A>
+<UL>
+<LI> <A NAME="tex2html226" HREF="node209.html#SECTION00791000000000000000">6.9.1 Changing Interrupt Handlers</A>
+<LI> <A NAME="tex2html227" HREF="node210.html#SECTION00792000000000000000">6.9.2 Examples of Signal Handlers</A>
+</UL> 
+</UL> 
+<LI> <A NAME="tex2html228" HREF="node211.html#SECTION00800000000000000000">Event Dispatching with SERVE-EVENT</A>
+<UL>
+<LI> <A NAME="tex2html229" HREF="node212.html#SECTION00810000000000000000">7.1 Object Sets</A>
+<LI> <A NAME="tex2html230" HREF="node213.html#SECTION00820000000000000000">The SERVE-EVENT Function</A>
+<LI> <A NAME="tex2html231" HREF="node214.html#SECTION00830000000000000000">Using SERVE-EVENT with Unix File Descriptors</A>
+<LI> <A NAME="tex2html232" HREF="node215.html#SECTION00840000000000000000">Using SERVE-EVENT with the CLX Interface to X</A>
+<UL>
+<LI> <A NAME="tex2html233" HREF="node216.html#SECTION00841000000000000000">7.4.1 Without Object Sets</A>
+<LI> <A NAME="tex2html234" HREF="node217.html#SECTION00842000000000000000">7.4.2 With Object Sets</A>
+</UL> 
+<LI> <A NAME="tex2html235" HREF="node218.html#SECTION00850000000000000000">A SERVE-EVENT Example</A>
+<UL>
+<LI> <A NAME="tex2html236" HREF="node219.html#SECTION00851000000000000000">7.5.1 Without Object Sets Example</A>
+<LI> <A NAME="tex2html237" HREF="node220.html#SECTION00852000000000000000">7.5.2 With Object Sets Example</A>
+</UL> 
+</UL> 
+<LI> <A NAME="tex2html238" HREF="node221.html#SECTION00900000000000000000">8 Alien Objects</A>
+<UL>
+<LI> <A NAME="tex2html239" HREF="node222.html#SECTION00910000000000000000">8.1 Introduction to Aliens</A>
+<LI> <A NAME="tex2html240" HREF="node223.html#SECTION00920000000000000000">8.2 Alien Types</A>
+<UL>
+<LI> <A NAME="tex2html241" HREF="node224.html#SECTION00921000000000000000">8.2.1 Defining Alien Types</A>
+<LI> <A NAME="tex2html242" HREF="node225.html#SECTION00922000000000000000">8.2.2 Alien Types and Lisp Types</A>
+<LI> <A NAME="tex2html243" HREF="node226.html#SECTION00923000000000000000">8.2.3 Alien Type Specifiers</A>
+<LI> <A NAME="tex2html244" HREF="node227.html#SECTION00924000000000000000">The C-Call Package</A>
+</UL> 
+<LI> <A NAME="tex2html245" HREF="node228.html#SECTION00930000000000000000">8.3 Alien Operations</A>
+<UL>
+<LI> <A NAME="tex2html246" HREF="node229.html#SECTION00931000000000000000">8.3.1 Alien Access Operations</A>
+<LI> <A NAME="tex2html247" HREF="node230.html#SECTION00932000000000000000">8.3.2 Alien Coercion Operations</A>
+<LI> <A NAME="tex2html248" HREF="node231.html#SECTION00933000000000000000">8.3.3 Alien Dynamic Allocation</A>
+</UL> 
+<LI> <A NAME="tex2html249" HREF="node232.html#SECTION00940000000000000000">8.4 Alien Variables</A>
+<UL>
+<LI> <A NAME="tex2html250" HREF="node233.html#SECTION00941000000000000000">8.4.1 Local Alien Variables</A>
+<LI> <A NAME="tex2html251" HREF="node234.html#SECTION00942000000000000000">8.4.2 External Alien Variables</A>
+</UL> 
+<LI> <A NAME="tex2html252" HREF="node235.html#SECTION00950000000000000000">8.5 Alien Data Structure Example</A>
+<LI> <A NAME="tex2html253" HREF="node236.html#SECTION00960000000000000000">8.6 Loading Unix Object Files</A>
+<LI> <A NAME="tex2html254" HREF="node237.html#SECTION00970000000000000000">8.7 Alien Function Calls</A>
+<UL>
+<LI> <A NAME="tex2html255" HREF="node238.html#SECTION00971000000000000000">The alien-funcall Primitive</A>
+<LI> <A NAME="tex2html256" HREF="node239.html#SECTION00972000000000000000">The def-alien-routine Macro</A>
+<LI> <A NAME="tex2html257" HREF="node240.html#SECTION00973000000000000000">def-alien-routine Example</A>
+<LI> <A NAME="tex2html258" HREF="node241.html#SECTION00974000000000000000">8.7.4 Calling Lisp from C</A>
+<LI> <A NAME="tex2html259" HREF="node242.html#SECTION00975000000000000000">8.7.5 Accessing Lisp Arrays</A>
+</UL> 
+<LI> <A NAME="tex2html260" HREF="node243.html#SECTION00980000000000000000">Step-by-Step Alien Example</A>
+</UL> 
+<LI> <A NAME="tex2html261" HREF="node244.html#SECTION001000000000000000000">9 Interprocess Communication under LISP</A>
+<UL>
+<LI> <A NAME="tex2html262" HREF="node245.html#SECTION001010000000000000000">9.1 The REMOTE Package</A>
+<UL>
+<LI> <A NAME="tex2html263" HREF="node246.html#SECTION001011000000000000000">9.1.1 Connecting Servers and Clients</A>
+<LI> <A NAME="tex2html264" HREF="node247.html#SECTION001012000000000000000">9.1.2 Remote Evaluations</A>
+<LI> <A NAME="tex2html265" HREF="node248.html#SECTION001013000000000000000">9.1.3 Remote Objects</A>
+<LI> <A NAME="tex2html266" HREF="node249.html#SECTION001014000000000000000">9.1.4 Host Addresses</A>
+</UL> 
+<LI> <A NAME="tex2html267" HREF="node250.html#SECTION001020000000000000000">9.2 The WIRE Package</A>
+<UL>
+<LI> <A NAME="tex2html268" HREF="node251.html#SECTION001021000000000000000">9.2.1 Untagged Data</A>
+<LI> <A NAME="tex2html269" HREF="node252.html#SECTION001022000000000000000">9.2.2 Tagged Data</A>
+<LI> <A NAME="tex2html270" HREF="node253.html#SECTION001023000000000000000">9.2.3 Making Your Own Wires</A>
+</UL> 
+<LI> <A NAME="tex2html271" HREF="node254.html#SECTION001030000000000000000">Out-Of-Band Data</A>
+</UL> 
+<LI> <A NAME="tex2html272" HREF="node255.html#SECTION001100000000000000000">10 Debugger Programmer's Interface</A>
+<UL>
+<LI> <A NAME="tex2html273" HREF="node256.html#SECTION001110000000000000000">10.1 DI Exceptional Conditions</A>
+<UL>
+<LI> <A NAME="tex2html274" HREF="node257.html#SECTION001111000000000000000">Debug-conditions</A>
+<LI> <A NAME="tex2html275" HREF="node258.html#SECTION001112000000000000000">Debug-errors</A>
+</UL> 
+<LI> <A NAME="tex2html276" HREF="node259.html#SECTION001120000000000000000">Debug-variables</A>
+<LI> <A NAME="tex2html277" HREF="node260.html#SECTION001130000000000000000">10.3 Frames</A>
+<LI> <A NAME="tex2html278" HREF="node261.html#SECTION001140000000000000000">Debug-functions</A>
+<LI> <A NAME="tex2html279" HREF="node262.html#SECTION001150000000000000000">Debug-blocks</A>
+<LI> <A NAME="tex2html280" HREF="node263.html#SECTION001160000000000000000">10.6 Breakpoints</A>
+<LI> <A NAME="tex2html281" HREF="node264.html#SECTION001170000000000000000">Code-locations</A>
+<LI> <A NAME="tex2html282" HREF="node265.html#SECTION001180000000000000000">Debug-sources</A>
+<LI> <A NAME="tex2html283" HREF="node266.html#SECTION001190000000000000000">10.9 Source Translation Utilities</A>
+</UL> 
+<LI> <A NAME="tex2html284" HREF="node267.html#SECTION001200000000000000000">Index</A>
+<LI> <A NAME="tex2html285" HREF="node268.html#SECTION001300000000000000000">  About this document ... </A>
+</UL>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

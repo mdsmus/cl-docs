@@ -1,0 +1,180 @@
+<html lang="en">
+<head>
+<title>Function Tracing - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Debugger.html#Debugger" title="Debugger">
+<link rel="prev" href="Information-Commands.html#Information-Commands" title="Information Commands">
+<link rel="next" href="Single-Stepping.html#Single-Stepping" title="Single Stepping">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Function-Tracing"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Single-Stepping.html#Single-Stepping">Single Stepping</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Information-Commands.html#Information-Commands">Information Commands</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Debugger.html#Debugger">Debugger</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">4.9 Function Tracing</h3>
+
+<p><a name="index-Tracing-112"></a><a name="index-Function_002c-tracing-113"></a>
+The tracer causes selected functions to print their arguments and
+their results whenever they are called.  Options allow conditional
+printing of the trace information and conditional breakpoints on
+function entry or exit.
+
+   <p><a name="Macro-common_002dlisp_003atrace"></a>
+
+<div class="defun">
+&mdash; Macro: <b>common-lisp:trace</b><var> &amp;rest specs<a name="index-common_002dlisp_003atrace-114"></a></var><br>
+<blockquote><p><a name="index-common_002dlisp_003atrace-115"></a><code>trace</code> {Option Global-Value}* {Name {Option Value}*}*
+
+        <p><code>trace</code> is a debugging tool that provides information when specified
+functions are called. In its simplest form:
+
+     <pre class="lisp">                 (TRACE NAME-1 NAME-2 ...)
+</pre>
+        <p>The NAMEs are not evaluated. Each may be a symbol, denoting an
+individual function, or a string, denoting all functions fbound to
+symbols whose home package is the package with the given name.
+
+        <p>Options allow modification of the default behavior. Each option is a
+pair of an option keyword and a value form. Global options are
+specified before the first name, and affect all functions traced by a
+given use of <code>trace</code>. Options may also be interspersed with function
+names, in which case they act as local options, only affecting tracing
+of the immediately preceding function name. Local options override
+global options.
+
+        <p>By default, <code>trace</code> causes a printout on <code>*trace-output*</code> each time that
+one of the named functions is entered or returns. (This is the basic,
+<code>ansi</code> Common Lisp behavior of <code>trace</code>.) As an <code>sbcl</code> extension, the
+<code>:report</code> <code>sb-ext:profile</code> option can be used to instead cause information
+to be silently recorded to be inspected later using the <code>sb-ext:profile</code>
+function.
+
+        <p>The following options are defined:
+
+          <dl>
+<dt><code>:report</code><em> Report-Type</em><dd>       If Report-Type is <code>trace</code> (the default) then information is reported
+       by printing immediately. If Report-Type is <code>sb-ext:profile</code>, information
+       is recorded for later summary by calls to <code>sb-ext:profile</code>. If
+       Report-Type is <code>nil</code>, then the only effect of the trace is to execute
+       other options (e.g. <code>print</code> or BREAK).
+
+          <br><dt><code>:condition</code><em> Form</em><dt><code>:condition-after</code><em> Form</em><dt><code>:condition-all</code><em> Form</em><dd>       If <code>:condition</code> is specified, then <code>trace</code> does nothing unless Form
+       evaluates to true at the time of the call. <code>:condition-after</code> is
+       similar, but suppresses the initial printout, and is tested when the
+       function returns. <code>:condition-all</code> tries both before and after. 
+       This option is not supported with <code>:report</code> <code>profile</code>.
+
+          <br><dt><code>:break</code><em> Form</em><dt><code>:break-after</code><em> Form</em><dt><code>:break-all</code><em> Form</em><dd>       If specified, and Form evaluates to true, then the debugger is invoked
+       at the start of the function, at the end of the function, or both,
+       according to the respective option.
+
+          <br><dt><code>:print</code><em> Form</em><dt><code>:print-after</code><em> Form</em><dt><code>:print-all</code><em> Form</em><dd>       In addition to the usual printout, the result of evaluating Form is
+       printed at the start of the function, at the end of the function, or
+       both, according to the respective option. Multiple print options cause
+       multiple values to be printed.
+
+          <br><dt><code>:wherein</code><em> Names</em><dd>       If specified, Names is a function name or list of names. <code>trace</code> does
+       nothing unless a call to one of those functions encloses the call to
+       this function (i.e. it would appear in a backtrace.)  Anonymous
+       functions have string names like "DEFUN FOO". This option is not
+       supported with <code>:report</code> <code>profile</code>.
+
+          <br><dt><code>:encapsulate</code><em> {:DEFAULT | </em><code>t</code><em> | NIL}</em><dd>       If <code>t</code>, the tracing is done via encapsulation (redefining the function
+       name) rather than by modifying the function. <code>:default</code> is the default,
+       and means to use encapsulation for interpreted functions and funcallable
+       instances, breakpoints otherwise. When encapsulation is used, forms are
+       *not* evaluated in the function's lexical environment, but <code>sb-debug:arg</code>
+       can still be used.
+
+          <br><dt><code>:methods</code><em> {T | NIL}</em><dd>       If <code>t</code>, any function argument naming a generic function will have its
+       methods traced in addition to the generic function itself.
+
+          <br><dt><code>:function</code><em> Function-Form</em><dd>       This is a not really an option, but rather another way of specifying
+       what function to trace. The Function-Form is evaluated immediately,
+       and the resulting function is instrumented, i.e. traced or profiled
+       as specified in <code>report</code>.
+
+        </dl>
+
+        <p><code>:condition</code>, <code>:break</code> and <code>:print</code> forms are evaluated in a context which
+mocks up the lexical environment of the called function, so that
+<code>sb-debug:var</code> and <code>sb-debug:arg</code> can be used. The <code>-after</code> and <code>-all</code> forms
+are evaluated in the null environment. 
+</p></blockquote></div>
+
+   <p><a name="Macro-common_002dlisp_003auntrace"></a>
+
+<div class="defun">
+&mdash; Macro: <b>common-lisp:untrace</b><var> &amp;rest specs<a name="index-common_002dlisp_003auntrace-116"></a></var><br>
+<blockquote><p><a name="index-common_002dlisp_003auntrace-117"></a>Remove tracing from the specified functions. Untraces all
+functions when called with no arguments. 
+</p></blockquote></div>
+
+   <p><a name="Variable-sb_002ddebug_003a_002atrace_002dindentation_002dstep_002a"></a>
+
+<div class="defun">
+&mdash; Variable: <b>sb-debug:*trace-indentation-step*</b><var><a name="index-sb_002ddebug_003a_002atrace_002dindentation_002dstep_002a-118"></a></var><br>
+<blockquote><p><a name="index-sb_002ddebug_003a_002atrace_002dindentation_002dstep_002a-119"></a>the increase in trace indentation at each call level
+</p></blockquote></div>
+
+   <p><a name="Variable-sb_002ddebug_003a_002amax_002dtrace_002dindentation_002a"></a>
+
+<div class="defun">
+&mdash; Variable: <b>sb-debug:*max-trace-indentation*</b><var><a name="index-sb_002ddebug_003a_002amax_002dtrace_002dindentation_002a-120"></a></var><br>
+<blockquote><p><a name="index-sb_002ddebug_003a_002amax_002dtrace_002dindentation_002a-121"></a>If the trace indentation exceeds this value, then indentation restarts at
+   0. 
+</p></blockquote></div>
+
+   <p><a name="Variable-sb_002ddebug_003a_002atrace_002dencapsulate_002ddefault_002a"></a>
+
+<div class="defun">
+&mdash; Variable: <b>sb-debug:*trace-encapsulate-default*</b><var><a name="index-sb_002ddebug_003a_002atrace_002dencapsulate_002ddefault_002a-122"></a></var><br>
+<blockquote><p><a name="index-sb_002ddebug_003a_002atrace_002dencapsulate_002ddefault_002a-123"></a>the default value for the <code>:encapsulate</code> option to <code>trace</code>
+</p></blockquote></div>
+
+   <p><a name="Variable-sb_002ddebug_003a_002atrace_002dvalues_002a"></a>
+
+<div class="defun">
+&mdash; Variable: <b>sb-debug:*trace-values*</b><var><a name="index-sb_002ddebug_003a_002atrace_002dvalues_002a-124"></a></var><br>
+<blockquote><p><a name="index-sb_002ddebug_003a_002atrace_002dvalues_002a-125"></a>This is bound to the returned values when evaluating <code>:break-after</code> and
+   <code>:print-after</code> forms. 
+</p></blockquote></div>
+
+<!-- FIXME rudi 2004-03-26: encapsulate is (per TODO file as of -->
+<!-- 0.8.9) in a state of flux.  When it's sorted out, revive the -->
+<!-- cmucl documentation. -->
+   </body></html>
+

@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>9.2.3 Making Your Own Wires</TITLE>
+<META NAME="description" CONTENT="9.2.3 Making Your Own Wires">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3901" HREF="node254.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3899" HREF="node250.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3895" HREF="node252.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3903" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3904" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3902" HREF="node254.html">Out-Of-Band Data</A>
+<B>Up:</B> <A NAME="tex2html3900" HREF="node250.html">9.2 The WIRE Package</A>
+<B> Previous:</B> <A NAME="tex2html3896" HREF="node252.html">9.2.2 Tagged Data</A>
+<BR> <P>
+<H2><A NAME="SECTION001023000000000000000">9.2.3 Making Your Own Wires</A></H2>
+<P>
+You can create wires manually in addition to the <tt>remote</tt> package's
+interface creating them for you.  To create a wire, you need a Unix &#305;file
+descriptor.  If you are unfamiliar with Unix file descriptors, see section 2 of
+the Unix manual pages.
+<P>
+<b>[Function]</b><BR> 
+<tt> wire: make-wire</tt> <em> <i>descriptor</i></em><BR>
+<P>
+  The function <tt>make-wire</tt> creates a new wire when supplied with
+  the file descriptor to use for the underlying I/O operations.
+<P>
+<b>[Function]</b><BR> 
+<tt> wire: wire-p</tt> <em> <i>object</i></em><BR>
+<P>
+  This function returns <i>t</i> if <i>object</i> is indeed a wire,
+  <i>nil</i> otherwise.
+<P>
+<b>[Function]</b><BR> 
+<tt> wire: wire-fd</tt> <em> <i>wire</i></em><BR>
+<P>
+  This function returns the file descriptor used by the <i>wire</i>.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

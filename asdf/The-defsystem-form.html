@@ -1,0 +1,95 @@
+<html lang="en">
+<head>
+<title>asdf Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name=description content="asdf Manual">
+<meta name=generator content="makeinfo 4.2">
+<link href="http://www.gnu.org/software/texinfo/" rel=generator-home>
+<!--
+This manual describes asdf, a system definition facility for Common
+Lisp programs and libraries.
+
+<p>asdf Copyright &copy; 2001-2004 Daniel Barlow and contributors
+
+<p>This manual Copyright &copy; 2001-2004 Daniel Barlow and
+contributors
+
+<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+-->
+</head>
+<body>
+<p>
+Node:<a name="The%20defsystem%20form">The defsystem form</a>,
+Next:<a rel=next accesskey=n href="A-more-involved-example.html#A%20more%20involved%20example">A more involved example</a>,
+Previous:<a rel=previous accesskey=p href="Defining-systems-with-defsystem.html#Defining%20systems%20with%20defsystem">Defining systems with defsystem</a>,
+Up:<a rel=up accesskey=u href="Defining-systems-with-defsystem.html#Defining%20systems%20with%20defsystem">Defining systems with defsystem</a>
+<hr><br>
+
+<h3>The defsystem form</h3>
+
+<p>Systems can be constructed programmatically by instantiating
+components using make-instance.  Most of the time, however, it is much
+more practical to use a static <code>defsystem</code> form.  This section
+begins with an example of a system definition, then gives the full
+grammar of <code>defsystem</code>.
+
+<p>Let's look at a simple system:
+
+<br><pre>(defsystem "hello-lisp"
+    :description "hello-lisp: a sample Lisp system."
+    :version "0.2"
+    :author "Joe User &lt;joe@example.com&gt;"
+    :licence "Public Domain"
+    :components ((:file "packages")
+                 (:file "macros" :depends-on ("packages"))
+                 (:file "hello" :depends-on ("macros"))))
+</pre>
+
+<p>Some notes about this example:
+
+<ul>
+<li>This form defines a system named "hello-lisp" that contains three
+source files: <code>packages</code>, <code>macros</code> and <code>hello</code>.
+
+<li>The file <code>macros</code> depends on <code>packages</code> (presumably because
+the package it's in is defined in <code>packages</code>), and the file
+<code>hello</code> depends on <code>macros</code> (and hence, transitively on
+<code>packages</code>).  This means that asdf will compile and load
+<code>packages</code> and <code>macros</code> before starting the compilation of
+file <code>hello</code>.
+
+<li>The files are located in the same directory as the file with the
+system definition.  asdf resolves symlinks before loading the system
+definition file and stores its location in the resulting
+system<a rel=footnote href="#fn-1"><sup>1</sup></a>.  This is a good thing because the user can
+move the system sources without having to edit the system definition.
+
+</ul>
+
+<hr><h4>Footnotes</h4>
+<ol type="1">
+<li><a name="fn-1"></a>
+<p>It is possible, though almost never necessary, to
+override this behaviour.</p>
+
+</ol><hr>
+
+</body></html>
+

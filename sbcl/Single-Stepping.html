@@ -1,0 +1,97 @@
+<html lang="en">
+<head>
+<title>Single Stepping - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Debugger.html#Debugger" title="Debugger">
+<link rel="prev" href="Function-Tracing.html#Function-Tracing" title="Function Tracing">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Single-Stepping"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Function-Tracing.html#Function-Tracing">Function Tracing</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Debugger.html#Debugger">Debugger</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">4.10 Single Stepping</h3>
+
+<p><a name="index-Stepper-126"></a><a name="index-Single-Stepping-127"></a>
+SBCL includes an instrumentation based single-stepper for compiled
+code, that can be invoked via the <code>step</code> macro, or from within
+the debugger. See <a href="Debugger-Policy-Control.html#Debugger-Policy-Control">Debugger Policy Control</a>, for details on enabling
+stepping for compiled code.
+
+   <p>The following debugger commands are used for controlling single stepping.
+
+<div class="defun">
+&mdash; Debugger Command: <b>start</b><var><a name="index-start-128"></a></var><br>
+<blockquote><p>Selects the <code>continue</code> restart if one exists and starts single stepping. 
+None of the other single stepping commands can be used before stepping has
+been started either by using <code>start</code> or by using the standard
+<code>step</code> macro. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Debugger Command: <b>step</b><var><a name="index-step-129"></a></var><br>
+<blockquote><p>Steps into the current form. Stepping will be resumed when the next
+form that has been compiled with stepper instrumentation is evaluated. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Debugger Command: <b>next</b><var><a name="index-next-130"></a></var><br>
+<blockquote><p>Steps over the current form. Stepping will be disabled until evaluation of
+the form is complete. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Debugger Command: <b>out</b><var><a name="index-out-131"></a></var><br>
+<blockquote><p>Steps out of the current frame. Stepping will be disabled until the
+topmost stack frame that had been stepped into returns. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Debugger Command: <b>stop</b><var><a name="index-stop-132"></a></var><br>
+<blockquote><p>Stops the single stepper and resumes normal execution. 
+</p></blockquote></div>
+
+   <p><a name="Macro-common_002dlisp_003astep"></a>
+
+<div class="defun">
+&mdash; Macro: <b>common-lisp:step</b><var> form<a name="index-common_002dlisp_003astep-133"></a></var><br>
+<blockquote><p><a name="index-common_002dlisp_003astep-134"></a>The form is evaluated with single stepping enabled. Function calls
+outside the lexical scope of the form can be stepped into only if the
+functions in question have been compiled with sufficient <code>debug</code> policy
+to be at least partially steppable. 
+</p></blockquote></div>
+
+   </body></html>
+

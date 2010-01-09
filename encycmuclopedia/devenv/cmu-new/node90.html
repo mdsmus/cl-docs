@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>4.4.2 The Original and Actual Source</TITLE>
+<META NAME="description" CONTENT="4.4.2 The Original and Actual Source">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1749" HREF="node91.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1747" HREF="node88.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1741" HREF="node89.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1751" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1752" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1750" HREF="node91.html">4.4.3 The Processing Path</A>
+<B>Up:</B> <A NAME="tex2html1748" HREF="node88.html">4.4 Interpreting Error Messages</A>
+<B> Previous:</B> <A NAME="tex2html1742" HREF="node89.html">4.4.1 The Parts of </A>
+<BR> <P>
+<H2><A NAME="SECTION00542000000000000000">4.4.2 The Original and Actual Source</A></H2>
+<P>
+<A NAME="9435">&#160;</A>
+<A NAME="9436">&#160;</A>
+<P>
+The &#305;original source displayed will almost always be a list.  If the actual
+source for an error message is a symbol, the original source will be the
+immediately enclosing evaluated list form.  So even if the offending symbol
+does appear in the original source, the compiler will print the enclosing list
+and then print the symbol as the actual source (as though the symbol were
+introduced by a macro.)
+<P>
+When the &#305;actual source is displayed (and is not a symbol), it will always
+be code that resulted from the expansion of a macro or a source-to-source
+compiler optimization.  This is code that did not appear in the original
+source program; it was introduced by the compiler.
+<P>
+Keep in mind that when the compiler displays a source form in an error message,
+it always displays the most specific (innermost) responsible form.  For
+example, compiling this function:
+<BLOCKQUOTE> <PRE>(defun bar (x)
+  (let (a)
+    (declare (fixnum a))
+    (setq a (foo x))
+    a))
+</PRE> </BLOCKQUOTE>
+Gives this error message:
+<BLOCKQUOTE> <PRE>In: DEFUN BAR
+  (LET (A) (DECLARE (FIXNUM A)) (SETQ A (FOO X)) A)
+Warning: The binding of A is not a FIXNUM:
+  NIL
+</PRE> </BLOCKQUOTE>
+This error message is not saying ``there's a problem somewhere in this
+<tt>let</tt>''--it is saying that there is a problem with the
+<tt>let</tt> itself.  In this example, the problem is that <tt>a</tt>'s
+<i>nil</i> initial value is not a <tt>fixnum</tt>.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

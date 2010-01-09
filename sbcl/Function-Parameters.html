@@ -1,0 +1,74 @@
+<html lang="en">
+<head>
+<title>Function Parameters - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="sb_002dposix.html#sb_002dposix" title="sb-posix">
+<link rel="prev" href="Lisp-objects-and-C-structures.html#Lisp-objects-and-C-structures" title="Lisp objects and C structures">
+<link rel="next" href="Function-Return-Values.html#Function-Return-Values" title="Function Return Values">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Function-Parameters"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Function-Return-Values.html#Function-Return-Values">Function Return Values</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Lisp-objects-and-C-structures.html#Lisp-objects-and-C-structures">Lisp objects and C structures</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="sb_002dposix.html#sb_002dposix">sb-posix</a>
+<hr>
+</div>
+
+<h4 class="subsection">15.3.3 Function Parameters</h4>
+
+<p>The calling convention is modelled after that of CMUCL's <code>UNIX</code>
+package: in particular, it's like the C interface except that:
+
+     <ol type=a start=1>
+<li>Length arguments are omitted or optional where the sensible value
+is obvious.  For example, <code>read</code> would be defined this way:
+
+     <pre class="lisp">          (read fd buffer &amp;optional (length (length buffer))) =&gt; bytes-read
+</pre>
+     <li>Where C simulates &ldquo;out&rdquo; parameters using pointers (for instance, in
+<code>pipe()</code> or <code>socketpair()</code>) these may be optional or omitted
+in the Lisp interface: if not provided, appropriate objects will be
+allocated and returned (using multiple return values if necessary).
+
+     <li>Some functions accept objects such as filenames or file descriptors. 
+Wherever these are specified as such in the C bindings, the Lisp
+interface accepts designators for them as specified in the 'Types'
+section above.
+
+     <li>A few functions have been included in sb-posix that do not correspond
+exactly with their C counterparts.  These are described in
+See <a href="Functions-with-idiosyncratic-bindings.html#Functions-with-idiosyncratic-bindings">Functions with idiosyncratic bindings</a>.
+
+        </ol>
+
+   </body></html>
+

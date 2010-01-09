@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 31</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 31 - Handling Large Projects in Lisp</h1> 
+
+<P>This book is primarily a tutorial, designed to give you enough of
+an understanding of Lisp to get started writing your own programs.
+Eventually, you'll find yourself in a situation where you need to
+collaborate with other programmers to implement a larger system. The
+strategies and tools used to organize Lisp programs for large
+projects and team efforts are similar to those used for other
+languages. The main difference is that the coordination tools are
+part of the same environment in which you develop your program.
+
+<h2>Packages keep your names separate from my names</h2>
+
+<p>One of the first concerns in group development is to avoid
+namespace collisions. You don't want to have to poll all the other
+programmers to make sure that no one has already used the name
+you're planning to give the routine you're about to write. That
+would interrupt not only your train of thought, but all the
+programmers' as well. The alternative -- to ignore the namespace
+problem and resolve collisions during integration -- is even more
+unappealing.
+
+<p>One tried and true approach, used in many organizations, is to
+give every subsystem a unique prefix for its exported names. Your
+job as a programmer is to tack the proper prefix onto the name of
+each routine you write for a given subsystem. Like other approaches,
+this is both annoying and fragile. Prefixes tend to be abbreviations
+(to save typing); system designers tend to be particularly bad at
+anticipating future developments -- eventually, you'll have to make
+exceptions to the prefix naming rule to accommodate new development,
+and with the exceptions comes the extra mental effort of keeping
+track of another piece of information which has nothing to do with 
+solving a problem.
+
+<p>Object-based languages at least give you a class scope for naming,
+but this only pushes the conflict-avoidance strategy somewhere else.
+
+<p>Lisp's package system (see <a href="chapter03-10.html">Chapter 3,
+Lesson 10</a>) lets you partition namespaces independent of other
+language constructs. If you really want to give each programmer the
+freedom to create without the overhead of coordinating on matters
+unrelated to problem-solving, you can give each programmer her own
+package. As the subsystems are completed, you can integrate by
+referring to the qualified names of the public APIs of each
+subsystem. Using this approach, there's no cognitive overhead during
+subsystem construction, no rework needed during integration, and no
+runtime overhead in the delivered product.
+
+<p>The keyword package (remember that keywords are symbols with the
+empty package name, such as <code>:FOO</code>) is useful for symbols
+that are used only for their identity. Without associated code or
+data, a symbol can readily be shared across all subsystems.
+
+<h2>System builders let you describe dependencies</h2>
+
+<p>Lisp does not yet have a standard declarative way to describe the
+process of building a system from its source files. Most projects use
+one of two approaches:
+
+<ol>
+<li>create a system loader based upon <code>LOAD</code> (and sometimes,
+<code>COMPILE-FILE</code>) forms
+<li>use a homegrown or borrowed declarative system builder
+</ol> 
+
+<p>Both approaches have their merits. For smaller systems, a naive
+<code>LOAD</code>-based approach is quite workable. As systems get
+larger, you'll find increasing pressure to reload the minimum set of
+files necessary to update your working Lisp image from changed
+sources. And the introduction of macro definitions means that files
+which use the macros will have to be reloaded whenever the source
+code for a macro definition changes. Eventually, the complexity of
+keeping track of these dependencies via ad-hoc loader code will
+outweigh the pain of constructing, learning, or adapting a
+declarative system builder.
+
+<p>There are several such programs, collectively referred to as
+<code>DEFSYSTEM</code>s. Some Lisp vendors include a
+<code>DEFSYSTEM</code> with their product. Others are available as
+source code from Lisp archive sites. Customization or adaptation is
+usually required for the <code>DEFSYSTEM</code>s that are not
+vendor-supplied; you would be wise to see whether someone has
+already adapted a <code>DEFSYSTEM</code> to your particular
+environment.
+
+<p>Later in this chapter, we'll see one more way to keep track of
+file dependencies.
+
+<h2>Source control systems keep track of multiple revisions</h2>
+
+<p>Did you ever change a file, save it, and then discover that you
+had broken something so badly that you wanted to go back to the previous
+version of the file and start over?  A source code control system can
+help you do this.
+
+<p>There is no standard for source code control in Lisp, nor is there
+likely to be any time soon.  Source code control systems are typically
+provided as an essential programming tool independent of the Lisp
+environment.  Some Lisp vendors offer a way to operate the source
+code control system from the Lisp environment.
+
+<p>For projects involving more than one programmer, a source code
+control system offers additional benefits; most such systems allow a
+programmer to <em>reserve</em> a file which she intends to edit. A
+reserved file can't be edited by any other programmer. Furthermore,
+the process of reserving a file usually creates a local editable
+copy for the programmer making the changes; the other programmers
+see the previous, unedited copy of the file. When the programmer
+completes (and, of course, tests) the changes, she returns the
+completed file to the source code control system, which makes the
+file's new contents available to all the programmers and allows
+anyone to reserve the file for a new round of updates.
+
+<p>I highly recommend that you take the time to locate and use a
+source code control system. The effort will pay dividends in the
+time you don't spend recovering from lost source code changes.
+
+<h2>Modules: another way to describe file dependencies</h2>
+
+<p>Lisp actually does have a rudimentary system of maintaining file
+dependencies. I didn't mention the module system earlier because it
+is deprecated; it might be removed, replaced, or augmented in some
+future revision of the Lisp specification. I also didn't mention the
+module system because it has quite limited expressive power. The
+module system is best suited for finished, stable systems; it does
+not have enough functionality to support incremental program
+development in a useful manner.  Given all these caveats, let's take
+a brief look at ...
+
+<h2>PROVIDE and REQUIRE</h2>
+
+<p><code>PROVIDE</code> and <code>REQUIRE</code> are the sole
+standardized interface to Lisp's module system. A
+<code>(REQUIRE</code> <i>name</i><code>)</code> form tells Lisp to
+see whether the file associated with <i>name</i> has already been
+loaded; if so, <code>REQUIRE</code> does nothing, otherwise it loads
+the file. The loaded file must at some point include a top level
+form <code>(PROVIDE</code> <i>name</i><code>)</code>; this informs
+the module system that the module associated with <i>name</i> has
+been loaded.
+
+<p>The means by which the Lisp system locates the file according to
+<i>name</i> is implementation-dependent; usually the name maps onto 
+a source or object file in the current directory.
+
+<p>The biggest problem with this module system is that it is not
+designed to handle incremental program changes; it is better suited
+for loading a completed, stable system.  Once a <code>REQUIRE</code>d
+file is loaded, it will never be reloaded. (Your vendor may give you
+enough information to override this behavior, but you can't depend on
+it.)
+
+<p>Of course, if you use an ad-hoc loader or a
+<code>DEFSYSTEM</code> during program development, there is little
+reason to not to deliver the system using the same approach to
+loading. Better yet, some Lisp environments let you dump an image of
+your Lisp world, which lets you load the system without having
+source or object files at all. Either way, there is no good reason
+to use <code>PROVIDE</code> and <code>REQUIRE</code>.
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter30.html">Chapter 30</a> | Chapter 31 | <a href="chapter32.html">Chapter 32</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

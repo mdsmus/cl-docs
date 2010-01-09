@@ -1,0 +1,58 @@
+<html
+  ><head
+    ><title
+      >Method (RUN-RESOLVING-DEPENDENCIES TEST-CASE)</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Method: (RUN-RESOLVING-DEPENDENCIES TEST-CASE)</h1
+        ><div class="contents"
+          ><h2
+  >Documentation</h2
+><blockquote
+  >Return true if this test, and its dependencies, are satisfied,
+  NIL otherwise.</blockquote
+><h2
+            >Source</h2
+          ><pre class="code"
+            >(defmethod run-resolving-dependencies ((test test-case))
+  &quot;Return true if this test, and its dependencies, are satisfied,
+  NIL otherwise.&quot;
+  (case (status test)
+    (:unknown
+     (setf (status test) :resolving)
+     (if (or (not (depends-on test))
+             (resolve-dependencies (depends-on test)))
+         (progn
+           (run-test-lambda test)
+           (status test))
+         (with-run-state (result-list)
+           (unless (eql :circular (status test))
+             (push (make-instance 'test-skipped
+                                  :test-case test
+                                  :reason &quot;Dependencies not satisfied&quot;)
+                   result-list)
+             (setf (status test) :depends-not-satisfied)))))         
+    (:resolving
+     (restart-case
+         (error 'circular-dependency :test-case test)
+       (skip ()
+	 :report (lambda (s)
+		   (format s &quot;Skip the test ~S and all its dependencies.&quot; (name test)))
+	 (with-run-state (result-list)
+	   (push (make-instance 'test-skipped :reason &quot;Circular dependencies&quot; :test-case test)
+		 result-list))
+	 (setf (status test) :circular))))
+    (t (status test))))</pre
+          ><a href="../Running_0020Tests.html#method_005FIT.BESE.FIVEAM_003A_003A_0028RUN-RESOLVING-DEPENDENCIES_0020TEST-CASE_0029"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

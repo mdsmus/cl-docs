@@ -1,0 +1,74 @@
+<html lang="en">
+<head>
+<title>define-alien-routine Example - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Foreign-Function-Calls.html#Foreign-Function-Calls" title="Foreign Function Calls">
+<link rel="prev" href="The-define_002dalien_002droutine-Macro.html#The-define_002dalien_002droutine-Macro" title="The define-alien-routine Macro">
+<link rel="next" href="Calling-Lisp-From-C.html#Calling-Lisp-From-C" title="Calling Lisp From C">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="define-alien-routine-Example"></a>
+<a name="define_002dalien_002droutine-Example"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Calling-Lisp-From-C.html#Calling-Lisp-From-C">Calling Lisp From C</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="The-define_002dalien_002droutine-Macro.html#The-define_002dalien_002droutine-Macro">The define-alien-routine Macro</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Foreign-Function-Calls.html#Foreign-Function-Calls">Foreign Function Calls</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">7.7.3 <code>define-alien-routine</code> Example</h4>
+
+<p>Consider the C function <code>cfoo</code> with the following calling
+convention:
+
+<pre class="example">     void
+     cfoo (str, a, i)
+         char *str;
+         char *a; /* update */
+         int *i; /* out */
+     {
+       /* body of cfoo(...) */
+     }
+</pre>
+   <p>This can be described by the following call to
+<code>define-alien-routine</code>:
+
+<pre class="lisp">     (define-alien-routine "cfoo" void
+       (str c-string)
+       (a char :in-out)
+       (i int :out))
+</pre>
+   <p>The Lisp function <code>cfoo</code> will have two arguments (<var>str</var> and
+<var>a</var>) and two return values (<var>a</var> and <var>i</var>).
+
+   </body></html>
+

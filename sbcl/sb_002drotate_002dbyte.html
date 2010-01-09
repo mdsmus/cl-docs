@@ -1,0 +1,72 @@
+<html lang="en">
+<head>
+<title>sb-rotate-byte - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Contributed-Modules.html#Contributed-Modules" title="Contributed Modules">
+<link rel="prev" href="sb_002dmd5.html#sb_002dmd5" title="sb-md5">
+<link rel="next" href="sb_002dcover.html#sb_002dcover" title="sb-cover">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="sb-rotate-byte"></a>
+<a name="sb_002drotate_002dbyte"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="sb_002dcover.html#sb_002dcover">sb-cover</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="sb_002dmd5.html#sb_002dmd5">sb-md5</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Contributed-Modules.html#Contributed-Modules">Contributed Modules</a>
+<hr>
+</div>
+
+<h3 class="section">15.5 sb-rotate-byte</h3>
+
+<p><a name="index-Modular-arithmetic-623"></a><a name="index-Arithmetic_002c-modular-624"></a><a name="index-Arithmetic_002c-hardware-625"></a>
+The <code>sb-rotate-byte</code> module offers an interface to bitwise
+rotation, with an efficient implementation for operations which can be
+performed directly using the platform's arithmetic routines.  It
+implements the specification at
+<a href="http://www.cliki.net/ROTATE-BYTE">http://www.cliki.net/ROTATE-BYTE</a>. 
+<!-- FIXME: except when someone scribbles all over it.  Hmm. -->
+
+   <p>Bitwise rotation is a component of various cryptographic or hashing
+algorithms: MD5, SHA-1, etc.; often these algorithms are specified on
+32-bit rings.  [FIXME cite cite cite].
+
+   <p><a name="Function-sb_002drotate_002dbyte_003arotate_002dbyte"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-rotate-byte:rotate-byte</b><var> count bytespec integer<a name="index-sb_002drotate_002dbyte_003arotate_002dbyte-626"></a></var><br>
+<blockquote><p><a name="index-sb_002drotate_002dbyte_003arotate_002dbyte-627"></a>Rotates a field of bits within <code>integer</code>; specifically, returns an
+integer that contains the bits of <code>integer</code> rotated <code>count</code> times
+leftwards within the byte specified by <code>bytespec</code>, and elsewhere
+contains the bits of <code>integer</code>. 
+</p></blockquote></div>
+
+   </body></html>
+

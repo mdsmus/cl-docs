@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Search-List Operations</TITLE>
+<META NAME="description" CONTENT="Search-List Operations">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1198" HREF="node49.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1196" HREF="node42.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1190" HREF="node47.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1200" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1201" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1199" HREF="node49.html">2.13.7 Search List Example</A>
+<B>Up:</B> <A NAME="tex2html1197" HREF="node42.html">2.13 Pathnames</A>
+<B> Previous:</B> <A NAME="tex2html1191" HREF="node47.html">Predefined Search-Lists</A>
+<BR> <P>
+<H2><A NAME="SECTION003136000000000000000">Search-List Operations</A></H2>
+<P>
+These operations define and access search-list definitions.  A search-list name
+may be parsed into a pathname before the search-list is actually defined, but
+the search-list must be defined before it can actually be used in a filesystem
+operation.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:search-list</tt> <em> <i>name</i></em><BR>
+<P>
+  This function returns the list of directories associated with the
+  search list <i>name</i>.  If <i>name</i> is not a defined search list,
+  then an error is signaled.  When set with <tt>setf</tt>, the list of
+  directories is changed to the new value.  If the new value is just a
+  namestring or pathname, then it is interpreted as a one-element
+  list.  Note that (unlike Unix pathnames), search list names are
+  case-insensitive.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:search-list-defined-p</tt> <em> <i>name</i></em><BR> 
+  <tt>extensions:clear-search-list</tt> <EM></EM><i>name</i><BR>
+<P>
+  <tt>search-list-defined-p</tt> returns <i>t</i> if <i>name</i> is a
+  defined search list name, <i>nil</i> otherwise.
+  <tt>clear-search-list</tt> make the search list <i>name</i> undefined.
+<P>
+<b>[Macro]</b><BR> 
+<tt> extensions:enumerate-search-list</tt> <em> (<i>var</i> <i>pathname</i> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i>result</i></i><IMG WIDTH=5 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17168" SRC="img6.gif">) <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i>form</i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></em><BR>
+<P>
+  This macro provides an interface to search list resolution.  The
+  body <i>forms</i> are executed with <i>var</i> bound to each
+  successive possible expansion for <i>name</i>.  If <i>name</i> does
+  not contain a search-list, then the body is executed exactly once.
+  Everything is wrapped in a block named <i>nil</i>, so <tt>return</tt> can be
+  used to terminate early.  The <i>result</i> form (default <i>nil</i>) is
+  evaluated to determine the result of the iteration.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

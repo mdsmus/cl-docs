@@ -1,0 +1,67 @@
+<html lang="en">
+<head>
+<title>Input stream methods - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Gray-Streams.html#Gray-Streams" title="Gray Streams">
+<link rel="prev" href="Methods-common-to-all-streams.html#Methods-common-to-all-streams" title="Methods common to all streams">
+<link rel="next" href="Output-stream-methods.html#Output-stream-methods" title="Output stream methods">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Input-stream-methods"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Output-stream-methods.html#Output-stream-methods">Output stream methods</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Methods-common-to-all-streams.html#Methods-common-to-all-streams">Methods common to all streams</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Gray-Streams.html#Gray-Streams">Gray Streams</a>
+<hr>
+</div>
+
+<h4 class="subsection">9.2.3 Input stream methods</h4>
+
+<p>These generic functions may be specialized on any generalized instance
+of fundamental-input-stream.
+
+   <p><a name="Generic_002dFunction-sb_002dgray_003astream_002dclear_002dinput"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-gray:stream-clear-input</b><var> stream<a name="index-sb_002dgray_003astream_002dclear_002dinput-323"></a></var><br>
+<blockquote><p><a name="index-sb_002dgray_003astream_002dclear_002dinput-324"></a>This is like <code>cl:clear-input</code>, but for Gray streams, returning <code>nil</code>. 
+  The default method does nothing. 
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dgray_003astream_002dread_002dsequence"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-gray:stream-read-sequence</b><var> stream seq &amp;optional start end<a name="index-sb_002dgray_003astream_002dread_002dsequence-325"></a></var><br>
+<blockquote><p><a name="index-sb_002dgray_003astream_002dread_002dsequence-326"></a>This is like <code>cl:read-sequence</code>, but for Gray streams. 
+</p></blockquote></div>
+
+   </body></html>
+

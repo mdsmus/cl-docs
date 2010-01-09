@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.11.7 Floating Point Efficiency</TITLE>
+<META NAME="description" CONTENT="5.11.7 Floating Point Efficiency">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2891" HREF="node175.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2889" HREF="node167.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2883" HREF="node173.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2893" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2894" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2892" HREF="node175.html">5.11.8 Specialized Arrays</A>
+<B>Up:</B> <A NAME="tex2html2890" HREF="node167.html">5.11 Numbers</A>
+<B> Previous:</B> <A NAME="tex2html2884" HREF="node173.html">5.11.6 Word Integers</A>
+<BR> <P>
+<H2><A NAME="SECTION006117000000000000000">5.11.7 Floating Point Efficiency</A></H2>
+<P>
+<A NAME="floatefficiency">&#160;</A>
+<A NAME="10635">&#160;</A>
+<P>
+Arithmetic on objects of type <tt>single-float</tt> and <tt>double-float</tt> is
+efficiently implemented using non-descriptor representations and open coding.
+As for integer arithmetic, the arguments must be known to be of the same float
+type.  Unlike for integer arithmetic, the results and intermediate values
+usually take care of themselves due to the rules of float contagion, i.e.
+<tt>(1+ (the single-float x))</tt> is always a <tt>single-float</tt>.
+<P>
+Although they are not specially implemented, <tt>short-float</tt> and
+<tt>long-float</tt> are also acceptable in declarations, since they are
+synonyms for the <tt>single-float</tt> and <tt>double-float</tt> types,
+respectively.
+<P>
+<BR><IMG WIDTH=104 HEIGHT=24 ALIGN=BOTTOM ALT="change_begin" SRC="change_begin.gif"><BR>
+Some versions of CMU Common Lisp include extra support for floating
+  point arithmetic.  In particular, if <tt>*features*</tt> includes
+  <tt>:propagate-float-type</tt>, list-style float type specifiers such as
+  <tt>(single-float 0.0 1.0)</tt> will be used to good effect.
+<P>
+  For example, in this function,
+  <BLOCKQUOTE> <PRE>(defun square (x)
+      (declare (type (single-float 0f0 10f0)))
+      (* x x))
+  </PRE> </BLOCKQUOTE>
+  Python can deduce that the
+  return type of the function <tt>square</tt> is <tt>(single-float
+      0f0 100f0)</tt>.
+<P>
+  Many union types are also supported so that
+  <BLOCKQUOTE> <PRE>(+ (the (or (integer 1 1) (integer 5 5)) x)
+       (the (or (integer 10 10) (integer 20 20)) y))
+  </PRE> </BLOCKQUOTE>
+  has the inferred type <tt>(or (integer 11 11) (integer 15 15)
+    (integer 21 21) (integer 25 25))</tt>.  This also works for
+  floating-point numbers.  Member types, however, are not because in
+  general the member elements do not have to be numbers.  Thus,
+  instead of <tt>(member 1 4)</tt>, you should write <tt>(or (integer
+    1 1) (integer 4 4))</tt>.
+<P>
+  In addition, if <tt>:propagate-fun-type</tt> is in <tt>*features*</tt>,
+  Python knows how to infer types for many mathematical functions
+  including square root, exponential and logarithmic functions,
+  trignometric functions and their inverses, and hyperbolic functions
+  and their inverses.  For numeric code, this can greatly enhance
+  efficiency by allowing the compiler to use specialized versions of
+  the functions instead of the generic versions.  The greatest benefit 
+  of this type inference is determining that the result of the
+  function is real-valued number instead of possibly being
+  a complex-valued number.
+<P>
+  For example, consider the function
+  <BLOCKQUOTE> <PRE>(defun fun (x)
+      (declare (type (single-float 0f0 100f0) x))
+      (values (sqrt x) (log x 10f0)))
+  </PRE> </BLOCKQUOTE>
+  With this declaration, the compiler can determine that the argument
+  to <tt>sqrt</tt> and <tt>log</tt> are always non-negative so that the result 
+  is always a <tt>single-float</tt>.  In fact, the return type for this
+  function is derived to be <tt>(values (single-float 0f0 10f0)
+      (single-float * 2f0))</tt>.
+<P>
+  If the declaration were reduced to just <tt>(declare
+      single-float x)</tt>, the argument to <tt>sqrt</tt> and <tt>log</tt>
+  could be negative.  This forces the use of the generic versions of
+  these functions because the result could be a complex number.
+<P>
+  Union types are not yet supported for functions.
+<P>
+  We note, however, that proper interval arithmetic is not fully
+  implemented in the compiler so the inferred types may be slightly in
+  error due to round-off errors.  This round-off error could
+  accumulate to cause the compiler to erroneously deduce the result
+  type and cause code to be removed as being
+  unreachable.<A NAME="tex2html12" HREF="footnode.html#4311"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>Thus, the declarations should only be precise enough for the
+  compiler to deduce that a real-valued argument to a function would
+  produce a real-valued result.  The efficiency notes
+  (see section&nbsp;<A HREF="node188.html#representationeffnote">5.13.3</A>) from the compiler will guide you
+  on what declarations might be useful.
+<P>
+<BR><IMG WIDTH=104 HEIGHT=24 ALIGN=BOTTOM ALT="change_end" SRC="change_end.gif"><BR>
+
+<P>
+When a float must be represented as a descriptor, a pointer representation is
+used, creating consing overhead.  For this reason, you should try to avoid
+situations (such as full call and non-specialized data structures) that force a
+descriptor representation.  See sections <A HREF="node175.html#specializedarraytypes">5.11.8</A>,
+<A HREF="node176.html#rawslots">5.11.9</A> and <A HREF="node177.html#numberlocalcall">5.11.10</A>.
+<P>
+See section&nbsp;<A HREF="node15.html#ieeefloat">2.1.3</A> for information on the extensions to support IEEE
+floating point.
+<P>
+<HR><A NAME="tex2html2891" HREF="node175.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2889" HREF="node167.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2883" HREF="node173.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2893" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2894" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2892" HREF="node175.html">5.11.8 Specialized Arrays</A>
+<B>Up:</B> <A NAME="tex2html2890" HREF="node167.html">5.11 Numbers</A>
+<B> Previous:</B> <A NAME="tex2html2884" HREF="node173.html">5.11.6 Word Integers</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,34 @@
+<html
+  ><head
+    ><title
+      >Macro PASS</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Macro: PASS</h1
+        ><div class="contents"
+          ><h2
+  >Documentation</h2
+><blockquote
+  >Simply generate a PASS.</blockquote
+><h2
+            >Source</h2
+          ><pre class="code"
+            >(defmacro pass (&amp;rest message-args)
+  &quot;Simply generate a PASS.&quot;
+  `(add-result 'test-passed 
+               :test-expr ',message-args
+               ,@(when message-args
+                       `(:reason (format nil ,@message-args)))))</pre
+          ><a href="../Checks.html#macro_005FIT.BESE.FIVEAM_003A_003APASS"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

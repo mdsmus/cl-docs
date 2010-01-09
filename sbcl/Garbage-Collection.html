@@ -1,0 +1,138 @@
+<html lang="en">
+<head>
+<title>Garbage Collection - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Beyond-the-ANSI-Standard.html#Beyond-the-ANSI-Standard" title="Beyond the ANSI Standard">
+<link rel="next" href="Metaobject-Protocol.html#Metaobject-Protocol" title="Metaobject Protocol">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Garbage-Collection"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Metaobject-Protocol.html#Metaobject-Protocol">Metaobject Protocol</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Beyond-the-ANSI-Standard.html#Beyond-the-ANSI-Standard">Beyond the ANSI Standard</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">6.1 Garbage Collection</h3>
+
+<p>SBCL provides additional garbage collection functionality not
+specified by ANSI. Weak pointers allow references to objects to be
+maintained without keeping them from being garbage collected, and
+&ldquo;finalization&rdquo; hooks are available to cause code to be executed when
+an object has been garbage collected. Additionally users can specify
+their own cleanup actions to be executed with garbage collection.
+
+   <p><a name="Function-sb_002dext_003afinalize"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:finalize</b><var> object function &amp;key dont-save<a name="index-sb_002dext_003afinalize-143"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003afinalize-144"></a>Arrange for the designated <code>function</code> to be called when there
+are no more references to <code>object</code>, including references in
+<code>function</code> itself.
+
+        <p>If <code>dont-save</code> is true, the finalizer will be cancelled when
+<code>save-lisp-and-die</code> is called: this is useful for finalizers
+deallocating system memory, which might otherwise be called
+with addresses from the old image.
+
+        <p>In a multithreaded environment <code>function</code> may be called in any
+thread. In both single and multithreaded environments <code>function</code>
+may be called in any dynamic scope: consequences are unspecified
+if <code>function</code> is not fully re-entrant.
+
+        <p>Errors from <code>function</code> are handled and cause a <code>warning</code> to be
+signalled in whichever thread the <code>function</code> was called in.
+
+        <p>Examples:
+
+     <pre class="lisp">            ;;; good (assumes RELEASE-HANDLE is re-entrant)
+            (let* ((handle (get-handle))
+                   (object (make-object handle)))
+             (finalize object (lambda () (release-handle handle)))
+             object)
+</pre>
+        <pre class="lisp">            ;;; bad, finalizer refers to object being finalized, causing
+            ;;; it to be retained indefinitely
+            (let* ((handle (get-handle))
+                   (object (make-object handle)))
+              (finalize object (lambda () (release-handle (object-handle object)))))
+</pre>
+        <pre class="lisp">            ;;; bad, not re-entrant
+            (defvar *rec* nil)
+</pre>
+        <pre class="lisp">            (defun oops ()
+             (when *rec*
+               (error "recursive OOPS"))
+             (let ((*rec* t))
+               (gc))) ; or just cons enough to cause one
+</pre>
+        <pre class="lisp">            (progn
+              (finalize "oops" #'oops)
+              (oops)) ; causes GC and re-entry to #'oops due to the finalizer
+                      ; -&gt; ERROR, caught, WARNING signalled
+</pre>
+        </blockquote></div>
+
+   <p><a name="Function-sb_002dext_003acancel_002dfinalization"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:cancel-finalization</b><var> object<a name="index-sb_002dext_003acancel_002dfinalization-145"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003acancel_002dfinalization-146"></a>Cancel any finalization for <code>object</code>. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003amake_002dweak_002dpointer"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:make-weak-pointer</b><var> object<a name="index-sb_002dext_003amake_002dweak_002dpointer-147"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003amake_002dweak_002dpointer-148"></a>Allocate and return a weak pointer which points to <code>object</code>. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003aweak_002dpointer_002dvalue"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:weak-pointer-value</b><var> weak-pointer<a name="index-sb_002dext_003aweak_002dpointer_002dvalue-149"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003aweak_002dpointer_002dvalue-150"></a>If <code>weak-pointer</code> is valid, return the value of <code>weak-pointer</code> and <code>t</code>. 
+If the referent of <code>weak-pointer</code> has been garbage collected,
+returns the values <code>nil</code> and <code>nil</code>. 
+</p></blockquote></div>
+
+   <p><a name="Variable-sb_002dext_003a_002aafter_002dgc_002dhooks_002a"></a>
+
+<div class="defun">
+&mdash; Variable: <b>sb-ext:*after-gc-hooks*</b><var><a name="index-sb_002dext_003a_002aafter_002dgc_002dhooks_002a-151"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003a_002aafter_002dgc_002dhooks_002a-152"></a>Called after each garbage collection, except for garbage collections
+triggered during thread exits. In a multithreaded environment these hooks may
+run in any thread. 
+</p></blockquote></div>
+
+   </body></html>
+

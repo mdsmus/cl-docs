@@ -1,0 +1,10 @@
+for f in *.html
+do
+    echo $f
+    grep -v "<A REV=MADE" $f | grep -v "<A REL=NAVIGATOR" | grep -v "<A REL=COPYRIGHT" | grep -v "<HR>" | grep -v "</H2></A><P>"  | grep -v '^<A REL=CHILD HREF="' | sed "s/\`\`/\"/g" | sed "s/''/\"/g" > $f.new
+    cp $f bak
+    mv $f.new $f
+    tidy -m $f
+    tidy -m $f
+done
+

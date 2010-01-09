@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>2.1.3.1 IEEE Special Values</TITLE>
+<META NAME="description" CONTENT="2.1.3.1 IEEE Special Values">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html812" HREF="node17.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html810" HREF="node15.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html804" HREF="node15.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html814" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html815" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html813" HREF="node17.html">2.1.3.2 Negative Zero</A>
+<B>Up:</B> <A NAME="tex2html811" HREF="node15.html">2.1.3 Floats</A>
+<B> Previous:</B> <A NAME="tex2html805" HREF="node15.html">2.1.3 Floats</A>
+<BR> <P>
+<H3><A NAME="SECTION00313100000000000000">2.1.3.1 IEEE Special Values</A></H3>
+<P>
+CMU Common Lisp supports the IEEE infinity and NaN special values.  These
+non-numeric values will only be generated when trapping is disabled
+for some floating point exception (see section&nbsp;<A HREF="node19.html#floattraps">2.1.3.4</A>), so users of
+the default configuration need not concern themselves with special
+values.
+<P>
+<b>[Constant]</b><BR> 
+<tt> extensions:short-float-positive-infinity</tt><BR> 
+  <tt>extensions:short-float-negative-infinity</tt><BR> 
+  <tt>extensions:single-float-positive-infinity</tt><BR> 
+  <tt>extensions:single-float-negative-infinity</tt><BR> 
+  <tt>extensions:double-float-positive-infinity</tt><BR> 
+  <tt>extensions:double-float-negative-infinity</tt><BR> 
+  <tt>extensions:long-float-positive-infinity</tt><BR> 
+  <tt>extensions:long-float-negative-infinity</tt><BR>
+<P>
+  The values of these constants are the IEEE positive and negative
+  infinity objects for each float format.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:float-infinity-p</tt> <em> <i>x</i></em><BR>
+<P>
+  This function returns true if <i>x</i> is an IEEE float infinity (of
+  either sign.)  <i>x</i> must be a float.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:float-nan-p</tt> <em> <i>x</i></em><BR> 
+  <tt>extensions:float-trapping-nan-p</tt> <EM></EM><i>x</i><BR>
+<P>
+  <tt>float-nan-p</tt> returns true if <i>x</i> is an IEEE NaN (Not A
+  Number) object.  <tt>float-trapping-nan-p</tt> returns true only if
+  <i>x</i> is a trapping NaN.  With either function, <i>x</i> must be a
+  float.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

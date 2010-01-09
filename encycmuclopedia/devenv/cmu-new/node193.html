@@ -1,0 +1,34 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.14.3 Nested or Recursive Calls</TITLE>
+<META NAME="description" CONTENT="5.14.3 Nested or Recursive Calls">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3128" HREF="node194.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3126" HREF="node190.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3120" HREF="node192.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3130" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3131" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3129" HREF="node194.html">5.14.4 Clock resolution</A>
+<B>Up:</B> <A NAME="tex2html3127" HREF="node190.html">5.14 Profiling</A>
+<B> Previous:</B> <A NAME="tex2html3121" HREF="node192.html">5.14.2 Profiling Techniques</A>
+<BR> <P>
+<H2><A NAME="SECTION006143000000000000000">5.14.3 Nested or Recursive Calls</A></H2>
+<P>
+The profiler attempts to compensate for nested or recursive calls.  Time and
+consing overhead will be charged to the dynamically innermost (most recent)
+call to a profiled function.  So profiling a subfunction of a profiled function
+will cause the reported time for the outer function to decrease.  However if an
+inner function has a large number of calls, some of the profiling overhead may
+``leak'' into the reported time for the outer function.  In general, be wary of
+profiling short functions that are called many times.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

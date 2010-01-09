@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.13 Efficiency Notes</TITLE>
+<META NAME="description" CONTENT="5.13 Efficiency Notes">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3024" HREF="node186.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3022" HREF="node105.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3016" HREF="node184.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3026" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3027" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3025" HREF="node186.html">5.13.1 Type Uncertainty</A>
+<B>Up:</B> <A NAME="tex2html3023" HREF="node105.html">5 Advanced Compiler Use </A>
+<B> Previous:</B> <A NAME="tex2html3017" HREF="node184.html">5.12.5 Trace Files and </A>
+<BR> <P>
+<H1><A NAME="SECTION006130000000000000000">5.13 Efficiency Notes</A></H1>
+<P>
+<A NAME="efficiencynotes">&#160;</A>
+<A NAME="10731">&#160;</A>
+<A NAME="10732">&#160;</A>
+<A NAME="10733">&#160;</A>
+<P>
+Efficiency notes are messages that warn the user that the compiler has
+chosen a relatively inefficient implementation for some operation.
+Usually an efficiency note reflects the compiler's desire for more
+type information.  If the type of the values concerned is known to the
+programmer, then additional declarations can be used to get a more
+efficient implementation.
+<P>
+Efficiency notes are controlled by the
+<tt>extensions:inhibit-warnings</tt> (see section&nbsp;<A HREF="node102.html#optimizedeclaration">4.7.1</A>)
+optimization quality. When <tt>speed</tt> is greater than
+<tt>extensions:inhibit-warnings</tt>, efficiency notes are enabled.
+Note that this implicitly enables efficiency notes whenever
+<tt>speed</tt> is increased from its default of <tt>1</tt>.
+<P>
+Consider this program with an obscure missing declaration:
+<BLOCKQUOTE> <PRE>(defun eff-note (x y z)
+  (declare (fixnum x y z))
+  (the fixnum (+ x y z)))
+</PRE> </BLOCKQUOTE>
+If compiled with <tt>(speed 3) (safety 0)</tt>, this note is given:
+<BLOCKQUOTE> <PRE>In: DEFUN EFF-NOTE
+  (+ X Y Z)
+==&gt;
+  (+ (+ X Y) Z)
+Note: Forced to do inline (signed-byte 32) arithmetic (cost 3).
+      Unable to do inline fixnum arithmetic (cost 2) because:
+      The first argument is a (INTEGER -1073741824 1073741822),
+      not a FIXNUM.
+</PRE> </BLOCKQUOTE>
+This efficiency note tells us that the result of the intermediate
+computation <tt>(+ x y)</tt> is not known to be a <tt>fixnum</tt>, so
+the addition of the intermediate sum to <tt>z</tt> must be done less
+efficiently.  This can be fixed by changing the definition of
+<tt>eff-note</tt>:
+<BLOCKQUOTE> <PRE>(defun eff-note (x y z)
+  (declare (fixnum x y z))
+  (the fixnum (+ (the fixnum (+ x y)) z)))
+</PRE> </BLOCKQUOTE><BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html3028" HREF="node186.html#SECTION006131000000000000000">5.13.1 Type Uncertainty</A>
+<LI> <A NAME="tex2html3029" HREF="node187.html#SECTION006132000000000000000">5.13.2 Efficiency Notes and Type Checking</A>
+<LI> <A NAME="tex2html3030" HREF="node188.html#SECTION006133000000000000000">5.13.3 Representation Efficiency Notes</A>
+<LI> <A NAME="tex2html3031" HREF="node189.html#SECTION006134000000000000000">5.13.4 Verbosity Control</A>
+</UL>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

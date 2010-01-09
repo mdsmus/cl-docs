@@ -1,0 +1,138 @@
+<html lang="en">
+<head>
+<title>Native Filenames - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Pathnames.html#Pathnames" title="Pathnames">
+<link rel="prev" href="Lisp-Pathnames.html#Lisp-Pathnames" title="Lisp Pathnames">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Native-Filenames"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Lisp-Pathnames.html#Lisp-Pathnames">Lisp Pathnames</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Pathnames.html#Pathnames">Pathnames</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">8.2 Native Filenames</h3>
+
+<p>In some circumstances, what is wanted is a Lisp pathname object which
+corresponds to a string produced by the Operating System.  In this case,
+some of the default parsing rules are inappropriate: most filesystems do
+not have a native understanding of wild pathnames; such functionality is
+often provided by shells above the OS, often in mutually-incompatible
+ways.
+
+   <p>To allow the user to deal with this, the following functions are
+provided: <code>parse-native-namestring</code> and <code>native-pathname</code>
+return the closest equivalent Lisp pathname to a given string
+(appropriate for the Operating System), while <code>native-namestring</code>
+converts a non-wild pathname designator to the equivalent native
+namestring, if possible.  Some Lisp pathname concepts (such as the
+<code>:back</code> directory component) have no direct equivalents in most
+Operating Systems; the behaviour of <code>native-namestring</code> is
+unspecified if an inappropriate pathname designator is passed to it. 
+Additionally, note that conversion from pathname to native filename
+and back to pathname should not be expected to preserve equivalence
+under <code>equal</code>.
+
+   <p><a name="Function-sb_002dext_003aparse_002dnative_002dnamestring"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:parse-native-namestring</b><var> thing &amp;optional host defaults &amp;key start end junk-allowed as-directory<a name="index-sb_002dext_003aparse_002dnative_002dnamestring-293"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003aparse_002dnative_002dnamestring-294"></a>Convert <code>thing</code> into a pathname, using the native conventions
+appropriate for the pathname host <code>host</code>, or if not specified the
+host of <code>defaults</code>.  If <code>thing</code> is a string, the parse is bounded by
+<code>start</code> and <code>end</code>, and error behaviour is controlled by <code>junk-allowed</code>,
+as with <code>parse-namestring</code>.  For file systems whose native
+conventions allow directories to be indicated as files, if
+<code>as-directory</code> is true, return a pathname denoting <code>thing</code> as a
+directory. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003anative_002dpathname"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:native-pathname</b><var> pathspec<a name="index-sb_002dext_003anative_002dpathname-295"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003anative_002dpathname-296"></a>Convert <code>pathspec</code> (a pathname designator) into a pathname, assuming
+the operating system native pathname conventions. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003anative_002dnamestring"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:native-namestring</b><var> pathname &amp;key as-file<a name="index-sb_002dext_003anative_002dnamestring-297"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003anative_002dnamestring-298"></a>Construct the full native (name)string form of <code>pathname</code>.  For
+file systems whose native conventions allow directories to be
+indicated as files, if <code>as-file</code> is true and the name, type, and
+version components of <code>pathname</code> are all <code>nil</code> or <code>:unspecific</code>,
+construct a string that names the directory according to the file
+system's syntax for files. 
+</p></blockquote></div>
+
+   <p>Because some file systems permit the names of directories to be
+expressed in multiple ways, it is occasionally necessary to parse a
+native file name &ldquo;as a directory name&rdquo; or to produce a native file
+name that names a directory &ldquo;as a file&rdquo;.  For these cases,
+<code>parse-native-namestring</code> accepts the keyword argument
+<code>as-directory</code> to force a filename to parse as a directory, and
+<code>native-namestring</code> accepts the keyword argument <code>as-file</code>
+to force a pathname to unparse as a file.  For example,
+
+<pre class="lisp">     ; On Unix, the directory "/tmp/" can be denoted by "/tmp/" or "/tmp".
+     ; Under the default rules for native filenames, these parse and
+     ; unparse differently.
+     (defvar *p*)
+     (setf *p* (parse-native-namestring "/tmp/")) &rArr; #P"/tmp/"
+     (pathname-name *p*) &rArr; NIL
+     (pathname-directory *p*) &rArr; (:ABSOLUTE "tmp")
+     (native-namestring *p*) &rArr; "/tmp/"
+     
+     (setf *p* (parse-native-namestring "/tmp")) &rArr; #P"/tmp"
+     (pathname-name *p*) &rArr; "tmp"
+     (pathname-directory *p*) &rArr; (:ABSOLUTE)
+     (native-namestring *p*) &rArr; "/tmp"
+     
+     ; A non-NIL AS-DIRECTORY argument to PARSE-NATIVE-NAMESTRING forces
+     ; both the second string to parse the way the first does.
+     (setf *p* (parse-native-namestring "/tmp"
+                                        nil *default-pathname-defaults*
+                                        :as-directory t)) &rArr; #P"/tmp/"
+     (pathname-name *p*) &rArr; NIL
+     (pathname-directory *p*) &rArr; (:ABSOLUTE "tmp")
+     
+     ; A non-NIL AS-FILE argument to NATIVE-NAMESTRING forces the pathname
+     ; parsed from the first string to unparse as the second string.
+     (setf *p* (parse-native-namestring "/tmp/")) &rArr; #P"/tmp/"
+     (native-namestring *p* :as-file t) &rArr; "/tmp"
+</pre>
+   </body></html>
+

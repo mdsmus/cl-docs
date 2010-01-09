@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>9.2.1 Untagged Data</TITLE>
+<META NAME="description" CONTENT="9.2.1 Untagged Data">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3879" HREF="node252.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3877" HREF="node250.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3871" HREF="node250.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3881" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3882" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3880" HREF="node252.html">9.2.2 Tagged Data</A>
+<B>Up:</B> <A NAME="tex2html3878" HREF="node250.html">9.2 The WIRE Package</A>
+<B> Previous:</B> <A NAME="tex2html3872" HREF="node250.html">9.2 The WIRE Package</A>
+<BR> <P>
+<H2><A NAME="SECTION001021000000000000000">9.2.1 Untagged Data</A></H2>
+<P>
+When using these routines both ends of the wire know exactly what types are
+coming and going and in what order. This data is restricted to the following
+types:
+<UL>
+<LI>
+8 bit unsigned bytes.
+<LI>
+32 bit unsigned bytes.
+<LI>
+32 bit integers.
+<LI>
+simple-strings less than 65535 in length.
+</UL>
+<P>
+<b>[Function]</b><BR> 
+<tt> wire: wire-output-byte</tt> <em> <i>wire</i> <i>byte</i></em><BR> 
+  <tt>wire:wire-get-byte</tt> <EM></EM><i>wire</i><BR> 
+  <tt>wire:wire-output-number</tt> <EM></EM><i>wire</i> </EM><i>number</i><BR> 
+  <tt>wire:wire-get-number</tt> <EM></EM><i>wire</i> <i>&amp;optional</i>
+      </EM><i>signed</i><BR> 
+  <tt>wire:wire-output-string</tt> <EM></EM><i>wire</i> </EM><i>string</i><BR> 
+  <tt>wire:wire-get-string</tt> <EM></EM><i>wire</i><BR>
+<P>
+  These functions either output or input an object of the specified
+  data type.  When you use any of these output routines to send data
+  across the wire, you must use the corresponding input routine
+  interpret the data.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

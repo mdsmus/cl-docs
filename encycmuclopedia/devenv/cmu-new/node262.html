@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Debug-blocks</TITLE>
+<META NAME="description" CONTENT="Debug-blocks">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html4018" HREF="node263.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html4016" HREF="node255.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html4010" HREF="node261.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html4020" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html4021" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html4019" HREF="node263.html">10.6 Breakpoints</A>
+<B>Up:</B> <A NAME="tex2html4017" HREF="node255.html">10 Debugger Programmer's Interface</A>
+<B> Previous:</B> <A NAME="tex2html4011" HREF="node261.html">Debug-functions</A>
+<BR> <P>
+<H1><A NAME="SECTION001150000000000000000">Debug-blocks</A></H1>
+<P>
+Debug-blocks contain information pertinent to a specific range of code in a
+debug-function.
+<P>
+<b>[Macro]</b><BR> 
+<tt>  do-debug-block-locations</tt> <em> (<i>code-var</i> <i>debug-block</i> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i>result</i></i><IMG WIDTH=5 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17168" SRC="img6.gif">)
+      <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i>form</i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></em><BR>
+<P>
+  This macro executes each <i>form</i> in a context with <i>code-var</i>
+  bound to each code-location in <i>debug-block</i>.  This returns the
+  value of executing <i>result</i> (defaults to <i>nil</i>).
+<P>
+<b>[Function]</b><BR> 
+<tt>  debug-block-successors</tt> <em> <i>debug-block</i></em><BR>
+<P>
+  This function returns the list of possible code-locations where
+  execution may continue when the basic-block represented by
+  <i>debug-block</i> completes its execution.
+<P>
+<b>[Function]</b><BR> 
+<tt>  debug-block-elsewhere-p</tt> <em> <i>debug-block</i></em><BR>
+<P>
+  This function returns whether <i>debug-block</i> represents elsewhere
+  code.  This is code the compiler has moved out of a function's code
+  sequence for optimization reasons.  Code-locations in these blocks
+  are unsuitable for stepping tools, and the first code-location has
+  nothing to do with a normal starting location for the block.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

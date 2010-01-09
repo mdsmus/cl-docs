@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>10.9 Source Translation Utilities</TITLE>
+<META NAME="description" CONTENT="10.9 Source Translation Utilities">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html4064" HREF="node267.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html4062" HREF="node255.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html4058" HREF="node265.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html4066" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html4067" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html4065" HREF="node267.html">Index</A>
+<B>Up:</B> <A NAME="tex2html4063" HREF="node255.html">10 Debugger Programmer's Interface</A>
+<B> Previous:</B> <A NAME="tex2html4059" HREF="node265.html">Debug-sources</A>
+<BR> <P>
+<H1><A NAME="SECTION001190000000000000000">10.9 Source Translation Utilities</A></H1>
+<P>
+These two functions provide a mechanism for converting the rather
+obscure (but highly compact) representation of source locations into an
+actual source form:
+<P>
+<b>[Function]</b><BR> 
+<tt>  debug-source-start-positions</tt> <em> <i>debug-source</i></em><BR>
+<P>
+  This function returns the file position of each top-level form a
+  vector if <i>debug-source</i> is from a <tt>:file</tt>.  If
+  <tt>debug-source-from</tt> is <tt>:lisp</tt> or <tt>:stream</tt>, or the file
+  is byte-compiled, then the result is <i>nil</i>.
+<P>
+<b>[Function]</b><BR> 
+<tt>  form-number-translations</tt> <em> <i>form</i>
+      <i>tlf-number</i></em><BR>
+<P>
+  This function returns a table mapping form numbers (see
+  <tt>code-location-form-number</tt>) to source-paths.  A source-path
+  indicates a descent into the top-level-form <i>form</i>, going
+  directly to the subform corresponding to a form number.
+  <i>tlf-number</i> is the top-level-form number of <i>form</i>.
+<P>
+<b>[Function]</b><BR> 
+<tt>  source-path-context</tt> <em> <i>form</i> <i>path</i> <i>context</i></em><BR>
+<P>
+  This function returns the subform of <i>form</i> indicated by the
+  source-path.  <i>Form</i> is a top-level form, and <i>path</i> is a
+  source-path into it.  <i>Context</i> is the number of enclosing forms
+  to return instead of directly returning the source-path form.  When
+  <i>context</i> is non-zero, the form returned contains a marker,
+  <tt>#:****HERE****</tt>, immediately before the form indicated by
+  <i>path</i>.
+<P>
+<A NAME="12522">&#160;</A>
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,95 @@
+<html lang="en">
+<head>
+<title>How the Source is Found - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Source-Location-Printing.html#Source-Location-Printing" title="Source Location Printing">
+<link rel="next" href="Source-Location-Availability.html#Source-Location-Availability" title="Source Location Availability">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="How-the-Source-is-Found"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Source-Location-Availability.html#Source-Location-Availability">Source Location Availability</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Source-Location-Printing.html#Source-Location-Printing">Source Location Printing</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">4.5.1 How the Source is Found</h4>
+
+<p>If the code was defined from Lisp by <code>compile</code> or
+<code>eval</code>, then the source can always be reliably located.  If the
+code was defined from a <samp><span class="file">fasl</span></samp> file created by
+<code>compile-file</code>, then the debugger gets the source forms it
+prints by reading them from the original source file.  This is a
+potential problem, since the source file might have moved or changed
+since the time it was compiled.
+
+   <p>The source file is opened using the <code>truename</code> of the source file
+pathname originally given to the compiler.  This is an absolute pathname
+with all logical names and symbolic links expanded.  If the file can't
+be located using this name, then the debugger gives up and signals an
+error.
+
+   <p>If the source file can be found, but has been modified since the time it was
+compiled, the debugger prints this warning:
+
+<pre class="example">     ; File has been modified since compilation:
+     ;   <var>filename</var>
+     ; Using form offset instead of character position.
+</pre>
+   <p>where <var>filename</var> is the name of the source file.  It then proceeds
+using a robust but not foolproof heuristic for locating the source. 
+This heuristic works if:
+
+     <ul>
+<li>No top-level forms before the top-level form containing the source
+have been added or deleted, and
+
+     <li>The top-level form containing the source has not been modified much. 
+(More precisely, none of the list forms beginning before the source
+form have been added or deleted.)
+
+   </ul>
+
+   <p>If the heuristic doesn't work, the displayed source will be wrong, but will
+probably be near the actual source.  If the &ldquo;shape&rdquo; of the top-level form in
+the source file is too different from the original form, then an error will be
+signaled.  When the heuristic is used, the source location commands are
+noticeably slowed.
+
+   <p>Source location printing can also be confused if (after the source was
+compiled) a read-macro you used in the code was redefined to expand
+into something different, or if a read-macro ever returns the same
+<code>eq</code> list twice.  If you don't define read macros and don't use
+<code>##</code> in perverted ways, you don't need to worry about this.
+
+   </body></html>
+

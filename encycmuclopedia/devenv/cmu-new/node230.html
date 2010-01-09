@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>8.3.2 Alien Coercion Operations</TITLE>
+<META NAME="description" CONTENT="8.3.2 Alien Coercion Operations">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3613" HREF="node231.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3611" HREF="node228.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3605" HREF="node229.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3615" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3616" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3614" HREF="node231.html">8.3.3 Alien Dynamic Allocation</A>
+<B>Up:</B> <A NAME="tex2html3612" HREF="node228.html">8.3 Alien Operations</A>
+<B> Previous:</B> <A NAME="tex2html3606" HREF="node229.html">8.3.1 Alien Access Operations</A>
+<BR> <P>
+<H2><A NAME="SECTION00932000000000000000">8.3.2 Alien Coercion Operations</A></H2>
+<P>
+<b>[Macro]</b><BR> 
+<tt> alien: addr</tt> <em> <i>alien-expr</i></em><BR>
+<P>
+  This macro returns a pointer to the location specified by
+  <i>alien-expr</i>, which must be either an Alien variable, a use of
+  <tt>deref</tt>, a use of <tt>slot</tt>, or a use of
+  <A NAME="11633">&#160;</A><tt>extern-alien</tt> (page&nbsp;<A HREF="node234.html#FNexternalien"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>).
+<P>
+<b>[Macro]</b><BR> 
+<tt> alien: cast</tt> <em> <i>alien</i> <i>new-type</i></em><BR>
+<P>
+  This macro converts <i>alien</i> to a new Alien with the specified
+  <i>new-type</i>.  Both types must be an Alien pointer, array or
+  function type.  Note that the result is not <tt>eq</tt> to the
+  argument, but does refer to the same data bits.
+<P>
+<b>[Macro]</b><BR> 
+<tt> alien: sap-alien</tt> <em> <i>sap</i> <i>type</i></em><BR> 
+  <tt>alien:alien-sap</tt> <EM></EM><i>alien-value</i><BR>
+<P>
+  <tt>sap-alien</tt> converts <i>sap</i> (a system area pointer
+  see section&nbsp;<A HREF="node204.html#systemareapointers">6.5</A>) to an Alien value with the specified
+  <i>type</i>.  <i>type</i> is not evaluated.
+<P>
+<tt>alien-sap</tt> returns the SAP which points to <i>alien-value</i>'s
+data.
+<P>
+The <i>type</i> to <tt>sap-alien</tt> and the type of the <i>alien-value</i> to
+<tt>alien-sap</tt> must some Alien pointer, array or record type.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

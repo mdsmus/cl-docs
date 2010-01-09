@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.2.2 Canonicalization</TITLE>
+<META NAME="description" CONTENT="5.2.2 Canonicalization">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2141" HREF="node115.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2139" HREF="node112.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2133" HREF="node113.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2143" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2144" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2142" HREF="node115.html">5.2.3 Member Types</A>
+<B>Up:</B> <A NAME="tex2html2140" HREF="node112.html">5.2 More About Types </A>
+<B> Previous:</B> <A NAME="tex2html2134" HREF="node113.html">5.2.1 More Types Meaningful</A>
+<BR> <P>
+<H2><A NAME="SECTION00622000000000000000">5.2.2 Canonicalization</A></H2>
+<P>
+<A NAME="9728">&#160;</A>
+<A NAME="9729">&#160;</A>
+<A NAME="9730">&#160;</A>
+<P>
+When given a type specifier, Python will often rewrite it into a
+different (but equivalent) type.  This is the mechanism that Python
+uses for detecting type equivalence.  For example, in Python's
+canonical representation, these types are equivalent:
+<BLOCKQUOTE> <PRE>(or list (member :end)) <IMG WIDTH=11 HEIGHT=8 ALIGN=BOTTOM ALT="tex2html_wrap_inline16775" SRC="img14.gif"> (or cons (member nil :end))
+</PRE> </BLOCKQUOTE>
+This has two implications for the user:
+<UL>
+<LI> The standard symbol type specifiers for <tt>atom</tt>,
+  <tt>null</tt>, <tt>fixnum</tt>, etc., are in no way magical.  The
+  <A NAME="9734">&#160;</A><tt>null</tt> type is actually defined to be <tt>(member
+      nil)</tt>, <A NAME="9739">&#160;</A><tt>list</tt> is <tt>(or cons null)</tt>, and
+  <A NAME="9744">&#160;</A><tt>fixnum</tt> is <tt>(signed-byte 30)</tt>.
+<LI> When the compiler prints out a type, it may not look like the
+  type specifier that originally appeared in the program.  This is
+  generally not a problem, but it must be taken into consideration
+  when reading compiler error messages.
+</UL><BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

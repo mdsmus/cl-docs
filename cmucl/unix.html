@@ -1,0 +1,906 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+"http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+<meta name="generator" content=
+"HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 13), see www.w3.org">
+<meta http-equiv="Content-Type" content=
+"text/html; charset=us-ascii">
+<meta name="GENERATOR" content="hevea 1.06">
+<link rel="stylesheet" href="cmucl.css" type="text/css">
+<meta http-equiv="Content-Language" content="en">
+<title>CMUCL User's Manual: UNIX Interface</title>
+</head>
+<body>
+<a href="compiler-hint.html"><img src="previous_motif.gif" alt=
+"Previous"></a> <a href="index.html"><img src="contents_motif.gif"
+alt="Up"></a> <a href="serve-event.html"><img src="next_motif.gif"
+alt="Next"></a>
+<hr>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFBC">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc219" id="htoc219"><b><font size=
+"6">Chapter&nbsp;6</font></b></a></td>
+<td width="100%" align="center"><b><font size="6">UNIX
+Interface</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<ul>
+<li><a href="unix.html#toc227">Reading the Command Line</a></li>
+<li><a href="unix.html#toc228">Useful Variables</a></li>
+<li><a href="unix.html#toc229">Lisp Equivalents for C
+Routines</a></li>
+<li><a href="unix.html#toc230">Type Translations</a></li>
+<li><a href="unix.html#toc231">System Area Pointers</a></li>
+<li><a href="unix.html#toc232">Unix System Calls</a></li>
+<li><a href="unix.html#toc233">File Descriptor Streams</a></li>
+<li><a href="unix.html#toc234">Unix Signals</a>
+<ul>
+<li><a href="unix.html#toc235">Changing Signal Handlers</a></li>
+<li><a href="unix.html#toc236">Examples of Signal Handlers</a></li>
+</ul>
+</li>
+</ul>
+<a name="unix-interface" id="unix-interface"></a><br>
+<div align="center"><b>by Robert MacLachlan, Skef Wholey, Bill
+Chiles and William Lott</b></div>
+<br>
+CMUCL attempts to make the full power of the underlying environment
+available to the Lisp programmer. This is done using combination of
+hand-coded interfaces and foreign function calls to C libraries.
+Although the techniques differ, the style of interface is similar.
+This chapter provides an overview of the facilities available and
+general rules for using them, as well as describing specific
+features in detail. It is assumed that the reader has a working
+familiarity with Unix and X11, as well as access to the standard
+system documentation.<br>
+<br>
+<a name="toc227" id="toc227"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc220" id="htoc220"><b><font size=
+"5">6.1</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Reading the
+Command Line</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+The shell parses the command line with which Lisp is invoked, and
+passes a data structure containing the parsed information to Lisp.
+This information is then extracted from that data structure and put
+into a set of Lisp data structures.<br>
+<br>
+<br>
+<a name="@vars58"></a><a name="VR:command-line-strings" id=
+"VR:command-line-strings"></a>
+<div align="left">[Variable]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">*command-line-strings*</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+<a name="@vars59"></a><a name="VR:command-line-utility-name" id=
+"VR:command-line-utility-name"></a>
+<div align="left">[Variable]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">*command-line-utility-name*</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<br>
+<a name="@vars60"></a><a name="VR:command-line-words" id=
+"VR:command-line-words"></a>
+<div align="left">[Variable]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">*command-line-words*</tt> &nbsp;&nbsp;&nbsp;</div>
+<br>
+<a name="@vars61"></a><a name="VR:command-line-switches" id=
+"VR:command-line-switches"></a>
+<div align="left">[Variable]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">*command-line-switches*</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<br>
+The value of <tt class="code">*command-line-words*</tt> is a list
+of strings that make up the command line, one word per string. The
+first word on the command line, i.e. the name of the program
+invoked (usually <tt class="code">lisp</tt>) is stored in
+<tt class="code">*command-line-utility-name*</tt>. The value of
+<tt class="code">*command-line-switches*</tt> is a list of
+<tt class="code">command-line-switch</tt> structures, with a
+structure for each word on the command line starting with a hyphen.
+All the command line words between the program name and the first
+switch are stored in <tt class=
+"code">*command-line-words*</tt>.</blockquote>
+The following functions may be used to examine <tt class=
+"code">command-line-switch</tt> structures.<br>
+<br>
+<br>
+<a name="@funs146"></a><a name="FN:cmd-switch-name" id=
+"FN:cmd-switch-name"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">cmd-switch-name</tt> <tt class=
+"variable">switch</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Returns the name of the switch, less the preceding hyphen and
+trailing equal sign (if any).</blockquote>
+<br>
+<a name="@funs147"></a><a name="FN:cmd-switch-value" id=
+"FN:cmd-switch-value"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">cmd-switch-value</tt> <tt class=
+"variable">switch</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Returns the value designated using an embedded equal sign, if any.
+If the switch has no equal sign, then this is null.</blockquote>
+<br>
+<a name="@funs148"></a><a name="FN:cmd-switch-words" id=
+"FN:cmd-switch-words"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">cmd-switch-words</tt> <tt class=
+"variable">switch</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Returns a list of the words between this switch and the next switch
+or the end of the command line.</blockquote>
+<br>
+<a name="@funs149"></a><a name="FN:cmd-switch-arg" id=
+"FN:cmd-switch-arg"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">cmd-switch-arg</tt> <tt class=
+"variable">switch</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Returns the first non-null value from <tt class=
+"code">cmd-switch-value</tt>, the first element in <tt class=
+"code">cmd-switch-words</tt>, or the first word in <tt class=
+"variable">command-line-words</tt>.</blockquote>
+<br>
+<a name="@funs150"></a><a name="FN:get-command-line-switch" id=
+"FN:get-command-line-switch"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">get-command-line-switch</tt> <tt class=
+"variable">sname</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This function takes the name of a switch as a string and returns
+the value of the switch given on the command line. If no value was
+specified, then any following words are returned. If there are no
+following words, then <tt class="code">t</tt> is returned. If the
+switch was not specified, then <tt class="code">nil</tt> is
+returned.</blockquote>
+<br>
+<a name="@funs151"></a><a name="FN:defswitch" id=
+"FN:defswitch"></a>
+<div align="left">[Macro]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">defswitch</tt> <tt class="variable">name</tt>
+<tt class="code">&amp;optional</tt> <tt class=
+"variable">function</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This macro causes <tt class="variable">function</tt> to be called
+when the switch <tt class="variable">name</tt> appears in the
+command line. Name is a simple-string that does not begin with a
+hyphen (unless the switch name really does begin with one.)<br>
+<br>
+If <tt class="variable">function</tt> is not supplied, then the
+switch is parsed into <tt class=
+"variable">command-line-switches</tt>, but otherwise ignored. This
+suppresses the undefined switch warning which would otherwise take
+place. The warning can also be globally suppressed by <tt class=
+"variable">complain-about-illegal-switches</tt>.</blockquote>
+<a name="toc228" id="toc228"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc221" id="htoc221"><b><font size=
+"5">6.2</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Useful
+Variables</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+<br>
+<a name="@vars62"></a><a name="VR:stdin" id="VR:stdin"></a>
+<div align="left">[Variable]<br>
+<tt class="function-name">system:</tt><tt class=
+"function-name">*stdin*</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+<a name="@vars63"></a><a name="VR:stdout" id="VR:stdout"></a>
+<div align="left">[Variable]<br>
+<tt class="function-name">system:</tt><tt class=
+"function-name">*stdout*</tt> &nbsp;&nbsp;&nbsp;</div>
+<br>
+<a name="@vars64"></a><a name="VR:stderr" id="VR:stderr"></a>
+<div align="left">[Variable]<br>
+<tt class="function-name">system:</tt><tt class=
+"function-name">*stderr*</tt> &nbsp;&nbsp;&nbsp;</div>
+<br>
+Streams connected to the standard input, output and error file
+descriptors.</blockquote>
+<br>
+<a name="@vars65"></a><a name="VR:tty" id="VR:tty"></a>
+<div align="left">[Variable]<br>
+<tt class="function-name">system:</tt><tt class=
+"function-name">*tty*</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+A stream connected to <tt class=
+"filename">/dev/tty</tt>.</blockquote>
+<br>
+<a name="@vars66"></a><a name="VR:environment-list" id=
+"VR:environment-list"></a>
+<div align="left">[Variable]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">*environment-list*</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote>The environment variables inherited by the current
+process, as a keyword-indexed alist. For example, to access the
+DISPLAY environment variable, you could use
+<blockquote class="lisp">
+<pre>
+   (cdr (assoc :display ext:*environment-list*))
+</pre></blockquote>
+Note that the case of the variable name is preserved when
+converting to a keyword. Therefore, you need to specify the keyword
+properly for variable names containing lower-case
+letters,</blockquote>
+<a name="toc229" id="toc229"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc222" id="htoc222"><b><font size=
+"5">6.3</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Lisp Equivalents
+for C Routines</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+The UNIX documentation describes the system interface in terms of C
+procedure headers. The corresponding Lisp function will have a
+somewhat different interface, since Lisp argument passing
+conventions and datatypes are different.<br>
+<br>
+The main difference in the argument passing conventions is that
+Lisp does not support passing values by reference. In Lisp, all
+argument and results are passed by value. Interface functions take
+some fixed number of arguments and return some fixed number of
+values. A given ``parameter'' in the C specification will appear as
+an argument, return value, or both, depending on whether it is an
+In parameter, Out parameter, or In/Out parameter. The basic
+transformation one makes to come up with the Lisp equivalent of a C
+routine is to remove the Out parameters from the call, and treat
+them as extra return values. In/Out parameters appear both as
+arguments and return values. Since Out and In/Out parameters are
+only conventions in C, you must determine the usage from the
+documentation.<br>
+<br>
+Thus, the C routine declared as
+<blockquote class="example">
+<pre>
+kern_return_t lookup(servport, portsname, portsid)
+        port        servport;
+        char        *portsname;
+        int        *portsid;        /* out */
+ 
+  ...
+  *portsid = &lt;expression to compute portsid field&gt;
+  return(KERN_SUCCESS);
+ 
+</pre></blockquote>
+has as its Lisp equivalent something like
+<blockquote class="lisp">
+<pre>
+(defun lookup (ServPort PortsName)
+  ...
+  (values
+   success
+   &lt;expression to compute portsid field&gt;))
+</pre></blockquote>
+If there are multiple out or in-out arguments, then there are
+multiple additional returns values.<br>
+<br>
+Fortunately, CMUCL programmers rarely have to worry about the
+nuances of this translation process, since the names of the
+arguments and return values are documented in a way so that the
+<tt class="code">describe</tt> function (and the Hemlock <tt class=
+"code">Describe Function Call</tt> command, invoked with
+C-M-Shift-A) will list this information. Since the names of
+arguments and return values are usually descriptive, the
+information that <tt class="code">describe</tt> prints is usually
+all one needs to write a call. Most programmers use this on-line
+documentation nearly all of the time, and thereby avoid the need to
+handle bulky manuals and perform the translation from barbarous
+tongues.<br>
+<br>
+<a name="toc230" id="toc230"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc223" id="htoc223"><b><font size=
+"5">6.4</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Type
+Translations</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="@concept290"></a> <a name="@concept291"></a> <a name=
+"@concept292"></a><br>
+Lisp data types have very different representations from those used
+by conventional languages such as C. Since the system interfaces
+are designed for conventional languages, Lisp must translate
+objects to and from the Lisp representations. Many simple objects
+have a direct translation: integers, characters, strings and
+floating point numbers are translated to the corresponding Lisp
+object. A number of types, however, are implemented differently in
+Lisp for reasons of clarity and efficiency.<br>
+<br>
+Instances of enumerated types are expressed as keywords in Lisp.
+Records, arrays, and pointer types are implemented with the Alien
+facility (see section&nbsp;<a href="aliens.html#aliens">8</a>).
+Access functions are defined for these types which convert fields
+of records, elements of arrays, or data referenced by pointers into
+Lisp objects (possibly another object to be referenced with another
+access function).<br>
+<br>
+One should dispose of Alien objects created by constructor
+functions or returned from remote procedure calls when they are no
+longer of any use, freeing the virtual memory associated with that
+object. Since Aliens contain pointers to non-Lisp data, the garbage
+collector cannot do this itself. If the memory was obtained from
+<a name="@funs152"></a><tt class="code">make-alien</tt> or from a
+foreign function call to a routine that used <tt class=
+"code">malloc</tt>, then <a name="@funs153"></a><tt class=
+"code">free-alien</tt> should be used.<br>
+<br>
+<a name="toc231" id="toc231"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc224" id="htoc224"><b><font size=
+"5">6.5</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">System Area
+Pointers</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="system-area-pointers" id="system-area-pointers"></a><br>
+<a name="@concept293"></a><a name="@concept294"></a><a name=
+"@concept295"></a> Note that in some cases an address is
+represented by a Lisp integer, and in other cases it is represented
+by a real pointer. Pointers are usually used when an object in the
+current address space is being referred to. The MACH virtual memory
+manipulation calls must use integers, since in principle the
+address could be in any process, and Lisp cannot abide random
+pointers. Because these types are represented differently in Lisp,
+one must explicitly coerce between these representations.<br>
+<br>
+System Area Pointers (SAPs) provide a mechanism that bypasses the
+Alien type system and accesses virtual memory directly. A SAP is a
+raw byte pointer into the <tt class="code">lisp</tt> process
+address space. SAPs are represented with a pointer descriptor, so
+SAP creation can cause consing. However, the compiler uses a
+non-descriptor representation for SAPs when possible, so the
+consing overhead is generally minimal. See section&nbsp;<a href=
+"compiler-hint.html#non-descriptor">5.11.2</a>.<br>
+<br>
+<br>
+<a name="@funs154"></a><a name="FN:sap-int" id="FN:sap-int"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">system:</tt><tt class=
+"function-name">sap-int</tt> <tt class="variable">sap</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+<a name="@funs155"></a><a name="FN:int-sap" id="FN:int-sap"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">system:</tt><tt class=
+"function-name">int-sap</tt> <tt class="variable">int</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<br>
+The function <tt class="code">sap-int</tt> is used to generate an
+integer corresponding to the system area pointer, suitable for
+passing to the kernel interfaces (which want all addresses
+specified as integers). The function <tt class="code">int-sap</tt>
+is used to do the opposite conversion. The integer representation
+of a SAP is the byte offset of the SAP from the start of the
+address space.</blockquote>
+<br>
+<a name="@funs156"></a><a name="FN:sap+"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">system:</tt><tt class=
+"function-name">sap+</tt> <tt class="variable">sap</tt> <tt class=
+"variable">offset</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This function adds a byte <tt class="variable">offset</tt> to
+<tt class="variable">sap</tt>, returning a new SAP.</blockquote>
+<br>
+<a name="@funs157"></a><a name="FN:sap-ref-8" id=
+"FN:sap-ref-8"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">system:</tt><tt class=
+"function-name">sap-ref-8</tt> <tt class="variable">sap</tt>
+<tt class="variable">offset</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+<a name="@funs158"></a><a name="FN:sap-ref-16" id=
+"FN:sap-ref-16"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">system:</tt><tt class=
+"function-name">sap-ref-16</tt> <tt class="variable">sap</tt>
+<tt class="variable">offset</tt> &nbsp;&nbsp;&nbsp;</div>
+<br>
+<a name="@funs159"></a><a name="FN:sap-ref-32" id=
+"FN:sap-ref-32"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">system:</tt><tt class=
+"function-name">sap-ref-32</tt> <tt class="variable">sap</tt>
+<tt class="variable">offset</tt> &nbsp;&nbsp;&nbsp;</div>
+<br>
+These functions return the 8, 16 or 32 bit unsigned integer at
+<tt class="variable">offset</tt> from <tt class=
+"variable">sap</tt>. The <tt class="variable">offset</tt> is always
+a byte offset, regardless of the number of bits accessed.
+<tt class="code">setf</tt> may be used with the these functions to
+deposit values into virtual memory.</blockquote>
+<br>
+<a name="@funs160"></a><a name="FN:signed-sap-ref-8" id=
+"FN:signed-sap-ref-8"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">system:</tt><tt class=
+"function-name">signed-sap-ref-8</tt> <tt class="variable">sap</tt>
+<tt class="variable">offset</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+<a name="@funs161"></a><a name="FN:signed-sap-ref-16" id=
+"FN:signed-sap-ref-16"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">system:</tt><tt class=
+"function-name">signed-sap-ref-16</tt> <tt class=
+"variable">sap</tt> <tt class="variable">offset</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<br>
+<a name="@funs162"></a><a name="FN:signed-sap-ref-32" id=
+"FN:signed-sap-ref-32"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">system:</tt><tt class=
+"function-name">signed-sap-ref-32</tt> <tt class=
+"variable">sap</tt> <tt class="variable">offset</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<br>
+These functions are the same as the above unsigned operations,
+except that they sign-extend, returning a negative number if the
+high bit is set.</blockquote>
+<a name="toc232" id="toc232"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc225" id="htoc225"><b><font size=
+"5">6.6</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Unix System
+Calls</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+You probably won't have much cause to use them, but all the Unix
+system calls are available. The Unix system call functions are in
+the <tt class="code">Unix</tt> package. The name of the interface
+for a particular system call is the name of the system call
+prepended with <tt class="code">unix-</tt>. The system usually
+defines the associated constants without any prefix name. To find
+out how to use a particular system call, try using <tt class=
+"code">describe</tt> on it. If that is unhelpful, look at the
+source in <tt class="filename">unix.lisp</tt> or consult your
+system maintainer.<br>
+<br>
+The Unix system calls indicate an error by returning <tt class=
+"code">nil</tt> as the first value and the Unix error number as the
+second value. If the call succeeds, then the first value will
+always be non-<tt class="code">nil</tt>, often <tt class=
+"code">t</tt>.<br>
+<br>
+For example, to use the <tt class="code">chdir</tt> syscall:
+<blockquote class="lisp">
+<pre>
+(multiple-value-bind (success errno)
+    (unix:unix-chdir "/tmp")
+  (unless success
+     (error "Can't change working directory: ~a"
+            (unix:get-unix-error-msg errno))))
+</pre></blockquote>
+<br>
+<a name="@funs163"></a><a name="FN:get-unix-error-msg" id=
+"FN:get-unix-error-msg"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">Unix:</tt><tt class=
+"function-name">get-unix-error-msg</tt> <tt class=
+"variable">error</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This function returns a string describing the Unix error number
+<tt class="variable">error</tt> (this is similar to the Unix
+function <tt class="code">perror</tt>).</blockquote>
+<a name="toc233" id="toc233"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc226" id="htoc226"><b><font size=
+"5">6.7</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">File Descriptor
+Streams</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="sec:fds" id="sec:fds"></a><br>
+Many of the UNIX system calls return file descriptors. Instead of
+using other UNIX system calls to perform I/O on them, you can
+create a stream around them. For this purpose, fd-streams exist.
+See also <a name="@funs164"></a><tt class=
+"code">read-n-bytes</tt>.<br>
+<br>
+<br>
+<a name="@funs165"></a><a name="FN:make-fd-stream" id=
+"FN:make-fd-stream"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">system:</tt><tt class=
+"function-name">make-fd-stream</tt> <tt class=
+"variable">descriptor</tt> <tt class="code">&amp;key</tt>
+<tt class="code">:input</tt> <tt class="code">:output</tt>
+<tt class="code">:element-type</tt><br>
+<tt class="code">:buffering</tt> <tt class="code">:name</tt>
+<tt class="code">:file</tt> <tt class="code">:original</tt><br>
+<tt class="code">:delete-original</tt> <tt class=
+"code">:auto-close</tt><br>
+<tt class="code">:timeout</tt> <tt class="code">:pathname</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This function creates a file descriptor stream using <tt class=
+"variable">descriptor</tt>. If <tt class="code">:input</tt> is
+non-<tt class="code">nil</tt>, input operations are allowed. If
+<tt class="code">:output</tt> is non-<tt class="code">nil</tt>,
+output operations are allowed. The default is input only. These
+keywords are defined:
+<dl compact="compact">
+<dt><tt class="code">:element-type</tt><br></dt>
+<dd>is the type of the unit of transaction for the stream, which
+defaults to <tt class="code">string-char</tt>. See the Common Lisp
+description of <tt class="code">open</tt> for valid values.<br>
+<br></dd>
+<dt><tt class="code">:buffering</tt><br></dt>
+<dd>is the kind of output buffering desired for the stream. Legal
+values are <tt class="code">:none</tt> for no buffering, <tt class=
+"code">:line</tt> for buffering up to each newline, and <tt class=
+"code">:full</tt> for full buffering.<br>
+<br></dd>
+<dt><tt class="code">:name</tt><br></dt>
+<dd>is a simple-string name to use for descriptive purposes when
+the system prints an fd-stream. When printing fd-streams, the
+system prepends the streams name with <tt class="code">Stream
+for</tt> . If <tt class="variable">name</tt> is unspecified, it
+defaults to a string containing <tt class="variable">file</tt> or
+<tt class="variable">descriptor</tt>, in order of preference.<br>
+<br></dd>
+<dt><tt class="code">:file</tt>, <tt class=
+"code">:original</tt><br></dt>
+<dd><tt class="variable">file</tt> specifies the defaulted
+namestring of the associated file when creating a file stream (must
+be a <tt class="code">simple-string</tt>). <tt class=
+"variable">original</tt> is the <tt class="code">simple-string</tt>
+name of a backup file containing the original contents of
+<tt class="variable">file</tt> while writing <tt class=
+"variable">file</tt>.<br>
+<br>
+When you abort the stream by passing <tt class="code">t</tt> to
+<tt class="code">close</tt> as the second argument, if you supplied
+both <tt class="variable">file</tt> and <tt class=
+"variable">original</tt>, <tt class="code">close</tt> will rename
+the <tt class="variable">original</tt> name to the <tt class=
+"variable">file</tt> name. When you <tt class="code">close</tt> the
+stream normally, if you supplied <tt class=
+"variable">original</tt>, and <tt class=
+"variable">delete-original</tt> is non-<tt class="code">nil</tt>,
+<tt class="code">close</tt> deletes <tt class=
+"variable">original</tt>. If <tt class="variable">auto-close</tt>
+is true (the default), then <tt class="variable">descriptor</tt>
+will be closed when the stream is garbage collected.<br>
+<br></dd>
+<dt><tt class="code">:pathname</tt><br></dt>
+<dd>: The original pathname passed to open and returned by
+<tt class="code">pathname</tt>; not defaulted or translated.<br>
+<br></dd>
+<dt><tt class="code">:timeout</tt><br></dt>
+<dd>if non-null, then <tt class="variable">timeout</tt> is an
+integer number of seconds after which an input wait should time
+out. If a read does time out, then the <tt class=
+"code">system:io-timeout</tt> condition is signalled.</dd>
+</dl>
+</blockquote>
+<br>
+<a name="@funs166"></a><a name="FN:fd-stream-p" id=
+"FN:fd-stream-p"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">system:</tt><tt class=
+"function-name">fd-stream-p</tt> <tt class="variable">object</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This function returns <tt class="code">t</tt> if <tt class=
+"variable">object</tt> is an fd-stream, and <tt class=
+"code">nil</tt> if not. Obsolete: use the portable <tt class=
+"code">(typep x 'file-stream)</tt>.</blockquote>
+<br>
+<a name="@funs167"></a><a name="FN:fd-stream-fd" id=
+"FN:fd-stream-fd"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">system:</tt><tt class=
+"function-name">fd-stream-fd</tt> <tt class="variable">stream</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This returns the file descriptor associated with <tt class=
+"variable">stream</tt>.</blockquote>
+<a name="toc234" id="toc234"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc227" id="htoc227"><b><font size=
+"5">6.8</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Unix
+Signals</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="@concept296"></a> <a name="@concept297"></a><br>
+CMUCL allows access to all the Unix signals that can be generated
+under Unix. It should be noted that if this capability is abused,
+it is possible to completely destroy the running Lisp. The
+following macros and functions allow access to the Unix interrupt
+system. The signal names as specified in section 2 of the <em>Unix
+Programmer's Manual</em> are exported from the Unix package.<br>
+<br>
+<a name="toc235" id="toc235"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc228" id="htoc228"><b><font size=
+"4">6.8.1</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Changing Signal
+Handlers</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="signal-handlers" id="signal-handlers"></a><br>
+<br>
+<a name="@funs168"></a><a name="FN:with-enabled-interrupts" id=
+"FN:with-enabled-interrupts"></a>
+<div align="left">[Macro]<br>
+<tt class="function-name">system:</tt><tt class=
+"function-name">with-enabled-interrupts</tt> <tt class=
+"variable">specs</tt> <tt class="code">&amp;rest</tt> <tt class=
+"variable">body</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This macro should be called with a list of signal specifications,
+<tt class="variable">specs</tt>. Each element of <tt class=
+"variable">specs</tt> should be a list of two elements: the first
+should be the Unix signal for which a handler should be
+established, the second should be a function to be called when the
+signal is received One or more signal handlers can be established
+in this way. <tt class="code">with-enabled-interrupts</tt>
+establishes the correct signal handlers and then executes the forms
+in <tt class="variable">body</tt>. The forms are executed in an
+unwind-protect so that the state of the signal handlers will be
+restored to what it was before the <tt class=
+"code">with-enabled-interrupts</tt> was entered. A signal handler
+function specified as NIL will set the Unix signal handler to the
+default which is normally either to ignore the signal or to cause a
+core dump depending on the particular signal.</blockquote>
+<br>
+<a name="@funs169"></a><a name="FN:without-interrupts" id=
+"FN:without-interrupts"></a>
+<div align="left">[Macro]<br>
+<tt class="function-name">system:</tt><tt class=
+"function-name">without-interrupts</tt> <tt class=
+"code">&amp;rest</tt> <tt class="variable">body</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+It is sometimes necessary to execute a piece a code that can not be
+interrupted. This macro the forms in <tt class="variable">body</tt>
+with interrupts disabled. Note that the Unix interrupts are not
+actually disabled, rather they are queued until after <tt class=
+"variable">body</tt> has finished executing.</blockquote>
+<br>
+<a name="@funs170"></a><a name="FN:with-interrupts" id=
+"FN:with-interrupts"></a>
+<div align="left">[Macro]<br>
+<tt class="function-name">system:</tt><tt class=
+"function-name">with-interrupts</tt> <tt class=
+"code">&amp;rest</tt> <tt class="variable">body</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+When executing an interrupt handler, the system disables
+interrupts, as if the handler was wrapped in in a <tt class=
+"code">without-interrupts</tt>. The macro <tt class=
+"code">with-interrupts</tt> can be used to enable interrupts while
+the forms in <tt class="variable">body</tt> are evaluated. This is
+useful if <tt class="variable">body</tt> is going to enter a break
+loop or do some long computation that might need to be
+interrupted.</blockquote>
+<br>
+<a name="@funs171"></a><a name="FN:without-hemlock" id=
+"FN:without-hemlock"></a>
+<div align="left">[Macro]<br>
+<tt class="function-name">system:</tt><tt class=
+"function-name">without-hemlock</tt> <tt class=
+"code">&amp;rest</tt> <tt class="variable">body</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+For some interrupts, such as SIGTSTP (suspend the Lisp process and
+return to the Unix shell) it is necessary to leave Hemlock and then
+return to it. This macro executes the forms in <tt class=
+"variable">body</tt> after exiting Hemlock. When <tt class=
+"variable">body</tt> has been executed, control is returned to
+Hemlock.</blockquote>
+<br>
+<a name="@funs172"></a><a name="FN:enable-interrupt" id=
+"FN:enable-interrupt"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">system:</tt><tt class=
+"function-name">enable-interrupt</tt> <tt class=
+"variable">signal</tt> <tt class="variable">function</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This function establishes <tt class="variable">function</tt> as the
+handler for <tt class="variable">signal</tt>. Unless you want to
+establish a global signal handler, you should use the macro
+<tt class="code">with-enabled-interrupts</tt> to temporarily
+establish a signal handler. <tt class="code">enable-interrupt</tt>
+returns the old function associated with the signal.</blockquote>
+<br>
+<a name="@funs173"></a><a name="FN:ignore-interrupt" id=
+"FN:ignore-interrupt"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">system:</tt><tt class=
+"function-name">ignore-interrupt</tt> <tt class=
+"variable">signal</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Ignore-interrupt sets the Unix signal mechanism to ignore
+<tt class="variable">signal</tt> which means that the Lisp process
+will never see the signal. Ignore-interrupt returns the old
+function associated with the signal or <tt class="code">nil</tt> if
+none is currently defined.</blockquote>
+<br>
+<a name="@funs174"></a><a name="FN:default-interrupt" id=
+"FN:default-interrupt"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">system:</tt><tt class=
+"function-name">default-interrupt</tt> <tt class=
+"variable">signal</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Default-interrupt can be used to tell the Unix signal mechanism to
+perform the default action for <tt class="variable">signal</tt>.
+For details on what the default action for a signal is, see section
+2 of the <em>Unix Programmer's Manual</em>. In general, it is
+likely to ignore the signal or to cause a core dump.</blockquote>
+<a name="toc236" id="toc236"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc229" id="htoc229"><b><font size=
+"4">6.8.2</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Examples of
+Signal Handlers</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+The following code is the signal handler used by the Lisp system
+for the SIGINT signal.
+<blockquote class="lisp">
+<pre>
+(defun ih-sigint (signal code scp)
+  (declare (ignore signal code scp))
+  (without-hemlock
+   (with-interrupts
+    (break "Software Interrupt" t))))
+</pre></blockquote>
+The <tt class="code">without-hemlock</tt> form is used to make sure
+that Hemlock is exited before a break loop is entered. The
+<tt class="code">with-interrupts</tt> form is used to enable
+interrupts because the user may want to generate an interrupt while
+in the break loop. Finally, break is called to enter a break loop,
+so the user can look at the current state of the computation. If
+the user proceeds from the break loop, the computation will be
+restarted from where it was interrupted.<br>
+<br>
+The following function is the Lisp signal handler for the SIGTSTP
+signal which suspends a process and returns to the Unix shell.
+<blockquote class="lisp">
+<pre>
+(defun ih-sigtstp (signal code scp)
+  (declare (ignore signal code scp))
+  (without-hemlock
+   (Unix:unix-kill (Unix:unix-getpid) Unix:sigstop)))
+</pre></blockquote>
+Lisp uses this interrupt handler to catch the SIGTSTP signal
+because it is necessary to get out of Hemlock in a clean way before
+returning to the shell.<br>
+<br>
+To set up these interrupt handlers, the following is recommended:
+<blockquote class="lisp">
+<pre>
+(with-enabled-interrupts ((Unix:SIGINT #'ih-sigint)
+                          (Unix:SIGTSTP #'ih-sigtstp))
+  &lt;user code to execute with the above signal handlers enabled.&gt;
+)
+</pre></blockquote>
+<hr>
+<a href="compiler-hint.html"><img src="previous_motif.gif" alt=
+"Previous"></a> <a href="index.html"><img src="contents_motif.gif"
+alt="Up"></a> <a href="serve-event.html"><img src="next_motif.gif"
+alt="Next"></a>
+</body>
+</html>

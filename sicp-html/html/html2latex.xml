@@ -1,0 +1,127 @@
+<!--
+% Copyright (C) 2005, Antonio S. de A. Terceiro <asaterceiro@inf.ufrgs.br> and
+% Pedro Kroeger <kroeger@pedrokroeger.net>
+% See the COPYING file at the root of the sources directory for licensing
+% information
+-->
+
+<conf>
+    <!-- Tag description -->
+    <tag name="b" type="command">
+        <tex>textbf</tex>
+    </tag>
+    <!--
+    <tag name="body" type="environment">
+        <tex>document</tex>
+    </tag>
+    -->
+    <tag name="br" type="single">
+        <tex>\\</tex>
+    </tag>
+    <tag name="blockquote" type="environment">
+        <tex>quote</tex>
+    </tag>
+    <tag name="center" type="environment">
+        <tex>center</tex>
+    </tag>
+    <tag name="code" type="environment">
+        <tex>verbatim</tex>
+    </tag>
+    <tag name="dd" type="other">
+        <tex></tex>
+        <tex>\N</tex>
+    </tag>
+    <tag name="dl" type="environment">
+        <tex>description</tex>
+    </tag>
+    <tag name="dt" type="other">
+        <tex>\item[</tex>
+        <tex>]</tex>
+    </tag>
+    <tag name="em" type="command">
+        <tex>emph</tex>
+    </tag>
+    <tag name="h1" type="command">
+        <tex>chapter</tex>
+    </tag>
+    <tag name="h2" type="command">
+        <tex>section</tex>7
+    </tag>
+    <tag name="h3" type="command">
+        <tex>subsection</tex>
+    </tag>
+    <tag name="h4" type="command">
+        <tex>subsubsection</tex>
+    </tag>
+    <tag name="h5" type="command">
+        <tex>textbf</tex>
+    </tag>
+    <tag name="h6" type="command">
+        <tex>textbf</tex>
+    </tag>
+    <tag name="i" type="command">
+        <tex>emph</tex>
+    </tag>
+    <tag name="img" type="image">
+        <tex>htmltolateximage</tex>
+    </tag>
+    <tag name="li" type="single">
+        <tex>\item</tex>
+    </tag>
+    <tag name="ol" type="environment">
+        <tex>enumerate</tex>
+    </tag>
+    <tag name="p" type="single">
+        <tex>\N\N</tex>
+    </tag>
+    <tag name="pre" type="environment">
+        <tex>verbatim</tex>
+    </tag>
+    <tag name="tt" type="environment">
+        <tex>verbatim</tex>
+    </tag>
+    <tag name="script" type="kill"></tag>
+    <tag name="strong" type="command">
+        <tex>textbf</tex>
+    </tag>
+    <tag name="table" type="table">
+        <tex>table</tex>
+    </tag>
+    <tag name="td" type="table">
+        <tex>tr</tex>
+    </tag>
+    <!--
+    <tag name="title" type="command">
+        <tex>title</tex>
+    </tag>
+    -->
+    <tag name="title" type="kill"></tag>
+    <tag name="tr" type="table">
+        <tex>td</tex>
+    </tag>
+    <tag name="ul" type="environment">
+        <tex>itemize</tex>
+    </tag>
+
+    <!-- Options -->
+    <options>
+        <store>~/.html2latex</store>
+        <cache>0</cache>
+        <document_class>article</document_class>
+	<paragraph>1</paragraph>
+        <font>10</font>
+        <image>1</image>
+        <border>0</border>
+        <mbox>0</mbox>
+        <debug>0</debug>
+        <bodyonly>0</bodyonly>
+    </options>
+
+    <!-- LaTeX Packages-->
+    <package>fullpage</package>
+    <package>graphicx</package>
+    <package>url</package>
+
+    <!-- Tags to Ignore-->
+    <ban>code</ban>
+</conf>

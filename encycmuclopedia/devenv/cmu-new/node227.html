@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The C-Call Package</TITLE>
+<META NAME="description" CONTENT="The C-Call Package">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3574" HREF="node228.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3572" HREF="node223.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3568" HREF="node226.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3576" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3577" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3575" HREF="node228.html">8.3 Alien Operations</A>
+<B>Up:</B> <A NAME="tex2html3573" HREF="node223.html">8.2 Alien Types</A>
+<B> Previous:</B> <A NAME="tex2html3569" HREF="node226.html">8.2.3 Alien Type Specifiers</A>
+<BR> <P>
+<H2><A NAME="SECTION00924000000000000000">The C-Call Package</A></H2>
+<P>
+The <tt>c-call</tt> package exports these type-equivalents to the C type
+of the same name: <tt>char</tt>, <tt>short</tt>, <tt>int</tt>, <tt>long</tt>,
+<tt>unsigned-char</tt>, <tt>unsigned-short</tt>, <tt>unsigned-int</tt>,
+<tt>unsigned-long</tt>, <tt>float</tt>, <tt>double</tt>.  <tt>c-call</tt> also
+exports these types:
+<P>
+<b>[ Alien type]</b><BR> 
+<tt> void</tt> <i> </i><BR> 
+  This type is used in function types to declare that no useful value
+  is returned.  Evaluation of an <tt>alien-funcall</tt> form will return
+  zero values.
+<P>
+<b>[ Alien type]</b><BR> 
+<tt> c-string</tt> <i> </i><BR> 
+  This type is similar to <tt>(* char)</tt>, but is interpreted as a
+  null-terminated string, and is automatically converted into a Lisp
+  string when accessed.  If the pointer is C <tt>NULL</tt> (or 0), then
+  accessing gives Lisp <i>nil</i>.
+<P>
+  Assigning a Lisp string to a <tt>c-string</tt> structure field or
+  variable stores the contents of the string to the memory already
+  pointed to by that variable.  When an Alien of type <tt>(* char)</tt>
+  is assigned to a <tt>c-string</tt>, then the <tt>c-string</tt> pointer
+  is assigned to.  This allows <tt>c-string</tt> pointers to be
+  initialized.  For example:
+<BLOCKQUOTE> <PRE>(def-alien-type nil (struct foo (str c-string)))
+<P>
+  (defun make-foo (str) (let ((my-foo (make-alien (struct foo))))
+  (setf (slot my-foo 'str) (make-alien char (length str))) (setf (slot
+  my-foo 'str) str) my-foo))
+</PRE> </BLOCKQUOTE>
+Storing Lisp <i>nil</i> writes C <tt>NULL</tt> to the <tt>c-string</tt>
+pointer.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

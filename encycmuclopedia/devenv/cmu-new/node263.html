@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>10.6 Breakpoints</TITLE>
+<META NAME="description" CONTENT="10.6 Breakpoints">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html4030" HREF="node264.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html4028" HREF="node255.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html4022" HREF="node262.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html4032" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html4033" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html4031" HREF="node264.html">Code-locations</A>
+<B>Up:</B> <A NAME="tex2html4029" HREF="node255.html">10 Debugger Programmer's Interface</A>
+<B> Previous:</B> <A NAME="tex2html4023" HREF="node262.html">Debug-blocks</A>
+<BR> <P>
+<H1><A NAME="SECTION001160000000000000000">10.6 Breakpoints</A></H1>
+<P>
+A breakpoint represents a function the system calls with the current frame when
+execution passes a certain code-location.  A break point is active or inactive
+independent of its existence.  They also have an extra slot for users to tag
+the breakpoint with information.
+<P>
+<b>[Function]</b><BR> 
+<tt>  make-breakpoint</tt> <em> <i>hook-function</i> <i>what</i> <tt>&amp;key</tt> <tt>:kind</tt> <tt>:info</tt>
+        <tt>:function-end-cookie</tt></em><BR>
+<P>
+  This function creates and returns a breakpoint.  When program
+  execution encounters the breakpoint, the system calls
+  <i>hook-function</i>.  <i>hook-function</i> takes the current frame
+  for the function in which the program is running and the breakpoint
+  object.
+<P>
+  <i>what</i> and <i>kind</i> determine where in a function the system
+  invokes <i>hook-function</i>.  <i>what</i> is either a code-location
+  or a debug-function.  <i>kind</i> is one of <tt>:code-location</tt>,
+  <tt>:function-start</tt>, or <tt>:function-end</tt>.  Since the starts and
+  ends of functions may not have code-locations representing them,
+  designate these places by supplying <i>what</i> as a debug-function
+  and <i>kind</i> indicating the <tt>:function-start</tt> or
+  <tt>:function-end</tt>.  When <i>what</i> is a debug-function and
+  <i>kind</i> is <tt>:function-end</tt>, then hook-function must take two
+  additional arguments, a list of values returned by the function and
+  a function-end-cookie.
+<P>
+  <i>info</i> is information supplied by and used by the user.
+<P>
+  <i>function-end-cookie</i> is a function.  To implement function-end
+  breakpoints, the system uses starter breakpoints to establish the
+  function-end breakpoint for each invocation of the function.  Upon
+  each entry, the system creates a unique cookie to identify the
+  invocation, and when the user supplies a function for this argument,
+  the system invokes it on the cookie.  The system later invokes the
+  function-end breakpoint hook on the same cookie.  The user may save
+  the cookie when passed to the function-end-cookie function for later
+  comparison in the hook function.
+<P>
+  This signals an error if <i>what</i> is an unknown code-location.
+<P>
+  &#305;Note: Breakpoints in interpreted code or byte-compiled code are
+    not implemented.  Function-end breakpoints are not implemented for
+    compiled functions that use the known local return convention
+    (e.g. for block-compiled or self-recursive functions.)
+<P>
+<b>[Function]</b><BR> 
+<tt>  activate-breakpoint</tt> <em> <i>breakpoint</i></em><BR>
+<P>
+  This function causes the system to invoke the <i>breakpoint</i>'s
+  hook-function until the next call to <tt>deactivate-breakpoint</tt> or
+  <tt>delete-breakpoint</tt>.  The system invokes breakpoint hook
+  functions in the opposite order that you activate them.
+<P>
+<b>[Function]</b><BR> 
+<tt>  deactivate-breakpoint</tt> <em> <i>breakpoint</i></em><BR>
+<P>
+  This function stops the system from invoking the <i>breakpoint</i>'s
+  hook-function.
+<P>
+<b>[Function]</b><BR> 
+<tt>  breakpoint-active-p</tt> <em> <i>breakpoint</i></em><BR>
+<P>
+  This returns whether <i>breakpoint</i> is currently active.
+<P>
+<b>[Function]</b><BR> 
+<tt>  breakpoint-hook-function</tt> <em> <i>breakpoint</i></em><BR>
+<P>
+  This function returns the <i>breakpoint</i>'s function the system
+  calls when execution encounters <i>breakpoint</i>, and it is active.
+  This is <tt>SETF</tt>'able.
+<P>
+<b>[Function]</b><BR> 
+<tt>  breakpoint-info</tt> <em> <i>breakpoint</i></em><BR>
+<P>
+  This function returns <i>breakpoint</i>'s information supplied by the
+  user.  This is <tt>SETF</tt>'able.
+<P>
+<b>[Function]</b><BR> 
+<tt>  breakpoint-kind</tt> <em> <i>breakpoint</i></em><BR>
+<P>
+  This function returns the <i>breakpoint</i>'s kind specification.
+<P>
+<b>[Function]</b><BR> 
+<tt>  breakpoint-what</tt> <em> <i>breakpoint</i></em><BR>
+<P>
+  This function returns the <i>breakpoint</i>'s what specification.
+<P>
+<b>[Function]</b><BR> 
+<tt>  delete-breakpoint</tt> <em> <i>breakpoint</i></em><BR>
+<P>
+  This function frees system storage and removes computational
+  overhead associated with <i>breakpoint</i>.  After calling this,
+  <i>breakpoint</i> is useless and can never become active again.
+<P>
+<HR><A NAME="tex2html4030" HREF="node264.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html4028" HREF="node255.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html4022" HREF="node262.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html4032" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html4033" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html4031" HREF="node264.html">Code-locations</A>
+<B>Up:</B> <A NAME="tex2html4029" HREF="node255.html">10 Debugger Programmer's Interface</A>
+<B> Previous:</B> <A NAME="tex2html4023" HREF="node262.html">Debug-blocks</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

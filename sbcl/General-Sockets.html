@@ -1,0 +1,188 @@
+<html lang="en">
+<head>
+<title>General Sockets - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Networking.html#Networking" title="Networking">
+<link rel="prev" href="Sockets-Overview.html#Sockets-Overview" title="Sockets Overview">
+<link rel="next" href="Socket-Options.html#Socket-Options" title="Socket Options">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="General-Sockets"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Socket-Options.html#Socket-Options">Socket Options</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Sockets-Overview.html#Sockets-Overview">Sockets Overview</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Networking.html#Networking">Networking</a>
+<hr>
+</div>
+
+<h3 class="section">13.2 General Sockets</h3>
+
+<p><a name="Class-sb_002dbsd_002dsockets_003asocket"></a>
+
+<div class="defun">
+&mdash; Class: <b>sb-bsd-sockets:socket</b><var><a name="index-sb_002dbsd_002dsockets_003asocket-498"></a></var><br>
+<blockquote><p><a name="index-sb_002dbsd_002dsockets_003asocket-499"></a>Class precedence list: <code>socket, standard-object, t</code>
+
+        <p>Slots:
+          <ul>
+<li><code>protocol</code> &mdash; initarg: <code>:protocol<!-- /@w --></code>; reader: <code>sb-bsd-sockets:socket-protocol<!-- /@w --></code>
+
+          <p>Protocol used by the socket. If a
+keyword, the symbol-name of the keyword will be passed to
+<code>get-protocol-by-name</code> downcased, and the returned value used as
+protocol. Other values are used as-is. 
+<li><code>type</code> &mdash; initarg: <code>:type<!-- /@w --></code>; reader: <code>sb-bsd-sockets:socket-type<!-- /@w --></code>
+
+          <p>Type of the socket: <code>:stream</code> or <code>:datagram</code>. 
+</ul>
+
+        <p>Common base class of all sockets, not meant to be
+directly instantiated. 
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dbsd_002dsockets_003asocket_002dbind"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-bsd-sockets:socket-bind</b><var> socket &amp;rest address<a name="index-sb_002dbsd_002dsockets_003asocket_002dbind-500"></a></var><br>
+<blockquote><p><a name="index-sb_002dbsd_002dsockets_003asocket_002dbind-501"></a>Bind <code>socket</code> to <code>address</code>, which may vary according to
+socket family.  For the <code>inet</code> family, pass <code>address</code> and <code>port</code> as two
+arguments; for <code>file</code> address family sockets, pass the filename string. 
+See also bind(2)
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dbsd_002dsockets_003asocket_002daccept"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-bsd-sockets:socket-accept</b><var> socket<a name="index-sb_002dbsd_002dsockets_003asocket_002daccept-502"></a></var><br>
+<blockquote><p><a name="index-sb_002dbsd_002dsockets_003asocket_002daccept-503"></a>Perform the accept(2) call, returning a
+newly-created connected socket and the peer address as multiple
+values
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dbsd_002dsockets_003asocket_002dconnect"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-bsd-sockets:socket-connect</b><var> socket &amp;rest address<a name="index-sb_002dbsd_002dsockets_003asocket_002dconnect-504"></a></var><br>
+<blockquote><p><a name="index-sb_002dbsd_002dsockets_003asocket_002dconnect-505"></a>Perform the connect(2) call to connect <code>socket</code> to a
+  remote <code>peer</code>.  No useful return value. 
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dbsd_002dsockets_003asocket_002dpeername"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-bsd-sockets:socket-peername</b><var> socket<a name="index-sb_002dbsd_002dsockets_003asocket_002dpeername-506"></a></var><br>
+<blockquote><p><a name="index-sb_002dbsd_002dsockets_003asocket_002dpeername-507"></a>Return the socket's peer; depending on the address
+  family this may return multiple values
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dbsd_002dsockets_003asocket_002dname"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-bsd-sockets:socket-name</b><var> socket<a name="index-sb_002dbsd_002dsockets_003asocket_002dname-508"></a></var><br>
+<blockquote><p><a name="index-sb_002dbsd_002dsockets_003asocket_002dname-509"></a>Return the address (as vector of bytes) and port
+  that the socket is bound to, as multiple values. 
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dbsd_002dsockets_003asocket_002dreceive"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-bsd-sockets:socket-receive</b><var> socket buffer length &amp;key oob peek waitall dontwait element-type element-type<a name="index-sb_002dbsd_002dsockets_003asocket_002dreceive-510"></a></var><br>
+<blockquote><p><a name="index-sb_002dbsd_002dsockets_003asocket_002dreceive-511"></a>Read <code>length</code> octets from <code>socket</code> into <code>buffer</code> (or a freshly-consed
+buffer if NIL), using recvfrom(2). If <code>length</code> is <code>nil</code>, the length of
+<code>buffer</code> is used, so at least one of these two arguments must be
+non-NIL. If <code>buffer</code> is supplied, it had better be of an element type
+one octet wide. Returns the buffer, its length, and the address of the
+peer that sent it, as multiple values. On datagram sockets, sets
+MSG_TRUNC so that the actual packet length is returned even if the
+buffer was too small. 
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dbsd_002dsockets_003asocket_002dsend"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-bsd-sockets:socket-send</b><var> socket buffer length &amp;key address external-format oob eor dontroute dontwait nosignal confirm more external-format<a name="index-sb_002dbsd_002dsockets_003asocket_002dsend-512"></a></var><br>
+<blockquote><p><a name="index-sb_002dbsd_002dsockets_003asocket_002dsend-513"></a>Send <code>length</code> octets from <code>buffer</code> into <code>socket</code>, using sendto(2). If <code>buffer</code>
+is a string, it will converted to octets according to <code>external-format</code>. If
+<code>length</code> is <code>nil</code>, the length of the octet buffer is used. The format of <code>address</code>
+depends on the socket type (for example for <code>inet</code> domain sockets it would
+be a list of an <code>ip</code> address and a port). If no socket address is provided,
+send(2) will be called instead. Returns the number of octets written. 
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dbsd_002dsockets_003asocket_002dlisten"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-bsd-sockets:socket-listen</b><var> socket backlog<a name="index-sb_002dbsd_002dsockets_003asocket_002dlisten-514"></a></var><br>
+<blockquote><p><a name="index-sb_002dbsd_002dsockets_003asocket_002dlisten-515"></a>Mark <code>socket</code> as willing to accept incoming connections.  <code>backlog</code>
+defines the maximum length that the queue of pending connections may
+grow to before new connection attempts are refused.  See also listen(2)
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dbsd_002dsockets_003asocket_002dopen_002dp"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-bsd-sockets:socket-open-p</b><var> socket<a name="index-sb_002dbsd_002dsockets_003asocket_002dopen_002dp-516"></a></var><br>
+<blockquote><p><a name="index-sb_002dbsd_002dsockets_003asocket_002dopen_002dp-517"></a>Return true if <code>socket</code> is open; otherwise, return false. 
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dbsd_002dsockets_003asocket_002dclose"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-bsd-sockets:socket-close</b><var> socket<a name="index-sb_002dbsd_002dsockets_003asocket_002dclose-518"></a></var><br>
+<blockquote><p><a name="index-sb_002dbsd_002dsockets_003asocket_002dclose-519"></a>Close <code>socket</code>.  May throw any kind of error that
+write(2) would have thrown.  If <code>socket-make-stream</code> has been called,
+calls <code>close</code> on that stream instead
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dbsd_002dsockets_003asocket_002dmake_002dstream"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-bsd-sockets:socket-make-stream</b><var> socket &amp;rest args<a name="index-sb_002dbsd_002dsockets_003asocket_002dmake_002dstream-520"></a></var><br>
+<blockquote><p><a name="index-sb_002dbsd_002dsockets_003asocket_002dmake_002dstream-521"></a>Find or create a <code>stream</code> that can be used for <code>io</code> on
+<code>socket</code> (which must be connected).  <code>args</code> are passed onto
+<code>sb-sys:make-fd-stream</code>. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dbsd_002dsockets_003asocket_002derror"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-bsd-sockets:socket-error</b><var> where<a name="index-sb_002dbsd_002dsockets_003asocket_002derror-522"></a></var><br>
+<blockquote><p><a name="index-sb_002dbsd_002dsockets_003asocket_002derror-523"></a></p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dbsd_002dsockets_003anon_002dblocking_002dmode"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-bsd-sockets:non-blocking-mode</b><var> socket<a name="index-sb_002dbsd_002dsockets_003anon_002dblocking_002dmode-524"></a></var><br>
+<blockquote><p><a name="index-sb_002dbsd_002dsockets_003anon_002dblocking_002dmode-525"></a>Is <code>socket</code> in non-blocking mode? 
+</p></blockquote></div>
+
+   </body></html>
+

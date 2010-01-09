@@ -1,0 +1,124 @@
+<html lang="en">
+<head>
+<title>Debugger Policy Control - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Debugger.html#Debugger" title="Debugger">
+<link rel="prev" href="Source-Location-Printing.html#Source-Location-Printing" title="Source Location Printing">
+<link rel="next" href="Exiting-Commands.html#Exiting-Commands" title="Exiting Commands">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Debugger-Policy-Control"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Exiting-Commands.html#Exiting-Commands">Exiting Commands</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Source-Location-Printing.html#Source-Location-Printing">Source Location Printing</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Debugger.html#Debugger">Debugger</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">4.6 Debugger Policy Control</h3>
+
+<p><a name="index-Policy_002c-debugger-95"></a><a name="index-Debug-optimization-quality-96"></a><a name="index-Optimize-declaration-97"></a><a name="index-Inline-expansion-98"></a><a name="index-Semi_002dinline-expansion-99"></a>
+The compilation policy specified by <code>optimize</code> declarations
+affects the behavior seen in the debugger.  The <code>debug</code> quality
+directly affects the debugger by controlling the amount of debugger
+information dumped.  Other optimization qualities have indirect but
+observable effects due to changes in the way compilation is done.
+
+   <p>Unlike the other optimization qualities (which are compared in relative value
+to evaluate tradeoffs), the <code>debug</code> optimization quality is directly
+translated to a level of debug information.  This absolute interpretation
+allows the user to count on a particular amount of debug information being
+available even when the values of the other qualities are changed during
+compilation.  These are the levels of debug information that correspond to the
+values of the <code>debug</code> quality:
+
+     <dl>
+<dt><code>0</code><dd>Only the function name and enough information to allow the stack to
+be parsed.
+
+     <br><dt><code>&gt; 0</code><dd>Any level greater than <code>0</code> gives level <code>0</code> plus all argument
+variables.  Values will only be accessible if the argument variable is
+never set and <code>speed</code> is not <code>3</code>.  SBCL allows any real
+value for optimization qualities.  It may be useful to specify
+<code>0.5</code> to get backtrace argument display without argument
+documentation.
+
+     <br><dt><code>1</code><dd>Level <code>1</code> provides argument documentation (printed arglists) and
+derived argument/result type information.  This makes <code>describe</code>
+more informative, and allows the compiler to do compile-time argument
+count and type checking for any calls compiled at run-time.  This is
+the default.
+
+     <br><dt><code>2</code><dd>Level <code>1</code> plus all interned local variables, source location
+information, and lifetime information that tells the debugger when
+arguments are available (even when <code>speed</code> is <code>3</code> or the
+argument is set).
+
+     <br><dt><code>&gt; 2</code><dd>Any level greater than <code>2</code> gives level <code>2</code> and in addition
+disables tail-call optimization, so that the backtrace will contain
+frames for all invoked functions, even those in tail positions.
+
+     <br><dt><code>3</code><dd>Level <code>2</code> plus all uninterned variables.  In addition, lifetime
+analysis is disabled (even when <code>speed</code> is <code>3</code>), ensuring
+that all variable values are available at any known location within
+the scope of the binding.  This has a speed penalty in addition to the
+obvious space penalty.
+
+     <br><dt><code>&gt; (max speed space)</code><dd>If <code>debug</code> is greater than both <code>speed</code> and <code>space</code>,
+the command <samp><span class="command">return</span></samp> can be used to continue execution by
+returning a value from the current stack frame.
+
+     <br><dt><code>&gt; (max speed space compilation-speed)</code><dd>If <code>debug</code> is greater than all of <code>speed</code>, <code>space</code> and
+<code>compilation-speed</code> the code will be steppable (see <a href="Single-Stepping.html#Single-Stepping">Single Stepping</a>).
+
+   </dl>
+
+   <p>As you can see, if the <code>speed</code> quality is <code>3</code>, debugger performance is
+degraded.  This effect comes from the elimination of argument variable
+special-casing (see <a href="Variable-Value-Availability.html#Variable-Value-Availability">Variable Value Availability</a>).  Some degree of
+speed/debuggability tradeoff is unavoidable, but the effect is not too drastic
+when <code>debug</code> is at least <code>2</code>.
+
+   <p>In addition to <code>inline</code> and <code>notinline</code> declarations, the
+relative values of the <code>speed</code> and <code>space</code> qualities also
+change whether functions are inline expanded. 
+<!-- FIXME: link to section about inline expansion when it exists -->
+<!-- (\pxlref{inline-expansion}.) -->
+If a function is inline expanded, then
+there will be no frame to represent the call, and the arguments will
+be treated like any other local variable.  Functions may also be
+&ldquo;semi-inline&rdquo;, in which case there is a frame to represent the call,
+but the call is to an optimized local version of the function, not to
+the original function.
+
+   </body></html>
+

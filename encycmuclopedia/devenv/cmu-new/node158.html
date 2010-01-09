@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The Maybe-Inline Declaration</TITLE>
+<META NAME="description" CONTENT="The Maybe-Inline Declaration">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2684" HREF="node159.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2682" HREF="node155.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2678" HREF="node157.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2686" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2687" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2685" HREF="node159.html">5.9 Byte Coded Compilation</A>
+<B>Up:</B> <A NAME="tex2html2683" HREF="node155.html">5.8 Inline Expansion</A>
+<B> Previous:</B> <A NAME="tex2html2679" HREF="node157.html">Semi-Inline Expansion</A>
+<BR> <P>
+<H2><A NAME="SECTION00683000000000000000">The Maybe-Inline Declaration</A></H2>
+<P>
+<A NAME="maybeinlinedeclaration">&#160;</A>
+<A NAME="10417">&#160;</A>
+<P>
+The <tt>extensions:maybe-inline</tt> declaration is a CMU Common Lisp
+extension.  It is similar to <tt>inline</tt>, but indicates that inline
+expansion may sometimes be desirable, rather than saying that inline
+expansion should almost always be done.  When used in a global
+declaration, <tt>extensions:maybe-inline</tt> causes the expansion for
+the named functions to be recorded, but the functions aren't actually
+inline expanded unless <tt>space</tt> is <tt>0</tt> or the function is
+eventually (perhaps locally) declared <tt>inline</tt>.
+<P>
+Use of the <tt>extensions:maybe-inline</tt> declaration followed by the
+<tt>defun</tt> is preferable to the standard idiom of:
+<BLOCKQUOTE> <PRE>(proclaim '(inline myfun))
+(defun myfun () ...)
+(proclaim '(notinline myfun))
+<P>
+;;; &#305;Any calls to <tt>myfun</tt> here are not inline expanded.
+<P>
+(defun somefun ()
+  (declare (inline myfun))
+  ;;
+  ;; &#305;Calls to <tt>myfun</tt> here are inline expanded.
+  ...)
+</PRE> </BLOCKQUOTE>
+The problem with using <tt>notinline</tt> in this way is that in
+Common Lisp it does more than just suppress inline expansion, it also
+forbids the compiler to use any knowledge of <tt>myfun</tt> until a
+later <tt>inline</tt> declaration overrides the <tt>notinline</tt>.  This
+prevents compiler warnings about incorrect calls to the function, and
+also prevents block compilation.
+<P>
+The <tt>extensions:maybe-inline</tt> declaration is used like this:
+<BLOCKQUOTE> <PRE>(proclaim '(extensions:maybe-inline myfun))
+(defun myfun () ...)
+<P>
+;;; &#305;Any calls to <tt>myfun</tt> here are not inline expanded.
+<P>
+(defun somefun ()
+  (declare (inline myfun))
+  ;;
+  ;; &#305;Calls to <tt>myfun</tt> here are inline expanded.
+  ...)
+<P>
+(defun someotherfun ()
+  (declare (optimize (space 0)))
+  ;;
+  ;; &#305;Calls to <tt>myfun</tt> here are expanded semi-inline.
+  ...)
+</PRE> </BLOCKQUOTE>
+In this example, the use of <tt>extensions:maybe-inline</tt> causes the
+expansion to be recorded when the <tt>defun</tt> for <tt>somefun</tt> is
+compiled, and doesn't waste space through doing inline expansion by
+default.  Unlike <tt>notinline</tt>, this declaration still allows the
+compiler to assume that the known definition really is the one that
+will be called when giving compiler warnings, and also allows the
+compiler to do semi-inline expansion when the policy is appropriate.
+<P>
+When the goal is merely to control whether inline expansion is done by
+default, it is preferable to use <tt>extensions:maybe-inline</tt> rather
+than <tt>notinline</tt>.  The <tt>notinline</tt> declaration should be
+reserved for those special occasions when a function may be redefined
+at run-time, so the compiler must be told that the obvious definition
+of a function is not necessarily the one that will be in effect at the
+time of the call.
+<P>
+<HR><A NAME="tex2html2684" HREF="node159.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2682" HREF="node155.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2678" HREF="node157.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2686" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2687" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2685" HREF="node159.html">5.9 Byte Coded Compilation</A>
+<B>Up:</B> <A NAME="tex2html2683" HREF="node155.html">5.8 Inline Expansion</A>
+<B> Previous:</B> <A NAME="tex2html2679" HREF="node157.html">Semi-Inline Expansion</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

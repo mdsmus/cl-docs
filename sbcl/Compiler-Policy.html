@@ -1,0 +1,208 @@
+<html lang="en">
+<head>
+<title>Compiler Policy - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Compiler.html#Compiler" title="Compiler">
+<link rel="prev" href="Handling-of-Types.html#Handling-of-Types" title="Handling of Types">
+<link rel="next" href="Compiler-Errors.html#Compiler-Errors" title="Compiler Errors">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Compiler-Policy"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Compiler-Errors.html#Compiler-Errors">Compiler Errors</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Handling-of-Types.html#Handling-of-Types">Handling of Types</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Compiler.html#Compiler">Compiler</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">3.3 Compiler Policy</h3>
+
+<p>Compiler policy is controlled by the <code>optimize</code> declaration,
+supporting all ANSI optimization qualities (<code>debug</code>,
+<code>safety</code>, <code>space</code>, and <code>speed</code>).<a rel="footnote" href="#fn-1" name="fnd-1"><sup>1</sup></a>
+
+   <p>For effects of various optimization qualities on type-safety and
+debuggability see <a href="Declarations-as-Assertions.html#Declarations-as-Assertions">Declarations as Assertions</a> and <a href="Debugger-Policy-Control.html#Debugger-Policy-Control">Debugger Policy Control</a>.
+
+   <p>Ordinarily, when the <code>speed</code> quality is high, the compiler emits
+notes to notify the programmer about its inability to apply various
+optimizations. For selective muffling of these notes See <a href="Controlling-Verbosity.html#Controlling-Verbosity">Controlling Verbosity</a>.
+
+   <p>The value of <code>space</code> mostly influences the compiler's decision
+whether to inline operations, which tend to increase the size of
+programs. Use the value <code>0</code> with caution, since it can cause the
+compiler to inline operations so indiscriminately that the net effect
+is to slow the program by causing cache misses or even swapping.
+
+<!-- <!- FIXME: old CMU CL compiler policy, should perhaps be adapted -->
+<!-- _    for SBCL. (Unfortunately, the CMU CL docs are out of sync with the -->
+<!-- _    CMU CL code, so adapting this requires not only reformatting -->
+<!-- _    the documentation, but rooting out code rot.) -->
+<!-- _ -->
+<!-- _<sect2 id="compiler-policy"><title>Compiler Policy</1000 -->
+<!-- _  INDEX {policy}{compiler} -->
+<!-- _  INDEX compiler policy -->
+<!-- _ -->
+<!-- _<para>The policy is what tells the compiler <emphasis>how</emphasis> to -->
+<!-- _compile a program. This is logically (and often textually) distinct -->
+<!-- _from the program itself. Broad control of policy is provided by the -->
+<!-- _<parameter>optimize</parameter> declaration; other declarations and variables -->
+<!-- _control more specific aspects of compilation. -->
+<!-- _ -->
+<!-- _\begin{comment} -->
+<!-- _* The Optimize Declaration:: -->
+<!-- _* The Optimize-Interface Declaration:: -->
+<!-- _\end{comment} -->
+<!-- _ -->
+<!-- _%%\node The Optimize Declaration, The Optimize-Interface Declaration, Compiler Policy, Compiler Policy -->
+<!-- _\subsection{The Optimize Declaration} -->
+<!-- _\label{optimize-declaration} -->
+<!-- _\cindex{optimize declaration} -->
+<!-- _\cpsubindex{declarations}{\code{optimize}} -->
+<!-- _ -->
+<!-- _The \code{optimize} declaration recognizes six different -->
+<!-- _\var{qualities}.  The qualities are conceptually independent aspects -->
+<!-- _of program performance.  In reality, increasing one quality tends to -->
+<!-- _have adverse effects on other qualities.  The compiler compares the -->
+<!-- _relative values of qualities when it needs to make a trade-off; i.e., -->
+<!-- _if \code{speed} is greater than \code{safety}, then improve speed at -->
+<!-- _the cost of safety. -->
+<!-- _ -->
+<!-- _The default for all qualities (except \code{debug}) is \code{1}. -->
+<!-- _Whenever qualities are equal, ties are broken according to a broad -->
+<!-- _idea of what a good default environment is supposed to be.  Generally -->
+<!-- _this downplays \code{speed}, \code{compile-speed} and \code{space} in -->
+<!-- _favor of \code{safety} and \code{debug}.  Novice and casual users -->
+<!-- _should stick to the default policy.  Advanced users often want to -->
+<!-- _improve speed and memory usage at the cost of safety and -->
+<!-- _debuggability. -->
+<!-- _ -->
+<!-- _If the value for a quality is \code{0} or \code{3}, then it may have a -->
+<!-- _special interpretation.  A value of \code{0} means ``totally -->
+<!-- _unimportant'', and a \code{3} means ``ultimately important.''  These -->
+<!-- _extreme optimization values enable ``heroic'' compilation strategies -->
+<!-- _that are not always desirable and sometimes self-defeating. -->
+<!-- _Specifying more than one quality as \code{3} is not desirable, since -->
+<!-- _it doesn't tell the compiler which quality is most important. -->
+<!-- _ -->
+<!-- _ -->
+<!-- _These are the optimization qualities: -->
+<!-- _\begin{Lentry} -->
+<!-- _ -->
+<!-- _\item[\code{speed}] \cindex{speed optimization quality}How fast the -->
+<!-- _  program should is run.  \code{speed 3} enables some optimizations -->
+<!-- _  that hurt debuggability. -->
+<!-- _ -->
+<!-- _\item[\code{compilation-speed}] \cindex{compilation-speed optimization -->
+<!-- _    quality}How fast the compiler should run.  Note that increasing -->
+<!-- _  this above \code{safety} weakens type checking. -->
+<!-- _ -->
+<!-- _\item[\code{space}] \cindex{space optimization quality}How much space -->
+<!-- _  the compiled code should take up.  Inline expansion is mostly -->
+<!-- _  inhibited when \code{space} is greater than \code{speed}.  A value -->
+<!-- _  of \code{0} enables indiscriminate inline expansion.  Wide use of a -->
+<!-- _  \code{0} value is not recommended, as it may waste so much space -->
+<!-- _  that run time is slowed.  \xlref{inline-expansion} for a discussion -->
+<!-- _  of inline expansion. -->
+<!-- _ -->
+<!-- _\item[\code{debug}] \cindex{debug optimization quality}How debuggable -->
+<!-- _  the program should be.  The quality is treated differently from the -->
+<!-- _  other qualities: each value indicates a particular level of debugger -->
+<!-- _  information; it is not compared with the other qualities. -->
+<!-- _  \xlref{debugger-policy} for more details. -->
+<!-- _ -->
+<!-- _\item[\code{safety}] \cindex{safety optimization quality}How much -->
+<!-- _  error checking should be done.  If \code{speed}, \code{space} or -->
+<!-- _  \code{compilation-speed} is more important than \code{safety}, then -->
+<!-- _  type checking is weakened (\pxlref{weakened-type-checks}).  If -->
+<!-- _  \code{safety} if \code{0}, then no run time error checking is done. -->
+<!-- _  In addition to suppressing type checks, \code{0} also suppresses -->
+<!-- _  argument count checking, unbound-symbol checking and array bounds -->
+<!-- _  checks. -->
+<!-- _  ... and checking of tag existence in RETURN-FROM and GO. -->
+<!-- _ -->
+<!-- _\item[\code{extensions:inhibit-warnings}] \cindex{inhibit-warnings -->
+<!-- _    optimization quality}This is a CMU extension that determines how -->
+<!-- _  little (or how much) diagnostic output should be printed during -->
+<!-- _  compilation.  This quality is compared to other qualities to -->
+<!-- _  determine whether to print style notes and warnings concerning those -->
+<!-- _  qualities.  If \code{speed} is greater than \code{inhibit-warnings}, -->
+<!-- _  then notes about how to improve speed will be printed, etc.  The -->
+<!-- _  default value is \code{1}, so raising the value for any standard -->
+<!-- _  quality above its default enables notes for that quality.  If -->
+<!-- _  \code{inhibit-warnings} is \code{3}, then all notes and most -->
+<!-- _  non-serious warnings are inhibited.  This is useful with -->
+<!-- _  \code{declare} to suppress warnings about unavoidable problems. -->
+<!-- _\end{Lentry} -->
+<!-- _ -->
+<!-- _%%\node The Optimize-Interface Declaration,  , The Optimize Declaration, Compiler Policy -->
+<!-- _\subsection{The Optimize-Interface Declaration} -->
+<!-- _\label{optimize-interface-declaration} -->
+<!-- _\cindex{optimize-interface declaration} -->
+<!-- _\cpsubindex{declarations}{\code{optimize-interface}} -->
+<!-- _ -->
+<!-- _The \code{extensions:optimize-interface} declaration is identical in -->
+<!-- _syntax to the \code{optimize} declaration, but it specifies the policy -->
+<!-- _used during compilation of code the compiler automatically generates -->
+<!-- _to check the number and type of arguments supplied to a function.  It -->
+<!-- _is useful to specify this policy separately, since even thoroughly -->
+<!-- _debugged functions are vulnerable to being passed the wrong arguments. -->
+<!-- _The \code{optimize-interface} declaration can specify that arguments -->
+<!-- _should be checked even when the general \code{optimize} policy is -->
+<!-- _unsafe. -->
+<!-- _ -->
+<!-- _Note that this argument checking is the checking of user-supplied -->
+<!-- _arguments to any functions defined within the scope of the -->
+<!-- _declaration, \code{not} the checking of arguments to \llisp{} -->
+<!-- _primitives that appear in those definitions. -->
+<!-- _ -->
+<!-- _The idea behind this declaration is that it allows the definition of -->
+<!-- _functions that appear fully safe to other callers, but that do no -->
+<!-- _internal error checking.  Of course, it is possible that arguments may -->
+<!-- _be invalid in ways other than having incorrect type.  Functions -->
+<!-- _compiled unsafely must still protect themselves against things like -->
+<!-- _user-supplied array indices that are out of bounds and improper lists. -->
+<!-- _See also the \kwd{context-declarations} option to -->
+<!-- _\macref{with-compilation-unit}. -->
+<!-- _ -->
+<!-- _(end of section on compiler policy) -->
+<!-- _-> -->
+   <div class="footnote">
+<hr>
+<h4>Footnotes</h4><p class="footnote"><small>[<a name="fn-1" href="#fnd-1">1</a>]</small> A deprecated
+extension <code>sb-ext:inhibit-warnings</code> is still supported, but
+liable to go away at any time.</p>
+
+   <hr></div>
+
+   </body></html>
+

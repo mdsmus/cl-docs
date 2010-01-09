@@ -1,0 +1,70 @@
+<html lang="en">
+<head>
+<title>Initialization and Exit Hooks - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Starting-and-Stopping.html#Starting-and-Stopping" title="Starting and Stopping">
+<link rel="prev" href="Initialization-Files.html#Initialization-Files" title="Initialization Files">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Initialization-and-Exit-Hooks"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Initialization-Files.html#Initialization-Files">Initialization Files</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Starting-and-Stopping.html#Starting-and-Stopping">Starting and Stopping</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">2.5 Initialization and Exit Hooks</h3>
+
+<p>SBCL provides hooks into the system initialization and exit.
+
+   <p><a name="Variable-sb_002dext_003a_002ainit_002dhooks_002a"></a>
+
+<div class="defun">
+&mdash; Variable: <b>sb-ext:*init-hooks*</b><var><a name="index-sb_002dext_003a_002ainit_002dhooks_002a-14"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003a_002ainit_002dhooks_002a-15"></a>This is a list of functions which are called in an unspecified
+order when a saved core image starts up, after the system itself has
+been initialized. Unused by <code>sbcl</code> itself: reserved for user and
+applications. 
+</p></blockquote></div>
+
+   <p><a name="Variable-sb_002dext_003a_002aexit_002dhooks_002a"></a>
+
+<div class="defun">
+&mdash; Variable: <b>sb-ext:*exit-hooks*</b><var><a name="index-sb_002dext_003a_002aexit_002dhooks_002a-16"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003a_002aexit_002dhooks_002a-17"></a>This is a list of functions which are called in an unspecified
+order when <code>sbcl</code> process exits. Unused by <code>sbcl</code> itself: reserved for
+user and applications. Using (QUIT <code>:recklessly-p</code> T), or calling
+exit(3) directly will circumvent these hooks. 
+</p></blockquote></div>
+
+   </body></html>
+

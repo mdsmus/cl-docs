@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.8.1 Inline Expansion Recording</TITLE>
+<META NAME="description" CONTENT="5.8.1 Inline Expansion Recording">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2662" HREF="node157.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2660" HREF="node155.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2654" HREF="node155.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2664" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2665" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2663" HREF="node157.html">Semi-Inline Expansion</A>
+<B>Up:</B> <A NAME="tex2html2661" HREF="node155.html">5.8 Inline Expansion</A>
+<B> Previous:</B> <A NAME="tex2html2655" HREF="node155.html">5.8 Inline Expansion</A>
+<BR> <P>
+<H2><A NAME="SECTION00681000000000000000">5.8.1 Inline Expansion Recording</A></H2>
+<P>
+<A NAME="10403">&#160;</A>
+<P>
+Inline expansion requires that the source for the inline expanded function to
+be available when calls to the function are compiled.  The compiler doesn't
+remember the inline expansion for every function, since that would take an
+excessive about of space.  Instead, the programmer must tell the compiler to
+record the inline expansion before the definition of the inline expanded
+function is compiled.  This is done by globally declaring the function inline
+before the function is defined, by using the <tt>inline</tt> and
+<tt>extensions:maybe-inline</tt> (see section&nbsp;<A HREF="node158.html#maybeinlinedeclaration">5.8.3</A>)
+declarations.
+<P>
+In addition to recording the inline expansion of inline functions at the time
+the function is compiled, <tt>compile-file</tt> also puts the inline expansion in
+the output file.  When the output file is loaded, the inline expansion is made
+available for subsequent compilations; there is no need to compile the
+definition again to record the inline expansion.
+<P>
+If a function is declared inline, but no expansion is recorded, then the
+compiler will give an efficiency note like:
+<BLOCKQUOTE> <PRE>Note: MYFUN is declared inline, but has no expansion.
+</PRE> </BLOCKQUOTE>
+When you get this note, check that the <tt>inline</tt> declaration and the
+definition appear before the calls that are to be inline expanded.  This note
+will also be given if the inline expansion for a <tt>defun</tt> could not be
+recorded because the <tt>defun</tt> was in a non-null lexical environment.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

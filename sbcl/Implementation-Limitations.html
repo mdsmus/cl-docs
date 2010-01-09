@@ -1,0 +1,85 @@
+<html lang="en">
+<head>
+<title>Implementation Limitations - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Handling-of-Types.html#Handling-of-Types" title="Handling of Types">
+<link rel="prev" href="Getting-Existing-Programs-to-Run.html#Getting-Existing-Programs-to-Run" title="Getting Existing Programs to Run">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Implementation-Limitations"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Getting-Existing-Programs-to-Run.html#Getting-Existing-Programs-to-Run">Getting Existing Programs to Run</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Handling-of-Types.html#Handling-of-Types">Handling of Types</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">3.2.4 Implementation Limitations</h4>
+
+<p>Ideally, the compiler would consider <em>all</em> type declarations to
+be assertions, so that adding type declarations to a program, no
+matter how incorrect they might be, would <em>never</em> cause undefined
+behavior. However, the compiler is known to fall short of this goal in
+two areas:
+
+     <ul>
+<li><em>Proclaimed</em> constraints on argument and result types of a
+function are supposed to be checked by the function. If the function
+type is proclaimed before function definition, type checks are
+inserted by the compiler, but the standard allows the reversed order,
+in which case the compiler will trust the declaration.
+
+     <li>The compiler cannot check types of an unknown number of values; if the
+number of generated values is unknown, but the number of consumed is
+known, only consumed values are checked.
+
+     <p>For example,
+
+     <pre class="lisp">          (defun foo (x)
+            (the integer (bar x)))
+</pre>
+     <p>causes the following compiler diagnostic to be emitted:
+
+     <pre class="example">          ; note: type assertion too complex to check:
+          ;  (VALUES INTEGER &amp;REST T).
+</pre>
+     <p>A partial workaround is instead write:
+
+     <pre class="lisp">          (defun foo (x)
+            (the (values integer &amp;optional) (bar x)))
+</pre>
+     </ul>
+
+   <p>These are important issues, but are not necessarily easy to fix, so
+they may, alas, remain in the system for a while.
+
+   </body></html>
+

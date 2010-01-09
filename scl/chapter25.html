@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 25</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 25 - Connecting Lisp to the Real World</h1> 
+
+<P>Lisp provides a wonderful development environment, as we'll see
+in the next few chapters.  But Lisp would be of little value for 
+some applications without a way to access external programs written
+in other languages.  Fortunately, modern Lisp implementations have
+a Foreign Function Interface, or FFI for short.
+
+<p>In this chapter I'll describe FFI in general terms.
+Implementations differ in the details since FFI has not (yet) been
+standardized. Despite the lack of standardization, current
+implementations seem to have converged on a similar set of features.
+
+<h2>Foreign Function Interfaces let you talk to programs written in "foreign languages"</h2>
+
+<p>An FFI lets your Lisp program interact with code that is "foreign" --
+i.e. not Lisp. 
+
+<blockquote>
+This Lisp-centric view of the world is probably motivated
+by the Lisp machines, where everything -- even the low-level portions of
+the OS -- was written in Lisp. A good many of the people involved with
+Lisp during that time are responsible as well for the development of
+modern Lisp implementations; hence, the not-so-subtle nod toward the
+notion of Lisp as the center of the programmer's universe.
+</blockquote> 
+
+<p>A typical FFI provides for both calls from Lisp to separately-compiled
+code, and from separately compiled code to Lisp.  (In the latter case, it
+is almost always true that the external code must have been called from
+Lisp; it can then call back into Lisp.)  Most often, an FFI supports a 
+C calling convention.
+
+<h2>Would you wrap this, please?</h2>
+
+<p>Why is an FFI even necessary? Why can't you link-in separately
+compiled code as in any other language? The main reason is that Lisp
+datatypes don't generally have equivalents in conventional
+languages. For example, C integers typically fill (depending upon
+declaration) one-half, one, or two machine words and produce
+mathematically incorrect results when a result exceeds the
+representational capacity of the integer's storage. A Lisp integer
+can fit in a machine word, saving a few bits for a type tag. These
+are called fixnums. Lisp integers having magnitudes exceeding the
+capacity of the single word representation are converted to a
+representation that has an unlimited number of bits -- these are
+bignums. And with a good compiler, you can define subtypes of
+integers that, when packed into an array, have just enough bits in
+their representation to handle the declared range of values.
+
+<p>So, one purpose of an FFI is to translate Lisp datatypes to (and
+from) "foreign" datatypes.  Not all conversions are possible -- a good
+FFI will signal an error when a conversion is not possible at runtime.
+
+<p>When a non-Lisp function accepts or returns values in a record
+datatype, the FFI must provide a means of constructing appropriate
+records.  Typically, the FFI gives you a way to construct records
+that are bit-for-bit identical to those that would have been produced
+by another language.  Fields within a record are set and retrieved
+using specialized Lisp accessors.
+
+<p>An FFI must also support the proper function calling protocol for
+non-Lisp functions. Protocols differ by platform and by language.
+Lisp function calling conventions normally differ from those used by
+other languages. Lisp supports optional, keyword, default, and rest
+parameters, multiple return values, closures, and (sometimes,
+depending upon the compiler) tail call elimination; a conventional
+language might implement tail call elimination.
+
+<p>What else must an FFI do?  It loads object files produced by other
+languages, providing linker functionality within Lisp for these object 
+files.  A linker resolves named entries to code in the object file, and
+fills in machine addresses in the object code depending upon where the
+code loads into memory.
+
+<p>Finally, an FFI must resolve differences in memory allocation between
+Lisp and other languages.  Most Lisp implementations allow objects to
+move during operation; this improves the long-term efficiency of memory
+management and can improve the performance of the program under virtual
+memory implementations by reducing the size of the working set.
+Unfortunately, most other languages expect objects to remain at a fixed
+memory address during program execution.  So the FFI must arrange for a
+foreign function to see Lisp objects that don't move.
+
+<p>All of the above functionality is encapsulated by an FFI wrapper 
+function.  All you have to do is define the name, calling sequence and
+object code file of some foreign function, and the FFI will generate
+a wrapper that does all of the necessary translations.  Once you've
+done this, the foreign function can be called just like any other Lisp
+function.
+
+<h2>I'll call you back...</h2>
+
+<p>Usually a foreign function is called for its results or to have some
+effect on the external environment, and a simple call/return sequence 
+is all that's needed.  But some foreign functions, particularly
+those that deal with user interface or device I/O, require access to 
+<em>callback functions</em> during their operation.  A callback function
+is called <em>from</em> the foreign function.  
+
+<p>To define a callback function in Lisp, the FFI basically has to solve
+all of the foreign function problems in the reverse direction.  You use
+the FFI to define a Lisp function that is callable from another language.
+The result is typically a function object or pointer that can be passed
+(as a parameter) to a call of a foreign function.  When the foreign
+function is called, it references the callback parameter in the normal
+manner to invoke the Lisp callback function.  The FFI wrapper around the
+callback translates the foreign calling sequence and parameter values to
+the corresponding Lisp format, invokes the Lisp callback function, and
+returns the callback's results after suitable translation from Lisp to 
+foreign formats.
+
+<h2>Network Interfaces: beyond these four walls</h2>
+
+<p>Although network protocols are hightly standardized and interoperable,
+networking APIs are not.  Common Lisp vendors usually provide their own
+interface to the target platform's networking software.  Franz's Allegro
+Common Lisp provides a simple sockets library for IP networking.  Digitool's
+Macintosh Common Lisp comes with a complete set of interfaces to the low-level
+networking APIs (IP, AppleTalk and PPC) of the Mac OS, plus a collection of 
+sample code that uses the low-level calls to perform common networking tasks;
+you can use the samples as-is or customize them to your requirements.
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter24.html">Chapter 24</a> | Chapter 25 | <a href="chapter26.html">Chapter 26</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

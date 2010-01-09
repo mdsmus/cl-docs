@@ -1,0 +1,34 @@
+<html
+  ><head
+    ><title
+      >Macro FAIL</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Macro: FAIL</h1
+        ><div class="contents"
+          ><h2
+  >Documentation</h2
+><blockquote
+  >Simply generate a FAIL.</blockquote
+><h2
+            >Source</h2
+          ><pre class="code"
+            >(defmacro fail (&amp;rest message-args)
+  &quot;Simply generate a FAIL.&quot;
+  `(process-failure
+    :test-expr ',message-args
+    ,@(when message-args
+            `(:reason (format nil ,@message-args)))))</pre
+          ><a href="../Checks.html#macro_005FIT.BESE.FIVEAM_003A_003AFAIL"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

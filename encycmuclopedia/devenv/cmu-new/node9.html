@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>1.5 Command Line Options</TITLE>
+<META NAME="description" CONTENT="1.5 Command Line Options">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html664" HREF="node10.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html662" HREF="node2.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html656" HREF="node8.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html666" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html667" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html665" HREF="node10.html">1.6 Credits</A>
+<B>Up:</B> <A NAME="tex2html663" HREF="node2.html">1 Introduction</A>
+<B> Previous:</B> <A NAME="tex2html657" HREF="node8.html">1.4 Source Availability</A>
+<BR> <P>
+<H1><A NAME="SECTION00250000000000000000">1.5 Command Line Options</A></H1>
+<P>
+The command line syntax and environment is described in the lisp(1)
+man page in the man/man1 directory of the distribution.  See also
+cmucl(1).  Currently Lisp accepts the following switches:
+<DL ><BR><IMG WIDTH=104 HEIGHT=24 ALIGN=BOTTOM ALT="change_begin" SRC="change_begin.gif"><BR>
+<DT><STRONG><tt>-batch</tt></STRONG>
+<DD> specifies batch mode, where all input is
+    directed from standard-input.  An error code of 0 is returned upon
+    encountering an EOF and 1 otherwise.
+<P>
+<BR><IMG WIDTH=104 HEIGHT=24 ALIGN=BOTTOM ALT="change_end" SRC="change_end.gif"><BR>
+
+<DT><STRONG><tt>-core</tt></STRONG>
+<DD> requires an argument that should be the name of a
+  core file.  Rather than using the default core file
+  (`<tt>lib/lisp.core</tt>'), the specified core file is loaded.
+<P>
+<DT><STRONG><tt>-edit</tt></STRONG>
+<DD> specifies to enter Hemlock.  A file to edit may be
+  specified by placing the name of the file between the program name
+  (usually `<tt>lisp</tt>') and the first switch.
+<P>
+<DT><STRONG><tt>-eval</tt></STRONG>
+<DD> accepts one argument which should be a Lisp form
+  to evaluate during the start up sequence.  The value of the form
+  will not be printed unless it is wrapped in a form that does output.
+<P>
+<DT><STRONG><tt>-hinit</tt></STRONG>
+<DD> accepts an argument that should be the name of
+  the hemlock init file to load the first time the function
+  <A NAME="7535">&#160;</A><tt>ed</tt> is invoked.  The default is to load
+  `<tt>hemlock-init.<i>object-type</i></tt>', or if that does not exist,
+  `<tt>hemlock-init.lisp</tt>' from the user's home directory.  If the
+  file is not in the user's home directory, the full path must be
+  specified.
+<P>
+<DT><STRONG><tt>-init</tt></STRONG>
+<DD> accepts an argument that should be the name of an
+  init file to load during the normal start up sequence.  The default
+  is to load `<tt>init.<i>object-type</i></tt>' or, if that does not exist,
+  `<tt>init.lisp</tt>' from the user's home directory.  If the file is not
+  in the user's home directory, the full path must be specified.
+<P>
+<DT><STRONG><tt>-noinit</tt></STRONG>
+<DD> accepts no arguments and specifies that an init
+  file should not be loaded during the normal start up sequence.
+  Also, this switch suppresses the loading of a hemlock init file when
+  Hemlock is started up with the <tt>-edit</tt> switch.
+<P>
+<DT><STRONG><tt>-load</tt></STRONG>
+<DD> accepts an argument which should be the name of a
+  file to load into Lisp before entering Lisp's read-eval-print loop.
+<P>
+<DT><STRONG><tt>-slave</tt></STRONG>
+<DD> specifies that Lisp should start up as a
+  &#305;slave Lisp and try to connect to an editor Lisp.  The name of
+  the editor to connect to must be specified--to find the
+  editor's name, use the Hemlock ``<tt>Accept Slave
+    Connections</tt>'' command.  The name for the editor Lisp is of the
+  form:
+  <BLOCKQUOTE> <PRE><i>machine-name</i><tt>:</tt><i>socket</i>
+  </PRE> </BLOCKQUOTE>
+  where <i>machine-name</i> is the internet host name for the machine
+  and <i>socket</i> is the decimal number of the socket to connect to.
+<P>
+</DL>
+For more details on the use of the <tt>-edit</tt> and <tt>-slave</tt>
+switches, see the &#305;Hemlock User's Manual.
+<P>
+Arguments to the above switches can be specified in one of two ways:
+<i>switch</i><tt>=</tt><i>value</i> or
+<i>switch</i>&lt;<i>space</i>&gt;<i>value</i>.  For example, to start up
+the saved core file mylisp.core use either of the following two
+commands:
+<BLOCKQUOTE> <PRE><tt>lisp -core=mylisp.core
+lisp -core mylisp.core</tt>
+</PRE> </BLOCKQUOTE><HR><A NAME="tex2html664" HREF="node10.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html662" HREF="node2.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html656" HREF="node8.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html666" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html667" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html665" HREF="node10.html">1.6 Credits</A>
+<B>Up:</B> <A NAME="tex2html663" HREF="node2.html">1 Introduction</A>
+<B> Previous:</B> <A NAME="tex2html657" HREF="node8.html">1.4 Source Availability</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

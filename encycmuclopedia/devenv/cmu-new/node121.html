@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The Freeze-Type Declaration</TITLE>
+<META NAME="description" CONTENT="The Freeze-Type Declaration">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2225" HREF="node122.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2223" HREF="node112.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2217" HREF="node120.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2227" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2228" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2226" HREF="node122.html">5.2.10 Type Restrictions</A>
+<B>Up:</B> <A NAME="tex2html2224" HREF="node112.html">5.2 More About Types </A>
+<B> Previous:</B> <A NAME="tex2html2218" HREF="node120.html">5.2.8 Structure Types</A>
+<BR> <P>
+<H2><A NAME="SECTION00629000000000000000">The Freeze-Type Declaration</A></H2>
+<P>
+<A NAME="9840">&#160;</A>
+<A NAME="freezetype">&#160;</A>
+<P>
+The <tt>extensions:freeze-type</tt> declaration is a CMU extension that
+enables more efficient compilation of user-defined types by asserting
+that the definition is not going to change.  This declaration may only
+be used globally (with <tt>declaim</tt> or <tt>proclaim</tt>).  Currently
+<tt>freeze-type</tt> only affects structure type testing done by
+<tt>typep</tt>, <tt>typecase</tt>, etc.  Here is an example:
+<BLOCKQUOTE> <PRE>(declaim (freeze-type foo bar))
+</PRE> </BLOCKQUOTE>
+This asserts that the types <tt>foo</tt> and <tt>bar</tt> and their
+subtypes are not going to change.  This allows more efficient type
+testing, since the compiler can open-code a test for all possible
+subtypes, rather than having to examine the type hierarchy at
+run-time.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

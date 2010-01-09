@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.10.2 Structure Representation</TITLE>
+<META NAME="description" CONTENT="5.10.2 Structure Representation">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2738" HREF="node163.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2736" HREF="node160.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2730" HREF="node161.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2740" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2741" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2739" HREF="node163.html">5.10.3 Arrays</A>
+<B>Up:</B> <A NAME="tex2html2737" HREF="node160.html">5.10 Object Representation</A>
+<B> Previous:</B> <A NAME="tex2html2731" HREF="node161.html">5.10.1 Think Before You </A>
+<BR> <P>
+<H2><A NAME="SECTION006102000000000000000">5.10.2 Structure Representation</A></H2>
+<P>
+<A NAME="10472">&#160;</A> One of the best ways of
+building complex data structures is to define appropriate structure
+types using <A NAME="10473">&#160;</A><tt>defstruct</tt>.  In Python, access of structure
+slots is always at least as fast as list or vector access, and is
+usually faster.  In comparison to a list representation of a tuple,
+structures also have a space advantage.
+<P>
+Even if structures weren't more efficient than other representations, structure
+use would still be attractive because programs that use structures in
+appropriate ways are much more maintainable and robust than programs written
+using only lists.  For example:
+<BLOCKQUOTE> <PRE>(rplaca (caddr (cadddr x)) (caddr y))
+</PRE> </BLOCKQUOTE>
+could have been written using structures in this way:
+<BLOCKQUOTE> <PRE>(setf (beverage-flavor (astronaut-beverage x)) (beverage-flavor y))
+</PRE> </BLOCKQUOTE>
+The second version is more maintainable because it is easier to
+understand what it is doing.  It is more robust because structures
+accesses are type checked.  An <tt>astronaut</tt> will never be confused
+with a <tt>beverage</tt>, and the result of <tt>beverage-flavor</tt> is
+always a flavor.  See sections <A HREF="node120.html#structuretypes">5.2.8</A> and
+<A HREF="node121.html#freezetype">5.2.9</A> for more information about structure types.
+See section&nbsp;<A HREF="node124.html#typeinference">5.3</A> for a number of examples that make clear the
+advantages of structure typing.
+<P>
+Note that the structure definition should be compiled before any uses
+of its accessors or type predicate so that these function calls can be
+efficiently open-coded.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>8.7.5 Accessing Lisp Arrays</TITLE>
+<META NAME="description" CONTENT="8.7.5 Accessing Lisp Arrays">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3758" HREF="node243.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3756" HREF="node237.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3752" HREF="node241.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3760" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3761" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3759" HREF="node243.html">Step-by-Step Alien Example</A>
+<B>Up:</B> <A NAME="tex2html3757" HREF="node237.html">8.7 Alien Function Calls</A>
+<B> Previous:</B> <A NAME="tex2html3753" HREF="node241.html">8.7.4 Calling Lisp from </A>
+<BR> <P>
+<H2><A NAME="SECTION00975000000000000000">8.7.5 Accessing Lisp Arrays</A></H2>
+<P>
+Due to the way CMU Common Lisp manages memory, the amount of memory that can
+be dynamically allocated by <tt>malloc</tt> or <A NAME="11846">&#160;</A><tt>make-alien</tt> (page&nbsp;<A HREF="node231.html#FNmakealien"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>) is
+limited<A NAME="tex2html14" HREF="footnode.html#7100"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>.
+<P>
+To overcome this limitation, it is possible to access the content of
+Lisp arrays which are limited only by the amount of physical memory
+and swap space available.  However, this technique is only useful if
+the foreign function takes pointers to memory instead of allocating
+memory for itself.  In latter case, you will have to modify the
+foreign functions.
+<P>
+This technique takes advantage of the fact that CMU Common Lisp has
+specialized array types (see section&nbsp;<A HREF="node175.html#specializedarraytypes">5.11.8</A>) that match
+a typical C array.  For example, a <tt>(simple-array double-float
+  (100))</tt> is stored in memory in essentially the same way as the C
+array <tt>double x[100]</tt> would be.  The following function allows us
+to get the physical address of such a Lisp array:
+<BLOCKQUOTE> <PRE>(defun array-data-address (array)
+  &quot;Return the physical address of where the actual data of an array is
+stored.
+<P>
+ARRAY must be a specialized array type in CMU Lisp.  This means ARRAY
+must be an array of one of the following types:
+<P>
+                  double-float
+                  single-float
+                  (unsigned-byte 32)
+                  (unsigned-byte 16)
+                  (unsigned-byte  8)
+                  (signed-byte 32)
+                  (signed-byte 16)
+                  (signed-byte  8)
+&quot;
+  (declare (type (or #+signed-array (array (signed-byte 8))
+                     #+signed-array (array (signed-byte 16))
+                     #+signed-array (array (signed-byte 32))
+                     (array (unsigned-byte 8))
+                     (array (unsigned-byte 16))
+                     (array (unsigned-byte 32))
+                     (array single-float)
+                     (array double-float))
+                 array)
+           (optimize (speed 3) (safety 0))
+           (ext:optimize-interface (safety 3)))
+  ;; with-array-data will get us to the actual data.  However, because
+  ;; the array could have been displaced, we need to know where the
+  ;; data starts.
+  (lisp::with-array-data ((data array)
+                          (start)
+                          (end))
+    (declare (ignore end))
+    ;; DATA is a specialized simple-array.  Memory is laid out like this:
+    ;;
+    ;;   byte offset    Value
+    ;;        0         type code (should be 70 for double-float vector)
+    ;;        4         4 * number of elements in vector
+    ;;        8         1st element of vector
+    ;;      ...         ...
+    ;;
+    (let ((addr (+ 8 (logandc1 7 (kernel:get-lisp-obj-address data))))
+          (type-size (let ((type (array-element-type data)))
+                       (cond ((or (equal type '(signed-byte 8))
+                                  (equal type '(unsigned-byte 8)))
+                              1)
+                             ((or (equal type '(signed-byte 16))
+                                  (equal type '(unsigned-byte 16)))
+                              2)
+                             ((or (equal type '(signed-byte 32))
+                                  (equal type '(unsigned-byte 32)))
+                              4)
+                             ((equal type 'single-float)
+                              4)
+                             ((equal type 'double-float)
+                              8)
+                             (t
+                              (error &quot;Unknown specialized array element type&quot;))))))
+      (declare (type (unsigned-byte 32) addr)
+               (optimize (speed 3) (safety 0) (ext:inhibit-warnings 3)))
+      (system:int-sap (the (unsigned-byte 32)
+                        (+ addr (* type-size start)))))))
+</PRE> </BLOCKQUOTE>
+<P>
+Assume we have the C function below that we wish to use:
+<BLOCKQUOTE> <PRE>double dotprod(double* x, double* y, int n)
+  {
+    int k;
+    double sum = 0;
+<P>
+    for (k = 0; k &lt; n; ++k) {
+      sum += x[k] * y[k];
+    }
+  }
+</PRE> </BLOCKQUOTE>
+The following example generates two large arrays in Lisp, and calls the C
+function to do the desired computation.  This would not have been
+possible using <tt>malloc</tt> or <tt>make-alien</tt> since we need about
+16 MB of memory to hold the two arrays.
+<BLOCKQUOTE> <PRE>(def-alien-routine &quot;dotprod&quot; double
+    (x (* double-float) :in)
+    (y (* double-float) :in)
+    (n int :in))
+<P>
+  (let ((x (make-array 1000000 :element-type 'double-float))
+        (y (make-array 1000000 :element-type 'double-float)))
+    ;; Initialize X and Y somehow
+    (let ((x-addr (system:int-sap (array-data-address x)))
+          (y-addr (system:int-sap (array-data-address y))))
+      (dotprod x-addr y-addr 1000000)))    
+</PRE> </BLOCKQUOTE>
+In this example, it may be useful to wrap the inner <tt>let</tt>
+expression in an <tt>unwind-protect</tt> that first turns off garbage
+collection and then turns garbage collection on afterwards.  This will
+prevent garbage collection from moving <tt>x</tt> and <tt>y</tt> after we
+have obtained the (now erroneous) addresses but before the call to
+<tt>dotprod</tt> is made.
+<P>
+<HR><A NAME="tex2html3758" HREF="node243.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3756" HREF="node237.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3752" HREF="node241.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3760" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3761" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3759" HREF="node243.html">Step-by-Step Alien Example</A>
+<B>Up:</B> <A NAME="tex2html3757" HREF="node237.html">8.7 Alien Function Calls</A>
+<B> Previous:</B> <A NAME="tex2html3753" HREF="node241.html">8.7.4 Calling Lisp from </A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

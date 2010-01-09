@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>3.10.1 Encapsulation Functions</TITLE>
+<META NAME="description" CONTENT="3.10.1 Encapsulation Functions">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1616" HREF="node82.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1614" HREF="node80.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1610" HREF="node80.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1618" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1619" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1617" HREF="node82.html">3.11 Specials</A>
+<B>Up:</B> <A NAME="tex2html1615" HREF="node80.html">3.10 Function Tracing</A>
+<B> Previous:</B> <A NAME="tex2html1611" HREF="node80.html">3.10 Function Tracing</A>
+<BR> <P>
+<H2><A NAME="SECTION004101000000000000000">3.10.1 Encapsulation Functions</A></H2>
+<P>
+<A NAME="9125">&#160;</A>
+<A NAME="9126">&#160;</A>
+<P>
+The encapsulation functions provide a mechanism for intercepting the
+arguments and results of a function.  <tt>encapsulate</tt> changes the
+function definition of a symbol, and saves it so that it can be
+restored later.  The new definition normally calls the original
+definition.  The Common Lisp <A NAME="9128">&#160;</A><tt>fdefinition</tt> function always returns
+the original definition, stripping off any encapsulation.
+<P>
+The original definition of the symbol can be restored at any time by
+the <tt>unencapsulate</tt> function.  <tt>encapsulate</tt> and <tt>unencapsulate</tt>
+allow a symbol to be multiply encapsulated in such a way that different
+encapsulations can be completely transparent to each other.
+<P>
+Each encapsulation has a type which may be an arbitrary lisp object.
+If a symbol has several encapsulations of different types, then any
+one of them can be removed without affecting more recent ones.
+A symbol may have more than one encapsulation of the same type, but
+only the most recent one can be undone.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:encapsulate</tt> <em> <i>symbol</i> <i>type</i> <i>body</i></em><BR>
+<P>
+  Saves the current definition of <i>symbol</i>, and replaces it with a
+  function which returns the result of evaluating the form,
+  <i>body</i>.  <i>Type</i> is an arbitrary lisp object which is the
+  type of encapsulation.
+<P>
+  When the new function is called, the following variables are bound
+  for the evaluation of <i>body</i>:
+  <DL ><DT><STRONG><tt>extensions:argument-list</tt></STRONG>
+<DD> A list of the arguments to
+    the function.
+<P>
+  <DT><STRONG><tt>extensions:basic-definition</tt></STRONG>
+<DD> The unencapsulated
+    definition of the function.
+<P>
+</DL>
+  The unencapsulated definition may be called with the original
+  arguments by including the form
+  <BLOCKQUOTE> <PRE>(apply extensions:basic-definition extensions:argument-list)
+  </PRE> </BLOCKQUOTE>
+<P>
+  <tt>encapsulate</tt> always returns <i>symbol</i>.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:unencapsulate</tt> <em> <i>symbol</i> <i>type</i></em><BR>
+<P>
+  Undoes <i>symbol</i>'s most recent encapsulation of type <i>type</i>.
+  <i>Type</i> is compared with <tt>eq</tt>.  Encapsulations of other
+  types are left in place.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:encapsulated-p</tt> <em> <i>symbol</i> <i>type</i></em><BR>
+<P>
+  Returns <i>t</i> if <i>symbol</i> has an encapsulation of type
+  <i>type</i>.  Returns <i>nil</i> otherwise.  <i>type</i> is compared with
+  <tt>eq</tt>.
+<P>
+<HR><A NAME="tex2html1616" HREF="node82.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1614" HREF="node80.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1610" HREF="node80.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1618" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1619" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1617" HREF="node82.html">3.11 Specials</A>
+<B>Up:</B> <A NAME="tex2html1615" HREF="node80.html">3.10 Function Tracing</A>
+<B> Previous:</B> <A NAME="tex2html1611" HREF="node80.html">3.10 Function Tracing</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

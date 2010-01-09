@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>3.3.2 How Arguments are Printed</TITLE>
+<META NAME="description" CONTENT="3.3.2 How Arguments are Printed">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1416" HREF="node65.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1414" HREF="node62.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1408" HREF="node63.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1418" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1419" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1417" HREF="node65.html">3.3.3 Function Names</A>
+<B>Up:</B> <A NAME="tex2html1415" HREF="node62.html">3.3 Stack Frames</A>
+<B> Previous:</B> <A NAME="tex2html1409" HREF="node63.html">3.3.1 Stack Motion</A>
+<BR> <P>
+<H2><A NAME="SECTION00432000000000000000">3.3.2 How Arguments are Printed</A></H2>
+<P>
+A frame is printed to look like a function call, but with the actual argument
+values in the argument positions.  So the frame for this call in the source:
+<BLOCKQUOTE> <PRE>(myfun (+ 3 4) 'a)
+</PRE> </BLOCKQUOTE>
+would look like this:
+<BLOCKQUOTE> <PRE>(MYFUN 7 A)
+</PRE> </BLOCKQUOTE>
+All keyword and optional arguments are displayed with their actual
+values; if the corresponding argument was not supplied, the value will
+be the default.  So this call:
+<BLOCKQUOTE> <PRE>(subseq &quot;foo&quot; 1)
+</PRE> </BLOCKQUOTE>
+would look like this:
+<BLOCKQUOTE> <PRE>(SUBSEQ &quot;foo&quot; 1 3)
+</PRE> </BLOCKQUOTE>
+And this call:
+<BLOCKQUOTE> <PRE>(string-upcase &quot;test case&quot;)
+</PRE> </BLOCKQUOTE>
+would look like this:
+<BLOCKQUOTE> <PRE>(STRING-UPCASE &quot;test case&quot; :START 0 :END NIL)
+</PRE> </BLOCKQUOTE>
+<P>
+The arguments to a function call are displayed by accessing the argument
+variables.  Although those variables are initialized to the actual argument
+values, they can be set inside the function; in this case the new value will be
+displayed.
+<P>
+<tt><i>&amp;rest</i></tt> arguments are handled somewhat differently.  The value of
+the rest argument variable is displayed as the spread-out arguments to
+the call, so:
+<BLOCKQUOTE> <PRE>(format t &quot;&nbsp;A is a &nbsp;A.&quot; &quot;This&quot; 'test)
+</PRE> </BLOCKQUOTE>
+would look like this:
+<BLOCKQUOTE> <PRE>(FORMAT T &quot;&nbsp;A is a &nbsp;A.&quot; &quot;This&quot; 'TEST)
+</PRE> </BLOCKQUOTE>
+Rest arguments cause an exception to the normal display of keyword
+arguments in functions that have both <tt><i>&amp;rest</i></tt> and <tt>&amp;key</tt>
+arguments.  In this case, the keyword argument variables are not
+displayed at all; the rest arg is displayed instead.  So for these
+functions, only the keywords actually supplied will be shown, and the
+values displayed will be the argument values, not values of the
+(possibly modified) variables.
+<P>
+If the variable for an argument is never referenced by the function, it will be
+deleted.  The variable value is then unavailable, so the debugger prints
+<tt>&lt;unused-arg&gt;</tt> instead of the value.  Similarly, if for any of a number of
+reasons (described in more detail in section <A HREF="node69.html#debugvars">3.4</A>) the value of the
+variable is unavailable or not known to be available, then
+<tt>&lt;unavailable-arg&gt;</tt> will be printed instead of the argument value.
+<P>
+Printing of argument values is controlled by <tt>*debug-print-level*</tt> and
+<A NAME="8736">&#160;</A><tt>*debug-print-length*</tt> (page&nbsp;<A HREF="node82.html#VRdebugprintlength"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>).
+<P>
+<HR><A NAME="tex2html1416" HREF="node65.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1414" HREF="node62.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1408" HREF="node63.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1418" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1419" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1417" HREF="node65.html">3.3.3 Function Names</A>
+<B>Up:</B> <A NAME="tex2html1415" HREF="node62.html">3.3 Stack Frames</A>
+<B> Previous:</B> <A NAME="tex2html1409" HREF="node63.html">3.3.1 Stack Motion</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

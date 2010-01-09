@@ -1,0 +1,65 @@
+<html lang="en">
+<head>
+<title>asdf Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name=description content="asdf Manual">
+<meta name=generator content="makeinfo 4.2">
+<link href="http://www.gnu.org/software/texinfo/" rel=generator-home>
+<!--
+This manual describes asdf, a system definition facility for Common
+Lisp programs and libraries.
+
+<p>asdf Copyright &copy; 2001-2004 Daniel Barlow and contributors
+
+<p>This manual Copyright &copy; 2001-2004 Daniel Barlow and
+contributors
+
+<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+-->
+</head>
+<body>
+<p>
+Node:<a name="The%20object%20model%20of%20asdf">The object model of asdf</a>,
+Next:<a rel=next accesskey=n href="Error-handling.html#Error%20handling">Error handling</a>,
+Previous:<a rel=previous accesskey=p href="Defining-systems-with-defsystem.html#Defining%20systems%20with%20defsystem">Defining systems with defsystem</a>,
+Up:<a rel=up accesskey=u href="index.html#Top">Top</a>
+<hr><br>
+
+<h2>The object model of asdf</h2>
+
+<p>asdf is designed in an object-oriented way from the ground up.  Both a
+system's structure and the operations that can be performed on systems
+follow a protocol.  asdf is extensible to new operations and to new
+component types.  This allows the addition of behaviours: for example,
+a new component could be added for Java JAR archives, and methods
+specialised on <code>compile-op</code> added for it that would accomplish the
+relevant actions.
+
+<p>This chapter deals with <em>components</em>, the building blocks of a
+system, and <em>operations</em>, the actions that can be performed on a
+system.
+
+<ul>
+<li><a accesskey=1 href="Operations.html#Operations">Operations</a>: 
+<li><a accesskey=2 href="Components.html#Components">Components</a>: 
+</ul>
+
+</body></html>
+

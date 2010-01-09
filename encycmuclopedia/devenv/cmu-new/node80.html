@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>3.10 Function Tracing</TITLE>
+<META NAME="description" CONTENT="3.10 Function Tracing">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1605" HREF="node81.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1603" HREF="node59.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1597" HREF="node79.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1607" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1608" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1606" HREF="node81.html">3.10.1 Encapsulation Functions</A>
+<B>Up:</B> <A NAME="tex2html1604" HREF="node59.html">3 The Debugger</A>
+<B> Previous:</B> <A NAME="tex2html1598" HREF="node79.html">3.9.1 Breakpoint Example</A>
+<BR> <P>
+<H1><A NAME="SECTION004100000000000000000">3.10 Function Tracing</A></H1>
+<P>
+<A NAME="9032">&#160;</A>
+<A NAME="9033">&#160;</A>
+<P>
+The tracer causes selected functions to print their arguments and
+their results whenever they are called.  Options allow conditional
+printing of the trace information and conditional breakpoints on
+function entry or exit.
+<P>
+<b>[Macro]</b><BR> 
+<tt>  trace</tt> <em> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i>option global-value</i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i>name <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i>option
+          value</i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></em><BR>
+<P>
+  <tt>trace</tt> is a debugging tool that prints information when
+  specified functions are called.  In its simplest form:
+  <BLOCKQUOTE> <PRE>(trace <i>name-1</i> <i>name-2</i> ...)
+  </PRE> </BLOCKQUOTE>
+  <tt>trace</tt> causes a printout on <A NAME="9054">&#160;</A><tt>*trace-output*</tt> each time
+  that one of the named functions is entered or returns (the
+  <i>names</i> are not evaluated.)  Trace output is indented according
+  to the number of pending traced calls, and this trace depth is
+  printed at the beginning of each line of output.  Printing verbosity
+  of arguments and return values is controlled by
+  <A NAME="9057">&#160;</A><tt>*debug-print-level*</tt> and <A NAME="9059">&#160;</A><tt>*debug-print-length*</tt>.
+<P>
+  If no <i>names</i> or <i>options</i> are are given, <tt>trace</tt>
+  returns the list of all currently traced functions,
+  <tt>*traced-function-list*</tt>.
+<P>
+  Trace options can cause the normal printout to be suppressed, or
+  cause extra information to be printed.  Each option is a pair of an
+  option keyword and a value form.  Options may be interspersed with
+  function names.  Options only affect tracing of the function whose
+  name they appear immediately after.  Global options are specified
+  before the first name, and affect all functions traced by a given
+  use of <tt>trace</tt>.  If an already traced function is traced again,
+  any new options replace the old options.  The following options are
+  defined:
+  <DL ><DT><STRONG><tt>:condition</tt> <i>form</i>, <tt>:condition-after</tt> <i>form</i>,
+    <tt>:condition-all</tt> <i>form</i></STRONG>
+<DD> If <tt>:condition</tt> is specified,
+    then <tt>trace</tt> does nothing unless <i>form</i> evaluates to true
+    at the time of the call.  <tt>:condition-after</tt> is similar, but
+    suppresses the initial printout, and is tested when the function
+    returns.  <tt>:condition-all</tt> tries both before and after.
+<P>
+  <DT><STRONG><tt>:wherein</tt> <i>names</i></STRONG>
+<DD> If specified, <i>names</i> is a
+    function name or list of names.  <tt>trace</tt> does nothing unless
+    a call to one of those functions encloses the call to this
+    function (i.e. it would appear in a backtrace.)  Anonymous
+    functions have string names like <tt>&quot;DEFUN FOO&quot;</tt>.
+<P>
+  <DT><STRONG><tt>:break</tt> <i>form</i>, <tt>:break-after</tt> <i>form</i>,
+    <tt>:break-all</tt> <i>form</i></STRONG>
+<DD> If specified, and <i>form</i> evaluates
+    to true, then the debugger is invoked at the start of the
+    function, at the end of the function, or both, according to the
+    respective option.
+<P>
+  <DT><STRONG><tt>:print</tt> <i>form</i>, <tt>:print-after</tt> <i>form</i>,
+    <tt>:print-all</tt> <i>form</i></STRONG>
+<DD> In addition to the usual printout, the
+    result of evaluating <i>form</i> is printed at the start of the
+    function, at the end of the function, or both, according to the
+    respective option.  Multiple print options cause multiple values
+    to be printed.
+<P>
+  <DT><STRONG><tt>:function</tt> <i>function-form</i></STRONG>
+<DD> This is a not really an
+    option, but rather another way of specifying what function to
+    trace.  The <i>function-form</i> is evaluated immediately, and the
+    resulting function is traced.
+<P>
+  <DT><STRONG><tt>:encapsulate <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i>:default | t | nil</i></i><IMG WIDTH=5 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17168" SRC="img6.gif"></tt></STRONG>
+<DD> In CMU Common Lisp,
+    tracing can be done either by temporarily redefining the function
+    name (encapsulation), or using breakpoints.  When breakpoints are
+    used, the function object itself is destructively modified to
+    cause the tracing action.  The advantage of using breakpoints is
+    that tracing works even when the function is anonymously called
+    via <tt>funcall</tt>.
+<P>
+    When <tt>:encapsulate</tt> is true, tracing is done via encapsulation.
+    <tt>:default</tt> is the default, and means to use encapsulation for
+    interpreted functions and funcallable instances, breakpoints
+    otherwise.  When encapsulation is used, forms are <I>not</I>
+    evaluated in the function's lexical environment, but
+    <tt>debug:arg</tt> can still be used.
+<P>
+</DL>
+<P>
+  <tt>:condition</tt>, <tt>:break</tt> and <tt>:print</tt> forms are evaluated in
+  the lexical environment of the called function; <tt>debug:var</tt> and
+  <tt>debug:arg</tt> can be used.  The <tt>-after</tt> and <tt>-all</tt>
+  forms are evaluated in the null environment.
+<P>
+<b>[Macro]</b><BR> 
+<tt>  untrace</tt> <em>  <i>&amp;rest</i> <i>function-names</i></em><BR>
+<P>
+  This macro turns off tracing for the specified functions, and
+  removes their names from <tt>*traced-function-list*</tt>.  If no
+  <i>function-names</i> are given, then all currently traced functions
+  are untraced.
+<P>
+<b>[Variable]</b><BR> 
+<tt> extensions:*traced-function-list*</tt><BR> <BR>
+<P>
+  A list of function names maintained and used by <tt>trace</tt>,
+  <tt>untrace</tt>, and <tt>untrace-all</tt>.  This list should contain
+  the names of all functions currently being traced.
+<P>
+<b>[Variable]</b><BR> 
+<tt> extensions:*max-trace-indentation*</tt><BR> <BR>
+<P>
+  The maximum number of spaces which should be used to indent trace
+  printout.  This variable is initially set to 40.
+<P>
+<BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html1609" HREF="node81.html#SECTION004101000000000000000">3.10.1 Encapsulation Functions</A>
+</UL>
+<HR><A NAME="tex2html1605" HREF="node81.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1603" HREF="node59.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1597" HREF="node79.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1607" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1608" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1606" HREF="node81.html">3.10.1 Encapsulation Functions</A>
+<B>Up:</B> <A NAME="tex2html1604" HREF="node59.html">3 The Debugger</A>
+<B> Previous:</B> <A NAME="tex2html1598" HREF="node79.html">3.9.1 Breakpoint Example</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

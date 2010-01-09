@@ -1,0 +1,121 @@
+<html lang="en">
+<head>
+<title>asdf Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name=description content="asdf Manual">
+<meta name=generator content="makeinfo 4.2">
+<link href="http://www.gnu.org/software/texinfo/" rel=generator-home>
+<!--
+This manual describes asdf, a system definition facility for Common
+Lisp programs and libraries.
+
+<p>asdf Copyright &copy; 2001-2004 Daniel Barlow and contributors
+
+<p>This manual Copyright &copy; 2001-2004 Daniel Barlow and
+contributors
+
+<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+-->
+</head>
+<body>
+<p>
+Node:<a name="missing%20bits%20in%20implementation">missing bits in implementation</a>,
+Next:<a rel=next accesskey=n href="Inspiration.html#Inspiration">Inspiration</a>,
+Previous:<a rel=previous accesskey=p href="TODO-list.html#TODO%20list">TODO list</a>,
+Up:<a rel=up accesskey=u href="index.html#Top">Top</a>
+<hr><br>
+
+<h2>missing bits in implementation</h2>
+
+<p>** all of the above
+
+<p>** reuse the same scratch package whenever a system is reloaded from disk
+
+<p>** rules for system pathname defaulting are not yet implemented properly
+
+<p>** proclamations probably aren't
+
+<p>** when a system is reloaded with fewer components than it previously
+   had, odd things happen
+
+<p>we should do something inventive when processing a defsystem form,
+like take the list of kids and setf the slot to nil, then transfer
+children from old to new list as they're found
+
+<p>**  traverse may become a normal function
+
+<p>If you're defining methods on traverse,  speak up.
+
+<p>** a lot of load-op methods can be rewritten to use input-files
+
+<p>so should be.
+
+<p>** (stuff that might happen later)
+
+<p>*** david lichteblau's patch for symlink resolution?
+
+<p>*** Propagation of the :force option.  "I notice that
+
+<p>	(oos 'compile-op :araneida :force t)
+
+<p>also forces compilation of every other system the :araneida system
+depends on.  This is rarely useful to me; usually, when I want to force
+recompilation of something more than a single source file, I want to
+recompile only one system.  So it would be more useful to have
+make-sub-operation refuse to propagate <code>:force t</code> to other systems, and
+propagate only something like <code>:force :recursively</code>.
+
+<p>Ideally what we actually want is some kind of criterion that says to
+which systems (and which operations) a <code>:force</code> switch will
+propagate.
+
+<p>The problem is perhaps that `force' is a pretty meaningless concept. 
+How obvious is it that <code>load :force t</code> should force
+<em>compilation</em>?  But we don't really have the right dependency
+setup for the user to compile <code>:force t</code> and expect it to work
+(files will not be loaded after compilation, so the compile
+environment for subsequent files will be emptier than it needs to be)
+
+<p>What does the user actually want to do when he forces?  Usually, for
+me, update for use with a new version of the lisp compiler.  Perhaps
+for recovery when he suspects that something has gone wrong.  Or else
+when he's changed compilation options or configuration in some way
+that's not reflected in the dependency graph.
+
+<p>Other possible interface: have a 'revert' function akin to 'make clean'
+
+<br><pre>(asdf:revert 'asdf:compile-op 'araneida)
+</pre>
+
+<p>would delete any files produced by 'compile-op 'araneida.  Of course, it
+wouldn't be able to do much about stuff in the image itself.
+
+<p>How would this work?
+
+<p>traverse
+
+<p>There's a difference between a module's dependencies (peers) and its
+components (children).  Perhaps there's a similar difference in
+operations?  For example, <code>(load "use") depends-on (load "macros")</code> is a
+peer, whereas <code>(load "use") depends-on (compile "use")</code> is more of a
+`subservient' relationship.
+
+</body></html>
+

@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 3, Lesson 6</title> 
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 3 - Essential Lisp in Twelve Lessons</h1> 
+
+<h2><A NAME="lesson-6">Lesson 6 - Binding versus Assignment</A></h2> 
+
+<h3>Binding creates a new place to hold a value</h3> 
+
+<P>Lisp often "creates a binding" for a variable by allocating a piece of 
+storage to hold the variable's value and putting the value into the newly 
+allocated memory.  Binding is a very general mechanism for implementing 
+lexical scope for variables, but it has other uses depending upon the 
+lifetime of the binding.  We'll revisit this in 
+<A HREF="chapter08.html">Chapter 8</A> when we study lifetime and 
+visibility.</P>
+
+<BLOCKQUOTE>
+Yes, Lisp allocates storage for new bindings.  While this sounds like it could
+be horribly inefficient, we've said nothing yet about <EM>where</EM> Lisp 
+allocated the storage.  For example, Lisp binds function parameters to 
+actual values, but allocates the storage on the stack just like any other 
+programming language.  Lisp creates bindings in the heap if it can't 
+determine that the binding has a lifetime which ends when the binding form 
+finishes executing.
+</BLOCKQUOTE>
+
+<h3>Bindings have names</h3> 
+
+<P>Lisp gives each binding a name.  Otherwise, how would your program 
+refer to the binding?  Simple, eh?  Hold on...</P>
+
+<h3>A binding can have different values at the same time</h3> 
+
+<P>It is quite common for multiple bindings to share the same name.  For 
+example:</P>
+
+<PRE WIDTH=80>(let ((a 1))
+   (let ((a 2))
+      (let ((a 3))
+         ...)))</PRE>
+
+<P>Here, <CODE>A</CODE> has three distinct bindings by the time the body 
+(marked by <CODE>...</CODE>) executes in the innermost <CODE>LET</CODE>.</P>
+
+<BLOCKQUOTE>
+This is not to say that the above example is representative of typical Lisp 
+code, however.
+</BLOCKQUOTE>
+
+<h3>One binding is innermost</h3> 
+
+<PRE WIDTH=80><I>;; Here, A has no binding.</I>
+(let ((a 1))
+   <I>;; Here, the innermost binding of A has the value 1.</I>
+   (let ((a 2))
+      <I>;; Here, the innermost binding of A has the value 2.</I>
+      (let ((a 3))
+         <I>;; Here, the innermost binding of A has the value 3.</I>
+         ...)))</PRE>
+
+<P>As you can see, the notion of innermost binding depends on the relative 
+position of your program's code to the form that established a particular 
+binding.  If you look at how binding forms are nested (easy to do if you 
+indent your code as shown above) then the program has access to bindings 
+created around, or enclosing, your program code.</P>
+
+<P>One more thing you should know is that an outer binding is still 
+visible through inner binding forms, as long as the inner binding form does 
+not bind the same symbol:</P>
+
+<PRE WIDTH=80><I>;; Here, A and B have no binding.</I>
+(let ((a 1)
+      (b 9))
+   <I>;; Here, the innermost binding of A has the value 1,
+   ;; and the binding of B has the value 9.</I>
+   (let ((a 2))
+      <I>;; Here, the innermost binding of A has the value 2.
+      ;; The binding of B still has the value 9.</I>
+      (let ((a 3))
+         <I>;; Here, the innermost binding of A has the value 3.
+         ;; B still has the value 9 from the outermost LET form.</I>
+         ...)))</PRE>
+
+<h3>The program can only access bindings it creates</h3> 
+
+<P>When a binding form binds a new value to an existing symbol, the 
+previous value becomes shadowed.  The value of the outer binding is hidden 
+(but not forgotten) while your program code executes inside the inner 
+binding form.  But as soon as your program leaves the inner binding form, 
+the value of the outer binding is restored.  For example:</P>
+
+<PRE WIDTH=80>(let ((z 1))
+   <I>;; Here, the innermost binding of Z has the value 1.</I>
+   (let ((z 2))
+      <I>;; Here, the innermost binding of Z has the value 2.</I>
+      ...)
+   <I>;; Now we're outside the inner binding form,
+   ;; and we again see the binding with the value 1.</I>
+   ...)</PRE>
+   
+<h3>Assignment gives an old place a new value</h3> 
+
+<P>The <CODE>SETQ</CODE> form changes the value of an existing binding:</P>
+
+<PRE WIDTH=80>(let ((z 1))
+   <I>;; Here, the innermost binding of Z has the value 1.</I>
+   (setq z 9)
+   <I>;; Now the value of Z is 9.</I>
+   (let ((z 2))
+      <I>;; Here, the innermost binding of Z has the value 2.</I>
+      ...)
+   <I>;; Now we're outside the inner binding form,
+   ;; and we again see the outer binding of Z with the value 9.</I>
+   ...)</PRE>
+
+<P>The <CODE>SETQ</CODE> form above changed the value of the outer binding 
+of <CODE>Z</CODE> for the remainder of the outer <CODE>LET</CODE> form.  
+This is often the wrong thing to do.  The problem is that you now have to 
+look in two places to discover the value of <CODE>Z</CODE> -- first at the 
+binding forms, then in the program code for assignments such as 
+<CODE>SETQ</CODE>.  While the binding forms are indented by convention 
+(many Lisp editors do this as you type), the assignment form, as part of 
+the body code of the program, gets no special indentation; this makes it 
+harder to spot when you read the program.</P>
+
+<P>We can quite easily avoid the assignment in the previous example by 
+introducing a new binding:</P>
+
+<PRE WIDTH=80>(let ((z 1))
+   <I>;; Here, the innermost binding of Z has the value 1.</I>
+   (let ((z 9))
+      <I>;; Now the value of Z is 9.</I>
+      (let ((z 2))
+         <I>;; Here, the innermost binding of Z has the value 2.</I>
+         ...)
+      <I>;; Now we're outside the innermost binding form,
+      ;; and we again see the middle binding of Z with the value 9.</I>
+      ...)
+   <I>;; Here, we see the outermost binding of Z with the value 1.</I>
+   ...)</PRE>
+
+<P>Now all of the bindings of <CODE>Z</CODE> are apparent from the 
+relative indentation of the <CODE>LET</CODE> forms.  While reading the 
+program, all we have to do to find the right binding for <CODE>Z</CODE> at 
+any point in our program code (the <CODE>...</CODE> in the example) is to scan 
+vertically looking for a <CODE>LET</CODE> form at an outer level of 
+indentation.</P>
+
+<P>When a <CODE>SETQ</CODE> form refers to a variable that is not bound by 
+an enclosing <CODE>LET</CODE> form, it assigns a value to the global or 
+special value of the symbol.  A global value is accessible anywhere it's 
+not shadowed, and stays available for as long as the Lisp system runs.  
+We'll look at special variables in <A HREF="chapter08.html">Chapter 8</A>.
+
+<PRE WIDTH=80>(setq a 987)
+<I>;; Here, A has the global value 987.</I>
+(let ((a 1))
+   <I>;; Here, the binding of A to the value 1 shadows the global value.</I>
+   ...)
+<I>;; Now the global value of A is again visible.</I>
+...</PRE>
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter02.html">Chapter 2</a> | <A HREF="chapter03.html">Chapter 3, Introduction</A> | <A HREF="chapter03-05.html">Chapter 3, Lesson 5</A> | Chapter 3, Lesson 6 | <A HREF="chapter03-07.html">Chapter 3, Lesson 7</A> | <a href="chapter04.html">Chapter 4</a> | 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its 
+author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

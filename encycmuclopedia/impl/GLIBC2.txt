@@ -1,0 +1,4 @@
+Glibc2 support is now the standard for CMUCL.
+
+Note that in going to glibc-2.1 binary compatiblity was broken. The 
+current version compiles on 2.0 (runs also on 2.1) and 2.1.

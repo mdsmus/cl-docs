@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>2.1.3.6 Accessing the Floating Point Modes</TITLE>
+<META NAME="description" CONTENT="2.1.3.6 Accessing the Floating Point Modes">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html881" HREF="node23.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html879" HREF="node15.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html875" HREF="node21.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html883" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html884" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html882" HREF="node23.html">2.1.4 Characters</A>
+<B>Up:</B> <A NAME="tex2html880" HREF="node15.html">2.1.3 Floats</A>
+<B> Previous:</B> <A NAME="tex2html876" HREF="node21.html">Warning:</A>
+<BR> <P>
+<H3><A NAME="SECTION00313600000000000000">2.1.3.6 Accessing the Floating Point Modes</A></H3>
+<P>
+These functions can be used to modify or read the floating point modes:
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:set-floating-point-modes</tt> <em> <tt>&amp;key</tt> <tt>:traps</tt> <tt>:rounding-mode</tt>
+    <tt>:fast-mode</tt> <tt>:accrued-exceptions</tt>
+    <tt>:current-exceptions</tt></em><BR> 
+  <tt>extensions:get-floating-point-modes</tt> <EM></EM><BR>
+<P>
+  The keyword arguments to <tt>set-floating-point-modes</tt> set various
+  modes controlling how floating point arithmetic is done:
+  <DL ><DT><STRONG><tt>:traps</tt></STRONG>
+<DD> A list of the exception conditions that should
+    cause traps.  Possible exceptions are <tt>:underflow</tt>,
+    <tt>:overflow</tt>, <tt>:inexact</tt>, <tt>:invalid</tt> and
+    <tt>:divide-by-zero</tt>.  Initially all traps except <tt>:inexact</tt>
+    are enabled.  See section&nbsp;<A HREF="node19.html#floattraps">2.1.3.4</A>.
+<P>
+  <DT><STRONG><tt>:rounding-mode</tt></STRONG>
+<DD> The rounding mode to use when the result
+    is not exact.  Possible values are <tt>:nearest</tt>,
+    <tt>:positive-infinity</tt>,
+    <tt>:negative-infinity</tt> and <tt>:zero</tt>.  Initially, the rounding
+    mode is <tt>:nearest</tt>.  See the warning in section
+    <A HREF="node20.html#floatroundingmodes">2.1.3.5</A> about use of other rounding modes.
+<P>
+  <DT><STRONG><tt>:current-exceptions</tt>, <tt>:accrued-exceptions</tt></STRONG>
+<DD> Lists of
+    exception keywords used to set the exception flags.  The
+    <i>current-exceptions</i> are the exceptions for the previous
+    operation, so setting it is not very useful.  The
+    <i>accrued-exceptions</i> are a cumulative record of the exceptions
+    that occurred since the last time these flags were cleared.
+    Specifying <tt>()</tt> will clear any accrued exceptions.
+<P>
+  <DT><STRONG><tt>:fast-mode</tt></STRONG>
+<DD> Set the hardware's ``fast mode'' flag, if
+    any.  When set, IEEE conformance or debuggability may be impaired.
+    Some machines may not have this feature, in which case the value
+    is always <i>nil</i>.  No currently supported machines have a fast
+    mode.
+<P>
+</DL>
+  If a keyword argument is not supplied, then the associated state is
+  not changed.
+<P>
+  <tt>get-floating-point-modes</tt> returns a list representing the
+  state of the floating point modes.  The list is in the same format
+  as the keyword arguments to <tt>set-floating-point-modes</tt>, so
+  <tt>apply</tt> could be used with <tt>set-floating-point-modes</tt> to
+  restore the modes in effect at the time of the call to
+  <tt>get-floating-point-modes</tt>.
+<P>
+<BR><IMG WIDTH=104 HEIGHT=24 ALIGN=BOTTOM ALT="change_begin" SRC="change_begin.gif"><BR>
+To make handling control of floating-point exceptions, the following
+macro is useful.
+<P>
+<b>[Macro]</b><BR> 
+<tt> ext: with-float-traps-masked</tt> <em> traps <i>&amp;body</i> body</em><BR> 
+  <tt>body</tt> is executed with the selected floating-point exceptions
+  given by <tt>traps</tt> masked out (disabled).  <tt>traps</tt> should be
+  a list of possible floating-point exceptions that should be ignored.
+  Possible values are <tt>:underflow</tt>, <tt>:overflow</tt>, <tt>:inexact</tt>,
+  <tt>:invalid</tt> and <tt>:divide-by-zero</tt>.
+<P>
+  This is equivalent to saving the current traps from
+  <tt>get-floating-point-modes</tt>, setting the floating-point modes to
+  the desired exceptions, running the <tt>body</tt>, and restoring the
+  saved floating-point modes.  The advantage of this macro is that it
+  causes less consing to occur.
+<P>
+  Some points about the with-float-traps-masked:
+<P>
+  <UL>
+<LI> Two approaches are available for detecting FP exceptions:
+    <OL>
+<LI> enabling the traps and handling the exceptions
+<LI> disabling the traps and either handling the return values or
+      checking the accrued exceptions.
+    </OL>
+    Of these the latter is the most portable because on the alpha port
+    it is not possible to enable some traps at run-time.
+<LI> To assist the checking of the exceptions within the body any
+    accrued exceptions matching the given traps are cleared at the
+    start of the body when the traps are masked.
+<LI> To allow the macros to be nested these accrued exceptions are
+    restored at the end of the body to their values at the start of
+    the body. Thus any exceptions that occurred within the body will
+    not affect the accrued exceptions outside the macro.
+<LI> Note that only the given exceptions are restored at the end of
+    the body so other exception will be visible in the accrued
+    exceptions outside the body.
+<LI> On the x86, setting the accrued exceptions of an unmasked
+    exception would cause a FP trap. The macro behaviour of restoring
+    the accrued exceptions ensures than if an accrued exception is
+    initial not flagged and occurs within the body it will be
+    restored/cleared at the exit of the body and thus not cause a
+    trap.
+<LI> On the x86, and, perhaps, the hppa, the FP exceptions may be
+    delivered at the next FP instruction which requires a FP
+    <tt>wait</tt> instruction (<tt>x86::float-wait</tt>) if using the lisp
+    conditions to catch trap within a <tt>handler-bind</tt>.  The
+    <tt>handler-bind</tt> macro does the right thing and inserts a
+    float-wait at the end of its body on the x86).  The masking and
+    noting of exceptions is also safe here.
+<LI> The setting of the FP flags uses the
+    <tt>(floating-point-modes)</tt> and the <tt>(set
+      (floating-point-modes)...)</tt> VOPs. These VOPs blindly update
+    the flags which many include other state.  We assume this state
+    hasn't changed in between getting and setting the state. For
+    example, if you used the FP unit between the above calls, the
+    state may be incorrectly restored! The
+    <tt>with-float-traps-masked</tt> macro keeps the intervening code to
+    a minimum and uses only integer operations.
+  </UL>
+<BR><IMG WIDTH=104 HEIGHT=24 ALIGN=BOTTOM ALT="change_end" SRC="change_end.gif"><BR>
+<HR><A NAME="tex2html881" HREF="node23.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html879" HREF="node15.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html875" HREF="node21.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html883" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html884" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html882" HREF="node23.html">2.1.4 Characters</A>
+<B>Up:</B> <A NAME="tex2html880" HREF="node15.html">2.1.3 Floats</A>
+<B> Previous:</B> <A NAME="tex2html876" HREF="node21.html">Warning:</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

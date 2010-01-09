@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>2.13.3 Logical Pathnames</TITLE>
+<META NAME="description" CONTENT="2.13.3 Logical Pathnames">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1162" HREF="node46.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1160" HREF="node42.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1154" HREF="node44.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1164" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1165" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1163" HREF="node46.html">2.13.4 Search Lists</A>
+<B>Up:</B> <A NAME="tex2html1161" HREF="node42.html">2.13 Pathnames</A>
+<B> Previous:</B> <A NAME="tex2html1155" HREF="node44.html">2.13.2 Wildcard Pathnames</A>
+<BR> <P>
+<H2><A NAME="SECTION003133000000000000000">2.13.3 Logical Pathnames</A></H2>
+<P>
+<A NAME="8341">&#160;</A>
+<A NAME="logicalpathnames">&#160;</A>
+<P>
+If a namestring begins with the name of a defined logical pathname
+host followed by a colon, then it will be parsed as a logical
+pathname.  Both `<tt>*</tt>' and `<tt>**</tt>' wildcards are implemented.
+<A NAME="8344">&#160;</A><tt>load-logical-pathname-defaults</tt> on <i>name</i> looks for a
+logical host definition file in
+`<tt>library:<i>name</i>.translations</tt>'. Note that `<tt>library:</tt>'
+designates the search list (see section&nbsp;<A HREF="node46.html#searchlists">2.13.4</A>) initialized to the
+CMU Common Lisp `<tt>lib/</tt>' directory, not a logical pathname.  The format of
+the file is a single list of two-lists of the from and to patterns:
+<BLOCKQUOTE> <PRE>((&quot;foo;*.text&quot; &quot;/usr/ram/foo/*.txt&quot;)
+ (&quot;foo;*.lisp&quot; &quot;/usr/ram/foo/*.l&quot;))
+</PRE> </BLOCKQUOTE><BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

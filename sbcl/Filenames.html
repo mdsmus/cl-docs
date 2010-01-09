@@ -1,0 +1,73 @@
+<html lang="en">
+<head>
+<title>Filenames - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Types.html#Types" title="Types">
+<link rel="prev" href="File_002ddescriptors.html#File_002ddescriptors" title="File-descriptors">
+<link rel="next" href="Type-conversion-functions.html#Type-conversion-functions" title="Type conversion functions">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Filenames"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Type-conversion-functions.html#Type-conversion-functions">Type conversion functions</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="File_002ddescriptors.html#File_002ddescriptors">File-descriptors</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Types.html#Types">Types</a>
+<hr>
+</div>
+
+<h5 class="subsubsection">15.3.2.2 Filenames</h5>
+
+<p>A filename is a string.
+
+   <p>A pathname is a designator for a filename: the filename is computed
+using the same mechanism that SBCL uses to map pathnames to OS filenames
+internally.
+
+   <p>Note that filename syntax is distinct from namestring syntax, and that
+<code>SB-EXT:PARSE-NATIVE-NAMESTRING</code> may be used to construct
+Lisp pathnames that denote POSIX filenames returned by system calls. 
+See <a href="Function-sb_002dext_003aparse_002dnative_002dnamestring.html#Function-sb_002dext_003aparse_002dnative_002dnamestring">Function sb-ext:parse-native-namestring</a>.  Additionally, notice
+that POSIX filename syntax does not distinguish the names of files
+from the names of directories.  Consequently, in order to parse the
+name of a directory in POSIX filename syntax into a pathname
+<code>defaults</code> for which
+
+<pre class="lisp">     (merge-pathnames (make-pathname :name "FOO" :case :common)
+                      defaults)
+</pre>
+   <p class="noindent">returns a pathname that denotes a file in the directory, supply a true
+<code>AS-DIRECTORY</code> argument to <code>SB-EXT:PARSE-NATIVE-NAMESTRING</code>. 
+Likewise, if it is necessary to supply the name of a directory to a
+POSIX function in non-directory syntax, supply a true <code>AS-FILE</code>
+argument to <code>SB-EXT:NATIVE-NAMESTRING</code>.
+
+   </body></html>
+

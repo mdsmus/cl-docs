@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>2.5.1 GC Parameters</TITLE>
+<META NAME="description" CONTENT="2.5.1 GC Parameters">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html966" HREF="node30.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html964" HREF="node28.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html958" HREF="node28.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html968" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html969" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html967" HREF="node30.html">2.5.2 Weak Pointers</A>
+<B>Up:</B> <A NAME="tex2html965" HREF="node28.html">2.5 Garbage Collection</A>
+<B> Previous:</B> <A NAME="tex2html959" HREF="node28.html">2.5 Garbage Collection</A>
+<BR> <P>
+<H2><A NAME="SECTION00351000000000000000">2.5.1 GC Parameters</A></H2>
+<P>
+The following variables control the behavior of the garbage collector:
+<P>
+<b>[Variable]</b><BR> 
+<tt> extensions:*bytes-consed-between-gcs*</tt><BR> <BR>
+<P>
+  CMU Common Lisp automatically GC's whenever the amount of memory
+  allocated to dynamic objects exceeds the value of an internal
+  variable.  After each GC, the system sets this internal variable to
+  the amount of dynamic space in use at that point plus the value of
+  the variable <tt>ext:*bytes-consed-between-gcs*</tt>.  The default
+  value is 2000000.
+<P>
+<b>[Variable]</b><BR> 
+<tt> extensions:*gc-verbose*</tt><BR> <BR>
+<P>
+  This variable controls whether <tt>ext:gc</tt> invokes the functions
+  in <tt>ext:*gc-notify-before*</tt> and
+  <tt>ext:*gc-notify-after*</tt>.  If <tt>*gc-verbose*</tt> is <i>nil</i>,
+  <tt>ext:gc</tt> foregoes printing any messages.  The default value is
+  <tt>T</tt>.
+<P>
+<b>[Variable]</b><BR> 
+<tt> extensions:*gc-notify-before*</tt><BR> <BR>
+<P>
+  This variable's value is a function that should notify the user that
+  the system is about to GC.  It takes one argument, the amount of
+  dynamic space in use before the GC measured in bytes.  The default
+  value of this variable is a function that prints a message similar
+  to the following:
+<BLOCKQUOTE> <PRE>[GC threshold exceeded with 2,107,124 bytes in use.  Commencing GC.]
+</PRE> </BLOCKQUOTE>
+<P>
+<b>[Variable]</b><BR> 
+<tt> extensions:*gc-notify-after*</tt><BR> <BR>
+<P>
+  This variable's value is a function that should notify the user when
+  a GC finishes.  The function must take three arguments, the amount
+  of dynamic spaced retained by the GC, the amount of dynamic space
+  freed, and the new threshold which is the minimum amount of space in
+  use before the next GC will occur.  All values are byte quantities.
+  The default value of this variable is a function that prints a
+  message similar to the following:
+  <BLOCKQUOTE> <PRE>[GC completed with 25,680 bytes retained and 2,096,808 bytes freed.]
+    [GC will next occur when at least 2,025,680 bytes are in use.]
+  </PRE> </BLOCKQUOTE>
+<P>
+Note that a garbage collection will not happen at exactly the new
+threshold printed by the default <tt>ext:*gc-notify-after*</tt>
+function.  The system periodically checks whether this threshold has
+been exceeded, and only then does a garbage collection.
+<P>
+<b>[Variable]</b><BR> 
+<tt> extensions:*gc-inhibit-hook*</tt><BR> <BR>
+<P>
+  This variable's value is either a function of one argument or <i>nil</i>.
+  When the system has triggered an automatic GC, if this variable is a
+  function, then the system calls the function with the amount of
+  dynamic space currently in use (measured in bytes).  If the function
+  returns <i>nil</i>, then the GC occurs; otherwise, the system inhibits
+  automatic GC as if you had called <tt>ext:gc-off</tt>.  The writer of
+  this hook is responsible for knowing when automatic GC has been
+  turned off and for calling or providing a way to call
+  <tt>ext:gc-on</tt>.  The default value of this variable is <i>nil</i>.
+<P>
+<b>[Variable]</b><BR> 
+<tt> extensions:*before-gc-hooks*</tt><BR> <BR> 
+  <tt>extensions:*after-gc-hooks*</tt><BR>
+<P>
+  These variables' values are lists of functions to call before or
+  after any GC occurs.  The system provides these purely for
+  side-effect, and the functions take no arguments.
+<P>
+<HR><A NAME="tex2html966" HREF="node30.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html964" HREF="node28.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html958" HREF="node28.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html968" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html969" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html967" HREF="node30.html">2.5.2 Weak Pointers</A>
+<B>Up:</B> <A NAME="tex2html965" HREF="node28.html">2.5 Garbage Collection</A>
+<B> Previous:</B> <A NAME="tex2html959" HREF="node28.html">2.5 Garbage Collection</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

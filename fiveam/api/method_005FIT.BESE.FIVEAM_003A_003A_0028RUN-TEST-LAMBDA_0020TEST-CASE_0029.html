@@ -1,0 +1,61 @@
+<html
+  ><head
+    ><title
+      >Method (RUN-TEST-LAMBDA TEST-CASE)</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Method: (RUN-TEST-LAMBDA TEST-CASE)</h1
+        ><div class="contents"
+          ><h2
+            >Source</h2
+          ><pre class="code"
+            >(defmethod run-test-lambda ((test test-case))
+  (with-run-state (result-list)
+    (bind-run-state ((current-test test))
+      (labels ((abort-test (e)
+                 (add-result 'unexpected-test-failure
+                             :test-expr nil
+                             :test-case test
+                             :reason (format nil &quot;Unexpected Error: ~S.&quot; e)
+                             :condition e))
+               (run-it ()
+                 (let ((result-list '()))
+                   (declare (special result-list))
+                   (handler-bind ((check-failure (lambda (e)
+                                                   (declare (ignore e))
+                                                   (unless *debug-on-failure*
+                                                     (invoke-restart
+                                                      (find-restart 'ignore-failure)))))
+                                  (error (lambda (e)
+                                           (unless (or *debug-on-error*
+                                                       (typep e 'check-failure))
+                                             (abort-test e)
+                                             (return-from run-it result-list)))))
+                     (restart-case
+                         (funcall (test-lambda test))
+                       (retest ()
+                         :report (lambda (stream)
+                                   (format stream &quot;~@&lt;Rerun the test ~S~@:&gt;&quot; test))
+                         (return-from run-it (run-it)))
+                       (ignore ()
+                         :report (lambda (stream)
+                                   (format stream &quot;~@&lt;Signal an exceptional test failure and abort the test ~S.~@:&gt;&quot; test))
+                         (abort-test (make-instance 'test-failure :test-case test
+                                                    :reason &quot;Failure restart.&quot;))))
+                     result-list))))
+        (let ((results (run-it)))
+          (setf (status test) (results-status results)
+                result-list (nconc result-list results)))))))</pre
+          ><a href="../Running_0020Tests.html#method_005FIT.BESE.FIVEAM_003A_003A_0028RUN-TEST-LAMBDA_0020TEST-CASE_0029"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

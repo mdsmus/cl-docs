@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>4.4.1 The Parts of the Error Message</TITLE>
+<META NAME="description" CONTENT="4.4.1 The Parts of the Error Message">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1737" HREF="node90.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1735" HREF="node88.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1729" HREF="node88.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1739" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1740" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1738" HREF="node90.html">4.4.2 The Original and </A>
+<B>Up:</B> <A NAME="tex2html1736" HREF="node88.html">4.4 Interpreting Error Messages</A>
+<B> Previous:</B> <A NAME="tex2html1730" HREF="node88.html">4.4 Interpreting Error Messages</A>
+<BR> <P>
+<H2><A NAME="SECTION00541000000000000000">4.4.1 The Parts of the Error Message</A></H2>
+<P>
+The compiler will produce this warning:
+<BLOCKQUOTE> <PRE>File: /usr/me/stuff.lisp
+<P>
+In: DEFUN FOO
+  (ZOQ Y)
+-&gt; ROQ PLOQ + 
+==&gt;
+  Y
+Warning: Result is a SYMBOL, not a NUMBER.
+</PRE> </BLOCKQUOTE>
+In this example we see each of the six possible parts of a compiler error
+message:
+<DL ><DT><STRONG><tt>File: /usr/me/stuff.lisp</tt></STRONG>
+<DD> This is the <i>file</i> that
+  the compiler read the relevant code from.  The file name is
+  displayed because it may not be immediately obvious when there is an
+  error during compilation of a large system, especially when
+  <tt>with-compilation-unit</tt> is used to delay undefined warnings.
+<P>
+<DT><STRONG><tt>In: DEFUN FOO</tt></STRONG>
+<DD> This is the <i>definition</i> or
+  top-level form responsible for the error.  It is obtained by taking
+  the first two elements of the enclosing form whose first element is
+  a symbol beginning with ``<tt>DEF</tt>''.  If there is no enclosing
+  <i>def</i>mumble, then the outermost form is used.  If there are
+  multiple <i>def</i>mumbles, then they are all printed from the
+  out in, separated by <tt>=&gt;</tt>'s.  In this example, the problem
+  was in the <tt>defun</tt> for <tt>foo</tt>.
+<P>
+<DT><STRONG><tt>(ZOQ Y)</tt></STRONG>
+<DD> This is the &#305;original source form
+  responsible for the error.  Original source means that the form
+  directly appeared in the original input to the compiler, i.e. in the
+  lambda passed to <tt>compile</tt> or the top-level form read from the
+  source file.  In this example, the expansion of the <tt>zoq</tt> macro
+  was responsible for the error.
+<P>
+<DT><STRONG><tt>-&gt; ROQ PLOQ +</tt> </STRONG>
+<DD> This is the &#305;processing path
+  that the compiler used to produce the errorful code.  The processing
+  path is a representation of the evaluated forms enclosing the actual
+  source that the compiler encountered when processing the original
+  source.  The path is the first element of each form, or the form
+  itself if the form is not a list.  These forms result from the
+  expansion of macros or source-to-source transformation done by the
+  compiler.  In this example, the enclosing evaluated forms are the
+  calls to <tt>roq</tt>, <tt>ploq</tt> and <tt>+</tt>.  These calls resulted
+  from the expansion of the <tt>zoq</tt> macro.
+<P>
+<DT><STRONG><tt>==&gt; Y</tt></STRONG>
+<DD> This is the &#305;actual source responsible for
+  the error.  If the actual source appears in the explanation, then we
+  print the next enclosing evaluated form, instead of printing the
+  actual source twice.  (This is the form that would otherwise have
+  been the last form of the processing path.)  In this example, the
+  problem is with the evaluation of the reference to the variable
+  <tt>y</tt>.
+<P>
+<DT><STRONG><tt>Warning: Result is a SYMBOL, not a NUMBER.</tt></STRONG>
+<DD>  This is
+  the <i>explanation</i> the problem.  In this example, the problem is
+  that <tt>y</tt> evaluates to a <tt>symbol</tt>, but is in a context
+  where a number is required (the argument to <tt>+</tt>).
+<P>
+</DL>
+<P>
+Note that each part of the error message is distinctively marked:
+<UL>
+<LI> <tt>File:</tt> and <tt>In:</tt> mark the file and definition,
+  respectively.
+<LI> The original source is an indented form with no prefix.
+<LI> Each line of the processing path is prefixed with <tt>-&gt;</tt>.
+<LI> The actual source form is indented like the original source, but
+  is marked by a preceding <tt>==&gt;</tt> line.  This is like the
+  ``macroexpands to'' notation used in <em>Common Lisp: The Language</em>.
+<LI> The explanation is prefixed with the error severity
+  (see section&nbsp;<A HREF="node92.html#errorseverity">4.4.4</A>), either <tt>Error:</tt>, <tt>Warning:</tt>, or
+  <tt>Note:</tt>.
+</UL>
+<P>
+Each part of the error message is more specific than the preceding
+one.  If consecutive error messages are for nearby locations, then the
+front part of the error messages would be the same.  In this case, the
+compiler omits as much of the second message as in common with the
+first.  For example:
+<BLOCKQUOTE> <PRE>File: /usr/me/stuff.lisp
+<P>
+In: DEFUN FOO
+  (ZOQ Y)
+-&gt; ROQ 
+==&gt;
+  (PLOQ (+ Y 3))
+Warning: Undefined function: PLOQ
+<P>
+==&gt;
+  (ROQ (PLOQ (+ Y 3)))
+Warning: Undefined function: ROQ
+</PRE> </BLOCKQUOTE>
+In this example, the file, definition and original source are
+identical for the two messages, so the compiler omits them in the
+second message.  If consecutive messages are entirely identical, then
+the compiler prints only the first message, followed by:
+<BLOCKQUOTE> <PRE>[Last message occurs <i>repeats</i> times]
+</PRE> </BLOCKQUOTE>
+where <i>repeats</i> is the number of times the message was given.
+<P>
+If the source was not from a file, then no file line is printed.  If
+the actual source is the same as the original source, then the
+processing path and actual source will be omitted.  If no forms
+intervene between the original source and the actual source, then the
+processing path will also be omitted.
+<P>
+<HR><A NAME="tex2html1737" HREF="node90.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1735" HREF="node88.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1729" HREF="node88.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1739" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1740" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1738" HREF="node90.html">4.4.2 The Original and </A>
+<B>Up:</B> <A NAME="tex2html1736" HREF="node88.html">4.4 Interpreting Error Messages</A>
+<B> Previous:</B> <A NAME="tex2html1730" HREF="node88.html">4.4 Interpreting Error Messages</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

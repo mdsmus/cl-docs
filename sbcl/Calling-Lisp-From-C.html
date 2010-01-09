@@ -1,0 +1,214 @@
+<html lang="en">
+<head>
+<title>Calling Lisp From C - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Foreign-Function-Calls.html#Foreign-Function-Calls" title="Foreign Function Calls">
+<link rel="prev" href="define_002dalien_002droutine-Example.html#define_002dalien_002droutine-Example" title="define-alien-routine Example">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Calling-Lisp-From-C"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="define_002dalien_002droutine-Example.html#define_002dalien_002droutine-Example">define-alien-routine Example</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Foreign-Function-Calls.html#Foreign-Function-Calls">Foreign Function Calls</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">7.7.4 Calling Lisp From C</h4>
+
+<p>Calling Lisp functions from C is sometimes possible, but is extremely
+hackish and poorly supported as of SBCL 0.7.5.  See <code>funcall0</code>
+<small class="dots">...</small> <code>funcall3</code> in the runtime system. The arguments must be
+valid SBCL object descriptors (so that e.g. fixnums must be
+left-shifted by 2.) As of SBCL 0.7.5, the format of object descriptors
+is documented only by the source code and, in parts, by the old CMUCL
+<samp><span class="file">INTERNALS</span></samp> documentation.
+
+   <p>Note that the garbage collector moves objects, and won't be
+able to fix up any references in C variables.  There are three
+mechanisms for coping with this:
+
+     <ol type=1 start=1>
+<li>The <code>sb-ext:purify</code> moves all live Lisp
+data into static or read-only areas such that it will never be moved
+(or freed) again in the life of the Lisp session
+
+     <li><code>sb-sys:with-pinned-objects</code> is a macro which arranges for some
+set of objects to be pinned in memory for the dynamic extent of its
+body forms.  On ports which use the generational garbage collector (as
+of SBCL 0.8.3, only the x86) this has a page granularity - i.e. the
+entire 4k page or pages containing the objects will be locked down. On
+other ports it is implemented by turning off GC for the duration (so
+could be said to have a whole-world granularity).
+
+     <li>Disable GC, using the <code>without-gcing</code> macro or <code>gc-off</code>
+call.
+        </ol>
+
+<!-- <!- FIXME: This is a "changebar" section from the CMU CL manual. -->
+<!-- I (WHN 2002-07-14) am not very familiar with this content, so -->
+<!-- I'm not immediately prepared to try to update it for SBCL, and -->
+<!-- I'm not feeling masochistic enough to work to encourage this -->
+<!-- kind of low-level hack anyway. However, I acknowledge that callbacks -->
+<!-- are sometimes really really necessary, so I include the original -->
+<!-- text in case someone is hard-core enough to benefit from it. If -->
+<!-- anyone brings the information up to date for SBCL, it belong -->
+<!-- either in the main manual or on a CLiki SBCL Internals page. -->
+<!-- LaTeX \subsection{Accessing Lisp Arrays} -->
+<!-- LaTeX -->
+<!-- LaTeX Due to the way \cmucl{} manages memory, the amount of memory that can -->
+<!-- LaTeX be dynamically allocated by \code{malloc} or \funref{make-alien} is -->
+<!-- LaTeX limited\footnote{\cmucl{} mmaps a large piece of memory for it's own -->
+<!-- LaTeX   use and this memory is typically about 8 MB above the start of the C -->
+<!-- LaTeX   heap.  Thus, only about 8 MB of memory can be dynamically -->
+<!-- LaTeX   allocated.}. -->
+<!-- Empirically determined to be considerably >8Mb on this x86 linux -->
+<!-- machine, but I don't know what the actual values are - dan 2003.09.01 -->
+<!-- Note that this technique is used in SB-GROVEL in the SBCL contrib -->
+<!-- LaTeX -->
+<!-- LaTeX To overcome this limitation, it is possible to access the content of -->
+<!-- LaTeX Lisp arrays which are limited only by the amount of physical memory -->
+<!-- LaTeX and swap space available.  However, this technique is only useful if -->
+<!-- LaTeX the foreign function takes pointers to memory instead of allocating -->
+<!-- LaTeX memory for itself.  In latter case, you will have to modify the -->
+<!-- LaTeX foreign functions. -->
+<!-- LaTeX -->
+<!-- LaTeX This technique takes advantage of the fact that \cmucl{} has -->
+<!-- LaTeX specialized array types (\pxlref{specialized-array-types}) that match -->
+<!-- LaTeX a typical C array.  For example, a \code{(simple-array double-float -->
+<!-- LaTeX   (100))} is stored in memory in essentially the same way as the C -->
+<!-- LaTeX array \code{double x[100]} would be.  The following function allows us -->
+<!-- LaTeX to get the physical address of such a Lisp array: -->
+<!-- LaTeX \begin{example} -->
+<!-- LaTeX (defun array-data-address (array) -->
+<!-- LaTeX   "Return the physical address of where the actual data of an array is -->
+<!-- LaTeX stored. -->
+<!-- LaTeX -->
+<!-- LaTeX ARRAY must be a specialized array type in CMU Lisp.  This means ARRAY -->
+<!-- LaTeX must be an array of one of the following types: -->
+<!-- LaTeX -->
+<!-- LaTeX                   double-float -->
+<!-- LaTeX                   single-float -->
+<!-- LaTeX                   (unsigned-byte 32) -->
+<!-- LaTeX                   (unsigned-byte 16) -->
+<!-- LaTeX                   (unsigned-byte  8) -->
+<!-- LaTeX                   (signed-byte 32) -->
+<!-- LaTeX                   (signed-byte 16) -->
+<!-- LaTeX                   (signed-byte  8) -->
+<!-- LaTeX " -->
+<!-- LaTeX   (declare (type (or #+signed-array (array (signed-byte 8)) -->
+<!-- LaTeX                      #+signed-array (array (signed-byte 16)) -->
+<!-- LaTeX                      #+signed-array (array (signed-byte 32)) -->
+<!-- LaTeX                      (array (unsigned-byte 8)) -->
+<!-- LaTeX                      (array (unsigned-byte 16)) -->
+<!-- LaTeX                      (array (unsigned-byte 32)) -->
+<!-- LaTeX                      (array single-float) -->
+<!-- LaTeX                      (array double-float)) -->
+<!-- LaTeX                  array) -->
+<!-- LaTeX            (optimize (speed 3) (safety 0)) -->
+<!-- LaTeX            (ext:optimize-interface (safety 3))) -->
+<!-- LaTeX   ;; with-array-data will get us to the actual data.  However, because -->
+<!-- LaTeX   ;; the array could have been displaced, we need to know where the -->
+<!-- LaTeX   ;; data starts. -->
+<!-- LaTeX   (lisp::with-array-data ((data array) -->
+<!-- LaTeX                           (start) -->
+<!-- LaTeX                           (end)) -->
+<!-- LaTeX     (declare (ignore end)) -->
+<!-- LaTeX     ;; DATA is a specialized simple-array.  Memory is laid out like this: -->
+<!-- LaTeX     ;; -->
+<!-- LaTeX     ;;   byte offset    Value -->
+<!-- LaTeX     ;;        0         type code (should be 70 for double-float vector) -->
+<!-- LaTeX     ;;        4         4 * number of elements in vector -->
+<!-- LaTeX     ;;        8         1st element of vector -->
+<!-- LaTeX     ;;      ...         ... -->
+<!-- LaTeX     ;; -->
+<!-- LaTeX     (let ((addr (+ 8 (logandc1 7 (kernel:get-lisp-obj-address data)))) -->
+<!-- LaTeX           (type-size (let ((type (array-element-type data))) -->
+<!-- LaTeX                        (cond ((or (equal type '(signed-byte 8)) -->
+<!-- LaTeX                                   (equal type '(unsigned-byte 8))) -->
+<!-- LaTeX                               1) -->
+<!-- LaTeX                              ((or (equal type '(signed-byte 16)) -->
+<!-- LaTeX                                   (equal type '(unsigned-byte 16))) -->
+<!-- LaTeX                               2) -->
+<!-- LaTeX                              ((or (equal type '(signed-byte 32)) -->
+<!-- LaTeX                                   (equal type '(unsigned-byte 32))) -->
+<!-- LaTeX                               4) -->
+<!-- LaTeX                              ((equal type 'single-float) -->
+<!-- LaTeX                               4) -->
+<!-- LaTeX                              ((equal type 'double-float) -->
+<!-- LaTeX                               8) -->
+<!-- LaTeX                              (t -->
+<!-- LaTeX                               (error "Unknown specialized array element type")))))) -->
+<!-- LaTeX       (declare (type (unsigned-byte 32) addr) -->
+<!-- LaTeX                (optimize (speed 3) (safety 0) (ext:inhibit-warnings 3))) -->
+<!-- LaTeX       (system:int-sap (the (unsigned-byte 32) -->
+<!-- LaTeX                         (+ addr (* type-size start))))))) -->
+<!-- LaTeX \end{example} -->
+<!-- LaTeX -->
+<!-- LaTeX Assume we have the C function below that we wish to use: -->
+<!-- LaTeX \begin{example} -->
+<!-- LaTeX   double dotprod(double* x, double* y, int n) -->
+<!-- LaTeX   \{ -->
+<!-- LaTeX     int k; -->
+<!-- LaTeX     double sum = 0; -->
+<!-- LaTeX -->
+<!-- LaTeX     for (k = 0; k < n; ++k) \{ -->
+<!-- LaTeX       sum += x[k] * y[k]; -->
+<!-- LaTeX     \} -->
+<!-- LaTeX   \} -->
+<!-- LaTeX \end{example} -->
+<!-- LaTeX The following example generates two large arrays in Lisp, and calls the C -->
+<!-- LaTeX function to do the desired computation.  This would not have been -->
+<!-- LaTeX possible using \code{malloc} or \code{make-alien} since we need about -->
+<!-- LaTeX 16 MB of memory to hold the two arrays. -->
+<!-- LaTeX \begin{example} -->
+<!-- LaTeX   (define-alien-routine "dotprod" double -->
+<!-- LaTeX     (x (* double-float) :in) -->
+<!-- LaTeX     (y (* double-float) :in) -->
+<!-- LaTeX     (n int :in)) -->
+<!-- LaTeX -->
+<!-- LaTeX   (let ((x (make-array 1000000 :element-type 'double-float)) -->
+<!-- LaTeX         (y (make-array 1000000 :element-type 'double-float))) -->
+<!-- LaTeX     ;; Initialize X and Y somehow -->
+<!-- LaTeX     (let ((x-addr (system:int-sap (array-data-address x))) -->
+<!-- LaTeX           (y-addr (system:int-sap (array-data-address y)))) -->
+<!-- LaTeX       (dotprod x-addr y-addr 1000000))) -->
+<!-- LaTeX \end{example} -->
+<!-- LaTeX In this example, it may be useful to wrap the inner \code{let} -->
+<!-- LaTeX expression in an \code{unwind-protect} that first turns off garbage -->
+<!-- LaTeX collection and then turns garbage collection on afterwards.  This will -->
+<!-- LaTeX prevent garbage collection from moving \code{x} and \code{y} after we -->
+<!-- LaTeX have obtained the (now erroneous) addresses but before the call to -->
+<!-- LaTeX \code{dotprod} is made. -->
+<!-- LaTeX -->
+<!-- > -->
+   </body></html>
+

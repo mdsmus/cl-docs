@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>3.6 Compiler Policy Control</TITLE>
+<META NAME="description" CONTENT="3.6 Compiler Policy Control">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1546" HREF="node76.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1544" HREF="node59.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1538" HREF="node74.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1548" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1549" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1547" HREF="node76.html">3.7 Exiting Commands</A>
+<B>Up:</B> <A NAME="tex2html1545" HREF="node59.html">3 The Debugger</A>
+<B> Previous:</B> <A NAME="tex2html1539" HREF="node74.html">3.5.2 Source Location Availability</A>
+<BR> <P>
+<H1><A NAME="SECTION00460000000000000000">3.6 Compiler Policy Control</A></H1>
+<P>
+<A NAME="debuggerpolicy">&#160;</A>
+<A NAME="8896">&#160;</A>
+<A NAME="8897">&#160;</A>
+<A NAME="8898">&#160;</A>
+<P>
+The compilation policy specified by <tt>optimize</tt> declarations affects the
+behavior seen in the debugger.  The <tt>debug</tt> quality directly affects the
+debugger by controlling the amount of debugger information dumped.  Other
+optimization qualities have indirect but observable effects due to changes in
+the way compilation is done.
+<P>
+Unlike the other optimization qualities (which are compared in relative value
+to evaluate tradeoffs), the <tt>debug</tt> optimization quality is directly
+translated to a level of debug information.  This absolute interpretation
+allows the user to count on a particular amount of debug information being
+available even when the values of the other qualities are changed during
+compilation.  These are the levels of debug information that correspond to the
+values of the <tt>debug</tt> quality:
+<DL ><DT><STRONG><tt>0</tt></STRONG>
+<DD>
+Only the function name and enough information to allow the stack to
+be parsed.
+<P>
+<DT><STRONG><tt>&gt; 0</tt></STRONG>
+<DD>
+Any level greater than <tt>0</tt> gives level <tt>0</tt> plus all
+argument variables.  Values will only be accessible if the argument
+variable is never set and
+<tt>speed</tt> is not <tt>3</tt>.  CMU Common Lisp allows any real value for optimization
+qualities.  It may be useful to specify <tt>0.5</tt> to get backtrace argument
+display without argument documentation.
+<P>
+<DT><STRONG><tt>1</tt></STRONG>
+<DD> Level <tt>1</tt> provides argument documentation
+(printed arglists) and derived argument/result type information.
+This makes <A NAME="8914">&#160;</A><tt>describe</tt> more informative, and allows the
+compiler to do compile-time argument count and type checking for any
+calls compiled at run-time.
+<P>
+<DT><STRONG><tt>2</tt></STRONG>
+<DD>
+Level <tt>1</tt> plus all interned local variables, source location
+information, and lifetime information that tells the debugger when arguments
+are available (even when <tt>speed</tt> is <tt>3</tt> or the argument is set.)  This is
+the default.
+<P>
+<DT><STRONG><tt>3</tt></STRONG>
+<DD>
+Level <tt>2</tt> plus all uninterned variables.  In addition, lifetime
+analysis is disabled (even when <tt>speed</tt> is <tt>3</tt>), ensuring that all variable
+values are available at any known location within the scope of the binding.
+This has a speed penalty in addition to the obvious space penalty.
+<P>
+</DL>
+<P>
+As you can see, if the <tt>speed</tt> quality is <tt>3</tt>, debugger performance is
+degraded.  This effect comes from the elimination of argument variable
+special-casing (see section&nbsp;<A HREF="node70.html#debugvarvalidity">3.4.1</A>.)  Some degree of
+speed/debuggability tradeoff is unavoidable, but the effect is not too drastic
+when <tt>debug</tt> is at least <tt>2</tt>.
+<P>
+<A NAME="8929">&#160;</A>
+<A NAME="8930">&#160;</A>
+In addition to <tt>inline</tt> and <tt>notinline</tt> declarations, the relative values
+of the <tt>speed</tt> and <tt>space</tt> qualities also change whether functions are
+inline expanded (see section&nbsp;<A HREF="node155.html#inlineexpansion">5.8</A>.)  If a function is inline
+expanded, then there will be no frame to represent the call, and the arguments
+will be treated like any other local variable.  Functions may also be
+``semi-inline'', in which case there is a frame to represent the call, but the
+call is to an optimized local version of the function, not to the original
+function.
+<P>
+<HR><A NAME="tex2html1546" HREF="node76.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1544" HREF="node59.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1538" HREF="node74.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1548" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1549" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1547" HREF="node76.html">3.7 Exiting Commands</A>
+<B>Up:</B> <A NAME="tex2html1545" HREF="node59.html">3 The Debugger</A>
+<B> Previous:</B> <A NAME="tex2html1539" HREF="node74.html">3.5.2 Source Location Availability</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

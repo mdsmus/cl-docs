@@ -1,0 +1,63 @@
+<html lang="en">
+<head>
+<title>Package Lock Overview - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Package-Lock-Concepts.html#Package-Lock-Concepts" title="Package Lock Concepts">
+<link rel="next" href="Implementation-Packages.html#Implementation-Packages" title="Implementation Packages">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Package-Lock-Overview"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Implementation-Packages.html#Implementation-Packages">Implementation Packages</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Package-Lock-Concepts.html#Package-Lock-Concepts">Package Lock Concepts</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">10.1.1 Package Locking Overview</h4>
+
+<p>Package locks protect against unintentional modifications of a package:
+they provide similar protection to user packages as is mandated to
+<code>common-lisp</code> package by the ANSI specification. They are not, and
+should not be used as, a security measure.
+
+   <p>Newly created packages are by default unlocked (see the <code>:lock</code>
+option to <code>defpackage</code>).
+
+   <p>The package <code>common-lisp</code> and SBCL internal implementation
+packages are locked by default, including <code>sb-ext</code>.
+
+   <p>It may be beneficial to lock <code>common-lisp-user</code> as well, to
+ensure that various libraries don't pollute it without asking,
+but this is not currently done by default.
+
+   </body></html>
+

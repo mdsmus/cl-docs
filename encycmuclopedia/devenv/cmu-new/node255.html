@@ -1,0 +1,56 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>10 Debugger Programmer's Interface</TITLE>
+<META NAME="description" CONTENT="10 Debugger Programmer's Interface">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3923" HREF="node256.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3921" HREF="cmu-new.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3915" HREF="node254.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3925" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3926" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3924" HREF="node256.html">10.1 DI Exceptional Conditions</A>
+<B>Up:</B> <A NAME="tex2html3922" HREF="cmu-new.html">CMU Common Lisp User's </A>
+<B> Previous:</B> <A NAME="tex2html3916" HREF="node254.html">Out-Of-Band Data</A>
+<BR> <P>
+<H1><A NAME="SECTION001100000000000000000">10 Debugger Programmer's Interface</A></H1>
+<P>
+<A NAME="debuginternals">&#160;</A>
+<P>
+The debugger programmers interface is exported from from the
+<tt>&quot;DEBUG-INTERNALS&quot;</tt> or <tt>&quot;DI&quot;</tt> package.  This is a CMU
+extension that allows debugging tools to be written without detailed
+knowledge of the compiler or run-time system.
+<P>
+Some of the interface routines take a code-location as an argument.  As
+described in the section on code-locations, some code-locations are
+unknown.  When a function calls for a <i>basic-code-location</i>, it
+takes either type, but when it specifically names the argument
+<i>code-location</i>, the routine will signal an error if you give it an
+unknown code-location.
+<P>
+<BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html3927" HREF="node256.html#SECTION001110000000000000000">10.1 DI Exceptional Conditions</A>
+<UL>
+<LI> <A NAME="tex2html3928" HREF="node257.html#SECTION001111000000000000000">Debug-conditions</A>
+<LI> <A NAME="tex2html3929" HREF="node258.html#SECTION001112000000000000000">Debug-errors</A>
+</UL> 
+<LI> <A NAME="tex2html3930" HREF="node259.html#SECTION001120000000000000000">Debug-variables</A>
+<LI> <A NAME="tex2html3931" HREF="node260.html#SECTION001130000000000000000">10.3 Frames</A>
+<LI> <A NAME="tex2html3932" HREF="node261.html#SECTION001140000000000000000">Debug-functions</A>
+<LI> <A NAME="tex2html3933" HREF="node262.html#SECTION001150000000000000000">Debug-blocks</A>
+<LI> <A NAME="tex2html3934" HREF="node263.html#SECTION001160000000000000000">10.6 Breakpoints</A>
+<LI> <A NAME="tex2html3935" HREF="node264.html#SECTION001170000000000000000">Code-locations</A>
+<LI> <A NAME="tex2html3936" HREF="node265.html#SECTION001180000000000000000">Debug-sources</A>
+<LI> <A NAME="tex2html3937" HREF="node266.html#SECTION001190000000000000000">10.9 Source Translation Utilities</A>
+</UL>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

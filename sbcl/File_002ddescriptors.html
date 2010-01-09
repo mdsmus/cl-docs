@@ -1,0 +1,58 @@
+<html lang="en">
+<head>
+<title>File-descriptors - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Types.html#Types" title="Types">
+<link rel="next" href="Filenames.html#Filenames" title="Filenames">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="File-descriptors"></a>
+<a name="File_002ddescriptors"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Filenames.html#Filenames">Filenames</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Types.html#Types">Types</a>
+<hr>
+</div>
+
+<h5 class="subsubsection">15.3.2.1 File-descriptors</h5>
+
+<p>A file-descriptor is a non-negative small integer.
+
+   <p>A file-stream is a designator for a file-descriptor: the stream's file
+descriptor is extracted.  Note that mixing I/O operations on a stream
+with operations directly on its descriptor may produce unexpected
+results if the stream is buffered.
+
+   <p><code>SB-EXT:MAKE-FD-STREAM</code> can be used to construct a stream
+associated with a file descriptor.
+
+   </body></html>
+

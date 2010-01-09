@@ -1,0 +1,542 @@
+<html
+  ><head
+    ><title
+      >FiveAM</title
+    ><link href="style.css" rel="stylesheet"
+    /><link title="Print" href="print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><h1 class="title"
+        >FiveAM</h1
+      ><div class="contents"
+        ><h2
+  ><a name="Checks"
+  >Checks</a
+>&nbsp;</h2
+><div class="nav-links"
+  ><a class="nav-link" href="Introduction.html"
+  >prev</a
+> | <span class="dead-nav-link"
+  >up</span
+> | <a href="Checks.html#Types_0020of_0020test_0020results"
+  >next</a
+> | <a href="index.html"
+    >toc</a
+  ></div
+>
+<p> At the lowest level testing the system requires that certain
+ forms be evaluated and that certain post conditions are met: the
+ value returned must satisfy a certain predicate, the form must
+ (or must not) signal a certain condition, etc. In FiveAM these
+ low level operations are called 'checks' and are defined using
+ the various checking macros.
+
+<p> Checks are the basic operators for collecting results. Tests and
+ test suites on the other hand allow grouping multiple checks into
+ logic collections.
+
+<div class="computational-element-link computational-element-link-variable"
+  ><p
+    ><a href="api/variable_005FIT.BESE.FIVEAM_003A_003A_002ATEST-DRIBBLE_002A.html" name="variable_005FIT.BESE.FIVEAM_003A_003A_002ATEST-DRIBBLE_002A"
+      >Variable *TEST-DRIBBLE*</a
+    > </p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-macro"
+  ><p
+    ><a href="api/macro_005FIT.BESE.FIVEAM_003A_003AWITH-_002ATEST-DRIBBLE_002A.html" name="macro_005FIT.BESE.FIVEAM_003A_003AWITH-_002ATEST-DRIBBLE_002A"
+      >Macro WITH-*TEST-DRIBBLE*</a
+    > </p
+  ></div
+>
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>eval-when <span class="paren">(</span>:compile-toplevel :load-toplevel :execute<span class="paren">)</span></span><span class"body">
+  <span class="paren">(</span>def-special-environment run-state <span class="paren">(</span><span class="paren">)</span>
+    result-list
+    current-test<span class="paren">)</span><span class="paren">)</span></span></pre
+>
+
+<h3
+  ><a name="Types_0020of_0020test_0020results"
+  >Types of test results</a
+>&nbsp;</h3
+><div class="nav-links"
+  ><a class="nav-link" href="Checks.html"
+  >prev</a
+> | <a class="nav-link" href="Checks.html"
+  >up</a
+> | <a href="Checks.html#The_0020check_0020operators"
+  >next</a
+> | <a href="index.html"
+    >toc</a
+  ></div
+>
+<p> Every check produces a result object. 
+
+<div class="computational-element-link computational-element-link-class"
+  ><p
+    ><a href="api/class_005FIT.BESE.FIVEAM_003A_003ATEST-RESULT.html" name="class_005FIT.BESE.FIVEAM_003A_003ATEST-RESULT"
+      >Class TEST-RESULT</a
+    > All checking macros will generate an object of
+ type TEST-RESULT.</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-class"
+  ><p
+    ><a href="api/class_005FIT.BESE.FIVEAM_003A_003ATEST-PASSED.html" name="class_005FIT.BESE.FIVEAM_003A_003ATEST-PASSED"
+      >Class TEST-PASSED</a
+    > Class for successful checks.</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-generic function"
+  ><p
+    ><a href="api/generic_0020function_005FIT.BESE.FIVEAM_003A_003ATEST-PASSED-P.html" name="generic_0020function_005FIT.BESE.FIVEAM_003A_003ATEST-PASSED-P"
+      >Generic Function TEST-PASSED-P</a
+    > </p
+  ></div
+>
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>define-condition check-failure <span class="paren">(</span>error<span class="paren">)</span></span><span class"body">
+  <span class="paren">(</span><span class="paren">(</span>reason :accessor reason :initarg :reason :initform &quot;no reason given&quot;<span class="paren">)</span>
+   <span class="paren">(</span>test-case :accessor test-case :initarg :test-case<span class="paren">)</span>
+   <span class="paren">(</span>test-expr :accessor test-expr :initarg :test-expr<span class="paren">)</span><span class="paren">)</span>
+  <span class="paren">(</span>:documentation &quot;Signaled when a check fails.&quot;<span class="paren">)</span>
+  <span class="paren">(</span>:report  <span class="paren">(</span>lambda <span class="paren">(</span>c stream<span class="paren">)</span>
+              <span class="paren">(</span>format stream &quot;The following check failed: ~S~%~A.&quot;
+                      <span class="paren">(</span>test-expr c<span class="paren">)</span>
+                      <span class="paren">(</span>reason c<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span><span class="paren">)</span><span class="paren">)</span></span></pre
+>
+
+<div class="computational-element-link computational-element-link-macro"
+  ><p
+    ><a href="api/macro_005FIT.BESE.FIVEAM_003A_003APROCESS-FAILURE.html" name="macro_005FIT.BESE.FIVEAM_003A_003APROCESS-FAILURE"
+      >Macro PROCESS-FAILURE</a
+    > </p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-class"
+  ><p
+    ><a href="api/class_005FIT.BESE.FIVEAM_003A_003ATEST-FAILURE.html" name="class_005FIT.BESE.FIVEAM_003A_003ATEST-FAILURE"
+      >Class TEST-FAILURE</a
+    > Class for unsuccessful checks.</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-generic function"
+  ><p
+    ><a href="api/generic_0020function_005FIT.BESE.FIVEAM_003A_003ATEST-FAILURE-P.html" name="generic_0020function_005FIT.BESE.FIVEAM_003A_003ATEST-FAILURE-P"
+      >Generic Function TEST-FAILURE-P</a
+    > </p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-class"
+  ><p
+    ><a href="api/class_005FIT.BESE.FIVEAM_003A_003AUNEXPECTED-TEST-FAILURE.html" name="class_005FIT.BESE.FIVEAM_003A_003AUNEXPECTED-TEST-FAILURE"
+      >Class UNEXPECTED-TEST-FAILURE</a
+    > Represents the result of a test which neither
+passed nor failed, but signaled an error we couldn't deal
+with.</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-class"
+  ><p
+    ><a href="api/class_005FIT.BESE.FIVEAM_003A_003ATEST-SKIPPED.html" name="class_005FIT.BESE.FIVEAM_003A_003ATEST-SKIPPED"
+      >Class TEST-SKIPPED</a
+    > A test which was not run.</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-generic function"
+  ><p
+    ><a href="api/generic_0020function_005FIT.BESE.FIVEAM_003A_003ATEST-SKIPPED-P.html" name="generic_0020function_005FIT.BESE.FIVEAM_003A_003ATEST-SKIPPED-P"
+      >Generic Function TEST-SKIPPED-P</a
+    > </p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-function"
+  ><p
+    ><a href="api/function_005FIT.BESE.FIVEAM_003A_003AADD-RESULT.html" name="function_005FIT.BESE.FIVEAM_003A_003AADD-RESULT"
+      >Function ADD-RESULT</a
+    > Create a TEST-RESULT object of type RESULT-TYPE passing it the
+  initialize args MAKE-INSTANCE-ARGS and adds the resulting
+  object to the list of test results.</p
+  ></div
+>
+
+<h3
+  ><a name="The_0020check_0020operators"
+  >The check operators</a
+>&nbsp;</h3
+><div class="nav-links"
+  ><a class="nav-link" href="Checks.html#Types_0020of_0020test_0020results"
+  >prev</a
+> | <a class="nav-link" href="Checks.html"
+  >up</a
+> | <a href="Checks.html#The_0020IS_0020check"
+  >next</a
+> | <a href="index.html"
+    >toc</a
+  ></div
+>
+<h4
+  ><a name="The_0020IS_0020check"
+  >The IS check</a
+>&nbsp;</h4
+><div class="nav-links"
+  ><a class="nav-link" href="Checks.html#The_0020check_0020operators"
+  >prev</a
+> | <a class="nav-link" href="Checks.html#The_0020check_0020operators"
+  >up</a
+> | <a href="Checks.html#Other_0020checks"
+  >next</a
+> | <a href="index.html"
+    >toc</a
+  ></div
+>
+<div class="computational-element-link computational-element-link-macro"
+  ><p
+    ><a href="api/macro_005FIT.BESE.FIVEAM_003A_003AIS.html" name="macro_005FIT.BESE.FIVEAM_003A_003AIS"
+      >Macro IS</a
+    > The DWIM checking operator.</p
+  ></div
+>
+
+<h4
+  ><a name="Other_0020checks"
+  >Other checks</a
+>&nbsp;</h4
+><div class="nav-links"
+  ><a class="nav-link" href="Checks.html#The_0020IS_0020check"
+  >prev</a
+> | <a class="nav-link" href="Checks.html#The_0020check_0020operators"
+  >up</a
+> | <a href="Checks.html#Random_0020_0028QuickCheck-ish_0029_0020testing"
+  >next</a
+> | <a href="index.html"
+    >toc</a
+  ></div
+>
+<div class="computational-element-link computational-element-link-macro"
+  ><p
+    ><a href="api/macro_005FIT.BESE.FIVEAM_003A_003ASKIP.html" name="macro_005FIT.BESE.FIVEAM_003A_003ASKIP"
+      >Macro SKIP</a
+    > Generates a TEST-SKIPPED result.</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-macro"
+  ><p
+    ><a href="api/macro_005FIT.BESE.FIVEAM_003A_003AIS-TRUE.html" name="macro_005FIT.BESE.FIVEAM_003A_003AIS-TRUE"
+      >Macro IS-TRUE</a
+    > Like IS this check generates a pass if CONDITION returns true
+  and a failure if CONDITION returns false.</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-macro"
+  ><p
+    ><a href="api/macro_005FIT.BESE.FIVEAM_003A_003AIS-FALSE.html" name="macro_005FIT.BESE.FIVEAM_003A_003AIS-FALSE"
+      >Macro IS-FALSE</a
+    > Generates a pass if CONDITION returns false, generates a
+  failure otherwise.</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-macro"
+  ><p
+    ><a href="api/macro_005FIT.BESE.FIVEAM_003A_003ASIGNALS.html" name="macro_005FIT.BESE.FIVEAM_003A_003ASIGNALS"
+      >Macro SIGNALS</a
+    > Generates a pass if BODY signals a condition of type
+CONDITION.</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-macro"
+  ><p
+    ><a href="api/macro_005FIT.BESE.FIVEAM_003A_003AFINISHES.html" name="macro_005FIT.BESE.FIVEAM_003A_003AFINISHES"
+      >Macro FINISHES</a
+    > Generates a pass if BODY executes to normal completion.</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-macro"
+  ><p
+    ><a href="api/macro_005FIT.BESE.FIVEAM_003A_003APASS.html" name="macro_005FIT.BESE.FIVEAM_003A_003APASS"
+      >Macro PASS</a
+    > Simply generate a PASS.</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-macro"
+  ><p
+    ><a href="api/macro_005FIT.BESE.FIVEAM_003A_003AFAIL.html" name="macro_005FIT.BESE.FIVEAM_003A_003AFAIL"
+      >Macro FAIL</a
+    > Simply generate a FAIL.</p
+  ></div
+>
+
+
+<h3
+  ><a name="Random_0020_0028QuickCheck-ish_0029_0020testing"
+  >Random (QuickCheck-ish) testing</a
+>&nbsp;</h3
+><div class="nav-links"
+  ><a class="nav-link" href="Checks.html#Other_0020checks"
+  >prev</a
+> | <a class="nav-link" href="Checks.html"
+  >up</a
+> | <a href="Checks.html#Generators"
+  >next</a
+> | <a href="index.html"
+    >toc</a
+  ></div
+>
+<p> FiveAM provides the ability to automatically generate a
+ collection of random input data for a specific test and run a
+ test multiple times.
+
+<p> Specification testing is done through the FOR-ALL macro. This
+ macro will bind variables to random data and run a test body a
+ certain number of times. Should the test body ever signal a
+ failure we stop running and report what values of the variables
+ caused the code to fail.
+
+<div class="computational-element-link computational-element-link-variable"
+  ><p
+    ><a href="api/variable_005FIT.BESE.FIVEAM_003A_003A_002ANUM-TRIALS_002A.html" name="variable_005FIT.BESE.FIVEAM_003A_003A_002ANUM-TRIALS_002A"
+      >Variable *NUM-TRIALS*</a
+    > Number of times we attempt to run the body of the FOR-ALL test.</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-variable"
+  ><p
+    ><a href="api/variable_005FIT.BESE.FIVEAM_003A_003A_002AMAX-TRIALS_002A.html" name="variable_005FIT.BESE.FIVEAM_003A_003A_002AMAX-TRIALS_002A"
+      >Variable *MAX-TRIALS*</a
+    > Number of total times we attempt to run the body of the
+  FOR-ALL test including when the body is skipped due to failed
+  guard conditions.</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-macro"
+  ><p
+    ><a href="api/macro_005FIT.BESE.FIVEAM_003A_003AFOR-ALL.html" name="macro_005FIT.BESE.FIVEAM_003A_003AFOR-ALL"
+      >Macro FOR-ALL</a
+    > </p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-function"
+  ><p
+    ><a href="api/function_005FIT.BESE.FIVEAM_003A_003APERFORM-RANDOM-TESTING.html" name="function_005FIT.BESE.FIVEAM_003A_003APERFORM-RANDOM-TESTING"
+      >Function PERFORM-RANDOM-TESTING</a
+    > </p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-function"
+  ><p
+    ><a href="api/function_005FIT.BESE.FIVEAM_003A_003APERFORM-RANDOM-TESTING_002FRUN-ONCE.html" name="function_005FIT.BESE.FIVEAM_003A_003APERFORM-RANDOM-TESTING_002FRUN-ONCE"
+      >Function PERFORM-RANDOM-TESTING/RUN-ONCE</a
+    > </p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-class"
+  ><p
+    ><a href="api/class_005FIT.BESE.FIVEAM_003A_003AFOR-ALL-TEST-RESULT.html" name="class_005FIT.BESE.FIVEAM_003A_003AFOR-ALL-TEST-RESULT"
+      >Class FOR-ALL-TEST-RESULT</a
+    > </p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-class"
+  ><p
+    ><a href="api/class_005FIT.BESE.FIVEAM_003A_003AFOR-ALL-TEST-PASSED.html" name="class_005FIT.BESE.FIVEAM_003A_003AFOR-ALL-TEST-PASSED"
+      >Class FOR-ALL-TEST-PASSED</a
+    > </p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-class"
+  ><p
+    ><a href="api/class_005FIT.BESE.FIVEAM_003A_003AFOR-ALL-TEST-FAILED.html" name="class_005FIT.BESE.FIVEAM_003A_003AFOR-ALL-TEST-FAILED"
+      >Class FOR-ALL-TEST-FAILED</a
+    > </p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-generic function"
+  ><p
+    ><a href="api/generic_0020function_005FIT.BESE.FIVEAM_003A_003AFOR-ALL-TEST-FAILED-P.html" name="generic_0020function_005FIT.BESE.FIVEAM_003A_003AFOR-ALL-TEST-FAILED-P"
+      >Generic Function FOR-ALL-TEST-FAILED-P</a
+    > </p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-method"
+  ><p
+    ><a href="api/method_005FIT.BESE.FIVEAM_003A_003A_0028REASON_0020FOR-ALL-TEST-FAILED_0029.html" name="method_005FIT.BESE.FIVEAM_003A_003A_0028REASON_0020FOR-ALL-TEST-FAILED_0029"
+      >Method (REASON FOR-ALL-TEST-FAILED)</a
+    > </p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-class"
+  ><p
+    ><a href="api/class_005FIT.BESE.FIVEAM_003A_003AFOR-ALL-TEST-NO-TESTS.html" name="class_005FIT.BESE.FIVEAM_003A_003AFOR-ALL-TEST-NO-TESTS"
+      >Class FOR-ALL-TEST-NO-TESTS</a
+    > </p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-class"
+  ><p
+    ><a href="api/class_005FIT.BESE.FIVEAM_003A_003AFOR-ALL-TEST-NEVER-RUN.html" name="class_005FIT.BESE.FIVEAM_003A_003AFOR-ALL-TEST-NEVER-RUN"
+      >Class FOR-ALL-TEST-NEVER-RUN</a
+    > </p
+  ></div
+>
+
+<h4
+  ><a name="Generators"
+  >Generators</a
+>&nbsp;</h4
+><div class="nav-links"
+  ><a class="nav-link" href="Checks.html#Random_0020_0028QuickCheck-ish_0029_0020testing"
+  >prev</a
+> | <a class="nav-link" href="Checks.html#Random_0020_0028QuickCheck-ish_0029_0020testing"
+  >up</a
+> | <a href="Checks.html#Fixtures"
+  >next</a
+> | <a href="index.html"
+    >toc</a
+  ></div
+>
+<p> Since this is random testing we need some way of creating random
+ data to feed to our code. Generators are regular functions whcih
+ create this random data.
+
+<p> We provide a set of built-in generators.
+
+<div class="computational-element-link computational-element-link-macro"
+  ><p
+    ><a href="api/macro_005FIT.BESE.FIVEAM_003A_003ADEFGENERATOR.html" name="macro_005FIT.BESE.FIVEAM_003A_003ADEFGENERATOR"
+      >Macro DEFGENERATOR</a
+    > </p
+  ></div
+>
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>defgenerator gen-integer <span class="paren">(</span>&amp;key <span class="paren">(</span>max <span class="paren">(</span>1+ most-positive-fixnum<span class="paren">)</span><span class="paren">)</span></span><span class"body">
+                                <span class="paren">(</span>min <span class="paren">(</span>1- most-negative-fixnum<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span>
+  <span class="paren">(</span>+ min <span class="paren">(</span>random <span class="paren">(</span>1+ <span class="paren">(</span>- max min<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span><span class="paren">)</span><span class="paren">)</span></span></pre
+>
+
+<div class="computational-element-link computational-element-link-macro"
+  ><p
+    ><a href="api/macro_005FIT.BESE.FIVEAM_003A_003AGEN-FLOAT-GENERATOR.html" name="macro_005FIT.BESE.FIVEAM_003A_003AGEN-FLOAT-GENERATOR"
+      >Macro GEN-FLOAT-GENERATOR</a
+    > </p
+  ></div
+>
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>defgenerator gen-long-float <span class="paren">(</span>&amp;key <span class="paren">(</span>max <span class="paren">(</span>1+ most-positive-long-float<span class="paren">)</span><span class="paren">)</span></span><span class"body">
+                                   <span class="paren">(</span>min <span class="paren">(</span>1- most-negative-long-float<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span>
+  <span class="paren">(</span>+ min <span class="paren">(</span>random <span class="paren">(</span>1+ <span class="paren">(</span>- max min<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span><span class="paren">)</span><span class="paren">)</span></span></pre
+>
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>defgenerator gen-character <span class="paren">(</span>&amp;key <span class="paren">(</span>code <span class="paren">(</span>gen-integer :min 0 :max <span class="paren">(</span>1- char-code-limit<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span></span><span class"body">
+                                  <span class="paren">(</span>alphanumericp nil<span class="paren">)</span><span class="paren">)</span>
+  <span class="paren">(</span>if alphanumericp
+      <span class="paren">(</span>code-char <span class="paren">(</span>funcall code<span class="paren">)</span><span class="paren">)</span>
+      <span class="paren">(</span>loop
+         for char = <span class="paren">(</span>code-char <span class="paren">(</span>funcall code<span class="paren">)</span><span class="paren">)</span>
+         until <span class="paren">(</span>alphanumericp char<span class="paren">)</span>
+         finally <span class="paren">(</span>return char<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span><span class="paren">)</span></span></pre
+>
+
+<div class="computational-element-link computational-element-link-function"
+  ><p
+    ><a href="api/function_005FIT.BESE.FIVEAM_003A_003AGEN-STRING.html" name="function_005FIT.BESE.FIVEAM_003A_003AGEN-STRING"
+      >Function GEN-STRING</a
+    > </p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-function"
+  ><p
+    ><a href="api/function_005FIT.BESE.FIVEAM_003A_003AGEN-LIST.html" name="function_005FIT.BESE.FIVEAM_003A_003AGEN-LIST"
+      >Function GEN-LIST</a
+    > </p
+  ></div
+>
+
+<p> The trivial always-produce-the-same-thing generator is done using
+ cl:constantly.
+
+<h3
+  ><a name="Fixtures"
+  >Fixtures</a
+>&nbsp;</h3
+><div class="nav-links"
+  ><a class="nav-link" href="Checks.html#Generators"
+  >prev</a
+> | <a class="nav-link" href="Checks.html"
+  >up</a
+> | <a href="Tests.html"
+  >next</a
+> | <a href="index.html"
+    >toc</a
+  ></div
+>
+<p> When running tests we often need to setup some kind of context
+ (create dummy db connections, simulate an http request,
+ etc.). Fixtures provide a way to conviently hide this context
+ into a macro and allow the test to focus on testing.
+
+<p> NB: A FiveAM fixture is nothing more than a macro. Since the term
+ 'fixture' is so common in testing frameworks we've provided a
+ wrapper around defmacro for this purpose.
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>deflookup-table fixture</span><span class"body">
+  :documentation &quot;Lookup table mapping fixture names to fixture
+  objects.&quot;<span class="paren">)</span></span></pre
+>
+
+<div class="computational-element-link computational-element-link-macro"
+  ><p
+    ><a href="api/macro_005FIT.BESE.FIVEAM_003A_003ADEF-FIXTURE.html" name="macro_005FIT.BESE.FIVEAM_003A_003ADEF-FIXTURE"
+      >Macro DEF-FIXTURE</a
+    > Defines a fixture named NAME.</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-macro"
+  ><p
+    ><a href="api/macro_005FIT.BESE.FIVEAM_003A_003AWITH-FIXTURE.html" name="macro_005FIT.BESE.FIVEAM_003A_003AWITH-FIXTURE"
+      >Macro WITH-FIXTURE</a
+    > Insert BODY into the fixture named FIXTURE-NAME.</p
+  ></div
+>
+
+
+</div
+      ></div
+    ></body
+  ></html
+>

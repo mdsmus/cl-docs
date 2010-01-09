@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>7.1 Object Sets</TITLE>
+<META NAME="description" CONTENT="7.1 Object Sets">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3372" HREF="node213.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3370" HREF="node211.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3364" HREF="node211.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3374" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3375" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3373" HREF="node213.html">The SERVE-EVENT Function</A>
+<B>Up:</B> <A NAME="tex2html3371" HREF="node211.html">Event Dispatching with SERVE-EVENT</A>
+<B> Previous:</B> <A NAME="tex2html3365" HREF="node211.html">Event Dispatching with SERVE-EVENT</A>
+<BR> <P>
+<H1><A NAME="SECTION00810000000000000000">7.1 Object Sets</A></H1>
+<P>
+<A NAME="objectsets">&#160;</A>
+<A NAME="11225">&#160;</A>
+An &#305;object set is a collection of objects that have the same implementation
+for each operation.  Externally the object is represented by the object
+capability and the operation is represented by the operation code.  Within
+Lisp, the object is represented by an arbitrary Lisp object, and the
+implementation for the operation is represented by an arbitrary Lisp function.
+The object set mechanism maintains this translation from the external to the
+internal representation.
+<P>
+<b>[Function]</b><BR> 
+<tt> system:make-object-set</tt> <em> <i>name</i> <i>&amp;optional</i> <i>default-handler</i></em><BR>
+<P>
+  This function makes a new object set.  <i>Name</i> is a string used
+  only for purposes of identifying the object set when it is printed.
+  <i>Default-handler</i> is the function used as a handler when an
+  undefined operation occurs on an object in the set.  You can define
+  operations with the <tt>serve-</tt><i>operation</i> functions exported
+  the <tt>extensions</tt> package for X events
+  (see section&nbsp;<A HREF="node215.html#xservemumbles">7.4</A>).  Objects are added with
+  <tt>system:add-xwindow-object</tt>.  Initially the object set has no
+  objects and no defined operations.
+<P>
+<b>[Function]</b><BR> 
+<tt> system:object-set-operation</tt> <em> <i>object-set</i> <i>operation-code</i></em><BR>
+<P>
+  This function returns the handler function that is the
+  implementation of the operation corresponding to
+  <i>operation-code</i> in <i>object-set</i>.  When set with
+  <tt>setf</tt>, the setter function establishes the new handler.  The
+  <tt>serve-</tt><i>operation</i> functions exported from the
+  <tt>extensions</tt> package for X events (see section&nbsp;<A HREF="node215.html#xservemumbles">7.4</A>)
+  call this on behalf of the user when announcing a new operation for
+  an object set.
+<P>
+<b>[Function]</b><BR> 
+<tt> system:add-xwindow-object</tt> <em> <i>window</i> <i>object</i> <i>object-set</i></em><BR>
+<P>
+  These functions add <i>port</i> or <i>window</i> to <i>object-set</i>.
+  <i>Object</i> is an arbitrary Lisp object that is associated with the
+  <i>port</i> or <i>window</i> capability.  <i>Window</i> is a CLX
+  window.  When an event occurs, <tt>system:serve-event</tt> passes
+  <i>object</i> as an argument to the handler function.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

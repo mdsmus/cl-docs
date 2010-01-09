@@ -1,0 +1,49 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.4.6 Multiple Values Optimization</TITLE>
+<META NAME="description" CONTENT="5.4.6 Multiple Values Optimization">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2427" HREF="node138.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2425" HREF="node131.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2419" HREF="node136.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2429" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2430" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2428" HREF="node138.html">5.4.7 Source to Source </A>
+<B>Up:</B> <A NAME="tex2html2426" HREF="node131.html">5.4 Source Optimization</A>
+<B> Previous:</B> <A NAME="tex2html2420" HREF="node136.html">5.4.5 Unreachable Code Deletion</A>
+<BR> <P>
+<H2><A NAME="SECTION00646000000000000000">5.4.6 Multiple Values Optimization</A></H2>
+<P>
+<A NAME="10063">&#160;</A>
+<A NAME="10064">&#160;</A>
+<P>
+Within a function, Python implements uses of multiple values
+particularly efficiently.  Multiple values can be kept in arbitrary
+registers, so using multiple values doesn't imply stack manipulation
+and representation conversion.  For example, this code:
+<BLOCKQUOTE> <PRE>(let ((a (if x (foo x) u))
+      (b (if x (bar x) v)))
+  ...)
+</PRE> </BLOCKQUOTE>
+is actually more efficient written this way:
+<BLOCKQUOTE> <PRE>(multiple-value-bind
+    (a b)
+    (if x
+        (values (foo x) (bar x))
+        (values u v))
+  ...)
+</PRE> </BLOCKQUOTE>
+<P>
+Also, see section&nbsp;<A HREF="node147.html#localcallreturn">5.6.5</A> for information on how local call
+provides efficient support for multiple function return values.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

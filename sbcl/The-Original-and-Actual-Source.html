@@ -1,0 +1,91 @@
+<html lang="en">
+<head>
+<title>The Original and Actual Source - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Understanding-Compiler-Diagnostics.html#Understanding-Compiler-Diagnostics" title="Understanding Compiler Diagnostics">
+<link rel="prev" href="The-Parts-of-a-Compiler-Diagnostic.html#The-Parts-of-a-Compiler-Diagnostic" title="The Parts of a Compiler Diagnostic">
+<link rel="next" href="The-Processing-Path.html#The-Processing-Path" title="The Processing Path">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="The-Original-and-Actual-Source"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="The-Processing-Path.html#The-Processing-Path">The Processing Path</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="The-Parts-of-a-Compiler-Diagnostic.html#The-Parts-of-a-Compiler-Diagnostic">The Parts of a Compiler Diagnostic</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Understanding-Compiler-Diagnostics.html#Understanding-Compiler-Diagnostics">Understanding Compiler Diagnostics</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h5 class="subsubsection">3.1.3.2 The Original and Actual Source</h5>
+
+<p><a name="index-Original-Source-39"></a><a name="index-Actual-Source-40"></a>
+The <em>original source</em> displayed will almost always be a list. If
+the actual source for an message is a symbol, the original source will
+be the immediately enclosing evaluated list form. So even if the
+offending symbol does appear in the original source, the compiler will
+print the enclosing list and then print the symbol as the actual
+source (as though the symbol were introduced by a macro.)
+
+   <p>When the <em>actual source</em> is displayed (and is not a symbol), it
+will always be code that resulted from the expansion of a macro or a
+source-to-source compiler optimization. This is code that did not
+appear in the original source program; it was introduced by the
+compiler.
+
+   <p>Keep in mind that when the compiler displays a source form in an
+diagnostic message, it always displays the most specific (innermost)
+responsible form. For example, compiling this function
+
+<pre class="lisp">     (defun bar (x)
+       (let (a)
+         (declare (fixnum a))
+         (setq a (foo x))
+         a))
+</pre>
+   <p>gives this error message
+
+<pre class="example">     ; file: /tmp/foo.lisp
+     ; in: DEFUN BAR
+     ;     (LET (A)
+     ;     (DECLARE (FIXNUM A))
+     ;     (SETQ A (FOO X))
+     ;     A)
+     ;
+     ; caught WARNING:
+     ;   Asserted type FIXNUM conflicts with derived type (VALUES NULL &amp;OPTIONAL).
+</pre>
+   <p>This message is not saying &ldquo;there is a problem somewhere in this
+<code>let</code>&rdquo; &ndash; it is saying that there is a problem with the
+<code>let</code> itself. In this example, the problem is that <code>a</code>'s
+<code>nil</code> initial value is not a <code>fixnum</code>.
+
+   </body></html>
+

@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.3.1 Variable Type Inference</TITLE>
+<META NAME="description" CONTENT="5.3.1 Variable Type Inference">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2277" HREF="node126.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2275" HREF="node124.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2269" HREF="node124.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2279" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2280" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2278" HREF="node126.html">5.3.2 Local Function Type </A>
+<B>Up:</B> <A NAME="tex2html2276" HREF="node124.html">5.3 Type Inference</A>
+<B> Previous:</B> <A NAME="tex2html2270" HREF="node124.html">5.3 Type Inference</A>
+<BR> <P>
+<H2><A NAME="SECTION00631000000000000000">5.3.1 Variable Type Inference</A></H2>
+<P>
+<A NAME="variabletypeinference">&#160;</A>
+<P>
+The type of a variable is the union of the types of all the
+definitions.  In the degenerate case of a let, the type of the
+variable is the type of the initial value.  This inferred type is
+intersected with any declared type, and is then propagated to all the
+variable's references.  The types of <A NAME="9895">&#160;</A><tt>multiple-value-bind</tt>
+variables are similarly inferred from the types of the individual
+values of the values form.
+<P>
+If multiple type declarations apply to a single variable, then all the
+declarations must be correct; it is as though all the types were intersected
+producing a single <A NAME="9897">&#160;</A><tt>and</tt> type specifier.  In this example:
+<BLOCKQUOTE> <PRE>(defmacro my-dotimes ((var count) &amp;body body)
+  `(do ((,var 0 (1+ ,var)))
+       ((&gt;= ,var ,count))
+     (declare (type (integer 0 *) ,var))
+     ,@body))
+<P>
+(my-dotimes (i ...)
+  (declare (fixnum i))
+  ...)
+</PRE> </BLOCKQUOTE>
+the two declarations for <tt>i</tt> are intersected, so <tt>i</tt> is
+known to be a non-negative fixnum.
+<P>
+In practice, this type inference is limited to lets and local
+functions, since the compiler can't analyze all the calls to a global
+function.  But type inference works well enough on local variables so
+that it is often unnecessary to declare the type of local variables.
+This is especially likely when function result types and structure
+slot types are declared.  The main areas where type inference breaks
+down are:
+<UL>
+<LI> When the initial value of a variable is a untyped expression,
+  such as <tt>(car x)</tt>, and
+<LI> When the type of one of the variable's definitions is a function
+  of the variable's current value, as in: <tt>(setq x (1+ x))</tt>
+</UL><BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

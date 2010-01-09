@@ -1,0 +1,1792 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+"http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+<meta name="generator" content=
+"HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 13), see www.w3.org">
+<meta http-equiv="Content-Type" content=
+"text/html; charset=us-ascii">
+<meta name="GENERATOR" content="hevea 1.06">
+<link rel="stylesheet" href="cmucl.css" type="text/css">
+<meta http-equiv="Content-Language" content="en">
+<title>CMUCL User's Manual: The Compiler</title>
+</head>
+<body>
+<a href="debugger.html"><img src="previous_motif.gif" alt=
+"Previous"></a> <a href="index.html"><img src="contents_motif.gif"
+alt="Up"></a> <a href="compiler-hint.html"><img src=
+"next_motif.gif" alt="Next"></a>
+<hr>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFBC">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc103" id="htoc103"><b><font size=
+"6">Chapter&nbsp;4</font></b></a></td>
+<td width="100%" align="center"><b><font size="6">The
+Compiler</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<ul>
+<li><a href="compiler.html#toc112">Compiler Introduction</a></li>
+<li><a href="compiler.html#toc113">Calling the Compiler</a></li>
+<li><a href="compiler.html#toc114">Compilation Units</a>
+<ul>
+<li><a href="compiler.html#toc115">Undefined Warnings</a></li>
+</ul>
+</li>
+<li><a href="compiler.html#toc116">Interpreting Error Messages</a>
+<ul>
+<li><a href="compiler.html#toc117">The Parts of the Error
+Message</a></li>
+<li><a href="compiler.html#toc118">The Original and Actual
+Source</a></li>
+<li><a href="compiler.html#toc119">The Processing Path</a></li>
+<li><a href="compiler.html#toc120">Error Severity</a></li>
+<li><a href="compiler.html#toc121">Errors During
+Macroexpansion</a></li>
+<li><a href="compiler.html#toc122">Read Errors</a></li>
+<li><a href="compiler.html#toc123">Error Message
+Parameterization</a></li>
+</ul>
+</li>
+<li><a href="compiler.html#toc124">Types in Python</a>
+<ul>
+<li><a href="compiler.html#toc125">Compile Time Type
+Errors</a></li>
+<li><a href="compiler.html#toc126">Precise Type Checking</a></li>
+<li><a href="compiler.html#toc127">Weakened Type Checking</a></li>
+</ul>
+</li>
+<li><a href="compiler.html#toc128">Getting Existing Programs to
+Run</a></li>
+<li><a href="compiler.html#toc129">Compiler Policy</a>
+<ul>
+<li><a href="compiler.html#toc130">The Optimize
+Declaration</a></li>
+<li><a href="compiler.html#toc131">The Optimize-Interface
+Declaration</a></li>
+</ul>
+</li>
+<li><a href="compiler.html#toc132">Open Coding and Inline
+Expansion</a></li>
+</ul>
+<br>
+<a name="toc112" id="toc112"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc104" id="htoc104"><b><font size=
+"5">4.1</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Compiler
+Introduction</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+This chapter contains information about the compiler that every
+CMUCL user should be familiar with. Chapter <a href=
+"compiler-hint.html#advanced-compiler">5</a> goes into greater
+depth, describing ways to use more advanced features.<br>
+<br>
+The CMUCL compiler (also known as Python, not to be confused with
+the programming language of the same name) has many features that
+are seldom or never supported by conventional Common Lisp
+compilers:
+<ul>
+<li>Source level debugging of compiled code (see chapter <a href=
+"debugger.html#debugger">3</a>.)<br>
+<br></li>
+<li>Type error compiler warnings for type errors detectable at
+compile time.<br>
+<br></li>
+<li>Compiler error messages that provide a good indication of where
+the error appeared in the source.<br>
+<br></li>
+<li>Full run-time checking of all potential type errors, with
+optimization of type checks to minimize the cost.<br>
+<br></li>
+<li>Scheme-like features such as proper tail recursion and
+extensive source-level optimization.<br>
+<br></li>
+<li>Advanced tuning and optimization features such as comprehensive
+efficiency notes, flow analysis, and untagged number
+representations (see chapter <a href=
+"compiler-hint.html#advanced-compiler">5</a>.)</li>
+</ul>
+<a name="toc113" id="toc113"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc105" id="htoc105"><b><font size=
+"5">4.2</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Calling the
+Compiler</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="@concept93"></a><br>
+Functions may be compiled using <tt class="code">compile</tt>,
+<tt class="code">compile-file</tt>, or <tt class=
+"code">compile-from-stream</tt>.<br>
+<br>
+<br>
+<a name="@funs111"></a><a name="FN:compile" id="FN:compile"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">compile</tt> <tt class=
+"variable">name</tt> <tt class="code">&amp;optional</tt> <tt class=
+"variable">definition</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This function compiles the function whose name is <tt class=
+"variable">name</tt>. If <tt class="variable">name</tt> is
+<tt class="code">nil</tt>, the compiled function object is
+returned. If <tt class="variable">definition</tt> is supplied, it
+should be a lambda expression that is to be compiled and then
+placed in the function cell of <tt class="variable">name</tt>. As
+per the proposed X3J13 cleanup ``compile-argument-problems'',
+<tt class="variable">definition</tt> may also be an interpreted
+function.<br>
+<br>
+The return values are as per the proposed X3J13 cleanup
+``compiler-diagnostics''. The first value is the function name or
+function object. The second value is <tt class="code">nil</tt> if
+no compiler diagnostics were issued, and <tt class="code">t</tt>
+otherwise. The third value is <tt class="code">nil</tt> if no
+compiler diagnostics other than style warnings were issued. A
+non-<tt class="code">nil</tt> value indicates that there were
+``serious'' compiler diagnostics issued, or that other conditions
+of type <a name="@types19"></a><tt class="code">error</tt> or
+<a name="@types20"></a><tt class="code">warning</tt> (but not
+<a name="@types21"></a><tt class="code">style-warning</tt>) were
+signaled during compilation.</blockquote>
+<br>
+<a name="@funs112"></a><a name="FN:compile-file" id=
+"FN:compile-file"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">compile-file</tt> <tt class=
+"variable">input-pathname</tt> <tt class="code">&amp;key</tt>
+<tt class="code">:output-file</tt> <tt class=
+"code">:error-file</tt> <tt class="code">:trace-file</tt><br>
+<tt class="code">:error-output</tt> <tt class="code">:verbose</tt>
+<tt class="code">:print</tt> <tt class="code">:progress</tt><br>
+<tt class="code">:load</tt> <tt class="code">:block-compile</tt>
+<tt class="code">:entry-points</tt><br>
+<tt class="code">:byte-compile</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+The CMUCL <tt class="code">compile-file</tt> is extended through
+the addition of several new keywords and an additional
+interpretation of <tt class="variable">input-pathname</tt>:
+<dl compact="compact">
+<dt><tt class="variable">input-pathname</tt><br></dt>
+<dd>If this argument is a list of input files, rather than a single
+input pathname, then all the source files are compiled into a
+single object file. In this case, the name of the first file is
+used to determine the default output file names. This is especially
+useful in combination with <tt class=
+"variable">block-compile</tt>.<br>
+<br></dd>
+<dt><tt class="code">:output-file</tt><br></dt>
+<dd>This argument specifies the name of the output file. <tt class=
+"code">t</tt> gives the default name, <tt class="code">nil</tt>
+suppresses the output file.<br>
+<br></dd>
+<dt><tt class="code">:error-file</tt><br></dt>
+<dd>A listing of all the error output is directed to this file. If
+there are no errors, then no error file is produced (and any
+existing error file is deleted.) <tt class="code">t</tt> gives
+"<tt class="variable">name</tt><tt class="code">.err</tt>" (the
+default), and <tt class="code">nil</tt> suppresses the output
+file.<br>
+<br></dd>
+<dt><tt class="code">:error-output</tt><br></dt>
+<dd>If <tt class="code">t</tt> (the default), then error output is
+sent to <tt class="code">*error-output*</tt>. If a stream, then
+output is sent to that stream instead. If <tt class=
+"code">nil</tt>, then error output is suppressed. Note that this
+error output is in addition to (but the same as) the output placed
+in the <tt class="variable">error-file</tt>.<br>
+<br></dd>
+<dt><tt class="code">:verbose</tt><br></dt>
+<dd>If <tt class="code">t</tt> (the default), then the compiler
+prints to error output at the start and end of compilation of each
+file. See <a name="@vars34"></a><tt class=
+"code">*compile-verbose*</tt>.<br>
+<br></dd>
+<dt><tt class="code">:print</tt><br></dt>
+<dd>If <tt class="code">t</tt> (the default), then the compiler
+prints to error output when each function is compiled. See <a name=
+"@vars35"></a><tt class="code">*compile-print*</tt>.<br>
+<br></dd>
+<dt><tt class="code">:progress</tt><br></dt>
+<dd>If <tt class="code">t</tt> (default <tt class="code">nil</tt>),
+then the compiler prints to error output progress information about
+the phases of compilation of each function. This is a CMUCL
+extension that is useful mainly in large block compilations. See
+<a name="@vars36"></a><tt class="code">*compile-progress*</tt>.<br>
+<br></dd>
+<dt><tt class="code">:trace-file</tt><br></dt>
+<dd>If <tt class="code">t</tt>, several of the intermediate
+representations (including annotated assembly code) are dumped out
+to this file. <tt class="code">t</tt> gives "<tt class=
+"variable">name</tt><tt class="code">.trace</tt>". Trace output is
+off by default. See section&nbsp;<a href=
+"compiler-hint.html#trace-files">5.12.5</a>.<br>
+<br></dd>
+<dt><tt class="code">:load</tt><br></dt>
+<dd>If <tt class="code">t</tt>, load the resulting output file.<br>
+<br></dd>
+<dt><tt class="code">:block-compile</tt><br></dt>
+<dd>Controls the compile-time resolution of function calls. By
+default, only self-recursive calls are resolved, unless an
+<tt class="code">ext:block-start</tt> declaration appears in the
+source file. See section&nbsp;<a href=
+"compiler-hint.html#compile-file-block">5.7.3</a>.<br>
+<br></dd>
+<dt><tt class="code">:entry-points</tt><br></dt>
+<dd>If non-null, then this is a list of the names of all functions
+in the file that should have global definitions installed (because
+they are referenced in other files.) See section&nbsp;<a href=
+"compiler-hint.html#compile-file-block">5.7.3</a>.<br>
+<br></dd>
+<dt><tt class="code">:byte-compile</tt><br></dt>
+<dd>If <tt class="code">t</tt>, compiling to a compact interpreted
+byte code is enabled. Possible values are <tt class="code">t</tt>,
+<tt class="code">nil</tt>, and <tt class="code">:maybe</tt> (the
+default.) See <a name="@vars37"></a><tt class=
+"code">*byte-compile-default*</tt> and See section&nbsp;<a href=
+"compiler-hint.html#byte-compile">5.9</a>.</dd>
+</dl>
+The return values are as per the proposed X3J13 cleanup
+``compiler-diagnostics''. The first value from <tt class=
+"code">compile-file</tt> is the truename of the output file, or
+<tt class="code">nil</tt> if the file could not be created. The
+interpretation of the second and third values is described above
+for <tt class="code">compile</tt>.</blockquote>
+<br>
+<a name="@vars38"></a><a name="VR:compile-verbose" id=
+"VR:compile-verbose"></a>
+<div align="left">[Variable]<br>
+<tt class="function-name">*compile-verbose*</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+<a name="@vars39"></a><a name="VR:compile-print" id=
+"VR:compile-print"></a>
+<div align="left">[Variable]<br>
+<tt class="function-name">*compile-print*</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<br>
+<a name="@vars40"></a><a name="VR:compile-progress" id=
+"VR:compile-progress"></a>
+<div align="left">[Variable]<br>
+<tt class="function-name">*compile-progress*</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<br>
+These variables determine the default values for the <tt class=
+"code">:verbose</tt>, <tt class="code">:print</tt> and <tt class=
+"code">:progress</tt> arguments to <tt class=
+"code">compile-file</tt>.</blockquote>
+<br>
+<a name="@funs113"></a><a name="FN:compile-from-stream" id=
+"FN:compile-from-stream"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">compile-from-stream</tt> <tt class=
+"variable">input-stream</tt> <tt class="code">&amp;key</tt>
+<tt class="code">:error-stream</tt><br>
+<tt class="code">:trace-stream</tt><br>
+<tt class="code">:block-compile</tt> <tt class=
+"code">:entry-points</tt><br>
+<tt class="code">:byte-compile</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This function is similar to <tt class="code">compile-file</tt>, but
+it takes all its arguments as streams. It reads Common Lisp code
+from <tt class="variable">input-stream</tt> until end of file is
+reached, compiling into the current environment. This function
+returns the same two values as the last two values of <tt class=
+"code">compile</tt>. No output files are produced.</blockquote>
+<a name="toc114" id="toc114"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc106" id="htoc106"><b><font size=
+"5">4.3</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Compilation
+Units</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="@concept94"></a><br>
+CMUCL supports the <tt class="code">with-compilation-unit</tt>
+macro added to the language by the X3J13 ``with-compilation-unit''
+compiler cleanup issue. This provides a mechanism for eliminating
+spurious undefined warnings when there are forward references
+across files, and also provides a standard way to access compiler
+extensions.<br>
+<br>
+<br>
+<a name="@funs114"></a><a name="FN:with-compilation-unit" id=
+"FN:with-compilation-unit"></a>
+<div align="left">[Macro]<br>
+<tt class="function-name">with-compilation-unit</tt> (<tt class=
+"code">{<tt class="variable">key</tt> <tt class=
+"variable">value</tt>}</tt><sup><font size="2">*</font></sup>)
+<tt class="code">{<tt class=
+"variable">form</tt>}</tt><sup><font size="2">*</font></sup>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This macro evaluates the <tt class="variable">forms</tt> in an
+environment that causes warnings for undefined variables, functions
+and types to be delayed until all the forms have been evaluated.
+Each keyword <tt class="variable">value</tt> is an evaluated form.
+These keyword options are recognized:
+<dl compact="compact">
+<dt><tt class="code">:override</tt><br></dt>
+<dd>If uses of <tt class="code">with-compilation-unit</tt> are
+dynamically nested, the outermost use will take precedence,
+suppressing printing of undefined warnings by inner uses. However,
+when the <tt class="code">override</tt> option is true this
+shadowing is inhibited; an inner use will print summary warnings
+for the compilations within the inner scope.<br>
+<br></dd>
+<dt><tt class="code">:optimize</tt><br></dt>
+<dd>This is a CMUCL extension that specifies of the ``global''
+compilation policy for the dynamic extent of the body. The argument
+should evaluate to an <tt class="code">optimize</tt> declare form,
+like:
+<blockquote class="lisp">
+<pre>
+      (optimize (speed 3) (safety 0))
+    
+</pre></blockquote>
+See section&nbsp;<a href="#optimize-declaration">4.7.1</a><br>
+<br></dd>
+<dt><tt class="code">:optimize-interface</tt><br></dt>
+<dd>Similar to <tt class="code">:optimize</tt>, but specifies the
+compilation policy for function interfaces (argument count and type
+checking) for the dynamic extent of the body. See
+section&nbsp;<a href=
+"#optimize-interface-declaration">4.7.2</a>.<br>
+<br></dd>
+<dt><tt class="code">:context-declarations</tt><br></dt>
+<dd>This is a CMUCL extension that pattern-matches on function
+names, automatically splicing in any appropriate declarations at
+the head of the function definition. See section&nbsp;<a href=
+"compiler-hint.html#context-declarations">5.7.5</a>.</dd>
+</dl>
+</blockquote>
+<a name="toc115" id="toc115"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc107" id="htoc107"><b><font size=
+"4">4.3.1</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Undefined
+Warnings</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+<a name="@concept95"></a> Warnings about undefined variables,
+functions and types are delayed until the end of the current
+compilation unit. The compiler entry functions (<tt class=
+"code">compile</tt>, etc.) implicitly use <tt class=
+"code">with-compilation-unit</tt>, so undefined warnings will be
+printed at the end of the compilation unless there is an enclosing
+<tt class="code">with-compilation-unit</tt>. In order the gain the
+benefit of this mechanism, you should wrap a single <tt class=
+"code">with-compilation-unit</tt> around the calls to <tt class=
+"code">compile-file</tt>, i.e.:
+<blockquote class="lisp">
+<pre>
+(with-compilation-unit ()
+  (compile-file "file1")
+  (compile-file "file2")
+  ...)
+</pre></blockquote>
+Unlike for functions and types, undefined warnings for variables
+are not suppressed when a definition (e.g. <tt class=
+"code">defvar</tt>) appears after the reference (but in the same
+compilation unit.) This is because doing special declarations out
+of order just doesn't work---although early references will be
+compiled as special, bindings will be done lexically.<br>
+<br>
+Undefined warnings are printed with full source context (see
+section&nbsp;<a href="#error-messages">4.4</a>), which tremendously
+simplifies the problem of finding undefined references that
+resulted from macroexpansion. After printing detailed information
+about the undefined uses of each name, <tt class=
+"code">with-compilation-unit</tt> also prints summary listings of
+the names of all the undefined functions, types and variables.<br>
+<br>
+<br>
+<a name="@vars41"></a><a name="VR:undefined-warning-limit" id=
+"VR:undefined-warning-limit"></a>
+<div align="left">[Variable]<br>
+<tt class="function-name">*undefined-warning-limit*</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This variable controls the number of undefined warnings for each
+distinct name that are printed with full source context when the
+compilation unit ends. If there are more undefined references than
+this, then they are condensed into a single warning:
+<blockquote class="example">
+<pre>
+    Warning: <tt class=
+"variable">count</tt> more uses of undefined function <tt class=
+"variable">name</tt>.
+  
+</pre></blockquote>
+When the value is <tt class="code">0</tt>, then the undefined
+warnings are not broken down by name at all: only the summary
+listing of undefined names is printed.</blockquote>
+<a name="toc116" id="toc116"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc108" id="htoc108"><b><font size=
+"5">4.4</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Interpreting
+Error Messages</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="error-messages" id="error-messages"></a> <a name=
+"@concept96"></a> <a name="@concept97"></a><br>
+One of Python's unique features is the level of source location
+information it provides in error messages. The error messages
+contain a lot of detail in a terse format, to they may be confusing
+at first. Error messages will be illustrated using this example
+program:
+<blockquote class="lisp">
+<pre>
+(defmacro zoq (x)
+  `(roq (ploq (+ ,x 3))))
+
+(defun foo (y)
+  (declare (symbol y))
+  (zoq y))
+</pre></blockquote>
+The main problem with this program is that it is trying to add
+<tt class="code">3</tt> to a symbol. Note also that the functions
+<tt class="code">roq</tt> and <tt class="code">ploq</tt> aren't
+defined anywhere.<br>
+<br>
+<a name="toc117" id="toc117"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc109" id="htoc109"><b><font size=
+"4">4.4.1</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">The Parts of the
+Error Message</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+The compiler will produce this warning:
+<blockquote class="example">
+<pre>
+File: /usr/me/stuff.lisp
+In: DEFUN FOO
+  (ZOQ Y)
+--&gt; ROQ PLOQ + 
+==&gt;
+  Y
+Warning: Result is a SYMBOL, not a NUMBER.
+</pre></blockquote>
+In this example we see each of the six possible parts of a compiler
+error message:<br>
+<br>
+<dl compact="compact">
+<dt><tt class="code">File: /usr/me/stuff.lisp</tt><br></dt>
+<dd>This is the <tt class="variable">file</tt> that the compiler
+read the relevant code from. The file name is displayed because it
+may not be immediately obvious when there is an error during
+compilation of a large system, especially when <tt class=
+"code">with-compilation-unit</tt> is used to delay undefined
+warnings.<br>
+<br></dd>
+<dt><tt class="code">In: DEFUN FOO</tt><br></dt>
+<dd>This is the <tt class="variable">definition</tt> or top-level
+form responsible for the error. It is obtained by taking the first
+two elements of the enclosing form whose first element is a symbol
+beginning with ``<tt class="code">DEF</tt>''. If there is no
+enclosing <tt class="variable">def</tt>mumble, then the outermost
+form is used. If there are multiple <tt class=
+"variable">def</tt>mumbles, then they are all printed from the out
+in, separated by <tt class="code">=&gt;</tt>'s. In this example,
+the problem was in the <tt class="code">defun</tt> for <tt class=
+"code">foo</tt>.<br>
+<br></dd>
+<dt><tt class="code">(ZOQ Y)</tt><br></dt>
+<dd>This is the <em>original source</em> form responsible for the
+error. Original source means that the form directly appeared in the
+original input to the compiler, i.e. in the lambda passed to
+<tt class="code">compile</tt> or the top-level form read from the
+source file. In this example, the expansion of the <tt class=
+"code">zoq</tt> macro was responsible for the error.<br>
+<br></dd>
+<dt><tt class="code">--&gt; ROQ PLOQ +</tt><br></dt>
+<dd>This is the <em>processing path</em> that the compiler used to
+produce the errorful code. The processing path is a representation
+of the evaluated forms enclosing the actual source that the
+compiler encountered when processing the original source. The path
+is the first element of each form, or the form itself if the form
+is not a list. These forms result from the expansion of macros or
+source-to-source transformation done by the compiler. In this
+example, the enclosing evaluated forms are the calls to <tt class=
+"code">roq</tt>, <tt class="code">ploq</tt> and <tt class=
+"code">+</tt>. These calls resulted from the expansion of the
+<tt class="code">zoq</tt> macro.<br>
+<br></dd>
+<dt><tt class="code">==&gt; Y</tt><br></dt>
+<dd>This is the <em>actual source</em> responsible for the error.
+If the actual source appears in the explanation, then we print the
+next enclosing evaluated form, instead of printing the actual
+source twice. (This is the form that would otherwise have been the
+last form of the processing path.) In this example, the problem is
+with the evaluation of the reference to the variable <tt class=
+"code">y</tt>.<br>
+<br></dd>
+<dt><tt class="code">Warning: Result is a SYMBOL, not a
+NUMBER.</tt><br></dt>
+<dd>This is the <tt class="variable">explanation</tt> the problem.
+In this example, the problem is that <tt class="code">y</tt>
+evaluates to a <tt class="code">symbol</tt>, but is in a context
+where a number is required (the argument to <tt class=
+"code">+</tt>).</dd>
+</dl>
+Note that each part of the error message is distinctively marked:
+<ul>
+<li><tt class="code">File:</tt> and <tt class="code">In:</tt> mark
+the file and definition, respectively.<br>
+<br></li>
+<li>The original source is an indented form with no prefix.<br>
+<br></li>
+<li>Each line of the processing path is prefixed with <tt class=
+"code">--&gt;</tt>.<br>
+<br></li>
+<li>The actual source form is indented like the original source,
+but is marked by a preceding <tt class="code">==&gt;</tt> line.
+This is like the ``macroexpands to'' notation used in <i>Common
+Lisp: The Language</i>.<br>
+<br></li>
+<li>The explanation is prefixed with the error severity (see
+section&nbsp;<a href="#error-severity">4.4.4</a>), either
+<tt class="code">Error:</tt>, <tt class="code">Warning:</tt>, or
+<tt class="code">Note:</tt>.</li>
+</ul>
+Each part of the error message is more specific than the preceding
+one. If consecutive error messages are for nearby locations, then
+the front part of the error messages would be the same. In this
+case, the compiler omits as much of the second message as in common
+with the first. For example:
+<blockquote class="example">
+<pre>
+File: /usr/me/stuff.lisp
+In: DEFUN FOO
+  (ZOQ Y)
+--&gt; ROQ 
+==&gt;
+  (PLOQ (+ Y 3))
+Warning: Undefined function: PLOQ
+
+==&gt;
+  (ROQ (PLOQ (+ Y 3)))
+Warning: Undefined function: ROQ
+</pre></blockquote>
+In this example, the file, definition and original source are
+identical for the two messages, so the compiler omits them in the
+second message. If consecutive messages are entirely identical,
+then the compiler prints only the first message, followed by:
+<blockquote class="example">
+<pre>
+[Last message occurs <tt class="variable">repeats</tt> times]
+</pre></blockquote>
+where <tt class="variable">repeats</tt> is the number of times the
+message was given.<br>
+<br>
+If the source was not from a file, then no file line is printed. If
+the actual source is the same as the original source, then the
+processing path and actual source will be omitted. If no forms
+intervene between the original source and the actual source, then
+the processing path will also be omitted.<br>
+<br>
+<a name="toc118" id="toc118"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc110" id="htoc110"><b><font size=
+"4">4.4.2</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">The Original and
+Actual Source</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="@concept98"></a> <a name="@concept99"></a><br>
+The <em>original source</em> displayed will almost always be a
+list. If the actual source for an error message is a symbol, the
+original source will be the immediately enclosing evaluated list
+form. So even if the offending symbol does appear in the original
+source, the compiler will print the enclosing list and then print
+the symbol as the actual source (as though the symbol were
+introduced by a macro.)<br>
+<br>
+When the <em>actual source</em> is displayed (and is not a symbol),
+it will always be code that resulted from the expansion of a macro
+or a source-to-source compiler optimization. This is code that did
+not appear in the original source program; it was introduced by the
+compiler.<br>
+<br>
+Keep in mind that when the compiler displays a source form in an
+error message, it always displays the most specific (innermost)
+responsible form. For example, compiling this function:
+<blockquote class="lisp">
+<pre>
+(defun bar (x)
+  (let (a)
+    (declare (fixnum a))
+    (setq a (foo x))
+    a))
+</pre></blockquote>
+gives this error message:
+<blockquote class="example">
+<pre>
+In: DEFUN BAR
+  (LET (A) (DECLARE (FIXNUM A)) (SETQ A (FOO X)) A)
+Warning: The binding of A is not a FIXNUM:
+  NIL
+</pre></blockquote>
+This error message is not saying ``there's a problem somewhere in
+this <tt class="code">let</tt>''---it is saying that there is a
+problem with the <tt class="code">let</tt> itself. In this example,
+the problem is that <tt class="code">a</tt>'s <tt class=
+"code">nil</tt> initial value is not a <tt class=
+"code">fixnum</tt>.<br>
+<br>
+<a name="toc119" id="toc119"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc111" id="htoc111"><b><font size=
+"4">4.4.3</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">The Processing
+Path</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="@concept100"></a> <a name="@concept101"></a> <a name=
+"@concept102"></a><br>
+The processing path is mainly useful for debugging macros, so if
+you don't write macros, you can ignore the processing path.
+Consider this example:
+<blockquote class="lisp">
+<pre>
+(defun foo (n)
+  (dotimes (i n *undefined*)))
+</pre></blockquote>
+Compiling results in this error message:
+<blockquote class="example">
+<pre>
+In: DEFUN FOO
+  (DOTIMES (I N *UNDEFINED*))
+--&gt; DO BLOCK LET TAGBODY RETURN-FROM 
+==&gt;
+  (PROGN *UNDEFINED*)
+Warning: Undefined variable: *UNDEFINED*
+</pre></blockquote>
+Note that <tt class="code">do</tt> appears in the processing path.
+This is because <tt class="code">dotimes</tt> expands into:
+<blockquote class="lisp">
+<pre>
+(do ((i 0 (1+ i)) (#:g1 n))
+    ((&gt;= i #:g1) *undefined*)
+  (declare (type unsigned-byte i)))
+</pre></blockquote>
+The rest of the processing path results from the expansion of
+<tt class="code">do</tt>:
+<blockquote class="lisp">
+<pre>
+(block nil
+  (let ((i 0) (#:g1 n))
+    (declare (type unsigned-byte i))
+    (tagbody (go #:g3)
+     #:g2    (psetq i (1+ i))
+     #:g3    (unless (&gt;= i #:g1) (go #:g2))
+             (return-from nil (progn *undefined*)))))
+</pre></blockquote>
+In this example, the compiler descended into the <tt class=
+"code">block</tt>, <tt class="code">let</tt>, <tt class=
+"code">tagbody</tt> and <tt class="code">return-from</tt> to reach
+the <tt class="code">progn</tt> printed as the actual source. This
+is a place where the ``actual source appears in explanation'' rule
+was applied. The innermost actual source form was the symbol
+<tt class="code">*undefined*</tt> itself, but that also appeared in
+the explanation, so the compiler backed out one level.<br>
+<br>
+<a name="toc120" id="toc120"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc112" id="htoc112"><b><font size=
+"4">4.4.4</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Error
+Severity</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="error-severity" id="error-severity"></a> <a name=
+"@concept103"></a> <a name="@concept104"></a><br>
+There are three levels of compiler error severity:<br>
+<br>
+<dl compact="compact">
+<dt>Error<br></dt>
+<dd>This severity is used when the compiler encounters a problem
+serious enough to prevent normal processing of a form. Instead of
+compiling the form, the compiler compiles a call to <tt class=
+"code">error</tt>. Errors are used mainly for signaling syntax
+errors. If an error happens during macroexpansion, the compiler
+will handle it. The compiler also handles and attempts to proceed
+from read errors.<br>
+<br></dd>
+<dt>Warning<br></dt>
+<dd>Warnings are used when the compiler can prove that something
+bad will happen if a portion of the program is executed, but the
+compiler can proceed by compiling code that signals an error at
+runtime if the problem has not been fixed:
+<ul>
+<li>Violation of type declarations, or<br>
+<br></li>
+<li>Function calls that have the wrong number of arguments or
+malformed keyword argument lists, or<br>
+<br></li>
+<li>Referencing a variable declared <tt class="code">ignore</tt>,
+or unrecognized declaration specifiers.</li>
+</ul>
+<br>
+In the language of the Common Lisp standard, these are situations
+where the compiler can determine that a situation with undefined
+consequences or that would cause an error to be signaled would
+result at runtime.<br>
+<br></dd>
+<dt>Note<br></dt>
+<dd>Notes are used when there is something that seems a bit odd,
+but that might reasonably appear in correct programs.</dd>
+</dl>
+Note that the compiler does not fully conform to the proposed X3J13
+``compiler-diagnostics'' cleanup. Errors, warnings and notes mostly
+correspond to errors, warnings and style-warnings, but many things
+that the cleanup considers to be style-warnings are printed as
+warnings rather than notes. Also, warnings, style-warnings and most
+errors aren't really signaled using the condition system.<br>
+<br>
+<a name="toc121" id="toc121"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc113" id="htoc113"><b><font size=
+"4">4.4.5</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Errors During
+Macroexpansion</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="@concept105"></a><br>
+The compiler handles errors that happen during macroexpansion,
+turning them into compiler errors. If you want to debug the error
+(to debug a macro), you can set <tt class=
+"code">*break-on-signals*</tt> to <tt class="code">error</tt>. For
+example, this definition:
+<blockquote class="lisp">
+<pre>
+(defun foo (e l)
+  (do ((current l (cdr current))
+       ((atom current) nil))
+      (when (eq (car current) e) (return current))))
+</pre></blockquote>
+gives this error:
+<blockquote class="example">
+<pre>
+In: DEFUN FOO
+  (DO ((CURRENT L #) (# NIL)) (WHEN (EQ # E) (RETURN CURRENT)) )
+Error: (during macroexpansion)
+
+Error in function LISP::DO-DO-BODY.
+DO step variable is not a symbol: (ATOM CURRENT)
+</pre></blockquote>
+<a name="toc122" id="toc122"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc114" id="htoc114"><b><font size=
+"4">4.4.6</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Read
+Errors</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="@concept106"></a><br>
+The compiler also handles errors while reading the source. For
+example:
+<blockquote class="example">
+<pre>
+Error: Read error at 2:
+ "(,/\foo)"
+Error in function LISP::COMMA-MACRO.
+Comma not inside a backquote.
+</pre></blockquote>
+The ``<tt class="code">at 2</tt>'' refers to the character position
+in the source file at which the error was signaled, which is
+generally immediately after the erroneous text. The next line,
+``<tt class="code">(,/\foo)</tt>'', is the line in the source that
+contains the error file position. The ``<tt class="code">/\</tt> ''
+indicates the error position within that line (in this example,
+immediately after the offending comma.)<br>
+<br>
+When in Hemlock (or any other EMACS-like editor), you can go to a
+character position with:
+<blockquote class="example">
+<pre>
+M-&lt; C-u <tt class="variable">position</tt> C-f
+</pre></blockquote>
+Note that if the source is from a Hemlock buffer, then the position
+is relative to the start of the compiled region or <tt class=
+"code">defun</tt>, not the file or buffer start.<br>
+<br>
+After printing a read error message, the compiler attempts to
+recover from the error by backing up to the start of the enclosing
+top-level form and reading again with <tt class=
+"code">*read-suppress*</tt> true. If the compiler can recover from
+the error, then it substitutes a call to <tt class=
+"code">cerror</tt> for the unreadable form and proceeds to compile
+the rest of the file normally.<br>
+<br>
+If there is a read error when the file position is at the end of
+the file (i.e., an unexpected EOF error), then the error message
+looks like this:
+<blockquote class="example">
+<pre>
+Error: Read error in form starting at 14:
+ "(defun test ()"
+Error in function LISP::FLUSH-WHITESPACE.
+EOF while reading #&lt;Stream for file "/usr/me/test.lisp"&gt;
+</pre></blockquote>
+In this case, ``<tt class="code">starting at 14</tt>'' indicates
+the character position at which the compiler started reading, i.e.
+the position before the start of the form that was missing the
+closing delimiter. The line "<tt class="code">(defun test ()</tt>"
+is first line after the starting position that the compiler thinks
+might contain the unmatched open delimiter.<br>
+<br>
+<a name="toc123" id="toc123"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc115" id="htoc115"><b><font size=
+"4">4.4.7</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Error Message
+Parameterization</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="@concept107"></a> <a name="@concept108"></a><br>
+There is some control over the verbosity of error messages. See
+also <a name="@vars42"></a><tt class=
+"code">*undefined-warning-limit*</tt>, <tt class=
+"code">*efficiency-note-limit*</tt> and <a name=
+"@vars43"></a><tt class=
+"code">*efficiency-note-cost-threshold*</tt>.<br>
+<br>
+<br>
+<a name="@vars44"></a><a name="VR:enclosing-source-cutoff" id=
+"VR:enclosing-source-cutoff"></a>
+<div align="left">[Variable]<br>
+<tt class="function-name">*enclosing-source-cutoff*</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This variable specifies the number of enclosing actual source forms
+that are printed in full, rather than in the abbreviated processing
+path format. Increasing the value from its default of <tt class=
+"code">1</tt> allows you to see more of the guts of the
+macroexpanded source, which is useful when debugging
+macros.</blockquote>
+<br>
+<a name="@vars45"></a><a name="VR:error-print-length" id=
+"VR:error-print-length"></a>
+<div align="left">[Variable]<br>
+<tt class="function-name">*error-print-length*</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+<a name="@vars46"></a><a name="VR:error-print-level" id=
+"VR:error-print-level"></a>
+<div align="left">[Variable]<br>
+<tt class="function-name">*error-print-level*</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<br>
+These variables are the print level and print length used in
+printing error messages. The default values are <tt class=
+"code">5</tt> and <tt class="code">3</tt>. If null, the global
+values of <tt class="code">*print-level*</tt> and <tt class=
+"code">*print-length*</tt> are used.</blockquote>
+<br>
+<a name="@funs115"></a><a name="FN:def-source-context" id=
+"FN:def-source-context"></a>
+<div align="left">[Macro]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">def-source-context</tt> <tt class=
+"variable">name</tt> <tt class="variable">lambda-list</tt>
+<tt class="code">{form}</tt><sup><font size="2">*</font></sup>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This macro defines how to extract an abbreviated source context
+from the <tt class="variable">name</tt>d form when it appears in
+the compiler input. <tt class="variable">lambda-list</tt> is a
+<tt class="code">defmacro</tt> style lambda-list used to parse the
+arguments. The <tt class="variable">body</tt> should return a list
+of subforms that can be printed on about one line. There are
+predefined methods for <tt class="code">defstruct</tt>, <tt class=
+"code">defmethod</tt>, etc. If no method is defined, then the first
+two subforms are returned. Note that this facility implicitly
+determines the string name associated with anonymous
+functions.</blockquote>
+<a name="toc124" id="toc124"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc116" id="htoc116"><b><font size=
+"5">4.5</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Types in
+Python</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="@concept109"></a><br>
+A big difference between Python and all other Common Lisp compilers
+is the approach to type checking and amount of knowledge about
+types:
+<ul>
+<li>Python treats type declarations much differently that other
+Lisp compilers do. Python doesn't blindly believe type
+declarations; it considers them assertions about the program that
+should be checked.<br>
+<br></li>
+<li>Python also has a tremendously greater knowledge of the Common
+Lisp type system than other compilers. Support is incomplete only
+for the <tt class="code">not</tt>, <tt class="code">and</tt> and
+<tt class="code">satisfies</tt> types.</li>
+</ul>
+See also sections <a href=
+"compiler-hint.html#advanced-type-stuff">5.2</a> and <a href=
+"compiler-hint.html#type-inference">5.3</a>.<br>
+<br>
+<a name="toc125" id="toc125"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc117" id="htoc117"><b><font size=
+"4">4.5.1</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Compile Time Type
+Errors</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="@concept110"></a> <a name="@concept111"></a><br>
+If the compiler can prove at compile time that some portion of the
+program cannot be executed without a type error, then it will give
+a warning at compile time. It is possible that the offending code
+would never actually be executed at run-time due to some higher
+level consistency constraint unknown to the compiler, so a type
+warning doesn't always indicate an incorrect program. For example,
+consider this code fragment:
+<blockquote class="lisp">
+<pre>
+(defun raz (foo)
+  (let ((x (case foo
+             (:this 13)
+             (:that 9)
+             (:the-other 42))))
+    (declare (fixnum x))
+    (foo x)))
+</pre></blockquote>
+Compilation produces this warning:
+<blockquote class="example">
+<pre>
+In: DEFUN RAZ
+  (CASE FOO (:THIS 13) (:THAT 9) (:THE-OTHER 42))
+--&gt; LET COND IF COND IF COND IF 
+==&gt;
+  (COND)
+Warning: This is not a FIXNUM:
+  NIL
+</pre></blockquote>
+In this case, the warning is telling you that if <tt class=
+"code">foo</tt> isn't any of <tt class="code">:this</tt>,
+<tt class="code">:that</tt> or <tt class="code">:the-other</tt>,
+then <tt class="code">x</tt> will be initialized to <tt class=
+"code">nil</tt>, which the <tt class="code">fixnum</tt> declaration
+makes illegal. The warning will go away if <tt class=
+"code">ecase</tt> is used instead of <tt class="code">case</tt>, or
+if <tt class="code">:the-other</tt> is changed to <tt class=
+"code">t</tt>.<br>
+<br>
+This sort of spurious type warning happens moderately often in the
+expansion of complex macros and in inline functions. In such cases,
+there may be dead code that is impossible to correctly execute. The
+compiler can't always prove this code is dead (could never be
+executed), so it compiles the erroneous code (which will always
+signal an error if it is executed) and gives a warning.<br>
+<br>
+<br>
+<a name="@funs116"></a><a name="FN:required-argument" id=
+"FN:required-argument"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">extensions:</tt><tt class=
+"function-name">required-argument</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This function can be used as the default value for keyword
+arguments that must always be supplied. Since it is known by the
+compiler to never return, it will avoid any compile-time type
+warnings that would result from a default value inconsistent with
+the declared type. When this function is called, it signals an
+error indicating that a required keyword argument was not supplied.
+This function is also useful for <tt class="code">defstruct</tt>
+slot defaults corresponding to required arguments. See
+section&nbsp;<a href="compiler-hint.html#empty-type">5.2.5</a>.<br>
+<br>
+Although this function is a CMUCL extension, it is relatively
+harmless to use it in otherwise portable code, since you can easily
+define it yourself:
+<blockquote class="lisp">
+<pre>
+    (defun required-argument ()
+      (error "A required keyword argument was not supplied."))
+    
+</pre></blockquote>
+</blockquote>
+Type warnings are inhibited when the <tt class=
+"code">extensions:inhibit-warnings</tt> optimization quality is
+<tt class="code">3</tt> (see section&nbsp;<a href=
+"#compiler-policy">4.7</a>.) This can be used in a local
+declaration to inhibit type warnings in a code fragment that has
+spurious warnings.<br>
+<br>
+<a name="toc126" id="toc126"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc118" id="htoc118"><b><font size=
+"4">4.5.2</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Precise Type
+Checking</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="precise-type-checks" id="precise-type-checks"></a>
+<a name="@concept112"></a> <a name="@concept113"></a><br>
+With the default compilation policy, all type
+assertions<sup><a name="text7" href="#note7" id="text7"><font size=
+"2">1</font></a></sup> are precisely checked. Precise checking
+means that the check is done as though <tt class="code">typep</tt>
+had been called with the exact type specifier that appeared in the
+declaration. Python uses <tt class="variable">policy</tt> to
+determine whether to trust type assertions (see
+section&nbsp;<a href="#compiler-policy">4.7</a>). Type assertions
+from declarations are indistinguishable from the type assertions on
+arguments to built-in functions. In Python, adding type
+declarations makes code safer.<br>
+<br>
+If a variable is declared to be <tt class="code">(integer 3
+17)</tt>, then its value must always always be an integer between
+<tt class="code">3</tt> and <tt class="code">17</tt>. If multiple
+type declarations apply to a single variable, then all the
+declarations must be correct; it is as though all the types were
+intersected producing a single <tt class="code">and</tt> type
+specifier.<br>
+<br>
+Argument type declarations are automatically enforced. If you
+declare the type of a function argument, a type check will be done
+when that function is called. In a function call, the called
+function does the argument type checking, which means that a more
+restrictive type assertion in the calling function (e.g., from
+<tt class="code">the</tt>) may be lost.<br>
+<br>
+The types of structure slots are also checked. The value of a
+structure slot must always be of the type indicated in any
+<tt class="code">:type</tt> slot option.<sup><a name="text8" href=
+"#note8" id="text8"><font size="2">2</font></a></sup> Because of
+precise type checking, the arguments to slot accessors are checked
+to be the correct type of structure.<br>
+<br>
+In traditional Common Lisp compilers, not all type assertions are
+checked, and type checks are not precise. Traditional compilers
+blindly trust explicit type declarations, but may check the
+argument type assertions for built-in functions. Type checking is
+not precise, since the argument type checks will be for the most
+general type legal for that argument. In many systems, type
+declarations suppress what little type checking is being done, so
+adding type declarations makes code unsafe. This is a problem since
+it discourages writing type declarations during initial coding. In
+addition to being more error prone, adding type declarations during
+tuning also loses all the benefits of debugging with checked type
+assertions.<br>
+<br>
+To gain maximum benefit from Python's type checking, you should
+always declare the types of function arguments and structure slots
+as precisely as possible. This often involves the use of <tt class=
+"code">or</tt>, <tt class="code">member</tt> and other list-style
+type specifiers. Paradoxically, even though adding type
+declarations introduces type checks, it usually reduces the overall
+amount of type checking. This is especially true for structure slot
+type declarations.<br>
+<br>
+Python uses the <tt class="code">safety</tt> optimization quality
+(rather than presence or absence of declarations) to choose one of
+three levels of run-time type error checking: see
+section&nbsp;<a href="#optimize-declaration">4.7.1</a>. See
+section&nbsp;<a href=
+"compiler-hint.html#advanced-type-stuff">5.2</a> for more
+information about types in Python.<br>
+<br>
+<a name="toc127" id="toc127"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc119" id="htoc119"><b><font size=
+"4">4.5.3</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Weakened Type
+Checking</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="weakened-type-checks" id="weakened-type-checks"></a>
+<a name="@concept114"></a> <a name="@concept115"></a><br>
+When the value for the <tt class="code">speed</tt> optimization
+quality is greater than <tt class="code">safety</tt>, and
+<tt class="code">safety</tt> is not <tt class="code">0</tt>, then
+type checking is weakened to reduce the speed and space penalty. In
+structure-intensive code this can double the speed, yet still catch
+most type errors. Weakened type checks provide a level of safety
+similar to that of ``safe'' code in other Common Lisp
+compilers.<br>
+<br>
+A type check is weakened by changing the check to be for some
+convenient supertype of the asserted type. For example, <tt class=
+"code">(integer 3 17)</tt> is changed to <tt class=
+"code">fixnum</tt>, <tt class="code">(simple-vector 17)</tt> to
+<tt class="code">simple-vector</tt>, and structure types are
+changed to <tt class="code">structure</tt>. A complex check like:
+<blockquote class="example">
+<pre>
+(or node hunk (member :foo :bar :baz))
+</pre></blockquote>
+will be omitted entirely (i.e., the check is weakened to <tt class=
+"code">*</tt>.) If a precise check can be done for no extra cost,
+then no weakening is done.<br>
+<br>
+Although weakened type checking is similar to type checking done by
+other compilers, it is sometimes safer and sometimes less safe.
+Weakened checks are done in the same places is precise checks, so
+all the preceding discussion about where checking is done still
+applies. Weakened checking is sometimes somewhat unsafe because
+although the check is weakened, the precise type is still input
+into type inference. In some contexts this will result in type
+inferences not justified by the weakened check, and hence deletion
+of some type checks that would be done by conventional
+compilers.<br>
+<br>
+For example, if this code was compiled with weakened checks:
+<blockquote class="lisp">
+<pre>
+(defstruct foo
+  (a nil :type simple-string))
+
+(defstruct bar
+  (a nil :type single-float))
+
+(defun myfun (x)
+  (declare (type bar x))
+  (* (bar-a x) 3.0))
+</pre></blockquote>
+and <tt class="code">myfun</tt> was passed a <tt class=
+"code">foo</tt>, then no type error would be signaled, and we would
+try to multiply a <tt class="code">simple-vector</tt> as though it
+were a float (with unpredictable results.) This is because the
+check for <tt class="code">bar</tt> was weakened to <tt class=
+"code">structure</tt>, yet when compiling the call to <tt class=
+"code">bar-a</tt>, the compiler thinks it knows it has a <tt class=
+"code">bar</tt>.<br>
+<br>
+Note that normally even weakened type checks report the precise
+type in error messages. For example, if <tt class=
+"code">myfun</tt>'s <tt class="code">bar</tt> check is weakened to
+<tt class="code">structure</tt>, and the argument is <tt class=
+"code">nil</tt>, then the error will be:
+<blockquote class="example">
+<pre>
+Type-error in MYFUN:
+  NIL is not of type BAR
+</pre></blockquote>
+However, there is some speed and space cost for signaling a precise
+error, so the weakened type is reported if the <tt class=
+"code">speed</tt> optimization quality is <tt class="code">3</tt>
+or <tt class="code">debug</tt> quality is less than <tt class=
+"code">1</tt>:
+<blockquote class="example">
+<pre>
+Type-error in MYFUN:
+  NIL is not of type STRUCTURE
+</pre></blockquote>
+See section&nbsp;<a href="#optimize-declaration">4.7.1</a> for
+further discussion of the <tt class="code">optimize</tt>
+declaration.<br>
+<br>
+<a name="toc128" id="toc128"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc120" id="htoc120"><b><font size=
+"5">4.6</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Getting Existing
+Programs to Run</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="@concept116"></a> <a name="@concept117"></a> <a name=
+"@concept118"></a><br>
+Since Python does much more comprehensive type checking than other
+Lisp compilers, Python will detect type errors in many programs
+that have been debugged using other compilers. These errors are
+mostly incorrect declarations, although compile-time type errors
+can find actual bugs if parts of the program have never been
+tested.<br>
+<br>
+Some incorrect declarations can only be detected by run-time type
+checking. It is very important to initially compile programs with
+full type checks and then test this version. After the checking
+version has been tested, then you can consider weakening or
+eliminating type checks. <b>This applies even to previously
+debugged programs.</b> Python does much more type inference than
+other Common Lisp compilers, so believing an incorrect declaration
+does much more damage.<br>
+<br>
+The most common problem is with variables whose initial value
+doesn't match the type declaration. Incorrect initial values will
+always be flagged by a compile-time type error, and they are simple
+to fix once located. Consider this code fragment:
+<blockquote class="example">
+<pre>
+(prog (foo)
+  (declare (fixnum foo))
+  (setq foo ...)
+  ...)
+</pre></blockquote>
+Here the variable <tt class="code">foo</tt> is given an initial
+value of <tt class="code">nil</tt>, but is declared to be a
+<tt class="code">fixnum</tt>. Even if it is never read, the initial
+value of a variable must match the declared type. There are two
+ways to fix this problem. Change the declaration:
+<blockquote class="example">
+<pre>
+(prog (foo)
+  (declare (type (or fixnum null) foo))
+  (setq foo ...)
+  ...)
+</pre></blockquote>
+or change the initial value:
+<blockquote class="example">
+<pre>
+(prog ((foo 0))
+  (declare (fixnum foo))
+  (setq foo ...)
+  ...)
+</pre></blockquote>
+It is generally preferable to change to a legal initial value
+rather than to weaken the declaration, but sometimes it is simpler
+to weaken the declaration than to try to make an initial value of
+the appropriate type.<br>
+<br>
+Another declaration problem occasionally encountered is incorrect
+declarations on <tt class="code">defmacro</tt> arguments. This
+probably usually happens when a function is converted into a macro.
+Consider this macro:
+<blockquote class="lisp">
+<pre>
+(defmacro my-1+ (x)
+  (declare (fixnum x))
+  `(the fixnum (1+ ,x)))
+</pre></blockquote>
+Although legal and well-defined Common Lisp, this meaning of this
+definition is almost certainly not what the writer intended. For
+example, this call is illegal:
+<blockquote class="lisp">
+<pre>
+(my-1+ (+ 4 5))
+</pre></blockquote>
+The call is illegal because the argument to the macro is <tt class=
+"code">(+ 4 5)</tt>, which is a <tt class="code">list</tt>, not a
+<tt class="code">fixnum</tt>. Because of macro semantics, it is
+hardly ever useful to declare the types of macro arguments. If you
+really want to assert something about the type of the result of
+evaluating a macro argument, then put a <tt class="code">the</tt>
+in the expansion:
+<blockquote class="lisp">
+<pre>
+(defmacro my-1+ (x)
+  `(the fixnum (1+ (the fixnum ,x))))
+</pre></blockquote>
+In this case, it would be stylistically preferable to change this
+macro back to a function and declare it inline. Macros have no
+efficiency advantage over inline functions when using Python. See
+section&nbsp;<a href=
+"compiler-hint.html#inline-expansion">5.8</a>.<br>
+<br>
+Some more subtle problems are caused by incorrect declarations that
+can't be detected at compile time. Consider this code:
+<blockquote class="example">
+<pre>
+(do ((pos 0 (position #\a string :start (1+ pos))))
+    ((null pos))
+  (declare (fixnum pos))
+  ...)
+</pre></blockquote>
+Although <tt class="code">pos</tt> is almost always a <tt class=
+"code">fixnum</tt>, it is <tt class="code">nil</tt> at the end of
+the loop. If this example is compiled with full type checks (the
+default), then running it will signal a type error at the end of
+the loop. If compiled without type checks, the program will go into
+an infinite loop (or perhaps <tt class="code">position</tt> will
+complain because <tt class="code">(1+ nil)</tt> isn't a sensible
+start.) Why? Because if you compile without type checks, the
+compiler just quietly believes the type declaration. Since
+<tt class="code">pos</tt> is always a <tt class="code">fixnum</tt>,
+it is never <tt class="code">nil</tt>, so <tt class="code">(null
+pos)</tt> is never true, and the loop exit test is optimized away.
+Such errors are sometimes flagged by unreachable code notes (see
+section&nbsp;<a href=
+"compiler-hint.html#dead-code-notes">5.4.5</a>), but it is still
+important to initially compile any system with full type checks,
+even if the system works fine when compiled using other
+compilers.<br>
+<br>
+In this case, the fix is to weaken the type declaration to
+<tt class="code">(or fixnum null)</tt>.<sup><a name="text9" href=
+"#note9" id="text9"><font size="2">3</font></a></sup> Note that
+there is usually little performance penalty for weakening a
+declaration in this way. Any numeric operations in the body can
+still assume the variable is a <tt class="code">fixnum</tt>, since
+<tt class="code">nil</tt> is not a legal numeric argument. Another
+possible fix would be to say:
+<blockquote class="example">
+<pre>
+(do ((pos 0 (position #\a string :start (1+ pos))))
+    ((null pos))
+  (let ((pos pos))
+    (declare (fixnum pos))
+    ...))
+</pre></blockquote>
+This would be preferable in some circumstances, since it would
+allow a non-standard representation to be used for the local
+<tt class="code">pos</tt> variable in the loop body (see section
+<a href="compiler-hint.html#ND-variables">5.11.3</a>.)<br>
+<br>
+In summary, remember that <em>all</em> values that a variable
+<em>ever</em> has must be of the declared type, and that you should
+test using safe code initially.<br>
+<br>
+<a name="toc129" id="toc129"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc121" id="htoc121"><b><font size=
+"5">4.7</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Compiler
+Policy</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="compiler-policy" id="compiler-policy"></a> <a name=
+"@concept119"></a> <a name="@concept120"></a><br>
+The policy is what tells the compiler <tt class="variable">how</tt>
+to compile a program. This is logically (and often textually)
+distinct from the program itself. Broad control of policy is
+provided by the <tt class="code">optimize</tt> declaration; other
+declarations and variables control more specific aspects of
+compilation.<br>
+<br>
+<a name="toc130" id="toc130"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc122" id="htoc122"><b><font size=
+"4">4.7.1</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">The Optimize
+Declaration</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="optimize-declaration" id="optimize-declaration"></a>
+<a name="@concept121"></a> <a name="@concept122"></a><br>
+The <tt class="code">optimize</tt> declaration recognizes six
+different <tt class="variable">qualities</tt>. The qualities are
+conceptually independent aspects of program performance. In
+reality, increasing one quality tends to have adverse effects on
+other qualities. The compiler compares the relative values of
+qualities when it needs to make a trade-off; i.e., if <tt class=
+"code">speed</tt> is greater than <tt class="code">safety</tt>,
+then improve speed at the cost of safety.<br>
+<br>
+The default for all qualities (except <tt class="code">debug</tt>)
+is <tt class="code">1</tt>. Whenever qualities are equal, ties are
+broken according to a broad idea of what a good default environment
+is supposed to be. Generally this downplays <tt class=
+"code">speed</tt>, <tt class="code">compile-speed</tt> and
+<tt class="code">space</tt> in favor of <tt class=
+"code">safety</tt> and <tt class="code">debug</tt>. Novice and
+casual users should stick to the default policy. Advanced users
+often want to improve speed and memory usage at the cost of safety
+and debuggability.<br>
+<br>
+If the value for a quality is <tt class="code">0</tt> or <tt class=
+"code">3</tt>, then it may have a special interpretation. A value
+of <tt class="code">0</tt> means ``totally unimportant'', and a
+<tt class="code">3</tt> means ``ultimately important.'' These
+extreme optimization values enable ``heroic'' compilation
+strategies that are not always desirable and sometimes
+self-defeating. Specifying more than one quality as <tt class=
+"code">3</tt> is not desirable, since it doesn't tell the compiler
+which quality is most important.<br>
+<br>
+These are the optimization qualities:
+<dl compact="compact">
+<dt><tt class="code">speed</tt><br></dt>
+<dd><a name="@concept123"></a>How fast the program should is run.
+<tt class="code">speed 3</tt> enables some optimizations that hurt
+debuggability.<br>
+<br></dd>
+<dt><tt class="code">compilation-speed</tt><br></dt>
+<dd><a name="@concept124"></a>How fast the compiler should run.
+Note that increasing this above <tt class="code">safety</tt>
+weakens type checking.<br>
+<br></dd>
+<dt><tt class="code">space</tt><br></dt>
+<dd><a name="@concept125"></a>How much space the compiled code
+should take up. Inline expansion is mostly inhibited when
+<tt class="code">space</tt> is greater than <tt class=
+"code">speed</tt>. A value of <tt class="code">0</tt> enables
+promiscuous inline expansion. Wide use of a <tt class="code">0</tt>
+value is not recommended, as it may waste so much space that run
+time is slowed. See section&nbsp;<a href=
+"compiler-hint.html#inline-expansion">5.8</a> for a discussion of
+inline expansion.<br>
+<br></dd>
+<dt><tt class="code">debug</tt><br></dt>
+<dd><a name="@concept126"></a>How debuggable the program should be.
+The quality is treated differently from the other qualities: each
+value indicates a particular level of debugger information; it is
+not compared with the other qualities. See section&nbsp;<a href=
+"debugger.html#debugger-policy">3.6</a> for more details.<br>
+<br></dd>
+<dt><tt class="code">safety</tt><br></dt>
+<dd><a name="@concept127"></a>How much error checking should be
+done. If <tt class="code">speed</tt>, <tt class="code">space</tt>
+or <tt class="code">compilation-speed</tt> is more important than
+<tt class="code">safety</tt>, then type checking is weakened (see
+section&nbsp;<a href="#weakened-type-checks">4.5.3</a>). If
+<tt class="code">safety</tt> if <tt class="code">0</tt>, then no
+run time error checking is done. In addition to suppressing type
+checks, <tt class="code">0</tt> also suppresses argument count
+checking, unbound-symbol checking and array bounds checks.<br>
+<br></dd>
+<dt><tt class="code">extensions:inhibit-warnings</tt><br></dt>
+<dd><a name="@concept128"></a>This is a CMUCL extension that
+determines how little (or how much) diagnostic output should be
+printed during compilation. This quality is compared to other
+qualities to determine whether to print style notes and warnings
+concerning those qualities. If <tt class="code">speed</tt> is
+greater than <tt class="code">inhibit-warnings</tt>, then notes
+about how to improve speed will be printed, etc. The default value
+is <tt class="code">1</tt>, so raising the value for any standard
+quality above its default enables notes for that quality. If
+<tt class="code">inhibit-warnings</tt> is <tt class="code">3</tt>,
+then all notes and most non-serious warnings are inhibited. This is
+useful with <tt class="code">declare</tt> to suppress warnings
+about unavoidable problems.</dd>
+</dl>
+<a name="toc131" id="toc131"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc123" id="htoc123"><b><font size=
+"4">4.7.2</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">The
+Optimize-Interface Declaration</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="optimize-interface-declaration" id=
+"optimize-interface-declaration"></a> <a name="@concept129"></a>
+<a name="@concept130"></a><br>
+The <tt class="code">extensions:optimize-interface</tt> declaration
+is identical in syntax to the <tt class="code">optimize</tt>
+declaration, but it specifies the policy used during compilation of
+code the compiler automatically generates to check the number and
+type of arguments supplied to a function. It is useful to specify
+this policy separately, since even thoroughly debugged functions
+are vulnerable to being passed the wrong arguments. The <tt class=
+"code">optimize-interface</tt> declaration can specify that
+arguments should be checked even when the general <tt class=
+"code">optimize</tt> policy is unsafe.<br>
+<br>
+Note that this argument checking is the checking of user-supplied
+arguments to any functions defined within the scope of the
+declaration, <tt class="code">not</tt> the checking of arguments to
+Common Lisp primitives that appear in those definitions.<br>
+<br>
+The idea behind this declaration is that it allows the definition
+of functions that appear fully safe to other callers, but that do
+no internal error checking. Of course, it is possible that
+arguments may be invalid in ways other than having incorrect type.
+Functions compiled unsafely must still protect themselves against
+things like user-supplied array indices that are out of bounds and
+improper lists. See also the <tt class=
+"code">:context-declarations</tt> option to <a name=
+"@funs117"></a><tt class="code">with-compilation-unit</tt>.<br>
+<br>
+<a name="toc132" id="toc132"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc124" id="htoc124"><b><font size=
+"5">4.8</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Open Coding and
+Inline Expansion</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="open-coding" id="open-coding"></a> <a name=
+"@concept131"></a> <a name="@concept132"></a> <a name=
+"@concept133"></a><br>
+Since Common Lisp forbids the redefinition of standard
+functions<sup><a name="text10" href="#note10" id=
+"text10"><font size="2">4</font></a></sup>, the compiler can have
+special knowledge of these standard functions embedded in it. This
+special knowledge is used in various ways (open coding, inline
+expansion, source transformation), but the implications to the user
+are basically the same:
+<ul>
+<li>Attempts to redefine standard functions may be frustrated,
+since the function may never be called. Although it is technically
+illegal to redefine standard functions, users sometimes want to
+implicitly redefine these functions when they are debugging using
+the <tt class="code">trace</tt> macro. Special-casing of standard
+functions can be inhibited using the <tt class=
+"code">notinline</tt> declaration.<br>
+<br></li>
+<li>The compiler can have multiple alternate implementations of
+standard functions that implement different trade-offs of speed,
+space and safety. This selection is based on the compiler policy,
+see section&nbsp;<a href="#compiler-policy">4.7</a>.</li>
+</ul>
+When a function call is <em>open coded</em>, inline code whose
+effect is equivalent to the function call is substituted for that
+function call. When a function call is <em>closed coded</em>, it is
+usually left as is, although it might be turned into a call to a
+different function with different arguments. As an example, if
+<tt class="code">nthcdr</tt> were to be open coded, then
+<blockquote class="lisp">
+<pre>
+(nthcdr 4 foobar)
+</pre></blockquote>
+might turn into
+<blockquote class="lisp">
+<pre>
+(cdr (cdr (cdr (cdr foobar))))
+</pre></blockquote>
+or even
+<blockquote class="lisp">
+<pre>
+(do ((i 0 (1+ i))
+     (list foobar (cdr foobar)))
+    ((= i 4) list))
+</pre></blockquote>
+If <tt class="code">nth</tt> is closed coded, then
+<blockquote class="lisp">
+<pre>
+(nth x l)
+</pre></blockquote>
+might stay the same, or turn into something like:
+<blockquote class="lisp">
+<pre>
+(car (nthcdr x l))
+</pre></blockquote>
+In general, open coding sacrifices space for speed, but some
+functions (such as <tt class="code">car</tt>) are so simple that
+they are always open-coded. Even when not open-coded, a call to a
+standard function may be transformed into a different function call
+(as in the last example) or compiled as <em>static call</em>.
+Static function call uses a more efficient calling convention that
+forbids redefinition.
+<hr width="50%" size="1">
+<dl>
+<dt><a name="note7" href="#text7" id="note7"><font size=
+"5">1</font></a></dt>
+<dd>There are a few circumstances where a type declaration is
+discarded rather than being used as type assertion. This doesn't
+affect safety much, since such discarded declarations are also not
+believed to be true by the compiler.</dd>
+<dt><a name="note8" href="#text8" id="note8"><font size=
+"5">2</font></a></dt>
+<dd>The initial value need not be of this type as long as the
+corresponding argument to the constructor is always supplied, but
+this will cause a compile-time type warning unless <tt class=
+"code">required-argument</tt> is used.</dd>
+<dt><a name="note9" href="#text9" id="note9"><font size=
+"5">3</font></a></dt>
+<dd>Actually, this declaration is totally unnecessary in Python,
+since it already knows <tt class="code">position</tt> returns a
+non-negative <tt class="code">fixnum</tt> or <tt class=
+"code">nil</tt>.</dd>
+<dt><a name="note10" href="#text10" id="note10"><font size=
+"5">4</font></a></dt>
+<dd>See the proposed X3J13 ``lisp-symbol-redefinition''
+cleanup.</dd>
+</dl>
+<hr>
+<a href="debugger.html"><img src="previous_motif.gif" alt=
+"Previous"></a> <a href="index.html"><img src="contents_motif.gif"
+alt="Up"></a> <a href="compiler-hint.html"><img src=
+"next_motif.gif" alt="Next"></a>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>4.7.1 The Optimize Declaration</TITLE>
+<META NAME="description" CONTENT="4.7.1 The Optimize Declaration">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1894" HREF="node103.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1892" HREF="node101.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1886" HREF="node101.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1896" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1897" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1895" HREF="node103.html">The Optimize-Interface Declaration</A>
+<B>Up:</B> <A NAME="tex2html1893" HREF="node101.html">4.7 Compiler Policy</A>
+<B> Previous:</B> <A NAME="tex2html1887" HREF="node101.html">4.7 Compiler Policy</A>
+<BR> <P>
+<H2><A NAME="SECTION00571000000000000000">4.7.1 The Optimize Declaration</A></H2>
+<P>
+<A NAME="optimizedeclaration">&#160;</A>
+<A NAME="9621">&#160;</A>
+<A NAME="9623">&#160;</A>
+<P>
+The <tt>optimize</tt> declaration recognizes six different
+<i>qualities</i>.  The qualities are conceptually independent aspects
+of program performance.  In reality, increasing one quality tends to
+have adverse effects on other qualities.  The compiler compares the
+relative values of qualities when it needs to make a trade-off; i.e.,
+if <tt>speed</tt> is greater than <tt>safety</tt>, then improve speed at
+the cost of safety.
+<P>
+The default for all qualities (except <tt>debug</tt>) is <tt>1</tt>.
+Whenever qualities are equal, ties are broken according to a broad
+idea of what a good default environment is supposed to be.  Generally
+this downplays <tt>speed</tt>, <tt>compile-speed</tt> and <tt>space</tt> in
+favor of <tt>safety</tt> and <tt>debug</tt>.  Novice and casual users
+should stick to the default policy.  Advanced users often want to
+improve speed and memory usage at the cost of safety and
+debuggability.
+<P>
+If the value for a quality is <tt>0</tt> or <tt>3</tt>, then it may have a
+special interpretation.  A value of <tt>0</tt> means ``totally
+unimportant'', and a <tt>3</tt> means ``ultimately important.''  These
+extreme optimization values enable ``heroic'' compilation strategies
+that are not always desirable and sometimes self-defeating.
+Specifying more than one quality as <tt>3</tt> is not desirable, since
+it doesn't tell the compiler which quality is most important.
+<P>
+These are the optimization qualities:
+<DL ><DT><STRONG><tt>speed</tt></STRONG>
+<DD> <A NAME="9642">&#160;</A>How fast the
+  program should is run.  <tt>speed 3</tt> enables some optimizations
+  that hurt debuggability.
+<P>
+<DT><STRONG><tt>compilation-speed</tt></STRONG>
+<DD> <A NAME="9645">&#160;</A>How fast the compiler should run.  Note that increasing
+  this above <tt>safety</tt> weakens type checking.
+<P>
+<DT><STRONG><tt>space</tt></STRONG>
+<DD> <A NAME="9648">&#160;</A>How much space
+  the compiled code should take up.  Inline expansion is mostly
+  inhibited when <tt>space</tt> is greater than <tt>speed</tt>.  A value
+  of <tt>0</tt> enables promiscuous inline expansion.  Wide use of a
+  <tt>0</tt> value is not recommended, as it may waste so much space
+  that run time is slowed.  See section&nbsp;<A HREF="node155.html#inlineexpansion">5.8</A> for a discussion
+  of inline expansion.
+<P>
+<DT><STRONG><tt>debug</tt></STRONG>
+<DD> <A NAME="9655">&#160;</A>How debuggable
+  the program should be.  The quality is treated differently from the
+  other qualities: each value indicates a particular level of debugger
+  information; it is not compared with the other qualities.
+  See section&nbsp;<A HREF="node75.html#debuggerpolicy">3.6</A> for more details.
+<P>
+<DT><STRONG><tt>safety</tt></STRONG>
+<DD> <A NAME="9658">&#160;</A>How much
+  error checking should be done.  If <tt>speed</tt>, <tt>space</tt> or
+  <tt>compilation-speed</tt> is more important than <tt>safety</tt>, then
+  type checking is weakened (see section&nbsp;<A HREF="node99.html#weakenedtypechecks">4.5.3</A>).  If
+  <tt>safety</tt> if <tt>0</tt>, then no run time error checking is done.
+  In addition to suppressing type checks, <tt>0</tt> also suppresses
+  argument count checking, unbound-symbol checking and array bounds
+  checks.
+<P>
+<DT><STRONG><tt>extensions:inhibit-warnings</tt></STRONG>
+<DD> <A NAME="9668">&#160;</A>This is a CMU extension that determines how
+  little (or how much) diagnostic output should be printed during
+  compilation.  This quality is compared to other qualities to
+  determine whether to print style notes and warnings concerning those
+  qualities.  If <tt>speed</tt> is greater than <tt>inhibit-warnings</tt>,
+  then notes about how to improve speed will be printed, etc.  The
+  default value is <tt>1</tt>, so raising the value for any standard
+  quality above its default enables notes for that quality.  If
+  <tt>inhibit-warnings</tt> is <tt>3</tt>, then all notes and most
+  non-serious warnings are inhibited.  This is useful with
+  <tt>declare</tt> to suppress warnings about unavoidable problems.
+<P>
+</DL><HR><A NAME="tex2html1894" HREF="node103.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1892" HREF="node101.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1886" HREF="node101.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1896" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1897" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1895" HREF="node103.html">The Optimize-Interface Declaration</A>
+<B>Up:</B> <A NAME="tex2html1893" HREF="node101.html">4.7 Compiler Policy</A>
+<B> Previous:</B> <A NAME="tex2html1887" HREF="node101.html">4.7 Compiler Policy</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

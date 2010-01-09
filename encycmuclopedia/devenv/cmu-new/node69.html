@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>3.4 Variable Access</TITLE>
+<META NAME="description" CONTENT="3.4 Variable Access">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1474" HREF="node70.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1472" HREF="node59.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1466" HREF="node68.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1476" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1477" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1475" HREF="node70.html">3.4.1 Variable Value Availability</A>
+<B>Up:</B> <A NAME="tex2html1473" HREF="node59.html">3 The Debugger</A>
+<B> Previous:</B> <A NAME="tex2html1467" HREF="node68.html">3.3.6 Unknown Locations and </A>
+<BR> <P>
+<H1><A NAME="SECTION00440000000000000000">3.4 Variable Access</A></H1>
+<P>
+<A NAME="debugvars">&#160;</A>
+<A NAME="8789">&#160;</A>
+<A NAME="8790">&#160;</A>
+<P>
+There are three ways to access the current frame's local variables in the
+debugger.  The simplest is to type the variable's name into the debugger's
+read-eval-print loop.  The debugger will evaluate the variable reference as
+though it had appeared inside that frame.
+<P>
+The debugger doesn't really understand lexical scoping; it has just one
+namespace for all the variables in a function.  If a symbol is the name of
+multiple variables in the same function, then the reference appears ambiguous,
+even though lexical scoping specifies which value is visible at any given
+source location.  If the scopes of the two variables are not nested, then the
+debugger can resolve the ambiguity by observing that only one variable is
+accessible.
+<P>
+When there are ambiguous variables, the evaluator assigns each one a
+small integer identifier.  The <tt>debug:var</tt> function and the
+<tt>list-locals</tt> command use this identifier to distinguish between
+ambiguous variables:
+<DL ><DT><STRONG><tt>list-locals</tt> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>prefix</i></i></i><IMG WIDTH=5 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17168" SRC="img6.gif"></STRONG>
+<DD>This command prints the name and value of all variables in the current
+frame whose name has the specified <i>prefix</i>.  <i>prefix</i> may be a
+string or a symbol.  If no <i>prefix</i> is given, then all available
+variables are printed.  If a variable has a potentially ambiguous name,
+then the name is printed with a ``<tt>#</tt><i>identifier</i>'' suffix, where
+<i>identifier</i> is the small integer used to make the name unique.
+<P>
+</DL>
+<P>
+<b>[Function]</b><BR> 
+<tt> debug: var</tt> <em> <i>name</i> <i>&amp;optional</i> <i>identifier</i></em><BR>
+<P>
+  This function returns the value of the variable in the current frame
+  with the specified <i>name</i>.  If supplied, <i>identifier</i>
+  determines which value to return when there are ambiguous variables.
+<P>
+  When <i>name</i> is a symbol, it is interpreted as the symbol name of
+  the variable, i.e. the package is significant.  If <i>name</i> is an
+  uninterned symbol (gensym), then return the value of the uninterned
+  variable with the same name.  If <i>name</i> is a string,
+  <tt>debug:var</tt> interprets it as the prefix of a variable name, and
+  must unambiguously complete to the name of a valid variable.
+<P>
+  This function is useful mainly for accessing the value of uninterned
+  or ambiguous variables, since most variables can be evaluated
+  directly.
+<P>
+<BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html1478" HREF="node70.html#SECTION00441000000000000000">3.4.1 Variable Value Availability</A>
+<LI> <A NAME="tex2html1479" HREF="node71.html#SECTION00442000000000000000">3.4.2 Note On Lexical Variable Access</A>
+</UL>
+<HR><A NAME="tex2html1474" HREF="node70.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1472" HREF="node59.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1466" HREF="node68.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1476" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1477" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1475" HREF="node70.html">3.4.1 Variable Value Availability</A>
+<B>Up:</B> <A NAME="tex2html1473" HREF="node59.html">3 The Debugger</A>
+<B> Previous:</B> <A NAME="tex2html1467" HREF="node68.html">3.3.6 Unknown Locations and </A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

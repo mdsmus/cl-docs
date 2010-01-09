@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.2.6 Function Types</TITLE>
+<META NAME="description" CONTENT="5.2.6 Function Types">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2189" HREF="node119.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2187" HREF="node112.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2181" HREF="node117.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2191" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2192" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2190" HREF="node119.html">5.2.7 The Values Declaration</A>
+<B>Up:</B> <A NAME="tex2html2188" HREF="node112.html">5.2 More About Types </A>
+<B> Previous:</B> <A NAME="tex2html2182" HREF="node117.html">5.2.5 The Empty Type</A>
+<BR> <P>
+<H2><A NAME="SECTION00626000000000000000">5.2.6 Function Types</A></H2>
+<P>
+<A NAME="functiontypes">&#160;</A>
+<A NAME="9780">&#160;</A>
+<A NAME="9781">&#160;</A>
+<P>
+<A NAME="9782">&#160;</A><tt>function</tt> types are understood in the restrictive sense, specifying:
+<UL>
+<LI> The argument syntax that the function must be called with.  This
+  is information about what argument counts are acceptable, and which
+  keyword arguments are recognized.  In Python, warnings about
+  argument syntax are a consequence of function type checking.
+<LI> The types of the argument values that the caller must pass.  If
+  the compiler can prove that some argument to a call is of a type
+  disallowed by the called function's type, then it will give a
+  compile-time type warning.  In addition to being used for
+  compile-time type checking, these type assertions are also used as
+  output type assertions in code generation.  For example, if
+  <tt>foo</tt> is declared to have a <tt>fixnum</tt> argument, then the
+  <tt>1+</tt> in <tt>(foo (1+ x))</tt> is compiled with knowledge that
+  the result must be a fixnum.
+<LI> The types the values that will be bound to argument variables in
+  the function's definition.  Declaring a function's type with
+  <tt>ftype</tt> implicitly declares the types of the arguments in the
+  definition.  Python checks for consistency between the definition
+  and the <tt>ftype</tt> declaration.  Because of precise type checking,
+  an error will be signaled when a function is called with an
+  argument of the wrong type.
+<LI> The type of return value(s) that the caller can expect.  This
+  information is a useful input to type inference.  For example, if a
+  function is declared to return a <tt>fixnum</tt>, then when a call to
+  that function appears in an expression, the expression will be
+  compiled with knowledge that the call will return a <tt>fixnum</tt>.
+<LI> The type of return value(s) that the definition must return.
+  The result type in an <tt>ftype</tt> declaration is treated like an
+  implicit <tt>the</tt> wrapped around the body of the definition.  If
+  the definition returns a value of the wrong type, an error will be
+  signaled.  If the compiler can prove that the function returns the
+  wrong type, then it will give a compile-time warning.
+</UL>
+<P>
+This is consistent with the new interpretation of function types and
+the <tt>ftype</tt> declaration in the proposed X3J13
+``function-type-argument-type-semantics'' cleanup.  Note also, that if
+you don't explicitly declare the type of a function using a global
+<tt>ftype</tt> declaration, then Python will compute a function type
+from the definition, providing a degree of inter-routine type
+inference, see section&nbsp;<A HREF="node127.html#functiontypeinference">5.3.3</A>.
+<P>
+<HR><A NAME="tex2html2189" HREF="node119.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2187" HREF="node112.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2181" HREF="node117.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2191" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2192" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2190" HREF="node119.html">5.2.7 The Values Declaration</A>
+<B>Up:</B> <A NAME="tex2html2188" HREF="node112.html">5.2 More About Types </A>
+<B> Previous:</B> <A NAME="tex2html2182" HREF="node117.html">5.2.5 The Empty Type</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

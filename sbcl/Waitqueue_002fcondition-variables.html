@@ -1,0 +1,162 @@
+<html lang="en">
+<head>
+<title>Waitqueue/condition variables - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Threading.html#Threading" title="Threading">
+<link rel="prev" href="Semaphores.html#Semaphores" title="Semaphores">
+<link rel="next" href="Sessions_002fDebugging.html#Sessions_002fDebugging" title="Sessions/Debugging">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Waitqueue%2fcondition-variables"></a>
+<a name="Waitqueue_002fcondition-variables"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Sessions_002fDebugging.html#Sessions_002fDebugging">Sessions/Debugging</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Semaphores.html#Semaphores">Semaphores</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Threading.html#Threading">Threading</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">11.5 Waitqueue/condition variables</h3>
+
+<p>These are based on the POSIX condition variable design, hence the
+annoyingly CL-conflicting name. For use when you want to check a
+condition and sleep until it's true. For example: you have a shared
+queue, a writer process checking &ldquo;queue is empty&rdquo; and one or more
+readers that need to know when &ldquo;queue is not empty&rdquo;. It sounds
+simple, but is astonishingly easy to deadlock if another process runs
+when you weren't expecting it to.
+
+   <p>There are three components:
+
+     <ul>
+<li>the condition itself (not represented in code)
+
+     <li>the condition variable (a.k.a waitqueue) which proxies for it
+
+     <li>a lock to hold while testing the condition
+</ul>
+
+   <p>Important stuff to be aware of:
+
+     <ul>
+<li>when calling condition-wait, you must hold the mutex. condition-wait
+will drop the mutex while it waits, and obtain it again before
+returning for whatever reason;
+
+     <li>likewise, you must be holding the mutex around calls to
+condition-notify;
+
+     <li>a process may return from condition-wait in several circumstances: it
+is not guaranteed that the underlying condition has become true. You
+must check that the resource is ready for whatever you want to do to
+it.
+
+   </ul>
+
+<pre class="lisp">     (defvar *buffer-queue* (make-waitqueue))
+     (defvar *buffer-lock* (make-mutex :name "buffer lock"))
+     
+     (defvar *buffer* (list nil))
+     
+     (defun reader ()
+       (with-mutex (*buffer-lock*)
+         (loop
+          (condition-wait *buffer-queue* *buffer-lock*)
+          (loop
+           (unless *buffer* (return))
+           (let ((head (car *buffer*)))
+             (setf *buffer* (cdr *buffer*))
+             (format t "reader ~A woke, read ~A~%"
+                     *current-thread* head))))))
+     
+     (defun writer ()
+       (loop
+        (sleep (random 5))
+        (with-mutex (*buffer-lock*)
+          (let ((el (intern
+                     (string (code-char
+                              (+ (char-code #\A) (random 26)))))))
+            (setf *buffer* (cons el *buffer*)))
+          (condition-notify *buffer-queue*))))
+     
+     (make-thread #'writer)
+     (make-thread #'reader)
+     (make-thread #'reader)
+</pre>
+   <p><a name="Structure-sb_002dthread_003awaitqueue"></a>
+
+<div class="defun">
+&mdash; Structure: <b>sb-thread:waitqueue</b><var><a name="index-sb_002dthread_003awaitqueue-471"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003awaitqueue-472"></a>Class precedence list: <code>waitqueue, structure-object, t</code>
+
+        <p>Waitqueue type. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dthread_003amake_002dwaitqueue"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-thread:make-waitqueue</b><var> &amp;key name<a name="index-sb_002dthread_003amake_002dwaitqueue-473"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003amake_002dwaitqueue-474"></a>Create a waitqueue. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dthread_003awaitqueue_002dname"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-thread:waitqueue-name</b><var> instance<a name="index-sb_002dthread_003awaitqueue_002dname-475"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003awaitqueue_002dname-476"></a>The name of the waitqueue. Setfable. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dthread_003acondition_002dwait"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-thread:condition-wait</b><var> queue mutex<a name="index-sb_002dthread_003acondition_002dwait-477"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003acondition_002dwait-478"></a>Atomically release <code>mutex</code> and enqueue ourselves on <code>queue</code>.  Another
+thread may subsequently notify us using <code>condition-notify</code>, at which
+time we reacquire <code>mutex</code> and return to the caller. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dthread_003acondition_002dnotify"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-thread:condition-notify</b><var> queue &amp;optional n<a name="index-sb_002dthread_003acondition_002dnotify-479"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003acondition_002dnotify-480"></a>Notify <code>n</code> threads waiting on <code>queue</code>. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dthread_003acondition_002dbroadcast"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-thread:condition-broadcast</b><var> queue<a name="index-sb_002dthread_003acondition_002dbroadcast-481"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003acondition_002dbroadcast-482"></a>Notify all threads waiting on <code>queue</code>. 
+</p></blockquote></div>
+
+   </body></html>
+

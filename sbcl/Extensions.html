@@ -1,0 +1,135 @@
+<html lang="en">
+<head>
+<title>Extensions - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Introduction.html#Introduction" title="Introduction">
+<link rel="prev" href="ANSI-Conformance.html#ANSI-Conformance" title="ANSI Conformance">
+<link rel="next" href="Idiosyncrasies.html#Idiosyncrasies" title="Idiosyncrasies">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Extensions"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Idiosyncrasies.html#Idiosyncrasies">Idiosyncrasies</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="ANSI-Conformance.html#ANSI-Conformance">ANSI Conformance</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Introduction.html#Introduction">Introduction</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">1.2 Extensions</h3>
+
+<p>SBCL comes with numerous extensions, some in core and some in modules
+loadable with <code>require</code>. Unfortunately, not all of these
+extensions have proper documentation yet.
+
+<!-- FIXME: Once bits and pieces referred to here get real documentation -->
+<!-- add xrefs there. -->
+     <dl>
+<dt><strong>System Definition Tool</strong><dd><code>asdf</code> is a flexible and popular protocol-oriented system
+definition tool by Daniel Barlow. see <a href="../asdf/index.html#Top">the asdf manual</a>, for
+more information.
+
+     <br><dt><strong>Third-party Extension Installation Tool</strong><dd><code>asdf-install</code> is a tool that can be used to download and install
+third-party libraries and applications, automatically handling
+dependencies, etc.
+
+     <br><dt><strong>Foreign Function Interface</strong><dd><code>sb-alien</code> package allows interfacing with C-code, loading shared
+object files, etc. See <a href="Foreign-Function-Interface.html#Foreign-Function-Interface">Foreign Function Interface</a>.
+
+     <p><code>sb-grovel</code> can be used to partially automate generation of
+foreign function interface definitions. See <a href="sb_002dgrovel.html#sb_002dgrovel">sb-grovel</a>.
+
+     <br><dt><strong>Recursive Event Loop</strong><dd>SBCL provides a recursive event loop (<code>serve-event</code>) for doing
+non-blocking IO on multiple streams without using threads.
+
+     <br><dt><strong>Metaobject Protocol</strong><dd><code>sb-mop</code> package provides a metaobject protocol for the Common
+Lisp Object System as described in <cite>Art of Metaobject Protocol</cite>.
+
+     <br><dt><strong>Native Threads</strong><dd>SBCL has native threads on x86/Linux, capable of taking advantage
+of SMP on multiprocessor machines. See <a href="Threading.html#Threading">Threading</a>.
+
+     <br><dt><strong>Network Interface</strong><dd><code>sb-bsd-sockets</code> is a low-level networking interface, providing
+both TCP and UDP sockets. See <a href="Networking.html#Networking">Networking</a>.
+
+     <br><dt><strong>Introspective Facilities</strong><dd><code>sb-introspect</code> module offers numerous introspective extensions,
+including access to function lambda-lists.
+
+     <br><dt><strong>Operating System Interface</strong><dd><code>sb-ext</code> contains a number of functions for running external
+processes, accessing environment variables, etc.
+
+     <p><code>sb-posix</code> module provides a lispy interface to standard POSIX
+facilities.
+
+     <br><dt><strong>Extensible Streams</strong><dd><code>sb-gray</code> is an implementation of <em>Gray Streams</em>. See <a href="Gray-Streams.html#Gray-Streams">Gray Streams</a>.
+
+     <p><code>sb-simple-streams</code> is an implementation of the <em>simple
+streams</em> API proposed by Franz Inc. See <a href="Simple-Streams.html#Simple-Streams">Simple Streams</a>.
+
+     <br><dt><strong>Profiling</strong><dd><code>sb-profile</code> is a exact per-function profiler. See <a href="Deterministic-Profiler.html#Deterministic-Profiler">Deterministic Profiler</a>.
+
+     <p><code>sb-sprof</code> is a statistical profiler, capable of call-graph
+generation and instruction level profiling. See <a href="Statistical-Profiler.html#Statistical-Profiler">Statistical Profiler</a>.
+
+     <br><dt><strong>Customization Hooks</strong><dd>SBCL contains a number of extra-standard customization hooks that
+can be used to tweak the behaviour of the system. See <a href="Customization-Hooks-for-Users.html#Customization-Hooks-for-Users">Customization Hooks for Users</a>.
+
+     <p><code>sb-aclrepl</code> provides an Allegro CL -style toplevel for SBCL,
+as an alternative to the classic CMUCL-style one. See <a href="sb_002daclrepl.html#sb_002daclrepl">sb-aclrepl</a>.
+
+     <br><dt><strong>CLTL2 Compatility Layer</strong><dd><code>sb-cltl2</code> module provides <code>compiler-let</code> and environment
+access functionality described in <cite>Common Lisp The Language, 2nd
+Edition</cite> which were removed from the language during the ANSI
+standardization process.
+
+     <br><dt><strong>Executable Fasl Packaging</strong><dd><code>sb-executable</code> can be used to concatenate multiple fasls into a
+single executable (though the presence of an SBCL runtime and core image
+is still required to run it).
+
+     <p>The <code>:executable</code> argument to <a href="Function-sb_002dext_003asave_002dlisp_002dand_002ddie.html#Function-sb_002dext_003asave_002dlisp_002dand_002ddie">Function sb-ext:save-lisp-and-die</a> can produce a `standalone' executable
+containing both an image of the current Lisp session and an SBCL
+runtime.
+
+     <br><dt><strong>Bitwise Rotation</strong><dd><code>sb-rotate-byte</code> provides an efficient primitive for bitwise
+rotation of integers, an operation required by eg. numerous
+cryptographic algorithms, but not available as a primitive in ANSI
+Common Lisp. See <a href="sb_002drotate_002dbyte.html#sb_002drotate_002dbyte">sb-rotate-byte</a>.
+
+     <br><dt><strong>Test Harness</strong><dd><code>sb-rt</code> module is a simple yet attractive regression and
+unit-test framework.
+
+     <br><dt><strong>MD5 Sums</strong><dd><code>sb-md5</code> is an implementation of the MD5 message digest algorithm
+for Common Lisp, using the modular arithmetic optimizations provided
+by SBCL. See <a href="sb_002dmd5.html#sb_002dmd5">sb-md5</a>.
+
+   </dl>
+
+   </body></html>
+

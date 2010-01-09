@@ -1,0 +1,68 @@
+<html lang="en">
+<head>
+<title>Special Variables - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Threading.html#Threading" title="Threading">
+<link rel="prev" href="Threading-basics.html#Threading-basics" title="Threading basics">
+<link rel="next" href="Mutex-Support.html#Mutex-Support" title="Mutex Support">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Special-Variables"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Mutex-Support.html#Mutex-Support">Mutex Support</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Threading-basics.html#Threading-basics">Threading basics</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Threading.html#Threading">Threading</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">11.2 Special Variables</h3>
+
+<p>The interaction of special variables with multiple threads is mostly
+as one would expect, with behaviour very similar to other
+implementations.
+
+     <ul>
+<li>global special values are visible across all threads;
+<li>bindings (e.g. using LET) are local to the thread;
+<li>threads do not inherit dynamic bindings from the parent thread
+</ul>
+
+   <p>The last point means that
+
+<pre class="lisp">     (defparameter *x* 0)
+     (let ((*x* 1))
+       (sb-thread:make-thread (lambda () (print *x*))))
+</pre>
+   <p>prints <code>0</code> and not <code>1</code> as of 0.9.6.
+
+   </body></html>
+

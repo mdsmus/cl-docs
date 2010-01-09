@@ -1,0 +1,40 @@
+<html
+  ><head
+    ><title
+      >Macro WITH-FIXTURE</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Macro: WITH-FIXTURE</h1
+        ><div class="contents"
+          ><h2
+  >Documentation</h2
+><blockquote
+  >Insert BODY into the fixture named FIXTURE-NAME.
+
+See Also: DEF-FIXTURE</blockquote
+><h2
+            >Source</h2
+          ><pre class="code"
+            >(defmacro with-fixture (fixture-name args &amp;body body)
+  &quot;Insert BODY into the fixture named FIXTURE-NAME.
+
+See Also: DEF-FIXTURE&quot;
+  (assert (get-fixture fixture-name)
+          (fixture-name)
+          &quot;Unknown fixture ~S.&quot; fixture-name)
+  (destructuring-bind (largs &amp;rest lbody) (get-fixture fixture-name)
+    `(macrolet ((&amp;body () '(progn ,@body)))
+       (funcall (lambda ,largs ,@lbody) ,@args))))</pre
+          ><a href="../Checks.html#macro_005FIT.BESE.FIVEAM_003A_003AWITH-FIXTURE"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

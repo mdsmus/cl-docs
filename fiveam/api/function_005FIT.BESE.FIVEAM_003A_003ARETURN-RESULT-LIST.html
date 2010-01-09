@@ -1,0 +1,37 @@
+<html
+  ><head
+    ><title
+      >Function RETURN-RESULT-LIST</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Function: RETURN-RESULT-LIST</h1
+        ><div class="contents"
+          ><h2
+  >Documentation</h2
+><blockquote
+  >Run the test function TEST-LAMBDA and return a list of all
+  test results generated, does not modify the special environment
+  variable RESULT-LIST.</blockquote
+><h2
+            >Source</h2
+          ><pre class="code"
+            >(defun return-result-list (test-lambda)
+  &quot;Run the test function TEST-LAMBDA and return a list of all
+  test results generated, does not modify the special environment
+  variable RESULT-LIST.&quot;
+  (bind-run-state ((result-list '())) 
+    (funcall test-lambda)
+    result-list))</pre
+          ><a href="../Running_0020Tests.html#function_005FIT.BESE.FIVEAM_003A_003ARETURN-RESULT-LIST"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

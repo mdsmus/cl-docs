@@ -1,0 +1,105 @@
+<html lang="en">
+<head>
+<title>asdf Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name=description content="asdf Manual">
+<meta name=generator content="makeinfo 4.2">
+<link href="http://www.gnu.org/software/texinfo/" rel=generator-home>
+<!--
+This manual describes asdf, a system definition facility for Common
+Lisp programs and libraries.
+
+<p>asdf Copyright &copy; 2001-2004 Daniel Barlow and contributors
+
+<p>This manual Copyright &copy; 2001-2004 Daniel Barlow and
+contributors
+
+<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+-->
+</head>
+<body>
+<p>
+Node:<a name="Components">Components</a>,
+Previous:<a rel=previous accesskey=p href="Operations.html#Operations">Operations</a>,
+Up:<a rel=up accesskey=u href="The-object-model-of-asdf.html#The%20object%20model%20of%20asdf">The object model of asdf</a>
+<hr><br>
+
+<h3>Components</h3>
+
+<p>A <dfn>component</dfn> represents a source file or (recursively) a
+collection of components.  A <dfn>system</dfn> is (roughly speaking) a
+top-level component that can be found via <code>find-system</code>.
+
+<p>A <dfn>system designator</dfn> is a string or symbol and behaves just like
+any other component name (including with regard to the case conversion
+rules for component names).
+
+<p>
+<table width="100%">
+<tr>
+<td align="left"><b>find-system</b><i> system-designator &amp;optional (error-p t)
+</i></td>
+<td align="right">Function</td>
+</tr>
+</table>
+<table width="95%" align="center">
+<tr><td>
+
+<p>Given a system designator, <code>find-system</code> finds and returns a
+system.  If no system is found, an error of type
+<code>missing-component</code> is thrown, or <code>nil</code> is returned if
+<code>error-p</code> is false.
+
+<p>To find and update systems, <code>find-system</code> funcalls each element
+in the <code>*system-definition-search-functions*</code> list, expecting a
+pathname to be returned.  The resulting pathname is loaded if either
+of the following conditions is true:
+
+<ul>
+<li>there is no system of that name in memory
+<li>the file's last-modified time exceeds the last-modified time of the
+  system in memory
+</ul>
+
+<p>When system definitions are loaded from <code>.asd</code> files, a new
+scratch package is created for them to load into, so that different
+systems do not overwrite each others operations.  The user may also
+wish to (and is recommended to) include <code>defpackage</code> and
+<code>in-package</code> forms in his system definition files, however, so
+that they can be loaded manually if need be.
+
+<p>The default value of <code>*system-definition-search-functions*</code> is a
+function that looks in each of the directories given by evaluating
+members of <code>*central-registry*</code> for a file whose name is the
+name of the system and whose type is <code>asd</code>.  The first such file
+is returned, whether or not it turns out to actually define the
+appropriate system.  Hence, it is strongly advised to define a system
+<var>foo</var> in the corresponding file <var>foo.asd</var>. 
+</td></tr>
+</table>
+
+<ul>
+<li><a accesskey=1 href="Common-attributes-of-components.html#Common%20attributes%20of%20components">Common attributes of components</a>: 
+<li><a accesskey=2 href="Pre-defined-subclasses-of-component.html#Pre-defined%20subclasses%20of%20component">Pre-defined subclasses of component</a>: 
+<li><a accesskey=3 href="Creating-new-component-types.html#Creating%20new%20component%20types">Creating new component types</a>: 
+</ul>
+
+</body></html>
+

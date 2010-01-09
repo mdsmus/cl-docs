@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.1.5 Writing Efficient Code</TITLE>
+<META NAME="description" CONTENT="5.1.5 Writing Efficient Code">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2094" HREF="node112.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2092" HREF="node106.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2088" HREF="node110.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2096" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2097" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2095" HREF="node112.html">5.2 More About Types </A>
+<B>Up:</B> <A NAME="tex2html2093" HREF="node106.html">5.1 Advanced Compiler Introduction</A>
+<B> Previous:</B> <A NAME="tex2html2089" HREF="node110.html">5.1.4 Representation of Objects</A>
+<BR> <P>
+<H2><A NAME="SECTION00615000000000000000">5.1.5 Writing Efficient Code</A></H2>
+<P>
+<A NAME="efficiencyoverview">&#160;</A>
+<P>
+Writing efficient code that works is a complex and prolonged process.
+It is important not to get so involved in the pursuit of efficiency
+that you lose sight of what the original problem demands.  Remember
+that:
+<UL>
+<LI> The program should be correct--it doesn't matter how
+  quickly you get the wrong answer.
+<LI> Both the programmer and the user will make errors, so the
+  program must be robust--it must detect errors in a way that
+  allows easy correction.
+<LI> A small portion of the program will consume most of the
+  resources, with the bulk of the code being virtually irrelevant to
+  efficiency considerations.  Even experienced programmers familiar
+  with the problem area cannot reliably predict where these ``hot
+  spots'' will be.
+</UL>
+<P>
+The best way to get efficient code that is still worth using, is to separate
+coding from tuning.  During coding, you should:
+<UL>
+<LI> Use a coding style that aids correctness and robustness without
+  being incompatible with efficiency.
+<LI> Choose appropriate data structures that allow efficient
+  algorithms and object representations
+  (see section&nbsp;<A HREF="node160.html#objectrepresentation">5.10</A>).  Try to make interfaces abstract
+  enough so that you can change to a different representation if
+  profiling reveals a need.
+<LI> Whenever you make an assumption about a function argument or
+  global data structure, add consistency assertions, either with type
+  declarations or explicit uses of <tt>assert</tt>, <tt>ecase</tt>, etc.
+</UL>
+<P>
+During tuning, you should:
+<UL>
+<LI> Identify the hot spots in the program through profiling (section
+  <A HREF="node190.html#profiling">5.14</A>.)
+<LI> Identify inefficient constructs in the hot spot with efficiency
+  notes, more profiling, or manual inspection of the source.  See
+  sections <A HREF="node179.html#generalefficiency">5.12</A> and <A HREF="node185.html#efficiencynotes">5.13</A>.
+<LI> Add declarations and consider the application of optimizations.
+  See sections <A HREF="node142.html#localcall">5.6</A>, <A HREF="node155.html#inlineexpansion">5.8</A> and
+  <A HREF="node169.html#nondescriptor">5.11.2</A>.
+<LI> If all else fails, consider algorithm or data structure changes.
+  If you did a good job coding, changes will be easy to introduce.
+</UL><HR><A NAME="tex2html2094" HREF="node112.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2092" HREF="node106.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2088" HREF="node110.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2096" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2097" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2095" HREF="node112.html">5.2 More About Types </A>
+<B>Up:</B> <A NAME="tex2html2093" HREF="node106.html">5.1 Advanced Compiler Introduction</A>
+<B> Previous:</B> <A NAME="tex2html2089" HREF="node110.html">5.1.4 Representation of Objects</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

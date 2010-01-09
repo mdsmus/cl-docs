@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Event Dispatching with SERVE-EVENT</TITLE>
+<META NAME="description" CONTENT="Event Dispatching with SERVE-EVENT">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3351" HREF="node212.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3349" HREF="cmu-new.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3343" HREF="node210.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3353" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3354" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3352" HREF="node212.html">7.1 Object Sets</A>
+<B>Up:</B> <A NAME="tex2html3350" HREF="cmu-new.html">CMU Common Lisp User's </A>
+<B> Previous:</B> <A NAME="tex2html3344" HREF="node210.html">6.9.2 Examples of Signal </A>
+<BR> <P>
+<H1><A NAME="SECTION00800000000000000000">Event Dispatching with SERVE-EVENT</A></H1>
+<P>
+By Bill Chiles and Robert MacLachlan
+
+<P>
+It is common to have multiple activities simultaneously operating in the same
+Lisp process.  Furthermore, Lisp programmers tend to expect a flexible
+development environment.  It must be possible to load and modify application
+programs without requiring modifications to other running programs.  CMU Common
+Lisp achieves this by having a central scheduling mechanism based on an
+event-driven, object-oriented paradigm.
+<P>
+An <i>event</i> is some interesting happening that should cause the Lisp process
+to wake up and do something.  These events include X events and activity on
+Unix file descriptors.  The object-oriented mechanism is only available with
+the first two, and it is optional with X events as described later in this
+chapter.  In an X event, the window ID is the object capability and the X event
+type is the operation code.  The Unix file descriptor input mechanism simply
+consists of an association list of a handler to call when input shows up on a
+particular file descriptor.
+<P>
+<BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html3355" HREF="node212.html#SECTION00810000000000000000">7.1 Object Sets</A>
+<LI> <A NAME="tex2html3356" HREF="node213.html#SECTION00820000000000000000">The SERVE-EVENT Function</A>
+<LI> <A NAME="tex2html3357" HREF="node214.html#SECTION00830000000000000000">Using SERVE-EVENT with Unix File Descriptors</A>
+<LI> <A NAME="tex2html3358" HREF="node215.html#SECTION00840000000000000000">Using SERVE-EVENT with the CLX Interface to X</A>
+<UL>
+<LI> <A NAME="tex2html3359" HREF="node216.html#SECTION00841000000000000000">7.4.1 Without Object Sets</A>
+<LI> <A NAME="tex2html3360" HREF="node217.html#SECTION00842000000000000000">7.4.2 With Object Sets</A>
+</UL> 
+<LI> <A NAME="tex2html3361" HREF="node218.html#SECTION00850000000000000000">A SERVE-EVENT Example</A>
+<UL>
+<LI> <A NAME="tex2html3362" HREF="node219.html#SECTION00851000000000000000">7.5.1 Without Object Sets Example</A>
+<LI> <A NAME="tex2html3363" HREF="node220.html#SECTION00852000000000000000">7.5.2 With Object Sets Example</A>
+</UL>
+</UL>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

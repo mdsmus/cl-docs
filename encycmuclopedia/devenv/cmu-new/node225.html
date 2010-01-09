@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>8.2.2 Alien Types and Lisp Types</TITLE>
+<META NAME="description" CONTENT="8.2.2 Alien Types and Lisp Types">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3552" HREF="node226.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3550" HREF="node223.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3544" HREF="node224.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3554" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3555" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3553" HREF="node226.html">8.2.3 Alien Type Specifiers</A>
+<B>Up:</B> <A NAME="tex2html3551" HREF="node223.html">8.2 Alien Types</A>
+<B> Previous:</B> <A NAME="tex2html3545" HREF="node224.html">8.2.1 Defining Alien Types</A>
+<BR> <P>
+<H2><A NAME="SECTION00922000000000000000">8.2.2 Alien Types and Lisp Types</A></H2>
+<P>
+The Alien types form a subsystem of the CMU Common Lisp type system.  An
+<tt>alien</tt> type specifier provides a way to use any Alien type as a
+Lisp type specifier.  For example
+<BLOCKQUOTE> <PRE>(typep foo '(alien (* int)))
+</PRE> </BLOCKQUOTE>
+can be used to determine whether <tt>foo</tt> is a pointer to an
+<tt>int</tt>.  <tt>alien</tt> type specifiers can be used in the same ways
+as ordinary type specifiers (like <tt>string</tt>.)  Alien type
+declarations are subject to the same precise type checking as any
+other declaration (section See section&nbsp;<A HREF="node98.html#precisetypechecks">4.5.2</A>.)
+<P>
+Note that the Alien type system overlaps with normal Lisp type
+specifiers in some cases.  For example, the type specifier
+<tt>(alien single-float)</tt> is identical to <tt>single-float</tt>, since
+Alien floats are automatically converted to Lisp floats.  When
+<tt>type-of</tt> is called on an Alien value that is not automatically
+converted to a Lisp value, then it will return an <tt>alien</tt> type
+specifier.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

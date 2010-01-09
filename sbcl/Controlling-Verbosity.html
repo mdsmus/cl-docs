@@ -1,0 +1,151 @@
+<html lang="en">
+<head>
+<title>Controlling Verbosity - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Diagnostic-Messages.html#Diagnostic-Messages" title="Diagnostic Messages">
+<link rel="next" href="Diagnostic-Severity.html#Diagnostic-Severity" title="Diagnostic Severity">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Controlling-Verbosity"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Diagnostic-Severity.html#Diagnostic-Severity">Diagnostic Severity</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Diagnostic-Messages.html#Diagnostic-Messages">Diagnostic Messages</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">3.1.1 Controlling Verbosity</h4>
+
+<p>The compiler can be quite verbose in its diagnostic reporting, rather
+more then some users would prefer &ndash; the amount of noise emitted can
+be controlled, however.
+
+   <p>To control emission of compiler diagnostics (of any severity other
+than <code>error</code>: see <a href="Diagnostic-Severity.html#Diagnostic-Severity">Diagnostic Severity</a>) use the
+<code>sb-ext:muffle-conditions</code> and <code>sb-ext:unmuffle-conditions</code>
+declarations, specifying the type of condition that is to be muffled
+(the muffling is done using an associated <code>muffle-warning</code> restart).
+
+   <p>Global control:
+<pre class="lisp">     ;;; Muffle compiler-notes globally
+     (declaim (sb-ext:muffle-conditions sb-ext:compiler-note))
+</pre>
+   <p>Local control:
+<pre class="lisp">     ;;; Muffle compiler-notes based on lexical scope
+     (defun foo (x)
+       (declare (optimize speed) (fixnum x)
+                (sb-ext:muffle-conditions sb-ext:compiler-note))
+       (values (* x 5) ; no compiler note from this
+         (locally
+           (declare (sb-ext:unmuffle-conditions sb-ext:compiler-note))
+           ;; this one gives a compiler note
+           (* x -5))))
+</pre>
+   <div class="defun">
+&mdash; Declaration: <b>sb-ext:muffle-conditions</b><var><a name="index-sb_002dext_003amuffle_002dconditions-20"></a></var><br>
+<blockquote><p>Syntax: type*
+
+        <p>Muffles the diagnostic messages that would be caused by compile-time
+signals of given types. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Declaration: <b>sb-ext:unmuffle-conditions</b><var><a name="index-sb_002dext_003aunmuffle_002dconditions-21"></a></var><br>
+<blockquote><p>Syntax: type*
+
+        <p>Cancels the effect of a previous <code>sb-ext:muffle-condition</code>
+declaration. 
+</p></blockquote></div>
+
+   <p>Various details of <em>how</em> the compiler messages are printed can be
+controlled via the alist
+<code>sb-ext:*compiler-print-variable-alist*</code>.
+
+   <p><a name="Variable-sb_002dext_003a_002acompiler_002dprint_002dvariable_002dalist_002a"></a>
+
+<div class="defun">
+&mdash; Variable: <b>sb-ext:*compiler-print-variable-alist*</b><var><a name="index-sb_002dext_003a_002acompiler_002dprint_002dvariable_002dalist_002a-22"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003a_002acompiler_002dprint_002dvariable_002dalist_002a-23"></a>an association list describing new bindings for special variables
+to be used by the compiler for error-reporting, etc. Eg.
+
+     <pre class="lisp">           ((*PRINT-LENGTH* . 10) (*PRINT-LEVEL* . 6) (*PRINT-PRETTY* . NIL))
+</pre>
+        <p>The variables in the <code>car</code> positions are bound to the values in the <code>cdr</code>
+during the execution of some debug commands. When evaluating arbitrary
+expressions in the debugger, the normal values of the printer control
+variables are in effect.
+
+        <p>Initially empty, <code>*compiler-print-variable-alist*</code> is Typically used to
+specify bindings for printer control variables. 
+</p></blockquote></div>
+
+   <p>For information about muffling warnings signaled outside of the
+compiler, see <a href="Customization-Hooks-for-Users.html#Customization-Hooks-for-Users">Customization Hooks for Users</a>.
+
+<!-- <!- FIXME: How much control over error messages is in SBCL? -->
+<!-- _     How much should be? How much of this documentation should -->
+<!-- _     we save or adapt? -->
+<!-- _ -->
+<!-- _ %%\node Error Message Parameterization,  , Read Errors, Interpreting Error Messages -->
+<!-- _ \subsection{Error Message Parameterization} -->
+<!-- _ \cpsubindex{error messages}{verbosity} -->
+<!-- _ \cpsubindex{verbosity}{of error messages} -->
+<!-- _ -->
+<!-- _ There is some control over the verbosity of error messages.  See also -->
+<!-- _ \varref{undefined-warning-limit}, \code{*efficiency-note-limit*} and -->
+<!-- _ \varref{efficiency-note-cost-threshold}. -->
+<!-- _ -->
+<!-- _ \begin{defvar}{}{enclosing-source-cutoff} -->
+<!-- _ -->
+<!-- _   This variable specifies the number of enclosing actual source forms -->
+<!-- _   that are printed in full, rather than in the abbreviated processing -->
+<!-- _   path format.  Increasing the value from its default of \code{1} -->
+<!-- _   allows you to see more of the guts of the macroexpanded source, -->
+<!-- _   which is useful when debugging macros. -->
+<!-- _ \end{defvar} -->
+<!-- _ -->
+<!-- _ \begin{defmac}{extensions:}{define-source-context}{% -->
+<!-- _     \args{\var{name} \var{lambda-list} \mstar{form}}} -->
+<!-- _ -->
+<!-- _   This macro defines how to extract an abbreviated source context from -->
+<!-- _   the \var{name}d form when it appears in the compiler input. -->
+<!-- _   \var{lambda-list} is a \code{defmacro} style lambda-list used to -->
+<!-- _   parse the arguments.  The \var{body} should return a list of -->
+<!-- _   subforms that can be printed on about one line.  There are -->
+<!-- _   predefined methods for \code{defstruct}, \code{defmethod}, etc.  If -->
+<!-- _   no method is defined, then the first two subforms are returned. -->
+<!-- _   Note that this facility implicitly determines the string name -->
+<!-- _   associated with anonymous functions. -->
+<!-- _ \end{defmac} -->
+<!-- _ -->
+<!-- _ -> -->
+   </body></html>
+

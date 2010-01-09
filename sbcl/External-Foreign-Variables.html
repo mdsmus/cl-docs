@@ -1,0 +1,114 @@
+<html lang="en">
+<head>
+<title>External Foreign Variables - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Foreign-Variables.html#Foreign-Variables" title="Foreign Variables">
+<link rel="prev" href="Local-Foreign-Variables.html#Local-Foreign-Variables" title="Local Foreign Variables">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="External-Foreign-Variables"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Local-Foreign-Variables.html#Local-Foreign-Variables">Local Foreign Variables</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Foreign-Variables.html#Foreign-Variables">Foreign Variables</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">7.4.2 External Foreign Variables</h4>
+
+<p>External foreign names are strings, and Lisp names are symbols. When
+an external foreign value is represented using a Lisp variable, there
+must be a way to convert from one name syntax into the other. The
+macros <code>extern-alien</code>, <code>define-alien-variable</code> and
+<code>define-alien-routine</code> use this conversion heuristic:
+
+     <ul>
+<li>Alien names are converted to Lisp names by uppercasing and replacing
+underscores with hyphens.
+
+     <li>Conversely, Lisp names are converted to alien names by lowercasing and
+replacing hyphens with underscores.
+
+     <li>Both the Lisp symbol and alien string names may be separately
+specified by using a list of the form
+
+     <pre class="lisp">          (alien-string lisp-symbol)
+</pre>
+     </ul>
+
+<div class="defun">
+&mdash; Macro: <b>sb-alien:define-alien-variable</b><var> name type<a name="index-sb_002dalien_003adefine_002dalien_002dvariable-276"></a></var><br>
+<blockquote><p><a name="index-define_002dalien_002dvariable-277"></a>
+The <code>define-alien-variable</code> macro defines <var>name</var> as an
+external foreign variable of the specified foreign <code>type</code>. 
+<var>name</var> and <code>type</code> are not evaluated.  The Lisp name of the
+variable (see above) becomes a global alien variable.  Global alien
+variables are effectively &ldquo;global symbol macros&rdquo;; a reference to the
+variable fetches the contents of the external variable.  Similarly,
+setting the variable stores new contents &ndash; the new contents must be
+of the declared <code>type</code>. Someday, they may well be implemented
+using the <acronym>ANSI</acronym> <code>define-symbol-macro</code> mechanism, but as
+of SBCL 0.7.5, they are still implemented using an older more-or-less
+parallel mechanism inherited from CMUCL.
+
+        <p>For example, to access a C-level counter <var>foo</var>, one could write
+
+     <pre class="lisp">          (define-alien-variable "foo" int)
+          ;; Now it is possible to get the value of the C variable foo simply by
+          ;; referencing that Lisp variable:
+          (print foo)
+          (setf foo 14)
+          (incf foo)
+</pre>
+        </blockquote></div>
+
+<div class="defun">
+&mdash; Function: <b>sb-alien:get-errno</b><var><a name="index-sb_002dalien_003aget_002derrno-278"></a></var><br>
+<blockquote><p><a name="index-get_002derrno-279"></a>
+Since in modern C libraries, the <code>errno</code> &ldquo;variable&rdquo; is typically
+no longer a variable, but some bizarre artificial construct
+which behaves superficially like a variable within a given thread,
+it can no longer reliably be accessed through the ordinary
+<code>define-alien-variable</code> mechanism. Instead, SBCL provides
+the operator <code>sb-alien:get-errno</code> to allow Lisp code to read it. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Macro: <b>sb-alien:extern-alien</b><var> name type<a name="index-sb_002dalien_003aextern_002dalien-280"></a></var><br>
+<blockquote><p><a name="index-extern_002dalien-281"></a>
+The <code>extern-alien</code> macro returns an alien with the specified
+<var>type</var> which points to an externally defined value.  <var>name</var> is
+not evaluated, and may be either a string or a symbol.  <var>type</var> is
+an unevaluated alien type specifier. 
+</p></blockquote></div>
+
+   </body></html>
+

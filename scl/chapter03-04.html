@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 3, Lesson 4</title> 
+</head> 
+
+<body bgcolor="white" text="black"><h1>Chapter 3 - Essential Lisp in Twelve Lessons</h1> 
+
+<h2><A NAME="lesson-4">Lesson 4 - Putting things together, and taking them apart</A></h2> 
+
+<h3>CONS</h3> 
+
+<P><CODE>CONS</CODE> is the most basic <I>cons</I>tructor of lists.  It is 
+a function, so it evaluates both of its arguments.  The second argument 
+must be a list or <CODE>NIL</CODE>.</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (cons 1 nil)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (1)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (cons 2 (cons 1 nil))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (2 1)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (cons 3 (cons 2 (cons 1 nil)))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (3 2 1)</PRE>
+
+<P><CODE>CONS</CODE> adds a new item to the beginning of a list.  The 
+empty list is equivalent to <CODE>NIL</CODE>,</P>
+
+<PRE WIDTH=80>() <IMG SRC="gifs/equivalent.gif" ALT="eqv" ALIGN="BOTTOM"> NIL</PRE>
+
+<P>so we could also have written:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (cons 1 ())<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (1)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (cons 2 (cons 1 ()))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (2 1)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (cons 3 (cons 2 (cons 1 ())))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (3 2 1)</PRE>
+
+
+<BLOCKQUOTE>
+<P>In case you're wondering, yes, there's something special about 
+<CODE>NIL</CODE>.  <CODE>NIL</CODE> is one of two symbols in Lisp that 
+isn't a keyword but still has itself as its constant value.  <CODE>T</CODE> 
+is the other symbol that works like this.</P>
+
+<P>The fact that <CODE>NIL</CODE> evaluates to itself, combined with 
+<CODE>()</CODE> <IMG SRC="gifs/equivalent.gif" ALT="eqv" ALIGN="BOTTOM"> 
+<CODE>NIL</CODE>, means that you can write <CODE>()</CODE> rather than 
+<CODE>(QUOTE ())</CODE>.  Otherwise, Lisp would have to make an exception 
+to its evaluation rule to handle the empty list.</P>
+</BLOCKQUOTE>
+
+<h3>LIST</h3> 
+
+<P>As you may have noticed, building a list out of nested <CODE>CONS</CODE> 
+forms can be a bit tedious.  The <CODE>LIST</CODE> form does the same 
+thing in a more perspicuous manner:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (list 1 2 3)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (1 2 3)</PRE>
+
+<P><CODE>LIST</CODE> can take any number of arguments.  Because 
+<CODE>LIST</CODE> is a function, it evaluates its arguments:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (list 1 2 :hello "there" 3)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (1 2 :HELLO "there" 3)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (let ((a :this)<br>        (b :and)<br>        (c :that))<br>     (list a 1 b c 2))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (:THIS 1 :AND :THAT 2)</PRE>
+
+<h3>FIRST and REST</h3> 
+
+<P>If you think of a list as being made up of two parts -- the first 
+element and everything else -- then you can retrieve any individual element 
+of a list using the two operations, <CODE>FIRST</CODE> and <CODE>REST</CODE>.</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq my-list (quote (1 2 3 4 5)))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (1 2 3 4 5)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (first my-list)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 1<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (rest my-list)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (2 3 4 5)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (first (rest my-list))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 2<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (rest (rest my-list))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (3 4 5)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (first (rest (rest my-list)))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 3<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (rest (rest (rest my-list)))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (4 5)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (first (rest (rest (rest my-list))))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 4</PRE>
+
+<P>Clearly, chaining together <CODE>FIRST</CODE> and <CODE>REST</CODE> 
+functions could become tedious.  Also, the approach can't work when you 
+need to select a particular element when the program runs, or when the list 
+is of indeterminate length.  We'll look at how to solve these problems in 
+<A HREF="chapter04.html">Chapter 4</A> by defining recursive functions.  
+Later, in <A HREF="chapter13.html">Chapter 13</A>, we'll see the functions 
+that Lisp provides to perform selection on the elements of lists and other 
+sequences.</P>
+
+
+<BLOCKQUOTE>
+<CODE>FIRST</CODE> and <CODE>REST</CODE> are fairly recent additions to 
+Lisp, renaming the equivalent functions <CODE>CAR</CODE> and 
+<CODE>CDR</CODE>, respectively.  <CODE>CAR</CODE> and <CODE>CDR</CODE> got 
+their names from an implementation detail of one of the earliest Lisp 
+implementations, and the names persisted for decades despite the fact that 
+the underlying implementation had long since changed.
+</BLOCKQUOTE>
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter02.html">Chapter 2</a> | <A HREF="chapter03.html">Chapter 3, Introduction</A> |<A HREF="chapter03-03.html">Chapter 3, Lesson 3</A> | Chapter 3, Lesson 4 | <A HREF="chapter03-05.html">Chapter 3, Lesson 5</A> | <a href="chapter04.html">Chapter 4</a> | 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its 
+author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

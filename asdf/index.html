@@ -1,0 +1,193 @@
+<html lang="en">
+<head>
+<title>asdf Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name=description content="asdf Manual">
+<meta name=generator content="makeinfo 4.2">
+<link href="http://www.gnu.org/software/texinfo/" rel=generator-home>
+<!--
+This manual describes asdf, a system definition facility for Common
+Lisp programs and libraries.
+
+<p>asdf Copyright &copy; 2001-2004 Daniel Barlow and contributors
+
+<p>This manual Copyright &copy; 2001-2004 Daniel Barlow and
+contributors
+
+<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+-->
+</head>
+<body>
+<h1>asdf Manual</h1>
+
+<h2>Table of Contents</h2>
+<ul>
+<li><a name="toc_Top"></a>
+    <a href="index.html#Top">asdf: another system definition facility</a>
+<li><a name="toc_Using%20asdf%20to%20load%20systems"></a>
+    <a href="Using-asdf-to-load-systems.html#Using%20asdf%20to%20load%20systems">Using asdf to load systems</a>
+<ul>
+<li><a href="Using-asdf-to-load-systems.html#Using%20asdf%20to%20load%20systems">Setting up asdf</a>
+<li><a href="Using-asdf-to-load-systems.html#Using%20asdf%20to%20load%20systems">Setting up a system to be loaded</a>
+<li><a href="Using-asdf-to-load-systems.html#Using%20asdf%20to%20load%20systems">Loading a system</a>
+</ul>
+<li><a name="toc_Defining%20systems%20with%20defsystem"></a>
+    <a href="Defining-systems-with-defsystem.html#Defining%20systems%20with%20defsystem">Defining systems with defsystem</a>
+<ul>
+<li><a href="The-defsystem-form.html#The%20defsystem%20form">The defsystem form</a>
+<li><a href="A-more-involved-example.html#A%20more%20involved%20example">A more involved example</a>
+<li><a href="The-defsystem-grammar.html#The%20defsystem%20grammar">The defsystem grammar</a>
+<ul>
+<li><a href="The-defsystem-grammar.html#The%20defsystem%20grammar">Serial dependencies</a>
+<li><a href="The-defsystem-grammar.html#The%20defsystem%20grammar">Source location</a>
+</ul>
+</ul>
+<li><a name="toc_The%20object%20model%20of%20asdf"></a>
+    <a href="The-object-model-of-asdf.html#The%20object%20model%20of%20asdf">The object model of asdf</a>
+<ul>
+<li><a href="Operations.html#Operations">Operations</a>
+<ul>
+<li><a href="Predefined-operations-of-asdf.html#Predefined%20operations%20of%20asdf">Predefined operations of asdf</a>
+<li><a href="Creating-new-operations.html#Creating%20new%20operations">Creating new operations</a>
+</ul>
+<li><a href="Components.html#Components">Components</a>
+<ul>
+<li><a href="Common-attributes-of-components.html#Common%20attributes%20of%20components">Common attributes of components</a>
+<ul>
+<li><a href="Common-attributes-of-components.html#Common%20attributes%20of%20components">Name</a>
+<li><a href="Common-attributes-of-components.html#Common%20attributes%20of%20components">Version identifier</a>
+<li><a href="Common-attributes-of-components.html#Common%20attributes%20of%20components">Required features</a>
+<li><a href="Common-attributes-of-components.html#Common%20attributes%20of%20components">Dependencies</a>
+<li><a href="Common-attributes-of-components.html#Common%20attributes%20of%20components">pathname</a>
+<li><a href="Common-attributes-of-components.html#Common%20attributes%20of%20components">properties</a>
+</ul>
+<li><a href="Pre-defined-subclasses-of-component.html#Pre-defined%20subclasses%20of%20component">Pre-defined subclasses of component</a>
+<li><a href="Creating-new-component-types.html#Creating%20new%20component%20types">Creating new component types</a>
+</ul>
+</ul>
+<li><a name="toc_Error%20handling"></a>
+    <a href="Error-handling.html#Error%20handling">Error handling</a>
+<li><a name="toc_Compilation%20error%20and%20warning%20handling"></a>
+    <a href="Compilation-error-and-warning-handling.html#Compilation%20error%20and%20warning%20handling">Compilation error and warning handling</a>
+<li><a name="toc_Getting%20the%20latest%20version"></a>
+    <a href="Getting-the-latest-version.html#Getting%20the%20latest%20version">Getting the latest version</a>
+<li><a name="toc_TODO%20list"></a>
+    <a href="TODO-list.html#TODO%20list">TODO list</a>
+<li><a name="toc_missing%20bits%20in%20implementation"></a>
+    <a href="missing-bits-in-implementation.html#missing%20bits%20in%20implementation">missing bits in implementation</a>
+<li><a name="toc_Inspiration"></a>
+    <a href="Inspiration.html#Inspiration">Inspiration</a>
+<ul>
+<li><a href="Inspiration.html#Inspiration">mk-defsystem (defsystem-3.x)</a>
+<li><a href="Inspiration.html#Inspiration">defsystem-4 proposal</a>
+<li><a href="Inspiration.html#Inspiration">kmp's "The Description of Large Systems", MIT AI Memu 801</a>
+</ul>
+<li><a name="toc_Concept%20Index"></a>
+    <a href="Concept-Index.html#Concept%20Index">Concept Index</a>
+<li><a name="toc_Function%20and%20Class%20Index"></a>
+    <a href="Function-and-Class-Index.html#Function%20and%20Class%20Index">Function and Class Index</a>
+<li><a name="toc_Variable%20Index"></a>
+    <a href="Variable-Index.html#Variable%20Index">Variable Index</a>
+</ul>
+
+
+<p>
+Node:<a name="Top">Top</a>,
+Next:<a rel=next accesskey=n href="Using-asdf-to-load-systems.html#Using%20asdf%20to%20load%20systems">Using asdf to load systems</a>,
+Previous:<a rel=previous accesskey=p href="../index.html#dir">(dir)</a>,
+Up:<a rel=up accesskey=u href="../index.html#dir">(dir)</a>
+<hr><br>
+
+<h2>asdf: another system definition facility</h2>
+
+This manual describes asdf, a system definition facility for Common
+Lisp programs and libraries.
+
+<p>asdf Copyright &copy; 2001-2004 Daniel Barlow and contributors
+
+<p>This manual Copyright &copy; 2001-2004 Daniel Barlow and
+contributors
+
+<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+
+<ul>
+<li><a accesskey=1 href="Using-asdf-to-load-systems.html#Using%20asdf%20to%20load%20systems">Using asdf to load systems</a>: 
+<li><a accesskey=2 href="Defining-systems-with-defsystem.html#Defining%20systems%20with%20defsystem">Defining systems with defsystem</a>: 
+<li><a accesskey=3 href="The-object-model-of-asdf.html#The%20object%20model%20of%20asdf">The object model of asdf</a>: 
+<li><a accesskey=4 href="Error-handling.html#Error%20handling">Error handling</a>: 
+<li><a accesskey=5 href="Compilation-error-and-warning-handling.html#Compilation%20error%20and%20warning%20handling">Compilation error and warning handling</a>: 
+<li><a accesskey=6 href="Getting-the-latest-version.html#Getting%20the%20latest%20version">Getting the latest version</a>: 
+<li><a accesskey=7 href="TODO-list.html#TODO%20list">TODO list</a>: 
+<li><a accesskey=8 href="missing-bits-in-implementation.html#missing%20bits%20in%20implementation">missing bits in implementation</a>: 
+<li><a accesskey=9 href="Inspiration.html#Inspiration">Inspiration</a>: 
+<li><a href="Concept-Index.html#Concept%20Index">Concept Index</a>: 
+<li><a href="Function-and-Class-Index.html#Function%20and%20Class%20Index">Function and Class Index</a>: 
+<li><a href="Variable-Index.html#Variable%20Index">Variable Index</a>:
+
+<p>--- The Detailed Node Listing ---
+
+<p>Defining systems with defsystem
+
+</p><li><a href="The-defsystem-form.html#The%20defsystem%20form">The defsystem form</a>: 
+<li><a href="A-more-involved-example.html#A%20more%20involved%20example">A more involved example</a>: 
+<li><a href="The-defsystem-grammar.html#The%20defsystem%20grammar">The defsystem grammar</a>:
+
+<p>The object model of asdf
+
+</p><li><a href="Operations.html#Operations">Operations</a>: 
+<li><a href="Components.html#Components">Components</a>:
+
+<p>Operations
+
+</p><li><a href="Predefined-operations-of-asdf.html#Predefined%20operations%20of%20asdf">Predefined operations of asdf</a>: 
+<li><a href="Creating-new-operations.html#Creating%20new%20operations">Creating new operations</a>:
+
+<p>Components
+
+</p><li><a href="Common-attributes-of-components.html#Common%20attributes%20of%20components">Common attributes of components</a>: 
+<li><a href="Pre-defined-subclasses-of-component.html#Pre-defined%20subclasses%20of%20component">Pre-defined subclasses of component</a>: 
+<li><a href="Creating-new-component-types.html#Creating%20new%20component%20types">Creating new component types</a>:
+
+<p>properties
+
+</p><li><a href="Pre-defined-subclasses-of-component.html#Pre-defined%20subclasses%20of%20component">Pre-defined subclasses of component</a>: 
+<li><a href="Creating-new-component-types.html#Creating%20new%20component%20types">Creating new component types</a>:
+
+</ul>
+
+</body></html>
+

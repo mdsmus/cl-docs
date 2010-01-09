@@ -1,0 +1,68 @@
+<html lang="en">
+<head>
+<title>Binary stream methods - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Gray-Streams.html#Gray-Streams" title="Gray Streams">
+<link rel="prev" href="Output-stream-methods.html#Output-stream-methods" title="Output stream methods">
+<link rel="next" href="Character-input-stream-methods.html#Character-input-stream-methods" title="Character input stream methods">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Binary-stream-methods"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Character-input-stream-methods.html#Character-input-stream-methods">Character input stream methods</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Output-stream-methods.html#Output-stream-methods">Output stream methods</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Gray-Streams.html#Gray-Streams">Gray Streams</a>
+<hr>
+</div>
+
+<h4 class="subsection">9.2.6 Binary stream methods</h4>
+
+<p>The following generic functions are available for subclasses of
+fundamental-binary-stream:
+
+   <p><a name="Generic_002dFunction-sb_002dgray_003astream_002dread_002dbyte"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-gray:stream-read-byte</b><var> stream<a name="index-sb_002dgray_003astream_002dread_002dbyte-347"></a></var><br>
+<blockquote><p><a name="index-sb_002dgray_003astream_002dread_002dbyte-348"></a>Used by <code>read-byte</code>; returns either an integer, or the symbol <code>:eof</code>
+  if the stream is at end-of-file. 
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dgray_003astream_002dwrite_002dbyte"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-gray:stream-write-byte</b><var> stream integer<a name="index-sb_002dgray_003astream_002dwrite_002dbyte-349"></a></var><br>
+<blockquote><p><a name="index-sb_002dgray_003astream_002dwrite_002dbyte-350"></a>Implements <code>write-byte</code>; writes the integer to the stream and
+  returns the integer as the result. 
+</p></blockquote></div>
+
+   </body></html>
+

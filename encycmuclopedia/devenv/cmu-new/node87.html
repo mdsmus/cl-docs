@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>4.3.1 Undefined Warnings</TITLE>
+<META NAME="description" CONTENT="4.3.1 Undefined Warnings">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1706" HREF="node88.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1704" HREF="node86.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1700" HREF="node86.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1708" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1709" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1707" HREF="node88.html">4.4 Interpreting Error Messages</A>
+<B>Up:</B> <A NAME="tex2html1705" HREF="node86.html">4.3 Compilation Units</A>
+<B> Previous:</B> <A NAME="tex2html1701" HREF="node86.html">4.3 Compilation Units</A>
+<BR> <P>
+<H2><A NAME="SECTION00531000000000000000">4.3.1 Undefined Warnings</A></H2>
+<P>
+<A NAME="9367">&#160;</A>
+Warnings about undefined variables, functions and types are delayed until the
+end of the current compilation unit.  The compiler entry functions
+(<tt>compile</tt>, etc.) implicitly use <tt>with-compilation-unit</tt>, so undefined
+warnings will be printed at the end of the compilation unless there is an
+enclosing <tt>with-compilation-unit</tt>.  In order the gain the benefit of this
+mechanism, you should wrap a single <tt>with-compilation-unit</tt> around the calls
+to <tt>compile-file</tt>, i.e.:
+<BLOCKQUOTE> <PRE>(with-compilation-unit ()
+  (compile-file &quot;file1&quot;)
+  (compile-file &quot;file2&quot;)
+  ...)
+</PRE> </BLOCKQUOTE>
+<P>
+Unlike for functions and types, undefined warnings for variables are
+not suppressed when a definition (e.g. <tt>defvar</tt>) appears after
+the reference (but in the same compilation unit.)  This is because
+doing special declarations out of order just doesn't
+work--although early references will be compiled as special,
+bindings will be done lexically.
+<P>
+Undefined warnings are printed with full source context
+(see section&nbsp;<A HREF="node88.html#errormessages">4.4</A>), which tremendously simplifies the problem
+of finding undefined references that resulted from macroexpansion.
+After printing detailed information about the undefined uses of each
+name, <tt>with-compilation-unit</tt> also prints summary listings of the
+names of all the undefined functions, types and variables.
+<P>
+<b>[Variable]</b><BR> 
+<tt> * undefined-warning-limit*</tt><BR> <BR>
+<P>
+  This variable controls the number of undefined warnings for each
+  distinct name that are printed with full source context when the
+  compilation unit ends.  If there are more undefined references than
+  this, then they are condensed into a single warning:
+  <BLOCKQUOTE> <PRE>Warning: <i>count</i> more uses of undefined function <i>name</i>.
+  </PRE> </BLOCKQUOTE>
+  When the value is <tt>0</tt>, then the undefined warnings are not
+  broken down by name at all: only the summary listing of undefined
+  names is printed.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

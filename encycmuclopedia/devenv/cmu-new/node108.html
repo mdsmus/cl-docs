@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.1.2 Optimization</TITLE>
+<META NAME="description" CONTENT="5.1.2 Optimization">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2060" HREF="node109.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2058" HREF="node106.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2052" HREF="node107.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2062" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2063" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2061" HREF="node109.html">5.1.3 Function Call</A>
+<B>Up:</B> <A NAME="tex2html2059" HREF="node106.html">5.1 Advanced Compiler Introduction</A>
+<B> Previous:</B> <A NAME="tex2html2053" HREF="node107.html">5.1.1 Types</A>
+<BR> <P>
+<H2><A NAME="SECTION00612000000000000000">5.1.2 Optimization</A></H2>
+<P>
+The main barrier to efficient Lisp programs is not that there is no
+efficient way to code the program in Lisp, but that it is difficult to
+arrive at that efficient coding.  Common Lisp is a highly complex
+language, and usually has many semantically equivalent ``reasonable''
+ways to code a given problem.  It is desirable to make all of these
+equivalent solutions have comparable efficiency so that programmers
+don't have to waste time discovering the most efficient solution.
+<P>
+Source level optimization increases the number of efficient ways to
+solve a problem.  This effect is much larger than the increase in the
+efficiency of the ``best'' solution.  Source level optimization
+transforms the original program into a more efficient (but equivalent)
+program.  Although the optimizer isn't doing anything the programmer
+couldn't have done, this high-level optimization is important because:
+<UL>
+<LI> The programmer can code simply and directly, rather than
+  obfuscating code to please the compiler.
+<LI> When presented with a choice of similar coding alternatives, the
+  programmer can chose whichever happens to be most convenient,
+  instead of worrying about which is most efficient.
+</UL>
+<P>
+Source level optimization eliminates the need for macros to optimize
+their expansion, and also increases the effectiveness of inline
+expansion.  See sections <A HREF="node131.html#sourceoptimization">5.4</A> and
+<A HREF="node155.html#inlineexpansion">5.8</A>.
+<P>
+Efficient support for a safer programming style is the biggest
+advantage of source level optimization.  Existing tuned programs
+typically won't benefit much from source optimization, since their
+source has already been optimized by hand.  However, even tuned
+programs tend to run faster under Python because:
+<UL>
+<LI> Low level optimization and register allocation provides modest
+  speedups in any program.
+<LI> Block compilation and inline expansion can reduce function call
+  overhead, but may require some program restructuring.  See sections
+  <A HREF="node155.html#inlineexpansion">5.8</A>, <A HREF="node142.html#localcall">5.6</A> and
+  <A HREF="node148.html#blockcompilation">5.7</A>.
+<LI> Efficiency notes will point out important type declarations that
+  are often missed even in highly tuned programs.
+  See section&nbsp;<A HREF="node185.html#efficiencynotes">5.13</A>.
+<LI> Existing programs can be compiled safely without prohibitive
+  speed penalty, although they would be faster and safer with added
+  declarations.  See section&nbsp;<A HREF="node130.html#typecheckoptimization">5.3.6</A>.
+<LI> The context declaration mechanism allows both space and runtime
+  of large systems to be reduced without sacrificing robustness by
+  semi-automatically varying compilation policy without addition any
+  <tt>optimize</tt> declarations to the source.
+  See section&nbsp;<A HREF="node153.html#contextdeclarations">5.7.5</A>.
+<LI> Byte compilation can be used to dramatically reduce the size of
+  code that is not speed-critical. See section&nbsp;<A HREF="node159.html#bytecompile">5.9</A>
+</UL><HR><A NAME="tex2html2060" HREF="node109.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2058" HREF="node106.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2052" HREF="node107.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2062" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2063" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2061" HREF="node109.html">5.1.3 Function Call</A>
+<B>Up:</B> <A NAME="tex2html2059" HREF="node106.html">5.1 Advanced Compiler Introduction</A>
+<B> Previous:</B> <A NAME="tex2html2053" HREF="node107.html">5.1.1 Types</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

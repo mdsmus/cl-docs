@@ -1,0 +1,76 @@
+<html lang="en">
+<head>
+<title>Functions with idiosyncratic bindings - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="sb_002dposix.html#sb_002dposix" title="sb-posix">
+<link rel="prev" href="Function-Return-Values.html#Function-Return-Values" title="Function Return Values">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Functions-with-idiosyncratic-bindings"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Function-Return-Values.html#Function-Return-Values">Function Return Values</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="sb_002dposix.html#sb_002dposix">sb-posix</a>
+<hr>
+</div>
+
+<h4 class="subsection">15.3.6 Functions with idiosyncratic bindings</h4>
+
+<p>A few functions in sb-posix don't correspond directly to their C
+counterparts.
+
+     <ul>
+<li>getcwd
+<a name="Function-sb_002dposix_003agetcwd"></a>
+
+     <div class="defun">
+&mdash; Function: <b>sb-posix:getcwd</b><var><a name="index-sb_002dposix_003agetcwd-607"></a></var><br>
+<blockquote> <p><a name="index-sb_002dposix_003agetcwd-608"></a>Returns the process's current working directory as a string. 
+</p></blockquote></div>
+     <li>readlink
+<a name="Function-sb_002dposix_003areadlink"></a>
+
+     <div class="defun">
+&mdash; Function: <b>sb-posix:readlink</b><var> pathspec<a name="index-sb_002dposix_003areadlink-609"></a></var><br>
+<blockquote> <p><a name="index-sb_002dposix_003areadlink-610"></a>Returns the resolved target of a symbolic link as a string. 
+</p></blockquote></div>
+     <li>syslog
+<a name="Function-sb_002dposix_003asyslog"></a>
+
+     <div class="defun">
+&mdash; Function: <b>sb-posix:syslog</b><var> priority format &amp;rest args<a name="index-sb_002dposix_003asyslog-611"></a></var><br>
+<blockquote> <p><a name="index-sb_002dposix_003asyslog-612"></a>Send a message to the syslog facility, with severity level
+<code>priority</code>.  The message will be formatted as by <code>cl:format</code> (rather
+than C's printf) with format string <code>format</code> and arguments <code>args</code>. 
+</p></blockquote></div>
+     </ul>
+
+   </body></html>
+

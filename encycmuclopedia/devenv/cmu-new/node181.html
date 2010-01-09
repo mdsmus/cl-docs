@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.12.2 Avoid Unnecessary Consing</TITLE>
+<META NAME="description" CONTENT="5.12.2 Avoid Unnecessary Consing">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2978" HREF="node182.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2976" HREF="node179.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2970" HREF="node180.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2980" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2981" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2979" HREF="node182.html">5.12.3 Complex Argument Syntax</A>
+<B>Up:</B> <A NAME="tex2html2977" HREF="node179.html">5.12 General Efficiency Hints</A>
+<B> Previous:</B> <A NAME="tex2html2971" HREF="node180.html">5.12.1 Compile Your Code</A>
+<BR> <P>
+<H2><A NAME="SECTION006122000000000000000">5.12.2 Avoid Unnecessary Consing</A></H2>
+<P>
+<A NAME="consing">&#160;</A>
+<A NAME="10699">&#160;</A>
+<A NAME="10700">&#160;</A>
+<A NAME="10701">&#160;</A>
+<A NAME="10702">&#160;</A>
+<P>
+Consing is another name for allocation of storage, as done by the
+<tt>cons</tt> function (hence its name.)  <tt>cons</tt> is by no means the
+only function which conses--so does <tt>make-array</tt> and many
+other functions.  Arithmetic and function call can also have hidden
+consing overheads.  Consing hurts performance in the following ways:
+<UL>
+<LI> Consing reduces memory access locality, increasing paging
+  activity.
+<LI> Consing takes time just like anything else.
+<LI> Any space allocated eventually needs to be reclaimed, either by
+  garbage collection or by starting a new <tt>lisp</tt> process.
+</UL>
+<P>
+Consing is not undiluted evil, since programs do things other than
+consing, and appropriate consing can speed up the real work.  It would
+certainly save time to allocate a vector of intermediate results that
+are reused hundreds of times.  Also, if it is necessary to copy a
+large data structure many times, it may be more efficient to update
+the data structure non-destructively; this somewhat increases update
+overhead, but makes copying trivial.
+<P>
+Note that the remarks in section <A HREF="node111.html#efficiencyoverview">5.1.5</A> about the
+importance of separating tuning from coding also apply to consing
+overhead.  The majority of consing will be done by a small portion of
+the program.  The consing hot spots are even less predictable than the
+CPU hot spots, so don't waste time and create bugs by doing
+unnecessary consing optimization.  During initial coding, avoid
+unnecessary side-effects and cons where it is convenient.  If
+profiling reveals a consing problem, <i>then</i> go back and fix the
+hot spots.
+<P>
+See section&nbsp;<A HREF="node169.html#nondescriptor">5.11.2</A> for a discussion of how to avoid number consing
+in Python.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

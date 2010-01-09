@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.10.4 Vectors</TITLE>
+<META NAME="description" CONTENT="5.10.4 Vectors">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2762" HREF="node165.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2760" HREF="node160.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2754" HREF="node163.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2764" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2765" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2763" HREF="node165.html">Bit-Vectors</A>
+<B>Up:</B> <A NAME="tex2html2761" HREF="node160.html">5.10 Object Representation</A>
+<B> Previous:</B> <A NAME="tex2html2755" HREF="node163.html">5.10.3 Arrays</A>
+<BR> <P>
+<H2><A NAME="SECTION006104000000000000000">5.10.4 Vectors</A></H2>
+<P>
+<A NAME="10490">&#160;</A>
+<P>
+Vectors (one dimensional arrays) are particularly useful, since in
+addition to their obvious array-like applications, they are also well
+suited to representing sequences.  In comparison to a list
+representation, vectors are faster to access and take up between two
+and sixty-four times less space (depending on the element type.)  As
+with arbitrary arrays, the compiler needs to know that vectors are not
+complex, so you should use <tt>simple-string</tt> in preference to
+<tt>string</tt>, etc.
+<P>
+The only advantage that lists have over vectors for representing
+sequences is that it is easy to change the length of a list, add to it
+and remove items from it.  Likely signs of archaic, slow lisp code are
+<tt>nth</tt> and <tt>nthcdr</tt>.  If you are using these functions you
+should probably be using a vector.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

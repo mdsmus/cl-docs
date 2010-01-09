@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>4.5.1 Compile Time Type Errors</TITLE>
+<META NAME="description" CONTENT="4.5.1 Compile Time Type Errors">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1834" HREF="node98.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1832" HREF="node96.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1826" HREF="node96.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1836" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1837" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1835" HREF="node98.html">4.5.2 Precise Type Checking</A>
+<B>Up:</B> <A NAME="tex2html1833" HREF="node96.html">4.5 Types in Python</A>
+<B> Previous:</B> <A NAME="tex2html1827" HREF="node96.html">4.5 Types in Python</A>
+<BR> <P>
+<H2><A NAME="SECTION00551000000000000000">4.5.1 Compile Time Type Errors</A></H2>
+<P>
+<A NAME="9510">&#160;</A>
+<A NAME="9511">&#160;</A>
+<P>
+If the compiler can prove at compile time that some portion of the
+program cannot be executed without a type error, then it will give a
+warning at compile time.  It is possible that the offending code would
+never actually be executed at run-time due to some higher level
+consistency constraint unknown to the compiler, so a type warning
+doesn't always indicate an incorrect program.  For example, consider
+this code fragment:
+<BLOCKQUOTE> <PRE>(defun raz (foo)
+  (let ((x (case foo
+             (:this 13)
+             (:that 9)
+             (:the-other 42))))
+    (declare (fixnum x))
+    (foo x)))
+</PRE> </BLOCKQUOTE>
+Compilation produces this warning:
+<BLOCKQUOTE> <PRE>In: DEFUN RAZ
+  (CASE FOO (:THIS 13) (:THAT 9) (:THE-OTHER 42))
+-&gt; LET COND IF COND IF COND IF 
+==&gt;
+  (COND)
+Warning: This is not a FIXNUM:
+  NIL
+</PRE> </BLOCKQUOTE>
+In this case, the warning is telling you that if <tt>foo</tt> isn't any
+of <tt>:this</tt>, <tt>:that</tt> or <tt>:the-other</tt>, then <tt>x</tt> will be
+initialized to <i>nil</i>, which the <tt>fixnum</tt> declaration makes
+illegal.  The warning will go away if <tt>ecase</tt> is used instead of
+<tt>case</tt>, or if <tt>:the-other</tt> is changed to <i>t</i>.
+<P>
+This sort of spurious type warning happens moderately often in the
+expansion of complex macros and in inline functions.  In such cases,
+there may be dead code that is impossible to correctly execute.  The
+compiler can't always prove this code is dead (could never be
+executed), so it compiles the erroneous code (which will always signal
+an error if it is executed) and gives a warning.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:required-argument</tt> <em> </em><BR>
+<P>
+  This function can be used as the default value for keyword arguments
+  that must always be supplied.  Since it is known by the compiler to
+  never return, it will avoid any compile-time type warnings that
+  would result from a default value inconsistent with the declared
+  type.  When this function is called, it signals an error indicating
+  that a required keyword argument was not supplied.  This function is
+  also useful for <tt>defstruct</tt> slot defaults corresponding to
+  required arguments.  See section&nbsp;<A HREF="node117.html#emptytype">5.2.5</A>.
+<P>
+  Although this function is a CMU extension, it is relatively harmless
+  to use it in otherwise portable code, since you can easily define it
+  yourself:
+  <BLOCKQUOTE> <PRE>(defun required-argument ()
+      (error &quot;A required keyword argument was not supplied.&quot;))
+    </PRE> </BLOCKQUOTE>
+<P>
+Type warnings are inhibited when the
+<tt>extensions:inhibit-warnings</tt> optimization quality is <tt>3</tt>
+(see section&nbsp;<A HREF="node101.html#compilerpolicy">4.7</A>.)  This can be used in a local declaration
+to inhibit type warnings in a code fragment that has spurious
+warnings.
+<P>
+<HR><A NAME="tex2html1834" HREF="node98.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1832" HREF="node96.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1826" HREF="node96.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1836" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1837" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1835" HREF="node98.html">4.5.2 Precise Type Checking</A>
+<B>Up:</B> <A NAME="tex2html1833" HREF="node96.html">4.5 Types in Python</A>
+<B> Previous:</B> <A NAME="tex2html1827" HREF="node96.html">4.5 Types in Python</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

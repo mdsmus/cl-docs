@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>6.9.2 Examples of Signal Handlers</TITLE>
+<META NAME="description" CONTENT="6.9.2 Examples of Signal Handlers">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3339" HREF="node211.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3337" HREF="node208.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3333" HREF="node209.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3341" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3342" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3340" HREF="node211.html">Event Dispatching with SERVE-EVENT</A>
+<B>Up:</B> <A NAME="tex2html3338" HREF="node208.html">6.9 Unix Interrupts</A>
+<B> Previous:</B> <A NAME="tex2html3334" HREF="node209.html">6.9.1 Changing Interrupt Handlers</A>
+<BR> <P>
+<H2><A NAME="SECTION00792000000000000000">6.9.2 Examples of Signal Handlers</A></H2>
+<P>
+The following code is the signal handler used by the Lisp system for the
+SIGINT signal.
+<BLOCKQUOTE> <PRE>(defun ih-sigint (signal code scp)
+  (declare (ignore signal code scp))
+  (without-hemlock
+   (with-interrupts
+    (break &quot;Software Interrupt&quot; t))))
+</PRE> </BLOCKQUOTE>
+The <tt>without-hemlock</tt> form is used to make sure that Hemlock is exited before
+a break loop is entered.  The <tt>with-interrupts</tt> form is used to enable
+interrupts because the user may want to generate an interrupt while in the
+break loop.  Finally, break is called to enter a break loop, so the user
+can look at the current state of the computation.  If the user proceeds
+from the break loop, the computation will be restarted from where it was
+interrupted.
+<P>
+The following function is the Lisp signal handler for the SIGTSTP signal
+which suspends a process and returns to the Unix shell.
+<BLOCKQUOTE> <PRE>(defun ih-sigtstp (signal code scp)
+  (declare (ignore signal code scp))
+  (without-hemlock
+   (Unix:unix-kill (Unix:unix-getpid) Unix:sigstop)))
+</PRE> </BLOCKQUOTE>
+Lisp uses this interrupt handler to catch the SIGTSTP signal because it is
+necessary to get out of Hemlock in a clean way before returning to the shell.
+<P>
+To set up these interrupt handlers, the following is recommended:
+<BLOCKQUOTE> <PRE>(with-enabled-interrupts ((Unix:SIGINT #'ih-sigint)
+                          (Unix:SIGTSTP #'ih-sigtstp))
+  &lt;user code to execute with the above signal handlers enabled.&gt;
+)
+</PRE> </BLOCKQUOTE><BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

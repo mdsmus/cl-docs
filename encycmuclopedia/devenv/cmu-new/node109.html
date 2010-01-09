@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.1.3 Function Call</TITLE>
+<META NAME="description" CONTENT="5.1.3 Function Call">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2072" HREF="node110.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2070" HREF="node106.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2064" HREF="node108.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2074" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2075" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2073" HREF="node110.html">5.1.4 Representation of Objects</A>
+<B>Up:</B> <A NAME="tex2html2071" HREF="node106.html">5.1 Advanced Compiler Introduction</A>
+<B> Previous:</B> <A NAME="tex2html2065" HREF="node108.html">5.1.2 Optimization</A>
+<BR> <P>
+<H2><A NAME="SECTION00613000000000000000">5.1.3 Function Call</A></H2>
+<P>
+The sort of symbolic programs generally written in Common Lisp often
+favor recursion over iteration, or have inner loops so complex that
+they involve multiple function calls.  Such programs spend a larger
+fraction of their time doing function calls than is the norm in other
+languages; for this reason Common Lisp implementations strive to make the
+general (or full) function call as inexpensive as possible.  Python
+goes beyond this by providing two good alternatives to full call:
+<UL>
+<LI> Local call resolves function references at compile time,
+  allowing better calling sequences and optimization across function
+  calls.  See section&nbsp;<A HREF="node142.html#localcall">5.6</A>.
+<LI> Inline expansion totally eliminates call overhead and allows
+  many context dependent optimizations.  This provides a safe and
+  efficient implementation of operations with function semantics,
+  eliminating the need for error-prone macro definitions or manual
+  case analysis.  Although most Common Lisp implementations support
+  inline expansion, it becomes a more powerful tool with Python's
+  source level optimization.  See sections <A HREF="node131.html#sourceoptimization">5.4</A>
+  and <A HREF="node155.html#inlineexpansion">5.8</A>.
+</UL>
+<P>
+Generally, Python provides simple implementations for simple uses
+of function call, rather than having only a single calling convention.
+These features allow a more natural programming style:
+<UL>
+<LI> Proper tail recursion.  See section&nbsp;<A HREF="node140.html#tailrecursion">5.5</A>
+<LI> Relatively efficient closures.
+<LI> A <tt>funcall</tt> that is as efficient as normal named call.
+<LI> Calls to local functions such as from <tt>labels</tt> are
+  optimized:
+<UL>
+<LI> Control transfer is a direct jump.
+<LI> The closure environment is passed in registers rather than heap
+  allocated.
+<LI> Keyword arguments and multiple values are implemented more
+  efficiently.
+</UL>
+<P>
+See section&nbsp;<A HREF="node142.html#localcall">5.6</A>.
+</UL><BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

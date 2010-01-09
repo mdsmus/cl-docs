@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.2.10 Type Restrictions</TITLE>
+<META NAME="description" CONTENT="5.2.10 Type Restrictions">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2237" HREF="node123.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2235" HREF="node112.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2229" HREF="node121.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2239" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2240" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2238" HREF="node123.html">5.2.11 Type Style Recommendations</A>
+<B>Up:</B> <A NAME="tex2html2236" HREF="node112.html">5.2 More About Types </A>
+<B> Previous:</B> <A NAME="tex2html2230" HREF="node121.html">The Freeze-Type Declaration</A>
+<BR> <P>
+<H2><A NAME="SECTION006210000000000000000">5.2.10 Type Restrictions</A></H2>
+<P>
+<A NAME="9849">&#160;</A>
+<P>
+Avoid use of the <tt>and</tt>, <tt>not</tt> and <tt>satisfies</tt> types in
+declarations, since type inference has problems with them.  When these
+types do appear in a declaration, they are still checked precisely,
+but the type information is of limited use to the compiler.
+<tt>and</tt> types are effective as long as the intersection can be
+canonicalized to a type that doesn't use <tt>and</tt>.  For example:
+<BLOCKQUOTE> <PRE>(and fixnum unsigned-byte)
+</PRE> </BLOCKQUOTE>
+is fine, since it is the same as:
+<BLOCKQUOTE> <PRE>(integer 0 <i>most-positive-fixnum</i>)
+</PRE> </BLOCKQUOTE>
+but this type:
+<BLOCKQUOTE> <PRE>(and symbol (not (member :end)))
+</PRE> </BLOCKQUOTE>
+will not be fully understood by type interference since the <tt>and</tt>
+can't be removed by canonicalization.
+<P>
+Using any of these type specifiers in a type test with <tt>typep</tt> or
+<tt>typecase</tt> is fine, since as tests, these types can be translated
+into the <tt>and</tt> macro, the <tt>not</tt> function or a call to the
+satisfies predicate.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

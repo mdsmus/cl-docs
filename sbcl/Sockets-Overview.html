@@ -1,0 +1,70 @@
+<html lang="en">
+<head>
+<title>Sockets Overview - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Networking.html#Networking" title="Networking">
+<link rel="next" href="General-Sockets.html#General-Sockets" title="General Sockets">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Sockets-Overview"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="General-Sockets.html#General-Sockets">General Sockets</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Networking.html#Networking">Networking</a>
+<hr>
+</div>
+
+<h3 class="section">13.1 Sockets Overview</h3>
+
+<p>Most of the functions are modelled on the BSD socket API.  BSD sockets
+are widely supported, portably <em>(&ldquo;portable&rdquo; by Unix standards, at least)</em>
+available on a variety of systems, and documented.  There are some
+differences in approach where we have taken advantage of some of the
+more useful features of Common Lisp - briefly:
+
+     <ul>
+<li>Where the C API would typically return -1 and set <code>errno</code>,
+<code>sb-bsd-sockets</code> signals an error. All the errors are subclasses
+of <code>sb-bsd-sockets:socket-condition</code> and generally correspond one
+for one with possible <code>errno</code> values.
+
+     <li>We use multiple return values in many places where the C API would use
+pass-by-reference values.
+
+     <li>We can often avoid supplying an explicit <em>length</em> argument to
+functions because we already know how long the argument is.
+
+     <li>IP addresses and ports are represented in slightly friendlier fashion
+than "network-endian integers".
+
+   </ul>
+
+   </body></html>
+

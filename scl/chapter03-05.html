@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 3, Lesson 5</title> 
+</head> 
+
+<body bgcolor="white" text="black"><h1>Chapter 3 - Essential Lisp in Twelve Lessons</h1> 
+
+<h2><A NAME="lesson-5">Lesson 5 - Naming and Identity</A></h2> 
+
+<h3>A symbol is just a name</h3> 
+
+<P>A symbol is just a name.  It can stand for itself.  This makes it easy 
+to write certain kinds of programs in Lisp.  For example, if you want your 
+program to represent relationships in your family tree, you can make a 
+database that keeps relationships like this:</P>
+
+<PRE WIDTH=80>(father John Barry)
+(son John Harold)
+(father John Susan)
+(mother Edith Barry)
+(mother Edith Susan)
+...</PRE>
+
+<P>Each relationship is a list.  <CODE>(father John Barry)</CODE> means 
+that John is Barry's father.  Every element of every list in our database 
+is a symbol.  Your Lisp program can compare symbols in this database to 
+determine, for example, that Harold is Barry's grandfather.  If you tried 
+to write a program like this in another language -- a language without 
+symbols -- you'd have to decide how to represent the names of family 
+members and relationships, and then create code to perform all the needed 
+operations -- reading, printing, comparison, assignment, etc.  This is all 
+built into Lisp, because symbols are a data type distinct from the objects 
+they might be used to name.</P>
+
+<h3>A symbol is always unique</h3> 
+
+<P>Every time your program uses a symbol, that symbol is 
+<EM>identical</EM> to every other symbol with the same name.  You can use 
+the <CODE>EQ</CODE> test to compare symbols:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (eq 'a 'a)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> T<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (eq 'david 'a)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> NIL<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (eq 'David 'DAVID)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> T<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq zzz 'sleeper)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> SLEEPER<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (eq zzz 'sleeper)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> T</PRE>
+
+<P>Notice that it doesn't matter whether you use uppercase or lowercase 
+letters in your symbol names.  Internally, Lisp translates every alphabetic 
+character in a symbol name to a common case -- usually upper, but you can 
+control this by setting a flag in the Lisp reader.</P>
+
+<BLOCKQUOTE>
+When you learn about packages in <A HREF="chapter03-10.html">Lesson 10</A> 
+(also see <A HREF="chapter31.html">Chapter 31</A>), you can create symbol 
+names that are not identical given the same spelling.  For now, all you 
+need to know is that any symbol spelled with a <CODE>:</CODE> gets special 
+treatment.
+</BLOCKQUOTE>
+
+<h3>A symbol can name a value</h3> 
+
+<P>Although the ability for a Lisp symbol to stand for itself is sometimes 
+useful, a more common use is for the symbol to name a value.  This is the 
+role played by variable and function names in other programming languages.  
+A Lisp symbol most commonly names a value or -- when used as the first 
+element of a function call form -- a function.</P>
+
+<P>What's unusual about Lisp is that a symbol can have a value as a 
+function and a variable at the same time:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq first 'number-one)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> NUMBER-ONE<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (first (list 3 2 1))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 3<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> first<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> NUMBER-ONE</PRE>
+
+<P>Note how <CODE>FIRST</CODE> is used as a variable in the first and last 
+case, and as a function (predefined by Lisp, in this example) in the second 
+case.  Lisp decides which of these values to use based on where the symbol 
+appears.  When the evaluation rule requires a value, Lisp looks for the 
+variable value of the symbol.  When a function is called for, Lisp looks 
+for the symbol's function.</P>
+
+<P>A symbol can have other values besides those it has as a variable or 
+function.  A symbol can also have values for its documentation, property 
+list, and print name.  A symbol's documentation is text that you create to 
+describe a symbol.  You can create this using the 
+<CODE>DOCUMENTATION</CODE> form or as part of certain forms which define a 
+symbol's value.  Because a symbol can have multiple meanings, you can 
+assign documentation to each of several meanings, for example as a function 
+and as a variable.</P>
+
+<P>A property list is like a small database with a single key per entry.  
+We'll look at this use of symbols in <A HREF="chapter03-10.html">Lesson 
+10</A>.</P>
+
+<P>The print name is what Lisp uses to print the symbol.  You normally 
+don't want to change this; if you do, Lisp will print the symbol with a 
+different name than it originally used to read the symbol, which will 
+create a different symbol when later read by Lisp.</P>
+
+<h3>A value can have more than one name</h3> 
+
+<P>A value can have more than one name.  That is, more than one symbol can 
+share a value.  Other languages have pointers that work this way.  Lisp 
+does not expose pointers to the programmer, but does have shared objects.  
+An object is considered identical when it passes the <CODE>EQ</CODE> 
+test.  Consider the following:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq L1 (list 'a 'b 'c))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (A B C)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq L2 L1)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (A B C)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (eq L1 L2)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> T<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq L3 (list 'a 'b 'c))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (A B C)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (eq L3 L1)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> NIL</PRE>
+
+<P>Here, <CODE>L1</CODE> is <CODE>EQ</CODE> to <CODE>L2</CODE> because 
+<CODE>L1</CODE> names the <EM>same value</EM> as <CODE>L2</CODE>.  In other 
+words, the value created by the <CODE>(LIST 'A 'B 'C)</CODE> form has two 
+names, <CODE>L1</CODE> and <CODE>L2</CODE>.  The <CODE>(SETQ L2 L1)</CODE> 
+form says, "Make the value of <CODE>L2</CODE> be the value of 
+<CODE>L1</CODE>." Not a copy of the the value, but the value.  So 
+<CODE>L1</CODE> and <CODE>L2</CODE> <EM>share</EM> the same value -- the 
+list <CODE>(A B C)</CODE> which was first assigned as the value of 
+<CODE>L1</CODE>.</P>
+
+<P><CODE>L3</CODE> also has a list <CODE>(A B C)</CODE> as its value, but 
+it is a <EM>different</EM> list than the one shared by <CODE>L1</CODE> and 
+<CODE>L2</CODE>.  Even though the value of <CODE>L3</CODE> <EM>looks</EM> 
+the same as the value of <CODE>L1</CODE> and <CODE>L2</CODE>, it is a 
+different list because it was created by a different <CODE>LIST</CODE> 
+form.  So <CODE>(EQ L3 L1)</CODE><IMG SRC="gifs/right-arrow.gif" 
+ALT="-&gt;" ALIGN="BOTTOM"><CODE>NIL</CODE> because their values are 
+different lists, each made of the symbols <CODE>A</CODE>, <CODE>B</CODE>, 
+and <CODE>C</CODE>.</P>
+
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter02.html">Chapter 2</a> | <A HREF="chapter03.html">Chapter 3, Introduction</A> | <A HREF="chapter03-04.html">Chapter 3, Lesson 4</A> | Chapter 3, Lesson 5 | <A HREF="chapter03-06.html">Chapter 3, Lesson 6</A> | <a href="chapter04.html">Chapter 4</a> | 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its 
+author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

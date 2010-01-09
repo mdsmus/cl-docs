@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.11.8 Specialized Arrays</TITLE>
+<META NAME="description" CONTENT="5.11.8 Specialized Arrays">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2903" HREF="node176.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2901" HREF="node167.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2895" HREF="node174.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2905" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2906" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2904" HREF="node176.html">5.11.9 Specialized Structure Slots</A>
+<B>Up:</B> <A NAME="tex2html2902" HREF="node167.html">5.11 Numbers</A>
+<B> Previous:</B> <A NAME="tex2html2896" HREF="node174.html">5.11.7 Floating Point Efficiency</A>
+<BR> <P>
+<H2><A NAME="SECTION006118000000000000000">5.11.8 Specialized Arrays</A></H2>
+<P>
+<A NAME="specializedarraytypes">&#160;</A>
+<A NAME="10671">&#160;</A>
+<A NAME="10672">&#160;</A>
+<A NAME="10673">&#160;</A>
+<P>
+Common Lisp supports specialized array element types through the
+<tt>:element-type</tt> argument to <tt>make-array</tt>.  When an array has a
+specialized element type, only elements of that type can be stored in
+the array.  From this restriction comes two major efficiency
+advantages:
+<UL>
+<LI> A specialized array can save space by packing multiple elements
+  into a single word.  For example, a <tt>base-char</tt> array can have
+  4 elements per word, and a <tt>bit</tt> array can have 32.  This
+  space-efficient representation is possible because it is not
+  necessary to separately indicate the type of each element.
+<LI> The elements in a specialized array can be given the same
+  non-descriptor representation as the one used in registers and on
+  the stack, eliminating the need for representation conversions when
+  reading and writing array elements.  For objects with pointer
+  descriptor representations (such as floats and word integers) there
+  is also a substantial consing reduction because it is not necessary
+  to allocate a new object every time an array element is modified.
+</UL>
+<P>
+These are the specialized element types currently supported:
+<BLOCKQUOTE> <PRE>bit
+(unsigned-byte 2)
+(unsigned-byte 4)
+(unsigned-byte 8)
+(unsigned-byte 16)
+(unsigned-byte 32)
+base-character
+single-float
+double-float
+</PRE> </BLOCKQUOTE>
+<BR><IMG WIDTH=104 HEIGHT=24 ALIGN=BOTTOM ALT="change_begin" SRC="change_begin.gif"><BR>
+Some versions of CMU Common Lisp<A NAME="tex2html13" HREF="footnode.html#7005"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> also support the following specialized element types:
+<BLOCKQUOTE> <PRE>(signed-byte 8)
+(signed-byte 16)
+(signed-byte 30)
+(signed-byte 32)
+</PRE> </BLOCKQUOTE>
+<BR><IMG WIDTH=104 HEIGHT=24 ALIGN=BOTTOM ALT="change_end" SRC="change_end.gif"><BR>
+
+Although a <tt>simple-vector</tt> can hold any type of object, <i>t</i>
+should still be considered a specialized array type, since arrays with
+element type <i>t</i> are specialized to hold descriptors.
+<P>
+When using non-descriptor representations, it is particularly
+important to make sure that array accesses are open-coded, since in
+addition to the generic operation overhead, efficiency is lost when
+the array element is converted to a descriptor so that it can be
+passed to (or from) the generic access routine.  You can detect
+inefficient array accesses by enabling efficiency notes,
+see section&nbsp;<A HREF="node185.html#efficiencynotes">5.13</A>.  See section&nbsp;<A HREF="node163.html#arraytypes">5.10.3</A>.
+<P>
+<HR><A NAME="tex2html2903" HREF="node176.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2901" HREF="node167.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2895" HREF="node174.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2905" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2906" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2904" HREF="node176.html">5.11.9 Specialized Structure Slots</A>
+<B>Up:</B> <A NAME="tex2html2902" HREF="node167.html">5.11 Numbers</A>
+<B> Previous:</B> <A NAME="tex2html2896" HREF="node174.html">5.11.7 Floating Point Efficiency</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

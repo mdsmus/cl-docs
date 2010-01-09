@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.14.4 Clock resolution</TITLE>
+<META NAME="description" CONTENT="5.14.4 Clock resolution">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3140" HREF="node195.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3138" HREF="node190.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3132" HREF="node193.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3142" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3143" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3141" HREF="node195.html">5.14.5 Profiling overhead</A>
+<B>Up:</B> <A NAME="tex2html3139" HREF="node190.html">5.14 Profiling</A>
+<B> Previous:</B> <A NAME="tex2html3133" HREF="node193.html">5.14.3 Nested or Recursive </A>
+<BR> <P>
+<H2><A NAME="SECTION006144000000000000000">5.14.4 Clock resolution</A></H2>
+<P>
+Unless you are very lucky, the length of your machine's clock ``tick'' is
+probably much longer than the time it takes simple function to run.  For
+example, on the IBM RT, the clock resolution is 1/50 second.  This means that
+if a function is only called a few times, then only the first couple decimal
+places are really meaningful.
+<P>
+Note however, that if a function is called many times, then the statistical
+averaging across all calls should result in increased resolution.  For example,
+on the IBM RT, if a function is called a thousand times, then a resolution of
+tens of microseconds can be expected.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

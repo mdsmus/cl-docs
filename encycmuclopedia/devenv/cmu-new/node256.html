@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>10.1 DI Exceptional Conditions</TITLE>
+<META NAME="description" CONTENT="10.1 DI Exceptional Conditions">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3946" HREF="node257.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3944" HREF="node255.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3938" HREF="node255.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3948" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3949" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3947" HREF="node257.html">Debug-conditions</A>
+<B>Up:</B> <A NAME="tex2html3945" HREF="node255.html">10 Debugger Programmer's Interface</A>
+<B> Previous:</B> <A NAME="tex2html3939" HREF="node255.html">10 Debugger Programmer's Interface</A>
+<BR> <P>
+<H1><A NAME="SECTION001110000000000000000">10.1 DI Exceptional Conditions</A></H1>
+<P>
+Some of these operations fail depending on the availability debugging
+information.  In the most severe case, when someone saved a Lisp image
+stripping all debugging data structures, no operations are valid.  In
+this case, even backtracing and finding frames is impossible.  Some
+interfaces can simply return values indicating the lack of information,
+or their return values are naturally meaningful in light missing data.
+Other routines, as documented below, will signal
+<tt>serious-condition</tt>s when they discover awkward situations.  This
+interface does not provide for programs to detect these situations other
+than by calling a routine that detects them and signals a condition.
+These are serious-conditions because the program using the interface
+must handle them before it can correctly continue execution.  These
+debugging conditions are not errors since it is no fault of the
+programmers that the conditions occur.
+<P>
+<BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html3950" HREF="node257.html#SECTION001111000000000000000">Debug-conditions</A>
+<LI> <A NAME="tex2html3951" HREF="node258.html#SECTION001112000000000000000">Debug-errors</A>
+</UL>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

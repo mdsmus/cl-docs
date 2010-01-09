@@ -1,0 +1,53 @@
+<html
+  ><head
+    ><title
+      >Macro SIGNALS</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Macro: SIGNALS</h1
+        ><div class="contents"
+          ><h2
+  >Documentation</h2
+><blockquote
+  >Generates a pass if BODY signals a condition of type
+CONDITION. BODY is evaluated in a block named NIL, CONDITION is
+not evaluated.</blockquote
+><h2
+            >Source</h2
+          ><pre class="code"
+            >(defmacro signals (condition-spec
+                   &amp;body body)
+  &quot;Generates a pass if BODY signals a condition of type
+CONDITION. BODY is evaluated in a block named NIL, CONDITION is
+not evaluated.&quot;
+  (let ((block-name (gensym)))
+    (destructuring-bind (condition &amp;optional reason-control reason-args)
+        (ensure-list condition-spec)
+      `(block ,block-name
+         (handler-bind ((,condition (lambda (c)
+                                      (declare (ignore c))
+                                      ;; ok, body threw condition
+                                      (add-result 'test-passed 
+                                                  :test-expr ',condition)
+                                      (return-from ,block-name t))))
+           (block nil
+             ,@body
+             (process-failure
+              :reason ,(if reason-control
+                           `(format nil ,reason-control ,@reason-args)
+                           `(format nil &quot;Failed to signal a ~S&quot; ',condition))
+              :test-expr ',condition)
+             (return-from ,block-name nil)))))))</pre
+          ><a href="../Checks.html#macro_005FIT.BESE.FIVEAM_003A_003ASIGNALS"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

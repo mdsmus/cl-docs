@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.13.4 Verbosity Control</TITLE>
+<META NAME="description" CONTENT="5.13.4 Verbosity Control">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3074" HREF="node190.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3072" HREF="node185.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3068" HREF="node188.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3076" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3077" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3075" HREF="node190.html">5.14 Profiling</A>
+<B>Up:</B> <A NAME="tex2html3073" HREF="node185.html">5.13 Efficiency Notes</A>
+<B> Previous:</B> <A NAME="tex2html3069" HREF="node188.html">5.13.3 Representation Efficiency Notes</A>
+<BR> <P>
+<H2><A NAME="SECTION006134000000000000000">5.13.4 Verbosity Control</A></H2>
+<P>
+<A NAME="10786">&#160;</A>
+<A NAME="10787">&#160;</A>
+<P>
+These variables control the verbosity of efficiency notes:
+<P>
+<b>[Variable]</b><BR> 
+<tt> * efficiency-note-cost-threshold*</tt><BR> <BR>
+<P>
+  Before printing some efficiency notes, the compiler compares the
+  value of this variable to the difference in cost between the chosen
+  implementation and the best potential implementation.  If the
+  difference is not greater than this limit, then no note is printed.
+  The units are implementation dependent; the initial value suppresses
+  notes about ``trivial'' inefficiencies.  A value of <tt>1</tt> will
+  note any inefficiency.
+<P>
+<b>[Variable]</b><BR> 
+<tt> * efficiency-note-limit*</tt><BR> <BR>
+<P>
+  When printing some efficiency notes, the compiler reports possible
+  efficient implementations.  The initial value of <tt>2</tt> prevents
+  excessively long efficiency notes in the common case where there is
+  no type information, so all implementations are possible.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

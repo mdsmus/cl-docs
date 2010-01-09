@@ -1,0 +1,226 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Successful Lisp - Chapter 3, Lesson 2</title> 
+</head>
+
+<body bgcolor="white" text="black">
+<h1>Chapter 3 - Essential Lisp in Twelve Lessons</h1> 
+
+<h2><A NAME="lesson-2">Lesson 2 - Essential Evaluation</A></h2> 
+
+<h3>A form is meant to be evaluated</h3> 
+
+<P>A <A NAME="form">form</A> can be either an <A 
+HREF="chapter03-01.html#atom">atom</A> or a <A 
+HREF="chapter03-01.html#list">list</A>.  The important thing is that the form is 
+meant to be <A NAME="evaluated">evaluated</A>.  Evaluation has a fairly 
+technical definition that we'll gradually expose in this section.</P>
+
+<P>Evaluation is simple if the form is an atom.  Lisp treats the atom as a 
+name, and retrieves the value for the name (if a value exists).  You 
+probably wonder why I'm avoiding the more direct explanation of calling the 
+atom a variable.  The reason is that the atom can have either a variable 
+value or a constant value.  And the atom's value can be constant for a 
+couple of reasons.</P>
+
+<P>A number is an atom.  (Its value is constant for obvious reasons.)  Lisp 
+does not <EM>store</EM> a value for a number -- the number is said to be 
+self-evaluating.</P>
+
+<BLOCKQUOTE>
+We're going to introduce a new term without a complete definition.  For 
+now, think of a <EM>symbol</EM> as an atom that can have a value.  We'll 
+look at symbols in greater detail when we get to <A 
+HREF="chapter03-05.html">Lesson 5</A>.
+</BLOCKQUOTE>
+
+<P>A symbol defined in a <CODE>defconstant</CODE> form has a constant 
+value.  Lisp will store the value as if the atom had a variable value, and 
+add a note to the effect that the value is not allowed to change.</P>
+
+<P>A symbol in the <CODE>KEYWORD</CODE> package is self-evaluating.  We'll 
+look at packages in detail in <A HREF="chapter31.html">Chapter 31</A>.  For 
+now, all you need to know is that a symbol beginning with the <CODE>:</CODE> 
+character (called the package prefix) is a keyword symbol.  Keyword 
+symbols have themselves as their values.</P>
+
+<P>A symbol can get a variable value in many different ways.  Lisp actually 
+keeps several different values for a symbol.  One has the traditional 
+meaning as the value of the symbol taken as a variable.  Another has 
+meaning as the symbol's function.  Still others keep track of the symbol's 
+documentation, its printed representation, and properties that the 
+programmer chooses to associate with the symbol.  We'll explore some of 
+these in more detail in <A HREF="chapter03-05.html">Lesson 5</A>, <A 
+HREF="chapter03-06.html">Lesson 6</A>, and <A HREF="chapter03-07.html">Lesson 7</A>.</P>
+
+<P>If a form is a list, then the first element must be either a symbol or a 
+special form called a lambda expression.  (We won't look at lambda 
+expressions for a while.)  The symbol must name a function.  In Lisp, the 
+<EM>symbols</EM> <CODE>+</CODE>, <CODE>-</CODE>, <CODE>*</CODE>, and 
+<CODE>/</CODE> name the four common arithmetic operations: addition, 
+subtraction, multiplication, and division.  Each of these symbols has an 
+associated function that performs the arithmetic operation.</P>
+
+<P>So when Lisp evaluates the form <CODE>(+ 2 3)</CODE>, it applies the 
+function for addition to the arguments <CODE>2</CODE> and <CODE>3</CODE>, 
+giving the expected result <CODE>5</CODE>.  Notice how the function symbol, 
+<CODE>+</CODE>, precedes its arguments.  This is <EM>prefix</EM> 
+notation.  Any time you see a list, look to its first element to find out 
+what Lisp will do to evaluate the list as a form.</P>
+
+<h3>A function is applied to its arguments</h3> 
+
+<P>Lisp, when given a list to evaluate, treats the form as a function call.  
+We'll be looking a lot at Lisp evaluation from now on, so we'll use some 
+visual aids to identify the input to Lisp and its responses:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> the Lisp prompt precedes input to Lisp<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> result of Lisp evaluation</PRE>
+
+<P>For example:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (+ 4 9)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 13<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (- 5 7)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> -2<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (* 3 9)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 27<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (/ 15.0 2)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 7.5</PRE>
+
+<P>In each case above, the evaluated form is a list.  Its first 
+element is a symbol, which names a function.  The remaining elements are 
+<EM>arguments</EM> of the function.  Here, the arguments are all numbers, 
+and we know that numbers are self-evaluating.</P>
+
+<P>Here are a few more examples:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (atom 123)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> T<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (numberp 123)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> T<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (atom :foo)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> T<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (numberp :foo)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> NIL</PRE>
+
+<P><CODE>ATOM</CODE> and <CODE>NUMBERP</CODE> are predicates.  Predicates 
+return a true or false value.  <CODE>NIL</CODE> is the only false value in 
+Lisp -- everything else is true.  Unless a predicate has a more useful 
+value to return, it conventionally returns <CODE>T</CODE> to mean true.  
+<CODE>ATOM</CODE> returns <code>T</code> if its one argument is a Lisp atom.  
+<CODE>NUMBERP</CODE> returns <code>T</code> if its argument is a number.</P>
+
+<P>To evaluate each of the above forms, Lisp first evaluates the arguments 
+(from left to right), then evaluates the first element to get its function, 
+then applies the function to the arguments.  With only a handful of 
+exceptions, which we'll learn about at the end of this lesson, Lisp always 
+does the same thing to evaluate a list form:</P>
+
+<A NAME="basic-eval"><OL>
+<LI>Evaluate the arguments, from left to right.</LI>
+<LI>Get the function associated with the first element.</LI>
+<LI>Apply the function to the arguments.</LI>
+</OL></A>
+
+<P>Remember that an atom can also be a Lisp form. When given an atom to 
+evaluate, Lisp simply returns its value:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> 17.95<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 17.95<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> :A-KEYWORD<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> :A-KEYWORD<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> *FEATURES*<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (:ANSI-CL :CLOS :COMMON-LISP)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> "Hello, world!"<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> "Hello, world!"<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> WHAT-IS-THIS?<br><IMG SRC="gifs/right-arrow-bar.gif" ALT="-&gt;" ALIGN="BOTTOM"> Error: Unbound variable</PRE>
+
+<P>Numbers and keywords are self-evaluating.  So are strings.  The 
+<CODE>*FEATURES*</CODE> variable is predefined by Lisp -- your system will 
+probably return a different value.</P>
+
+<P>The symbol <CODE>WHAT-IS-THIS?</CODE> doesn't have a value, because it's 
+not predefined by Lisp, and I haven't given it a value.  The system 
+responds with an error message, rather than a value.  We mark the message 
+with <IMG SRC="gifs/right-arrow-bar.gif" ALT="-&gt;|" ALIGN="BOTTOM"> 
+rather than the <IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 
+marker we use for successful evaluations. Your system will probably print 
+a different message.</P>
+
+<h3>A function can return any number of values</h3> 
+
+<P>Sometimes you'd like to have a function return several values. For 
+example, a function which looks up a database entry might return both the 
+desired result and a completion status code. One way to do this is to 
+pass to the function a location for one of the results; this is possible, 
+but <STRONG>very</STRONG> uncommon for a Lisp program.</P>
+
+<P>Another approach creates a single return value to combine both the 
+result and the status code.  Lisp gives you several different ways to do 
+this, including <A HREF="chapter03-10.html#structures">structures</A>.  
+Experienced Lisp programmers don't do this when the created value will just 
+be taken apart into its components and then forgotten, since the composite 
+value then becomes garbage (see <A HREF="chapter29.html">Chapter 29</A>) 
+that eventually slows down the operation of the program.</P>
+
+<P>The right way to return multiple values from a function is to use the 
+<CODE>VALUES</CODE> form.  We'll see <A 
+HREF="chapter03-09.html"><CODE>VALUES</CODE> used in the context of a 
+function</A> in a little while.  For now, let's see what happens when Lisp 
+evaluates a <CODE>VALUES</CODE> form:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (values 1 2 3 :hi "Hello")<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 1<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 2<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 3<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> :HI
+<IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> "Hello"</PRE>
+
+<P>Notice how Lisp returned a value (following the <IMG 
+SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> indicator) for 
+<EM>each</EM> argument to the <CODE>VALUES</CODE> form.  My Lisp system 
+represents this by printing each value on a new line; yours may separate 
+the values some other way.</P>
+
+<h3>Arguments are usually not modified by a function</h3> 
+
+<P>I mentioned earlier that you can pass a location to a function, and have 
+the function change the location's value.  This is a <EM>very</EM> uncommon 
+practice for a Lisp program, even though other languages make it part of their 
+standard repertoire.</P>
+
+<P>You could specify the location to be modified as either a non-keyword 
+symbol or a composite value -- obviously, you can't modify a constant.  If 
+you provide a symbol, then your function must execute code to give the 
+symbol a new value.  If you provide a composite data structure, your 
+function must execute code to change the correct piece of the composite 
+value.  It's harder to write Lisp code to do this, and it's harder to 
+understand programs written this way.  So Lisp programmers usually write 
+functions that get their inputs from parameters, and produce their outputs 
+as the function result.</P>
+
+<h3>Arguments are usually evaluated before function application</h3> 
+
+<P>When Lisp evaluates a function, it always evaluates all the arguments 
+first, as we saw <A HREF="#basic-eval">earlier</A>.  Unfortunately, every 
+rule has exceptions, and this rule is no exception (as we'll soon see)...  
+The problem is not that Lisp doesn't always evaluate a function's 
+arguments, but that not every list form is a function call.</P>
+
+<h3>Arguments are evaluated in left-to-right order</h3> 
+
+<P>When a list form <EM>is</EM> a function call, its arguments are always 
+evaluated in order, from left to right.  As in other programming 
+languages, it's in poor taste to rely on this, but if you absolutely have 
+to rely on the order, it's good to know that Lisp defines it for you.</P>
+
+<h3>Special forms and macros change argument evaluation</h3> 
+
+<P>So if a list form isn't always a function call, what else can it be?  
+There are two cases, but the result is the same: some arguments are 
+evaluated, and some aren't.  Which is which depends upon the form and 
+nothing else.  You'll just have to learn the exceptions.  Fortunately, most 
+Lisp systems will show you the online documentation for any form with just 
+a keystroke or two.</P>
+
+<P>There are two kinds of forms that don't evaluate all of their arguments: 
+special forms and macros.  Lisp predefines a small number of special forms.  
+You can't add your own special forms -- they're primitive features of the 
+language itself.  Lisp also defines quite a few macros.  You can also 
+define your own macros.  Macros in Lisp let you use the full power of the 
+language to add your own features.  Later in this chapter we'll look 
+briefly at <A HREF="chapter03-08.html">how to define simple macros</A>.  In <A 
+HREF="chapter20.html">Chapter 20</A> we'll cover topics surrounding the 
+creation of more complex macros.</P>
+
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter02.html">Chapter 2</a> | <A HREF="chapter03.html">Chapter 3, Introduction</A> | <A HREF="chapter03-01.html">Chapter 3, Lesson 1</A> | Chapter 3, Lesson 2 | <A HREF="chapter03-03.html">Chapter 3, Lesson 3</A> | <a href="chapter04.html">Chapter 4</a> <br>
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its 
+author.  Online distribution is restricted to the author's site.
+</address> 
+</body>
+</html>

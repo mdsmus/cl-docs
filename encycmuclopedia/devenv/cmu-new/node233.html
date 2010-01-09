@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>8.4.1 Local Alien Variables</TITLE>
+<META NAME="description" CONTENT="8.4.1 Local Alien Variables">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3649" HREF="node234.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3647" HREF="node232.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3641" HREF="node232.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3651" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3652" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3650" HREF="node234.html">8.4.2 External Alien Variables</A>
+<B>Up:</B> <A NAME="tex2html3648" HREF="node232.html">8.4 Alien Variables</A>
+<B> Previous:</B> <A NAME="tex2html3642" HREF="node232.html">8.4 Alien Variables</A>
+<BR> <P>
+<H2><A NAME="SECTION00941000000000000000">8.4.1 Local Alien Variables</A></H2>
+<P>
+<b>[Macro]</b><BR> 
+<tt> alien: with-alien</tt> <em> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i>(<i>name</i> <i>type</i> 
+      <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>initial-value</i></i></i><IMG WIDTH=5 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17168" SRC="img6.gif">)</i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i>form</i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></em><BR>
+<P>
+  This macro establishes local alien variables with the specified
+  Alien types and names for dynamic extent of the body.  The variable
+  <i>names</i> are established as symbol-macros; the bindings have
+  lexical scope, and may be assigned with <tt>setq</tt> or <tt>setf</tt>.
+  This form is analogous to defining a local variable in C: additional
+  storage is allocated, and the initial value is copied.
+<P>
+  <tt>with-alien</tt> also establishes a new scope for named structures
+  and unions.  Any <i>type</i> specified for a variable may contain
+  name structure or union types with the slots specified.  Within the
+  lexical scope of the binding specifiers and body, a locally defined
+  structure type <i>foo</i> can be referenced by its name using:
+<BLOCKQUOTE> <PRE>(struct foo)
+</PRE> </BLOCKQUOTE><BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

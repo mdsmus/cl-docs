@@ -1,0 +1,70 @@
+<html lang="en">
+<head>
+<title>Foreign Types and Lisp Types - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Foreign-Types.html#Foreign-Types" title="Foreign Types">
+<link rel="prev" href="Defining-Foreign-Types.html#Defining-Foreign-Types" title="Defining Foreign Types">
+<link rel="next" href="Foreign-Type-Specifiers.html#Foreign-Type-Specifiers" title="Foreign Type Specifiers">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Foreign-Types-and-Lisp-Types"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Foreign-Type-Specifiers.html#Foreign-Type-Specifiers">Foreign Type Specifiers</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Defining-Foreign-Types.html#Defining-Foreign-Types">Defining Foreign Types</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Foreign-Types.html#Foreign-Types">Foreign Types</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">7.2.2 Foreign Types and Lisp Types</h4>
+
+<p>The foreign types form a subsystem of the SBCL type system.  An
+<code>alien</code> type specifier provides a way to use any foreign type as a
+Lisp type specifier.  For example,
+
+<pre class="lisp">     (typep <var>foo</var> '(alien (* int)))
+</pre>
+   <p>can be used to determine whether <var>foo</var> is a pointer to a foreign
+<code>int</code>. <code>alien</code> type specifiers can be used in the same ways
+as ordinary Lisp type specifiers (like <code>string</code>.) Alien type
+declarations are subject to the same precise type checking as any
+other declaration.  See <a href="Precise-Type-Checking.html#Precise-Type-Checking">Precise Type Checking</a>.
+
+   <p>Note that the type identifiers used in the foreign type system overlap
+with native Lisp type specifiers in some cases.  For example, the type
+specifier <code>(alien single-float)</code> is identical to
+<code>single-float</code>, since foreign floats are automatically converted
+to Lisp floats.  When <code>type-of</code> is called on an alien value that
+is not automatically converted to a Lisp value, then it will return an
+<code>alien</code> type specifier.
+
+   </body></html>
+

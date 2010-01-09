@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 26</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 26 - Put on a Happy Face: Interface Builders</h1> 
+
+<P>Graphical user interfaces (GUIs) have changed the way that people use 
+computers.  High-end Lisp systems had sophisticated GUIs as far back
+as the late 1970s, with low-cost consumer computers adopting GUIs
+in 1984.  Modern Lisp systems include tools to build GUIs using both
+platform-specific and platform-independent techniques.  The former 
+can take advantage of proprietary features of the platform's user
+interface, while the latter provide an abstraction that is portable
+across multiple platforms.
+
+<h2>Event-driven interfaces</h2>
+
+<p><i>Events</i> are key to the operation of all GUIs. An event is a
+gesture initiated by the user: typically a keystroke, mouse movement
+or click, menu selection, pen stroke, or speech utterance. An event
+can occur at any time. This means that the program must be prepared
+to handle any event at any time in some meaningful way. The
+interpretation of an event will depend upon the current state of the
+program, e.g. what windows are visible on the screen and what each
+window is displaying. An event may change the state of the program
+and therefore affect the interpretation of later events.  But in all
+cases, the program must be prepared to handle receipt of any event at
+any time.
+
+<p>Event-driven programs have a control structure known as an 
+<em>event loop</em>.  The event loop receives events and dispatches
+them to some part of the program, normally the portion of the program
+that is in control of the current <em>focus</em>, or site of user
+interest, among all of the information currently displayed by the
+program.
+
+<h2>Graphical programming</h2>
+
+<p>The next, and more obvious, characteristic of graphical user interfaces
+is that they rely entirely upon graphics.  Even text is displayed as a 
+graphical image.  Of course, it would be incredibly painful (and silly)
+for every programmer to write programs to render text, lines, circles,
+boxes, menus, controls, etc.  The operating system provides a
+collection of library routines to draw graphical objects, windows, and
+controls; the Lisp environment typically provides wrappers (often by
+use of the Lisp <a href="chapter25.html">foreign function interface</a>)
+around the graphics routines so that they may be called from within
+Lisp.
+
+<p>The availability and implementation details of graphics routines
+vary widely from platform to platform. You should consult the
+documentation for your Lisp implementation to learn about how it
+supports graphics.
+
+<h2>Example: MCL's Interface Toolkit</h2>
+
+<p>Macintosh Common Lisp (MCL) provides access to the underlying graphical
+toolkit of the Macintosh OS in two ways.  MCL provides a high-level
+interface for presenting windows, menus, controls, text, and graphics.
+This interface is at a higher level of abstraction than the underlying
+OS primitives; it separates the programmer from concerns about memory
+allocation, record layout, and pointers.  MCL also provides a low-level
+interface that lets you program with the underlying OS routines (not
+just for graphics, but for the entire OS).  When you use the low-level
+interface, you are faced with all the concerns that dog a C or Pascal
+programmer -- only the syntax is different.
+
+<p>In addition to the programmer's interfaces to the Macintosh OS,
+MCL also provides a tool for visual construction of user interface
+elements. The Interface Toolkit lets you design windows and dialogs
+by simply specifying a particular type of new window, then dropping
+user interface elements into the window. The Interface Toolkit also
+provides an editor for menus. When you are satisfied with the
+appearance of your new window or menu, the Interface Toolkit will
+emit the Lisp code needed to reconstruct it from scratch.
+
+<h3>Creating a simple dialog</h3> 
+
+<p>MCL's Interface Toolkit allows you to create dialogs and menus.
+To create a dialog, you first select a window style.
+
+<p><img src="gifs/mcl-ift-create.gif"> 
+
+<p>Here, I've chosen to create a simple document window.
+
+<p><img src="gifs/mcl-ift-blank.gif"> 
+
+<p>A palette of controls appears near the new window.  From this
+palette you can drag and drop controls to create the desired
+window layout.
+
+<p><img src="gifs/mcl-ift-pallete.gif"> 
+
+<p>Each control dragged onto the window can be moved and resized.
+You can also edit attributes of the control, as shown here for
+a button control.
+
+<p><img src="gifs/mcl-ift-button-edit.gif"> 
+
+<p>Less than a minute later, I've finished this simple dialog.
+I can now use a menu command to dump the Lisp source text
+which will recreate this dialog.
+
+<p><img src="gifs/mcl-ift-finished.gif"> 
+
+<h3>Editing a menu</h3> 
+
+<p>The Interface Toolkit also lets you create and edit menubars,
+menus, and menu items.  You begin with the menubar editor.
+ 
+<p><img src="gifs/mcl-ift-menubar-editor.gif"> 
+
+<p>Here, I've chosen to edit MCL's Edit menu.
+
+<p><img src="gifs/mcl-ift-menu-editor.gif"> 
+
+<p>While you're editing menus, you may not have access to an
+Edit menu and its Cut, Copy, Paste, and Clear commands.
+MCL provides a palette with these controls during menu
+editing.
+
+<p><img src="gifs/mcl-ift-edit-palette.gif"> 
+
+<h2>Platform-independent interfaces</h2>
+
+<p>A platform-independent interface abstracts away details of the
+underlying operating system's GUI, providing its own event loop,
+windows, menus, and controls. When you write a GUI using these
+abstractions, the code can be moved to any other Lisp platform
+(assuming availability of the platform-independent interface)
+through recompilation.
+
+<p>CLIM is a commercially-supported platform-independent user 
+interface available on all Lisp platforms.  CLIM 2.0 even preserves
+the native look and feel of each platform by mapping platform-independent
+requests for windows, menus, and controls onto calls to the native OS
+graphics services.
+
+<p>Garnet is a free, unsupported platform-independent user interface
+that is available for most Lisp platforms.  Source code is freely 
+available, so you could port Garnet to a new platform if you are so
+inclined.  Unlike CLIM 2.0, Garnet uses its own definitions for windows,
+menus, and controls; this means that a Garnet GUI will look the same
+regardless of platform.
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter25.html">Chapter 25</a> | Chapter 26 | <a href="chapter27.html">Chapter 27</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

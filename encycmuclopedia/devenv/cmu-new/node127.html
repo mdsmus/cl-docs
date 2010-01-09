@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.3.3 Global Function Type Inference</TITLE>
+<META NAME="description" CONTENT="5.3.3 Global Function Type Inference">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2301" HREF="node128.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2299" HREF="node124.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2293" HREF="node126.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2303" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2304" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2302" HREF="node128.html">5.3.4 Operation Specific Type </A>
+<B>Up:</B> <A NAME="tex2html2300" HREF="node124.html">5.3 Type Inference</A>
+<B> Previous:</B> <A NAME="tex2html2294" HREF="node126.html">5.3.2 Local Function Type </A>
+<BR> <P>
+<H2><A NAME="SECTION00633000000000000000">5.3.3 Global Function Type Inference</A></H2>
+<P>
+<A NAME="functiontypeinference">&#160;</A>
+<A NAME="9908">&#160;</A>
+<P>
+As described in section <A HREF="node118.html#functiontypes">5.2.6</A>, a global function type
+(<A NAME="9909">&#160;</A><tt>ftype</tt>) declaration places implicit type assertions on the
+call arguments, and also guarantees the type of the return value.  So
+wherever a call to a declared function appears, there is no doubt as
+to the types of the arguments and return value.  Furthermore,
+Python will infer a function type from the function's definition if
+there is no <tt>ftype</tt> declaration.  Any type declarations on the
+argument variables are used as the argument types in the derived
+function type, and the compiler's best guess for the result type of
+the function is used as the result type in the derived function type.
+<P>
+This method of deriving function types from the definition implicitly assumes
+that functions won't be redefined at run-time.  Consider this example:
+<BLOCKQUOTE> <PRE>(defun foo-p (x)
+  (let ((res (and (consp x) (eq (car x) 'foo))))
+    (format t &quot;It is &nbsp;:[not &nbsp;;&nbsp;]foo.&quot; res)))
+<P>
+(defun frob (it)
+  (if (foo-p it)
+      (setf (cadr it) 'yow!)
+      (1+ it)))
+</PRE> </BLOCKQUOTE>
+<P>
+Presumably, the programmer really meant to return <tt>res</tt> from
+<tt>foo-p</tt>, but he seems to have forgotten.  When he tries to call
+do <tt>(frob (list 'foo nil))</tt>, <tt>frob</tt> will flame out when
+it tries to add to a <tt>cons</tt>.  Realizing his error, he fixes
+<tt>foo-p</tt> and recompiles it.  But when he retries his test case, he
+is baffled because the error is still there.  What happened in this
+example is that Python proved that the result of <tt>foo-p</tt> is
+<tt>null</tt>, and then proceeded to optimize away the <tt>setf</tt> in
+<tt>frob</tt>.
+<P>
+Fortunately, in this example, the error is detected at compile time
+due to notes about unreachable code (see section&nbsp;<A HREF="node136.html#deadcodenotes">5.4.5</A>.)
+Still, some users may not want to worry about this sort of problem
+during incremental development, so there is a variable to control
+deriving function types.
+<P>
+<b>[Variable]</b><BR> 
+<tt> extensions:*derive-function-types*</tt><BR> <BR>
+<P>
+  If true (the default), argument and result type information derived
+  from compilation of <tt>defun</tt>s is used when compiling calls to
+  that function.  If false, only information from <tt>ftype</tt>
+  proclamations will be used.
+<P>
+<HR><A NAME="tex2html2301" HREF="node128.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2299" HREF="node124.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2293" HREF="node126.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2303" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2304" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2302" HREF="node128.html">5.3.4 Operation Specific Type </A>
+<B>Up:</B> <A NAME="tex2html2300" HREF="node124.html">5.3 Type Inference</A>
+<B> Previous:</B> <A NAME="tex2html2294" HREF="node126.html">5.3.2 Local Function Type </A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

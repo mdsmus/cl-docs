@@ -1,0 +1,262 @@
+<html><head><title>CORBA in five minutes</title>
+<style type="text/css">
+div.orbit {  color: DarkGreen }
+</style>
+<body bgcolor=white>
+<h1>CORBA in five minutes</h1>
+
+<p><i>$Id: index.html,v 1.8 2000/05/03 23:52:14 dan Exp $</i> 
+- still soliciting suggestions
+
+<p><b>New:</b> See also <a href="gnome-lisp.html">CORBA, GNOME, CMUCL,
+and other macabre tales</a>, if you're {man,woman,small furry thing
+from Alpha Centauri} enough
+
+<p> I've read far too many unhelpful guides to CORBA.  If I see
+another explanation of why it's cool because it means you don't need
+to understand anything, or what network transparency is, or any more
+meaningless block diagrams depicting an ORB and a skeleton and some
+stubs, I will do Something Bad.
+
+<p> These are my notes on how I believe it really works.  Caveat: I don't
+<i>know</i> either.  If I did, I'd probably write stultifyingly dull
+incomprehensible stuff just like all the people that do.  Note also
+that wherever I've said "X happens" there are probably a billion other
+things that could possibly happen according to the standard.  OMG
+standards are defined before being widely implemented, though, so
+whether people are actually <i>doing</i> any of these billion other
+things is another matter.  The cynical would substitute "instead of"
+for "before" in the preceding sentence.
+
+<div class=orbit>
+<p>My ongoing CORBA experiments are mostly related to calling GNOME
+from Lisp, because that's what I want to be able to do.  Paragraphs in
+green - like this one - relate to implementational things to do with
+CLORB, or ORBit, or GNOME, or GNU/Linux, and may not apply in other
+circumstances
+</p></div>
+
+<h2> IIOP</h2>
+
+<p> We're talking about a network protocol.  GIOP is the general
+protocol, and IIOP is the IP version.  It runs over TCP.
+
+<p> CORBA servers are programs with an OA (Object Adaptor) linked into
+them.  This is a library that listens to the network for you.  CORBA
+clients are programs that know how to talk IIOP: typically they do
+this by having an ORB (Object Request Broker) and stubs linked into
+them - as a CORBA application user, you call the stub.
+
+<div class=orbit>
+<p> A patch is available for tcpdump to decode the IIOP wire protocol 
+- look in the <tt>patches</tt> directory of the ORBit distribution.
+<a href="http://ethereal.zing.org">ethereal</a> also knows how 
+to show them.
+</p>
+<p>Some ORBit installations come set up to use Unix-domain sockets
+instead of TCP.  I don't know how you get anything else to talk on a
+unix socket, but you can make it revert to TCP by editing <tt>/etc/orbitrc</tt>
+in the obvious fashion.
+</p>
+</div>
+
+<h2> IDL</h2>
+
+<p>The calls that you can make of a server are described in IDL
+(Interface Description Language).  All the guides go into extensive
+detail about what IDL is, so I won't.  It lets you define interfaces
+(objects with attributes and operations, but no specification of the
+object implementation), compound types, exceptions, and a few other
+bits.  It looks like C++ or Java inasmuch as it has lots of curly
+braces.
+
+<p> CORBA implementations will typically come with IDL compilers -
+programs that take an IDL file and generate glue code (stubs and
+skeletons for client and server respectively) so that you can
+make/receive these calls using syntax that looks like a method call of
+an object native to your language.  Obviously this will vary according
+to your choice of implementation language: the OMG have standardised
+the translations from IDL to most common languages, so that your C++
+CORBA client can work with many different ORBs, if relinked against
+the appropriate stubs for each of them.</p>
+
+<p> Implementations are permitted to short-circuit bits of this
+process if they think you'll not notice.  So if you write a C server
+and client and IDL that describes the interface between them, a CORBA
+implementation could legitimately stick the two together in the same
+memory image and not go anywhere near the network.  I mention this
+because everyone seems to think it's really great - but I won't go
+into it because, basically, what's the point?  If you're going to
+write everything in the same language, all the fun goes away.
+
+<h2>IOR</h2>
+
+<p> So that's the interface, now how do we find the implementation?
+In a normal network protocol, we'd use something like a hostname/port,
+or a host address/port, or one of those new-fangled URL things.  CORBA
+has a concept of an IOR (Interoperable Object Reference), which is
+basically the same thing fed through something that looks like Base64
+encoding - but can't actually possibly be anywhere near as
+information-dense, because a typical one is about 200 bytes long.
+Luckily it doesn't matter that these things are basically opaque,
+because CORBA is entirely wondrous and never goes wrong.  Because
+you're likewise infallible, it will never ever happen that you kill
+and restart a server process and fall to wondering whether your
+stringified IOR is a reference to the old or the new one
+
+<pre>
+IOR:010400002800000049444c3a6f6d672e6f72672f436f734e616d696e672f4e616d696e67436f6e746578743a312e300001000000000000002c0000000101000014000000746e696e6b7061642e74656c656e742e6e6574004f060000080000000000000001000000
+</pre>
+
+<p><i>An IOR</i></p>
+
+<p> Suppose you have an object which can be talked to using IIOP.  Its
+IOR encodes - among other things, like protocol version numbers - the
+hostname and port to which you can send IIOP messages that make that
+object do things, and an opaque <tt>object_key</tt>, which
+distinguishes different objects so you can have a single process serve
+them all
+
+<p> If you're a half-decent unix programmer you're probably asking how
+it deals with access control.  Security is an issue, and as far as I
+can determine, not one for which any widely implemented standards are
+available.  So, firewall it.  
+
+<p> There is a lovely wonderful standard for how you get these
+unwieldy monsters from place to place, and it's so easy to use that
+all the sample programs in the "intro to CORBA" guides don't - instead
+they just have their servers print them to stdout or a file, and the
+clients read them back.
+
+<h2>CosNaming</h2>
+
+<p>CosNaming is that service.  Or, to be more accurate, the
+omg.org.CosNaming IDL module describes the interface to such a
+service.  You still need - spot the bootstrapping issue - an IOR for an
+implementation of CosNaming, but allegedly that's fairly standard.
+
+<p>When you write a server, you need to call your CosNaming object to
+register the server against a given name.  Then when you write a
+client, you can look at the name server to find out where to send
+messages.  Note that this means that both your client and server have
+to be looking at the same name server.
+
+<p>In traditional CORBA terms, the naming service for your ORB is in
+the list of initial services.  So you get an ORB object using
+<tt>CORBA_ORB_init</tt> (this is a function call in your language
+bindings, not a CORBA call itself) then call
+<tt>resolve_initial_reference("NameService")</tt> on it.
+
+<div class=orbit>
+<p>In ORBit terms, that apparently doesn't work yet.  The name server
+is provided by a program called <tt>orbit-name-server</tt>, and you
+can get its IOR by starting it and seeing what it prints.  Unless,
+that is, you're expecting to interoperate with GNOME.  If you have all
+the GNOME stuff running (I think that the panel is the necessary bit,
+but I have the whole works started from gdm, so don't expect me to
+know) there will be a process called <tt>gnome-name-service</tt>
+already running, and you can get its IOR from an X property:
+
+<pre>
+$ xprop -root | grep GNOME_NAME  # find the window id
+GNOME_NAME_SERVER(WINDOW): window id # 0x1800001
+$ xprop -id 0x1800001 | grep IOR # query that window for the IOR    
+GNOME_NAME_SERVER_IOR(STRING) = "IOR:016a17402800000049444c3a6f6d672e6f72672f436f734e616d696e672f4e616d696e67436f6e746578743a312e300001000000000000002c0000000101000014000000746e696e6b7061642e74656c656e742e6e6574005a050000080000000000000001000000"
+</pre>
+
+<p>Don't expect this to work immediately: Gnome also uses a
+Principal-based security system which basically involves passing a
+cookie (also available as an X property, or as
+<tt>/tmp/orbit-<i>username</i>/cookie</tt>) along with all your
+requests.  More on this in <a href="gnome-lisp.html">gnome-lisp.html</a>
+if you can cope with the implementation language.
+
+</div>
+
+<h2>DII and DSI</h2>
+
+<p> DII is a more `dynamic' way to invoke a CORBA request: instead of
+being stuck with a stub which by its nature can only represent things
+that were known at compile time, you can programmatically assemble all
+your arguments at runtime.  DSI is the reverse operation for servers.
+
+<p> Your stubs and skeletons could legitimately be implemented using
+D[SI]I, or then again they might not be.  Unless you like writing
+interpreters, there's probably not that much else interesting to say
+about this,
+
+<h2>IR</h2>
+
+<p> IR here stands for Interface Repository.  It could potentially
+also stand for Implementation Repository, but here we're concentrating
+on things which are actually used, so we'll stick with interfaces.
+
+<p> An IR is a bunch of objects which describe the interfaces of other
+objects.  The classes used have names like InterfaceDef, OperationDef
+and ModuleDef: the containment graph looks pretty similar to an IDL
+file describing the same interface.
+
+<p> Unfortunately, information doesn't magically filter into an IR:
+somebody has to put it there manually.  A nice IR would be one that
+started up with the knowledge of where to find vast amounts of IDL
+file and read them in on the fly when asked for them; I haven't seen
+it yet.
+
+<div class=orbit>
+<p>Some ORBs come with a program that takes an IDL file and creates IR
+objects from it.  ORBit has only even <i>had</i> an IR for about one
+released version and doesn't yet have such luxuries.  In fact, as of
+0.5.0 the IR (<tt>orbit-ird</tt>) isn't finished anyway.  The CVS
+version is a lot further on but still has issues.
+</p>
+
+<p>It's also a scarily opaque thing: you put data in and you're never
+quite sure what happened to it.  Two tips: (a) check the return
+values; it will often fail and return <tt>NULL</tt> without raising an
+exception, (b) start it with <tt>-ORBDebugLevel=255 -ORBDebugModules=16</tt>
+and keep an eye on stderr.
+
+<p>Another random note about the state of ORBit that doesn't fit here
+but doesn't fit anywhere else either: it doesn't support the
+<tt>_interface</tt> attribute on Object.  This has recently caused me
+some pain.
+
+<p>In the meantime if you want a reliable IR there's nothing stopping
+you using someone else's.  MICO is libre; ORBacus (formerly
+OmniBroker) is gratis.  MICO apparently comes with a graphical IR
+browser, but I haven't found it yet - also, you need to hack the
+source and rebuild if you want to find out the IR's IOR.  ORBacus
+comes with <tt>irfeed</tt>, one of the aforementioned "put this IDL
+file in the IR, thanks" programs.  Both come with programs called
+<tt>idl</tt>, which is a bit poor IMO.
+
+</div>
+
+<h2>Coming soon</h2>
+
+<p>Object activation
+
+<p>More links.  Better links.
+
+<h2>Where next</h2>
+
+<ul>
+<li>Language mappings and the core CORBA/IIOP definition are available
+on the <a href="http://www.omg.org">OMG</a> site.  The full thing is
+pretty daunting: I settled for printing the C and Common Lisp
+mappings, and the IR chapter of the core spec.  I'll do the rest when
+i understand what I've got
+
+<li>Mathieu Lacage and Dirk-Jan C Minnema have put together a document
+entitled "GNOME &amp; CORBA", which you should be able to find
+somewhere at <a
+href="http://developer.gnome.org">developer.gnome.org</a> Apart from
+the pointless block diagram, the rest of this is actually very useful.
+Read it.
+
+<li>Download and build all the ORBs you can find and attempt to stop
+them all from trashing each others' include files.  Get the
+development version of ORBit from GNOME CVS and spend an afternoon
+swearing at its popt dependency.
+
+<li>

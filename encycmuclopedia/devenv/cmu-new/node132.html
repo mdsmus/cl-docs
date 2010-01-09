@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.4.1 Let Optimization</TITLE>
+<META NAME="description" CONTENT="5.4.1 Let Optimization">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2367" HREF="node133.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2365" HREF="node131.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2359" HREF="node131.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2369" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2370" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2368" HREF="node133.html">5.4.2 Constant Folding</A>
+<B>Up:</B> <A NAME="tex2html2366" HREF="node131.html">5.4 Source Optimization</A>
+<B> Previous:</B> <A NAME="tex2html2360" HREF="node131.html">5.4 Source Optimization</A>
+<BR> <P>
+<H2><A NAME="SECTION00641000000000000000">5.4.1 Let Optimization</A></H2>
+<P>
+<A NAME="letoptimization">&#160;</A>
+<P>
+<A NAME="10009">&#160;</A> <A NAME="10010">&#160;</A>
+<P>
+The primary optimization of let variables is to delete them when they
+are unnecessary.  Whenever the value of a let variable is a constant,
+a constant variable or a constant (local or non-notinline) function,
+the variable is deleted, and references to the variable are replaced
+with references to the constant expression.  This is useful primarily
+in the expansion of macros or inline functions, where argument values
+are often constant in any given call, but are in general non-constant
+expressions that must be bound to preserve order of evaluation.  Let
+variable optimization eliminates the need for macros to carefully
+avoid spurious bindings, and also makes inline functions just as
+efficient as macros.
+<P>
+A particularly interesting class of constant is a local function.
+Substituting for lexical variables that are bound to a function can
+substantially improve the efficiency of functional programming styles,
+for example:
+<BLOCKQUOTE> <PRE>(let ((a #'(lambda (x) (zow x))))
+  (funcall a 3))
+</PRE> </BLOCKQUOTE>
+effectively transforms to:
+<BLOCKQUOTE> <PRE>(zow 3)
+</PRE> </BLOCKQUOTE>
+This transformation is done even when the function is a closure, as in:
+<BLOCKQUOTE> <PRE>(let ((a (let ((y (zug)))
+           #'(lambda (x) (zow x y)))))
+  (funcall a 3))
+</PRE> </BLOCKQUOTE>
+becoming:
+<BLOCKQUOTE> <PRE>(zow 3 (zug))
+</PRE> </BLOCKQUOTE>
+<P>
+A constant variable is a lexical variable that is never assigned to,
+always keeping its initial value.  Whenever possible, avoid setting
+lexical variables--instead bind a new variable to the new value.
+Except for loop variables, it is almost always possible to avoid
+setting lexical variables.  This form:
+<BLOCKQUOTE> <PRE>(let ((x (f x)))
+  ...)
+</PRE> </BLOCKQUOTE>
+is <i>more</i> efficient than this form:
+<BLOCKQUOTE> <PRE>(setq x (f x))
+...
+</PRE> </BLOCKQUOTE>
+Setting variables makes the program more difficult to understand, both
+to the compiler and to the programmer.  Python compiles assignments
+at least as efficiently as any other Common Lisp compiler, but most let
+optimizations are only done on constant variables.
+<P>
+Constant variables with only a single use are also optimized away,
+even when the initial value is not constant.<A NAME="tex2html9" HREF="footnode.html#3472"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>  For example, this expansion of
+<tt>incf</tt>:
+<BLOCKQUOTE> <PRE>(let ((#:g3 (+ x 1)))
+  (setq x #:G3))
+</PRE> </BLOCKQUOTE>
+becomes:
+<BLOCKQUOTE> <PRE>(setq x (+ x 1))
+</PRE> </BLOCKQUOTE>
+The type semantics of this transformation are more important than the
+elimination of the variable itself.  Consider what happens when
+<tt>x</tt> is declared to be a <tt>fixnum</tt>; after the transformation,
+the compiler can compile the addition knowing that the result is a
+<tt>fixnum</tt>, whereas before the transformation the addition would
+have to allow for fixnum overflow.
+<P>
+Another variable optimization deletes any variable that is never read.
+This causes the initial value and any assigned values to be unused,
+allowing those expressions to be deleted if they have no side-effects.
+<P>
+Note that a let is actually a degenerate case of local call
+(see section&nbsp;<A HREF="node144.html#letcalls">5.6.2</A>), and that let optimization can be done on calls
+that weren't created by a let.  Also, local call allows an applicative
+style of iteration that is totally assignment free.
+<P>
+<HR><A NAME="tex2html2367" HREF="node133.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2365" HREF="node131.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2359" HREF="node131.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2369" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2370" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2368" HREF="node133.html">5.4.2 Constant Folding</A>
+<B>Up:</B> <A NAME="tex2html2366" HREF="node131.html">5.4 Source Optimization</A>
+<B> Previous:</B> <A NAME="tex2html2360" HREF="node131.html">5.4 Source Optimization</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

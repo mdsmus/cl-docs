@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 3, Lesson 7</title> 
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 3 - Essential Lisp in Twelve Lessons</h1> 
+
+<h2><A NAME="lesson-7">Lesson 7 - Essential Function Definition</A></h2> 
+
+<h3>DEFUN defines named functions</h3> 
+
+<P>You can define a named function using the <CODE>DEFUN</CODE> form:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (defun secret-number (the-number)<br>     (let ((the-secret 37))<br>        (cond ((= the-number the-secret) 'that-is-the-secret-number)<br>              ((&lt; the-number the-secret) 'too-low)<br>              ((&gt; the-number the-secret) 'too-high))))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> SECRET-NUMBER</PRE>
+
+<BLOCKQUOTE>
+We described <CODE>LET</CODE>, <CODE>COND</CODE>, and <CODE>'</CODE> 
+(a.k.a. <CODE>QUOTE)</CODE> in <A HREF="chapter03-03.html">Lesson 3</A>.  
+The numeric comparison functions have the obvious meaning.
+</BLOCKQUOTE>
+
+<P>The <CODE>DEFUN</CODE> form has three arguments:</P>
+
+<OL>
+<LI>the name of the function: <CODE>SECRET-NUMBER</CODE>,</LI>
+<LI>a list of argument names: <CODE>(THE-NUMBER)</CODE>, which will be
+bound to the function's parameters when it is called, and</LI>
+<LI>the body of the function: <CODE>(LET ...)</CODE>.</LI>
+</OL>
+
+<P>Since all three of these should stand for themselves, 
+<CODE>DEFUN</CODE> does not evaluate any of its arguments.  (If it did, 
+you'd face the inconvenience of having to quote each argument.)</P>
+
+<P><CODE>DEFUN</CODE> returns the name of the defined function, and 
+installs a global definition using the name, parameter list, and body that 
+you supplied.  Once you create a function using <CODE>DEFUN</CODE>, you can 
+use it right away:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (secret-number 11)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> TOO-LOW<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (secret-number 99)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> TOO-HIGH<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (secret-number 37)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> THAT-IS-THE-SECRET-NUMBER</PRE>
+
+<P>When you call the function, its parameter (e.g. <CODE>99</CODE> in the 
+second example) is bound to the argument name (i.e.  
+<CODE>THE-NUMBER</CODE>) you supplied in the definition.  Then, the body of 
+the function (i.e. <CODE>(LET ...)</CODE>) is evaluated within the context 
+of the parameter binding.  In other words, evaluating <CODE>(SECRET-NUMBER 
+99)</CODE> causes the body of the <CODE>SECRET-NUMBER</CODE> function 
+definition to be executed with the variable <CODE>THE-NUMBER</CODE> bound 
+to <CODE>99</CODE>.</P>
+
+<P>Of course, you can define a function of more than one argument:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (defun my-calculation (a b c x)<br>     (+ (* a (* x x)) (* b x) c))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> MY-CALCULATION<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (my-calculation 3 2 7 5)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 92</PRE>
+
+<P>When calling a function, parameters are bound to argument names in 
+order.  Lisp has several optional variations on the list of argument 
+names.  Formally, this list is called a <EM>lambda list</EM> -- we'll 
+examine some of its other features in <A HREF="chapter21.html">Chapter 
+21</A>.</P>
+
+<h3>LAMBDA defines anonymous functions</h3> 
+
+<P>At times you'll need a function in only one place in your program.  You 
+could create a function with <CODE>DEFUN</CODE> and call it just once.  
+Sometimes, this is the best thing to do, because you can give the function 
+a descriptive name that will help you read the program at some later 
+date.  But sometimes the function you need is so trivial or so obvious 
+that you don't want to have to invent a name or worry about whether the 
+name might be in use somewhere else.  For situations like this, Lisp lets 
+you create an unnamed, or anonymous, function using the 
+<CODE>LAMBDA</CODE> form.  A <CODE>LAMBDA</CODE> form looks like a 
+<CODE>DEFUN</CODE> form without the name:</P>
+
+<PRE WIDTH=80>(lambda (a b c x)
+   (+ (* a (* x x)) (* b x) c))</PRE>
+
+<P>You can't evaluate a <CODE>LAMBDA</CODE> form; it must appear only where 
+Lisp expects to find a function -- normally as the first element of a 
+form:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (lambda (a b c x)<br>     (+ (* a (* x x)) (* b x) c))<br><IMG SRC="gifs/right-arrow-bar.gif" ALT="-&gt;|" ALIGN="BOTTOM"> Error<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> ((lambda (a b c x)<br>      (+ (* a (* x x)) (* b x) c))<br>   3 2 7 5)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 92</PRE>
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter02.html">Chapter 2</a> | <A HREF="chapter03.html">Chapter 3, Introduction</A> | <A HREF="chapter03-06.html">Chapter 3, Lesson 6</A> | Chapter 3, Lesson 7 | <A HREF="chapter03-08.html">Chapter 3, Lesson 8</A> | <a href="chapter04.html">Chapter 4</a> | 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its 
+author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

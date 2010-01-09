@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>2.5 Garbage Collection</TITLE>
+<META NAME="description" CONTENT="2.5 Garbage Collection">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html951" HREF="node29.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html949" HREF="node11.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html943" HREF="node27.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html953" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html954" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html952" HREF="node29.html">2.5.1 GC Parameters</A>
+<B>Up:</B> <A NAME="tex2html950" HREF="node11.html">2 Design Choices and </A>
+<B> Previous:</B> <A NAME="tex2html944" HREF="node27.html">2.4 The Editor</A>
+<BR> <P>
+<H1><A NAME="SECTION00350000000000000000">2.5 Garbage Collection</A></H1>
+<P>
+CMU Common Lisp uses a stop-and-copy garbage collector that compacts
+the items in dynamic space every time it runs.  Most users cause the
+system to garbage collect (GC) frequently, long before space is
+exhausted.  With 16 or 24 megabytes of memory, causing GC's more
+frequently on less garbage allows the system to GC without much (if
+any) paging.
+<P>
+The following functions invoke the garbage collector or control whether
+automatic garbage collection is in effect:
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:gc</tt> <em> </em><BR>
+<P>
+  This function runs the garbage collector.  If
+  <tt>ext:*gc-verbose*</tt> is non-<i>nil</i>, then it invokes
+  <tt>ext:*gc-notify-before*</tt> before GC'ing and
+  <tt>ext:*gc-notify-after*</tt> afterwards.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:gc-off</tt> <em> </em><BR>
+<P>
+  This function inhibits automatic garbage collection.  After calling
+  it, the system will not GC unless you call <tt>ext:gc</tt> or
+  <tt>ext:gc-on</tt>.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:gc-on</tt> <em> </em><BR>
+<P>
+  This function reinstates automatic garbage collection.  If the
+  system would have GC'ed while automatic GC was inhibited, then this
+  will call <tt>ext:gc</tt>.
+<P>
+<BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html955" HREF="node29.html#SECTION00351000000000000000">2.5.1 GC Parameters</A>
+<LI> <A NAME="tex2html956" HREF="node30.html#SECTION00352000000000000000">2.5.2 Weak Pointers</A>
+<LI> <A NAME="tex2html957" HREF="node31.html#SECTION00353000000000000000">2.5.3 Finalization</A>
+</UL>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

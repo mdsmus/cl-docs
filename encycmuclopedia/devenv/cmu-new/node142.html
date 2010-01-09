@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.6 Local Call</TITLE>
+<META NAME="description" CONTENT="5.6 Local Call">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2484" HREF="node143.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2482" HREF="node105.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2476" HREF="node141.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2486" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2487" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2485" HREF="node143.html">Self-Recursive Calls</A>
+<B>Up:</B> <A NAME="tex2html2483" HREF="node105.html">5 Advanced Compiler Use </A>
+<B> Previous:</B> <A NAME="tex2html2477" HREF="node141.html">5.5.1 Tail Recursion Exceptions</A>
+<BR> <P>
+<H1><A NAME="SECTION00660000000000000000">5.6 Local Call</A></H1>
+<P>
+<A NAME="localcall">&#160;</A>
+<A NAME="10098">&#160;</A>
+<A NAME="10099">&#160;</A>
+<A NAME="10100">&#160;</A>
+<P>
+Python supports two kinds of function call: full call and local call.
+Full call is the standard calling convention; its late binding and
+generality make Common Lisp what it is, but create unavoidable overheads.
+When the compiler can compile the calling function and the called
+function simultaneously, it can use local call to avoid some of the
+overhead of full call.  Local call is really a collection of
+compilation strategies.  If some aspect of call overhead is not needed
+in a particular local call, then it can be omitted.  In some cases,
+local call can be totally free.  Local call provides two main
+advantages to the user:
+<UL>
+<LI> Local call makes the use of the lexical function binding forms
+  <A NAME="10101">&#160;</A><tt>flet</tt> and <A NAME="10103">&#160;</A><tt>labels</tt> much more efficient.  A local
+  call is always faster than a full call, and in many cases is much
+  faster.
+<LI> Local call is a natural approach to &#305;block compilation, a
+  compilation technique that resolves function references at compile
+  time.  Block compilation speeds function call, but increases
+  compilation times and prevents function redefinition.
+</UL><BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html2488" HREF="node143.html#SECTION00661000000000000000">Self-Recursive Calls</A>
+<LI> <A NAME="tex2html2489" HREF="node144.html#SECTION00662000000000000000">5.6.2 Let Calls</A>
+<LI> <A NAME="tex2html2490" HREF="node145.html#SECTION00663000000000000000">5.6.3 Closures</A>
+<LI> <A NAME="tex2html2491" HREF="node146.html#SECTION00664000000000000000">5.6.4 Local Tail Recursion</A>
+<LI> <A NAME="tex2html2492" HREF="node147.html#SECTION00665000000000000000">5.6.5 Return Values</A>
+</UL>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

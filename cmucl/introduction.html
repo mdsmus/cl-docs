@@ -1,0 +1,430 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+"http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+<meta name="generator" content=
+"HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 13), see www.w3.org">
+<meta http-equiv="Content-Type" content=
+"text/html; charset=us-ascii">
+<meta name="GENERATOR" content="hevea 1.06">
+<link rel="stylesheet" href="cmucl.css" type="text/css">
+<meta http-equiv="Content-Language" content="en">
+<title>CMUCL User's Manual: Introduction</title>
+</head>
+<body>
+<a href="cmu-user.htoc.html"><img src="previous_motif.gif" alt=
+"Previous"></a> <a href="index.html"><img src="contents_motif.gif"
+alt="Up"></a> <a href="extensions.html"><img src="next_motif.gif"
+alt="Next"></a>
+<hr>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFBC">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc1" id="htoc1"><b><font size=
+"6">Chapter&nbsp;1</font></b></a></td>
+<td width="100%" align="center"><b><font size=
+"6">Introduction</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<ul>
+<li><a href="introduction.html#toc1">Distribution and
+Support</a></li>
+<li><a href="introduction.html#toc2">Command Line Options</a></li>
+<li><a href="introduction.html#toc3">Credits</a></li>
+</ul>
+<br>
+CMUCL is a free, high-performance implementation of the Common Lisp
+programming language which runs on most major Unix platforms. It
+mainly conforms to the ANSI Common Lisp standard. Here is a summary
+of its main features:
+<ul>
+<li>a <em>sophisticated native-code compiler</em> which is capable
+of powerful type inferences, and generates code competitive in
+speed with C compilers.<br>
+<br></li>
+<li>generational garbage collection and multiprocessing capability
+on the x86 ports.<br>
+<br></li>
+<li>a foreign function interface which allows interfacing with C
+code and system libraries, including shared libraries on most
+platforms, and direct access to Unix system calls.<br>
+<br></li>
+<li>support for interprocess communication and remote procedure
+calls.<br>
+<br></li>
+<li>an implementation of CLOS, the Common Lisp Object System, which
+includes multimethods and a metaobject protocol.<br>
+<br></li>
+<li>a graphical source-level debugger using a Motif interface, and
+a code profiler.<br>
+<br></li>
+<li>an interface to the X11 Window System (CLX), and a
+sophisticated graphical widget library (Garnet).<br>
+<br></li>
+<li>programmer-extensible input and output streams.<br>
+<br></li>
+<li>an Emacs-like editor implemented in Common Lisp.<br>
+<br></li>
+<li>public domain: free, with full source code and no strings
+attached (and no warranty). Like GNU/Linux and the *BSD operating
+systems, CMUCL is maintained and improved by a team of volunteers
+collaborating over the Internet.</li>
+</ul>
+This user's manual contains only implementation-specific
+information about CMUCL. Users will also need a separate manual
+describing the Common Lisp standard, for example, the
+<em>Hyperspec</em> at <a href=
+"http://www.xanalys.com/software_tools">www.xanalys.com</a><br>
+<br>
+In addition to the language itself, this document describes a
+number of useful library modules that run in CMUCL. Hemlock, an
+Emacs-like text editor, is included as an integral part of the
+CMUCL environment. Two documents describe Hemlock: the <i>Hemlock
+User's Manual</i>, and the <i>Hemlock Command Implementor's
+Manual</i>.<br>
+<br>
+<a name="toc1" id="toc1"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc2" id="htoc2"><b><font size=
+"5">1.1</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Distribution and
+Support</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+CMUCL is developed and maintained by a group of volunteers who
+collaborate over the internet. Sources and binary releases for the
+various supported platforms can be obtained from <a href=
+"http://www.cons.org/cmucl/">www.cons.org/cmucl</a>. These pages
+describe how to download by FTP or CVS.<br>
+<br>
+A number of mailing lists are available for users and developers;
+please see the web site for more information.<br>
+<br>
+<a name="toc2" id="toc2"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc3" id="htoc3"><b><font size=
+"5">1.2</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Command Line
+Options</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="@concept0"></a> <a name="command-line-options" id=
+"command-line-options"></a><br>
+The command line syntax and environment is described in the
+<code>lisp(1)</code> man page in the man/man1 directory of the
+distribution. See also <code>cmucl(1)</code>. Currently CMUCL
+accepts the following switches:<br>
+<br>
+<dl compact="compact">
+<dt><tt class="code">-batch</tt><br></dt>
+<dd>specifies batch mode, where all input is directed from
+standard-input. An error code of 0 is returned upon encountering an
+EOF and 1 otherwise.<br>
+<br></dd>
+<dt><tt class="code">-quiet</tt><br></dt>
+<dd>enters quiet mode. This implies setting the variables
+<tt class="code">*load-verbose*</tt>, <tt class=
+"code">*compile-verbose*</tt>, <tt class=
+"code">*compile-print*</tt>, <tt class=
+"code">*compile-progress*</tt>, <tt class=
+"code">*require-verbose*</tt> and <tt class=
+"code">*gc-verbose*</tt> to NIL, and disables the printing of the
+startup banner.<br>
+<br></dd>
+<dt><tt class="code">-core</tt><br></dt>
+<dd>requires an argument that should be the name of a core file.
+Rather than using the default core file, which is searched in a
+number of places, according to the initial value of the <tt class=
+"code">library:</tt> search-list, the specified core file is
+loaded. This switch overrides the value of the <tt class=
+"code">CMUCLCORE</tt> environment variable, if present.<br>
+<br></dd>
+<dt><tt class="code">-lib</tt><br></dt>
+<dd>requires an argument that should be the path to the CMUCL
+library directory, which is going to be used to initialize the
+<tt class="code">library:</tt> search-list, among other things.
+This switch overrides the value of the <tt class=
+"code">CMUCLLIB</tt> environment variable, if present.<br>
+<br></dd>
+<dt><tt class="code">-dynamic-space-size</tt><br></dt>
+<dd>requires an argument that should be the number of megabytes
+(1048576 bytes) that should be allocated to the heap. If not
+specified, a platform-specific default is used. The actual maximum
+allowed heap size is platform-specific.<br>
+<br>
+Currently, this option is only available for the x86 and sparc
+platforms.<br>
+<br></dd>
+<dt><tt class="code">-edit</tt><br></dt>
+<dd>specifies to enter Hemlock. A file to edit may be specified by
+placing the name of the file between the program name (usually
+<tt class="filename">lisp</tt>) and the first switch.<br>
+<br></dd>
+<dt><tt class="code">-eval</tt><br></dt>
+<dd>accepts one argument which should be a Lisp form to evaluate
+during the start up sequence. The value of the form will not be
+printed unless it is wrapped in a form that does output.<br>
+<br></dd>
+<dt><tt class="code">-hinit</tt><br></dt>
+<dd>accepts an argument that should be the name of the hemlock init
+file to load the first time the function <a name=
+"@funs0"></a><tt class="code">ed</tt> is invoked. The default is to
+load <tt class="filename">hemlock-init.<tt class=
+"variable">object-type</tt></tt>, or if that does not exist,
+<tt class="filename">hemlock-init.lisp</tt> from the user's home
+directory. If the file is not in the user's home directory, the
+full path must be specified.<br>
+<br></dd>
+<dt><tt class="code">-init</tt><br></dt>
+<dd>accepts an argument that should be the name of an init file to
+load during the normal start up sequence. The default is to load
+<tt class="filename">init.<tt class=
+"variable">object-type</tt></tt> or, if that does not exist,
+<tt class="filename">init.lisp</tt> from the user's home directory.
+If the file is not in the user's home directory, the full path must
+be specified.<br>
+<br></dd>
+<dt><tt class="code">-noinit</tt><br></dt>
+<dd>accepts no arguments and specifies that an init file should not
+be loaded during the normal start up sequence. Also, this switch
+suppresses the loading of a hemlock init file when Hemlock is
+started up with the <tt class="code">-edit</tt> switch.<br>
+<br></dd>
+<dt><tt class="code">-nositeinit</tt><br></dt>
+<dd>accepts no arguments and specifies that the site init file
+should not be loaded during the normal start up sequence.<br>
+<br></dd>
+<dt><tt class="code">-load</tt><br></dt>
+<dd>accepts an argument which should be the name of a file to load
+into Lisp before entering Lisp's read-eval-print loop.<br>
+<br></dd>
+<dt><tt class="code">-slave</tt><br></dt>
+<dd>specifies that Lisp should start up as a islave Lisp and try to
+connect to an editor Lisp. The name of the editor to connect to
+must be specified---to find the editor's name, use the Hemlock
+``<tt class="code">Accept Slave Connections</tt>'' command. The
+name for the editor Lisp is of the form:
+<blockquote class="example">
+<pre>
+    <tt class="variable">machine-name</tt><tt class=
+"code">:</tt><tt class="variable">socket</tt>
+  
+</pre></blockquote>
+where <tt class="variable">machine-name</tt> is the internet host
+name for the machine and <tt class="variable">socket</tt> is the
+decimal number of the socket to connect to.</dd>
+</dl>
+For more details on the use of the <tt class="code">-edit</tt> and
+<tt class="code">-slave</tt> switches, see the <i>Hemlock User's
+Manual</i>.<br>
+<br>
+Arguments to the above switches can be specified in one of two
+ways: <tt class="variable">switch</tt><tt class=
+"code">=</tt><tt class="variable">value</tt> or <tt class=
+"variable">switch</tt>&lt;<tt class=
+"variable">space</tt>&gt;<tt class="variable">value</tt>. For
+example, to start up the saved core file mylisp.core use either of
+the following two commands:
+<blockquote class="example">
+<pre>
+   lisp -core=mylisp.core
+   lisp -core mylisp.core
+</pre></blockquote>
+<a name="toc3" id="toc3"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc4" id="htoc4"><b><font size=
+"5">1.3</font></b></a></td>
+<td width="100%" align="center"><b><font size=
+"5">Credits</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+CMUCL was developed at the Computer Science Department of Carnegie
+Mellon University. The work was a small autonomous part within the
+Mach microkernel-based operating system project, and started more
+as a tool development effort than a research project. The project
+started out as Spice Lisp, which provided a modern Lisp
+implementation for use in the CMU community. CMUCL has been under
+continual development since the early 1980's (concurrent with the
+Common Lisp standardization effort). Most of the CMU Common Lisp
+implementors went on to work on the Gwydion environment for Dylan.
+The CMU team was lead by Scott E. Fahlman, the Python compiler was
+written by Robert MacLachlan.<br>
+<br>
+CMUCL's CLOS implementation is derived from the PCL reference
+implementation written at Xerox PARC:
+<blockquote>Copyright (c) 1985, 1986, 1987, 1988, 1989, 1990 Xerox
+Corporation.<br>
+All rights reserved.<br>
+<br>
+<br>
+Use and copying of this software and preparation of derivative
+works based upon this software are permitted. Any distribution of
+this software or derivative works must comply with all applicable
+United States export control laws.<br>
+<br>
+<br>
+This software is made available AS IS, and Xerox Corporation makes
+no warranty about the software, its performance or its conformity
+to any specification.</blockquote>
+Its implementation of the LOOP macro was derived from code from
+Symbolics, which was derived from code written at MIT:
+<blockquote>Portions of LOOP are Copyright (c) 1986 by the
+Massachusetts Institute of Technology.<br>
+All Rights Reserved.<br>
+<br>
+<br>
+Permission to use, copy, modify and distribute this software and
+its documentation for any purpose and without fee is hereby
+granted, provided that the M.I.T. copyright notice appear in all
+copies and that both that copyright notice and this permission
+notice appear in supporting documentation. The names "M.I.T." and
+"Massachusetts Institute of Technology" may not be used in
+advertising or publicity pertaining to distribution of the software
+without specific, written prior permission. Notice must be given in
+supporting documentation that copying distribution is by permission
+of M.I.T. M.I.T. makes no representations about the suitability of
+this software for any purpose. It is provided "as is" without
+express or implied warranty.<br>
+<br>
+<br>
+<br>
+<br>
+Portions of LOOP are Copyright (c) 1989, 1990, 1991, 1992 by
+Symbolics, Inc.<br>
+All Rights Reserved.<br>
+<br>
+<br>
+Permission to use, copy, modify and distribute this software and
+its documentation for any purpose and without fee is hereby
+granted, provided that the Symbolics copyright notice appear in all
+copies and that both that copyright notice and this permission
+notice appear in supporting documentation. The name "Symbolics" may
+not be used in advertising or publicity pertaining to distribution
+of the software without specific, written prior permission. Notice
+must be given in supporting documentation that copying distribution
+is by permission of Symbolics. Symbolics makes no representations
+about the suitability of this software for any purpose. It is
+provided "as is" without express or implied warranty.<br>
+<br>
+<br>
+Symbolics, CLOE Runtime, and Minima are trademarks, and CLOE,
+Genera, and Zetalisp are registered trademarks of Symbolics,
+Inc.</blockquote>
+The CLX code is copyrighted by Texas Instruments Incorporated:
+<blockquote>Copyright (C) 1987 Texas Instruments Incorporated.<br>
+<br>
+<br>
+Permission is granted to any individual or institution to use,
+copy, modify, and distribute this software, provided that this
+complete copyright and permission notice is maintained, intact, in
+all copies and supporting documentation.<br>
+<br>
+<br>
+Texas Instruments Incorporated provides this software "as is"
+without express or implied warranty.</blockquote>
+CMUCL was funded by DARPA under CMU's "Research on Parallel
+Computing" contract. Rather than doing pure research on programming
+languages and environments, the emphasis was on developing
+practical programming tools. Sometimes this required new
+technology, but much of the work was in creating a Common Lisp
+environment that incorporates state-of-the-art features from
+existing systems (both Lisp and non-Lisp). Archives of the project
+are available online.<br>
+<br>
+The project funding stopped in 1994, so support at Carnegie Mellon
+University has been discontinued. All code and documentation
+developed at CMU was released into the public domain. The project
+continues as a group of users and developers collaborating over the
+Internet. The currently active maintainers are:
+<ul>
+<li>Marco Antoniotti</li>
+<li>Martin Cracauer</li>
+<li>Rob MacLachlan</li>
+<li>Pierre Mai</li>
+<li>Eric Marsden</li>
+<li>Gerd Moellman</li>
+<li>Tim Moore</li>
+<li>Raymond Toy</li>
+<li>Peter Van Eynde</li>
+<li>Paul Werkowski</li>
+</ul>
+In particular, Paul Werkowski and Douglas Crosher completed the
+port for the x86 architecture for FreeBSD. Peter VanEnyde took the
+FreeBSD port and created a Linux version. Other people who have
+contributed to the development of CMUCL since 1981 are
+<ul>
+<li>David Axmark</li>
+<li>Miles Bader</li>
+<li>Rick Busdiecker</li>
+<li>Bill Chiles</li>
+<li>Douglas Thomas Crosher</li>
+<li>Casper Dik</li>
+<li>Ted Dunning</li>
+<li>Scott Fahlman</li>
+<li>Mike Garland</li>
+<li>Paul Gleichauf</li>
+<li>Sean Hallgren</li>
+<li>Richard Harris</li>
+<li>Joerg-Cyril Hoehl</li>
+<li>Chris Hoover</li>
+<li>John Kolojejchick</li>
+<li>Todd Kaufmann</li>
+<li>Simon Leinen</li>
+<li>Sandra Loosemore</li>
+<li>William Lott</li>
+<li>Dave McDonald</li>
+<li>Tim Moore</li>
+<li>Skef Wholey</li>
+</ul>
+Countless others have contributed to the project by sending in bug
+reports, bug fixes, new features.<br>
+<br>
+This manual is based on CMU Technical Report CMU-CS-92-161, edited
+by Robert A. MacLachlan, dated July 1992. Other contributors
+include Raymond Toy, Paul Werkowski and Eric Marsden. The
+Hierarchical Packages chapter is based on documentation written by
+Franz. Inc, and is used with permission. The remainder of the
+document is in the public domain.
+<hr>
+<a href="cmu-user.htoc.html"><img src="previous_motif.gif" alt=
+"Previous"></a> <a href="index.html"><img src="contents_motif.gif"
+alt="Up"></a> <a href="extensions.html"><img src="next_motif.gif"
+alt="Next"></a>
+</body>
+</html>

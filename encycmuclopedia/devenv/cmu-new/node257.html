@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Debug-conditions</TITLE>
+<META NAME="description" CONTENT="Debug-conditions">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3960" HREF="node258.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3958" HREF="node256.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3952" HREF="node256.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3962" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3963" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3961" HREF="node258.html">Debug-errors</A>
+<B>Up:</B> <A NAME="tex2html3959" HREF="node256.html">10.1 DI Exceptional Conditions</A>
+<B> Previous:</B> <A NAME="tex2html3953" HREF="node256.html">10.1 DI Exceptional Conditions</A>
+<BR> <P>
+<H2><A NAME="SECTION001111000000000000000">Debug-conditions</A></H2>
+<P>
+The debug internals interface signals conditions when it can't adhere
+to its contract.  These are serious-conditions because the program
+using the interface must handle them before it can correctly continue
+execution.  These debugging conditions are not errors since it is no
+fault of the programmers that the conditions occur.  The interface
+does not provide for programs to detect these situations other than
+calling a routine that detects them and signals a condition.
+<P>
+<b>[ Condition]</b><BR> 
+<tt> debug-condition</tt> <i> </i><BR>
+<P>
+This condition inherits from serious-condition, and all debug-conditions
+inherit from this.  These must be handled, but they are not programmer errors.
+<P>
+<b>[ Condition]</b><BR> 
+<tt> no-debug-info</tt> <i> </i><BR>
+<P>
+This condition indicates there is absolutely no debugging information
+available.
+<P>
+<b>[ Condition]</b><BR> 
+<tt> no-debug-function-returns</tt> <i> </i><BR>
+<P>
+This condition indicates the system cannot return values from a frame since
+its debug-function lacks debug information details about returning values.
+<P>
+<b>[ Condition]</b><BR> 
+<tt> no-debug-blocks</tt> <i> </i><BR> 
+This condition indicates that a function was not compiled with debug-block
+information, but this information is necessary necessary for some requested
+operation.
+<P>
+<b>[ Condition]</b><BR> 
+<tt> no-debug-variables</tt> <i> </i><BR> 
+Similar to <tt>no-debug-blocks</tt>, except that variable information was
+requested.
+<P>
+<b>[ Condition]</b><BR> 
+<tt> lambda-list-unavailable</tt> <i> </i><BR> 
+Similar to <tt>no-debug-blocks</tt>, except that lambda list information was
+requested.
+<P>
+<b>[ Condition]</b><BR> 
+<tt> invalid-value</tt> <i> </i><BR>
+<P>
+This condition indicates a debug-variable has <tt>:invalid</tt> or <tt>:unknown</tt>
+value in a particular frame.
+<P>
+<b>[ Condition]</b><BR> 
+<tt> ambiguous-variable-name</tt> <i> </i><BR>
+<P>
+This condition indicates a user supplied debug-variable name identifies more
+than one valid variable in a particular frame.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

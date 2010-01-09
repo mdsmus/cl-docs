@@ -1,0 +1,68 @@
+<html lang="en">
+<head>
+<title>Note On Lexical Variable Access - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Variable-Access.html#Variable-Access" title="Variable Access">
+<link rel="prev" href="Variable-Value-Availability.html#Variable-Value-Availability" title="Variable Value Availability">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Note-On-Lexical-Variable-Access"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Variable-Value-Availability.html#Variable-Value-Availability">Variable Value Availability</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Variable-Access.html#Variable-Access">Variable Access</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">4.4.2 Note On Lexical Variable Access</h4>
+
+<p>When the debugger command loop establishes variable bindings for
+available variables, these variable bindings have lexical scope and
+dynamic extent.<a rel="footnote" href="#fn-1" name="fnd-1"><sup>1</sup></a>  You can close
+over them, but such closures can't be used as upward funargs.
+
+   <p>You can also set local variables using <code>setq</code>, but if the
+variable was closed over in the original source and never set, then
+setting the variable in the debugger may not change the value in all
+the functions the variable is defined in.  Another risk of setting
+variables is that you may assign a value of a type that the compiler
+proved the variable could never take on.  This may result in bad
+things happening.
+
+   <div class="footnote">
+<hr>
+<h4>Footnotes</h4><p class="footnote"><small>[<a name="fn-1" href="#fnd-1">1</a>]</small> The variable bindings are actually created
+using the Lisp <code>symbol-macrolet</code> special form.</p>
+
+   <hr></div>
+
+   </body></html>
+

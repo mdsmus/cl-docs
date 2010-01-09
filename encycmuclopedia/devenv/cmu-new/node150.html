@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.7.2 Block Compilation Declarations</TITLE>
+<META NAME="description" CONTENT="5.7.2 Block Compilation Declarations">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2589" HREF="node151.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2587" HREF="node148.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2581" HREF="node149.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2591" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2592" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2590" HREF="node151.html">5.7.3 Compiler Arguments</A>
+<B>Up:</B> <A NAME="tex2html2588" HREF="node148.html">5.7 Block Compilation</A>
+<B> Previous:</B> <A NAME="tex2html2582" HREF="node149.html">5.7.1 Block Compilation Semantics</A>
+<BR> <P>
+<H2><A NAME="SECTION00672000000000000000">5.7.2 Block Compilation Declarations</A></H2>
+<P>
+<A NAME="10197">&#160;</A>
+<A NAME="10198">&#160;</A>
+<A NAME="10199">&#160;</A>
+<P>
+The <tt>extensions:start-block</tt> and <tt>extensions:end-block</tt>
+declarations allow fine-grained control of block compilation.  These
+declarations are only legal as a global declarations (<tt>declaim</tt>
+or <tt>proclaim</tt>).
+<P>
+The <tt>start-block</tt> declaration has this syntax:
+<BLOCKQUOTE> <PRE>(start-block <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>entry-point-name</i></i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif">)
+</PRE> </BLOCKQUOTE>
+When processed by the compiler, this declaration marks the start of
+block compilation, and specifies the entry points to that block.  If
+no entry points are specified, then <i>all</i> functions are made into
+entry points.  If already block compiling, then the compiler ends the
+current block and starts a new one.
+<P>
+The <tt>end-block</tt> declaration has no arguments:
+<BLOCKQUOTE> <PRE>(end-block)
+</PRE> </BLOCKQUOTE>
+The <tt>end-block</tt> declaration ends a block compilation unit without
+starting a new one.  This is useful mainly when only a portion of a file
+is worth block compiling.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

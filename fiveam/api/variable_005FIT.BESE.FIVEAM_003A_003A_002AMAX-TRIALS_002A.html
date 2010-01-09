@@ -1,0 +1,42 @@
+<html
+  ><head
+    ><title
+      >Variable *MAX-TRIALS*</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Variable: *MAX-TRIALS*</h1
+        ><div class="contents"
+          ><h2
+  >Documentation</h2
+><blockquote
+  >Number of total times we attempt to run the body of the
+  FOR-ALL test including when the body is skipped due to failed
+  guard conditions.
+
+Since we have guard conditions we may get into infinite loops
+where the test code is never run due to the guards never
+returning true. This second run limit prevents that.</blockquote
+><h2
+            >Source</h2
+          ><pre class="code"
+            >(defparameter *max-trials* 10000
+  &quot;Number of total times we attempt to run the body of the
+  FOR-ALL test including when the body is skipped due to failed
+  guard conditions.
+
+Since we have guard conditions we may get into infinite loops
+where the test code is never run due to the guards never
+returning true. This second run limit prevents that.&quot;)</pre
+          ><a href="../Checks.html#variable_005FIT.BESE.FIVEAM_003A_003A_002AMAX-TRIALS_002A"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

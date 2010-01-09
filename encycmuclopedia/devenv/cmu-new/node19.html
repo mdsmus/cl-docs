@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>2.1.3.4 Floating Point Exceptions</TITLE>
+<META NAME="description" CONTENT="2.1.3.4 Floating Point Exceptions">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html848" HREF="node20.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html846" HREF="node15.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html840" HREF="node18.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html850" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html851" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html849" HREF="node20.html">2.1.3.5 Floating Point Rounding </A>
+<B>Up:</B> <A NAME="tex2html847" HREF="node15.html">2.1.3 Floats</A>
+<B> Previous:</B> <A NAME="tex2html841" HREF="node18.html">2.1.3.3 Denormalized Floats</A>
+<BR> <P>
+<H3><A NAME="SECTION00313400000000000000">2.1.3.4 Floating Point Exceptions</A></H3>
+<P>
+<A NAME="floattraps">&#160;</A>
+<P>
+The IEEE floating point standard defines several exceptions that occur
+when the result of a floating point operation is unclear or
+undesirable.  Exceptions can be ignored, in which case some default
+action is taken, such as returning a special value.  When trapping is
+enabled for an exception, a error is signalled whenever that exception
+occurs.  These are the possible floating point exceptions:
+<DL ><DT><STRONG><tt>:underflow</tt></STRONG>
+<DD> This exception occurs when the result of an
+  operation is too small to be represented as a normalized float in
+  its format.  If trapping is enabled, the
+  <A NAME="7642">&#160;</A><tt>floating-point-underflow</tt> condition is signalled.
+  Otherwise, the operation results in a denormalized float or zero.
+<P>
+<DT><STRONG><tt>:overflow</tt></STRONG>
+<DD> This exception occurs when the result of an
+  operation is too large to be represented as a float in its format.
+  If trapping is enabled, the <A NAME="7645">&#160;</A><tt>floating-point-overflow</tt>
+  exception is signalled.  Otherwise, the operation results in the
+  appropriate infinity.
+<P>
+<DT><STRONG><tt>:inexact</tt></STRONG>
+<DD> This exception occurs when the result of a
+  floating point operation is not exact, i.e. the result was rounded.
+  If trapping is enabled, the <tt>extensions:floating-point-inexact</tt>
+  condition is signalled.  Otherwise, the rounded result is returned.
+<P>
+<DT><STRONG><tt>:invalid</tt></STRONG>
+<DD> This exception occurs when the result of an
+  operation is ill-defined, such as <tt>(/ 0.0 0.0)</tt>.  If
+  trapping is enabled, the <tt>extensions:floating-point-invalid</tt>
+  condition is signalled.  Otherwise, a quiet NaN is returned.
+<P>
+<DT><STRONG><tt>:divide-by-zero</tt></STRONG>
+<DD> This exception occurs when a float is
+  divided by zero.  If trapping is enabled, the
+  <A NAME="7655">&#160;</A><tt>divide-by-zero</tt> condition is signalled.  Otherwise, the
+  appropriate infinity is returned.
+<P>
+</DL><BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

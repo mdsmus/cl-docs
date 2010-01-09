@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.4.3 Unused Expression Elimination</TITLE>
+<META NAME="description" CONTENT="5.4.3 Unused Expression Elimination">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2391" HREF="node135.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2389" HREF="node131.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2383" HREF="node133.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2393" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2394" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2392" HREF="node135.html">5.4.4 Control Optimization</A>
+<B>Up:</B> <A NAME="tex2html2390" HREF="node131.html">5.4 Source Optimization</A>
+<B> Previous:</B> <A NAME="tex2html2384" HREF="node133.html">5.4.2 Constant Folding</A>
+<BR> <P>
+<H2><A NAME="SECTION00643000000000000000">5.4.3 Unused Expression Elimination</A></H2>
+<P>
+<A NAME="10023">&#160;</A>
+<A NAME="10024">&#160;</A>
+<P>
+If the value of any expression is not used, and the expression has no
+side-effects, then it is deleted.  As with constant folding, this
+optimization applies most often when cleaning up after inline
+expansion and other optimizations.  Any function declared an
+<tt>extensions:constant-function</tt> is also subject to unused
+expression elimination.
+<P>
+Note that Python will eliminate parts of unused expressions known
+to be side-effect free, even if there are other unknown parts.  For
+example:
+<BLOCKQUOTE> <PRE>(let ((a (list (foo) (bar))))
+  (if t
+      (zow)
+      (raz a)))
+</PRE> </BLOCKQUOTE>
+becomes:
+<BLOCKQUOTE> <PRE>(progn (foo) (bar))
+(zow)
+</PRE> </BLOCKQUOTE><BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

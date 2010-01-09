@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>8.1 Introduction to Aliens</TITLE>
+<META NAME="description" CONTENT="8.1 Introduction to Aliens">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3512" HREF="node223.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3510" HREF="node221.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3504" HREF="node221.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3514" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3515" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3513" HREF="node223.html">8.2 Alien Types</A>
+<B>Up:</B> <A NAME="tex2html3511" HREF="node221.html">8 Alien Objects</A>
+<B> Previous:</B> <A NAME="tex2html3505" HREF="node221.html">8 Alien Objects</A>
+<BR> <P>
+<H1><A NAME="SECTION00910000000000000000">8.1 Introduction to Aliens</A></H1>
+<P>
+Because of Lisp's emphasis on dynamic memory allocation and garbage
+collection, Lisp implementations use unconventional memory representations
+for objects.  This representation mismatch creates problems when a Lisp
+program must share objects with programs written in another language.  There
+are three different approaches to establishing communication:
+<UL>
+<LI> The burden can be placed on the foreign program (and programmer) by
+requiring the use of Lisp object representations.  The main difficulty with
+this approach is that either the foreign program must be written with Lisp
+interaction in mind, or a substantial amount of foreign ``glue'' code must be
+written to perform the translation.
+<LI> The Lisp system can automatically convert objects back and forth
+between the Lisp and foreign representations.  This is convenient, but
+translation becomes prohibitively slow when large or complex data structures
+must be shared.
+<LI> The Lisp program can directly manipulate foreign objects through the
+use of extensions to the Lisp language.  Most Lisp systems make use of
+this approach, but the language for describing types and expressing
+accesses is often not powerful enough for complex objects to be easily
+manipulated.
+</UL>
+CMU Common Lisp relies primarily on the automatic conversion and direct manipulation
+approaches: Aliens of simple scalar types are automatically converted,
+while complex types are directly manipulated in their foreign
+representation.  Any foreign objects that can't automatically be
+converted into Lisp values are represented by objects of type
+<tt>alien-value</tt>.  Since Lisp is a dynamically typed language, even
+foreign objects must have a run-time type; this type information is
+provided by encapsulating the raw pointer to the foreign data within an
+<tt>alien-value</tt> object.
+<P>
+The Alien type language and operations are most similar to those of the
+C language, but Aliens can also be used when communicating with most
+other languages that can be linked with C.
+<P>
+<HR><A NAME="tex2html3512" HREF="node223.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3510" HREF="node221.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3504" HREF="node221.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3514" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3515" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3513" HREF="node223.html">8.2 Alien Types</A>
+<B>Up:</B> <A NAME="tex2html3511" HREF="node221.html">8 Alien Objects</A>
+<B> Previous:</B> <A NAME="tex2html3505" HREF="node221.html">8 Alien Objects</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

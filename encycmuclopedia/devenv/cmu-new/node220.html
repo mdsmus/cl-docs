@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>7.5.2 With Object Sets Example</TITLE>
+<META NAME="description" CONTENT="7.5.2 With Object Sets Example">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3466" HREF="node221.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3464" HREF="node218.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3460" HREF="node219.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3468" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3469" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3467" HREF="node221.html">8 Alien Objects</A>
+<B>Up:</B> <A NAME="tex2html3465" HREF="node218.html">A SERVE-EVENT Example</A>
+<B> Previous:</B> <A NAME="tex2html3461" HREF="node219.html">7.5.1 Without Object Sets </A>
+<BR> <P>
+<H2><A NAME="SECTION00852000000000000000">7.5.2 With Object Sets Example</A></H2>
+<P>
+This example involves more work, but you get a little more for your effort.  It
+defines two objects, <tt>input-box</tt> and <tt>slider</tt>, and establishes a
+<tt>:key-press</tt> handler for each object, <tt>key-pressed</tt> and
+<tt>slider-pressed</tt>.  We have two object sets because we handle events on the
+windows manifesting these objects differently, but the events come over the
+same display connection.
+<P>
+<BLOCKQUOTE> <PRE>(in-package &quot;SERVER-EXAMPLE&quot;)
+<P>
+(defstruct (input-box (:print-function print-input-box)
+                      (:constructor make-input-box (display window)))
+  &quot;Our program knows about input-boxes, and it doesn't care how they
+   are implemented.&quot;
+  display        ; The CLX display on which my input-box is displayed.
+  window)        ; The CLX window in which the user types.
+;;;
+(defun print-input-box (object stream n)
+  (declare (ignore n))
+  (format stream &quot;#&lt;Input-Box &nbsp;S&gt;&quot; (input-box-display object)))
+<P>
+(defvar *input-box-windows*
+        (system:make-object-set &quot;Input Box Windows&quot;
+                                #'ext:default-clx-event-handler))
+<P>
+(defun key-pressed (input-box event-key event-window root child
+                    same-screen-p x y root-x root-y modifiers time
+                    key-code send-event-p)
+  &quot;This is our :key-press event handler.&quot;
+  (declare (ignore event-key root child same-screen-p x y
+                   root-x root-y time send-event-p))
+  (format t &quot;KEY-PRESSED (Window = &nbsp;D) = &nbsp;S.&nbsp;(xlib:window-id event-window)
+          ;; See Hemlock Command Implementor's Manual for convenient
+          ;; input mapping function.
+          (ext:translate-character (input-box-display input-box)
+                                     key-code modifiers)))
+;;;
+(ext:serve-key-press *input-box-windows* #'key-pressed)
+</PRE> </BLOCKQUOTE>
+<BLOCKQUOTE> <PRE>(defstruct (slider (:print-function print-slider)
+                   (:include input-box)
+                   (:constructor (display window window-width max)))
+  &quot;Our program knows about sliders too, and these provide input values
+   zero to max.&quot;
+  bits-per-value  ; bits per discrete value up to max.
+  max)            ; End value for slider.
+;;;
+(defun print-slider (object stream n)
+  (declare (ignore n))
+  (format stream &quot;#&lt;Slider &nbsp;S  0..&nbsp;D&gt;&quot;
+          (input-box-display object)
+          (1- (slider-max object))))
+;;;
+(defun make-slider (display window max)
+  ((truncate (xlib:drawable-width window) max)
+                max))
+<P>
+(defvar *slider-windows*
+        (system:make-object-set &quot;Slider Windows&quot;
+                                #'ext:default-clx-event-handler))
+<P>
+(defun slider-pressed (slider event-key event-window root child
+                       same-screen-p x y root-x root-y modifiers time
+                       key-code send-event-p)
+  &quot;This is our :key-press event handler for sliders.  Probably this is
+   a mouse thing, but for simplicity here we take a character typed.&quot;
+  (declare (ignore event-key root child same-screen-p x y
+                   root-x root-y time send-event-p))
+  (format t &quot;KEY-PRESSED (Window = &nbsp;D) = &nbsp;S  -&gt;  &nbsp;D.&nbsp;(xlib:window-id event-window)
+          ;; See Hemlock Command Implementor's Manual for convenient
+          ;; input mapping function.
+          (ext:translate-character (input-box-display slider)
+                                     key-code modifiers)
+          (truncate x (slider-bits-per-value slider))))
+;;;
+(ext:serve-key-press *slider-windows* #'slider-pressed)
+</PRE> </BLOCKQUOTE>
+<BLOCKQUOTE> <PRE>(defun server-example ()
+  &quot;An example of using the SYSTEM:SERVE-EVENT function and object sets to
+   handle CLX events.&quot;
+  (let* ((display (ext:open-clx-display))
+         (screen (display-default-screen display))
+         (black (screen-black-pixel screen))
+         (white (screen-white-pixel screen))
+         (iwindow (create-window :parent (screen-root screen)
+                                 :x 0 :y 0 :width 200 :height 200
+                                 :background white :border black
+                                 :border-width 2
+                                 :event-mask
+                                 (xlib:make-event-mask :key-press)))
+         (swindow (create-window :parent (screen-root screen)
+                                 :x 0 :y 300 :width 200 :height 50
+                                 :background white :border black
+                                 :border-width 2
+                                 :event-mask
+                                 (xlib:make-event-mask :key-press)))
+         (input-box (make-input-box display iwindow))
+         (slider (make-slider display swindow 15)))
+    ;; Wrap code in UNWIND-PROTECT, so we clean up after ourselves.
+    (unwind-protect
+        (progn
+          ;; Enable event handling on the display.
+          (ext:enable-clx-event-handling display
+                                         #'ext:object-set-event-handler)
+          ;; Add the windows to the appropriate object sets.
+          (system:add-xwindow-object iwindow input-box
+                                       *input-box-windows*)
+          (system:add-xwindow-object swindow slider
+                                       *slider-windows*)
+          ;; Map the windows to the screen.
+          (map-window iwindow)
+          (map-window swindow)
+          ;; Make sure we send all our requests.
+          (display-force-output display)
+          ;; Call server for 100,000 events or immediate timeouts.
+          (dotimes (i 100000) (system:serve-event)))
+      ;; Disable event handling on this display.
+      (ext:disable-clx-event-handling display)
+      (delete-window iwindow display)
+      (delete-window swindow display)
+      ;; Close the display.
+      (xlib:close-display display))))
+</PRE> </BLOCKQUOTE>
+<BLOCKQUOTE> <PRE>(defun delete-window (window display)
+  ;; Remove the windows from the object sets before destroying them.
+  (system:remove-xwindow-object window)
+  ;; Destroy the window.
+  (destroy-window window)
+  ;; Pick off any events the X server has already queued for our
+  ;; windows, so we don't choke since SYSTEM:SERVE-EVENT is no longer
+  ;; prepared to handle events for us.
+  (loop
+   (unless (deleting-window-drop-event display window)
+     (return))))
+<P>
+(defun deleting-window-drop-event (display win)
+  &quot;Check for any events on win.  If there is one, remove it from the
+   event queue and return t; otherwise, return nil.&quot;
+  (xlib:display-finish-output display)
+  (let ((result nil))
+    (xlib:process-event
+     display :timeout 0
+     :handler #'(lambda (&amp;key event-window &amp;allow-other-keys)
+                  (if (eq event-window win)
+                      (setf result t)
+                      nil)))
+    result))
+</PRE> </BLOCKQUOTE><HR><A NAME="tex2html3466" HREF="node221.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3464" HREF="node218.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3460" HREF="node219.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3468" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3469" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3467" HREF="node221.html">8 Alien Objects</A>
+<B>Up:</B> <A NAME="tex2html3465" HREF="node218.html">A SERVE-EVENT Example</A>
+<B> Previous:</B> <A NAME="tex2html3461" HREF="node219.html">7.5.1 Without Object Sets </A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

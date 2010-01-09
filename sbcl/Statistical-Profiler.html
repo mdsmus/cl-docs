@@ -1,0 +1,368 @@
+<html lang="en">
+<head>
+<title>Statistical Profiler - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Profiling.html#Profiling" title="Profiling">
+<link rel="prev" href="Deterministic-Profiler.html#Deterministic-Profiler" title="Deterministic Profiler">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Statistical-Profiler"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Deterministic-Profiler.html#Deterministic-Profiler">Deterministic Profiler</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Profiling.html#Profiling">Profiling</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">14.2 Statistical Profiler</h3>
+
+<p><a name="index-Profiling_002c-statistical-570"></a>
+The <code>sb-sprof</code> module, loadable by
+<pre class="lisp">     (require :sb-sprof)
+</pre>
+   <p>provides an alternate profiler which works by taking samples of the
+program execution at regular intervals, instead of instrumenting
+functions like <code>sb-profile:profile</code> does. You might find
+<code>sb-sprof</code> more useful than the deterministic profiler when profiling
+functions in the <code>common-lisp</code>-package, SBCL internals, or code
+where the instrumenting overhead is excessive.
+
+   <p>Additionally <code>sb-sprof</code> includes a limited deterministic profiler
+which can be used for reporting the amounts of calls to some functions
+during
+
+<h4 class="subsection">14.2.1 Example Usage</h4>
+
+<pre class="lisp">     (in-package :cl-user)
+     
+     (require :sb-sprof)
+     
+     (declaim (optimize speed))
+     
+     (defun cpu-test-inner (a i)
+       (logxor a
+               (* i 5)
+               (+ a i)))
+     
+     (defun cpu-test (n)
+       (let ((a 0))
+         (dotimes (i (expt 2 n) a)
+           (setf a (cpu-test-inner a i)))))
+     
+     ;;;; CPU profiling
+     
+     ;;; Take up to 1000 samples of running (CPU-TEST 26), and give a flat
+     ;;; table report at the end. Profiling will end one the body has been
+     ;;; evaluated once, whether or not 1000 samples have been taken.
+     (sb-sprof:with-profiling (:max-samples 1000
+                               :report :flat
+                               :loop nil)
+       (cpu-test 26))
+     
+     ;;; Record call counts for functions defined on symbols in the CL-USER
+     ;;; package.
+     (sb-sprof:profile-call-counts "CL-USER")
+     
+     ;;; Take 1000 samples of running (CPU-TEST 24), and give a flat
+     ;;; table report at the end. The body will be re-evaluated in a loop
+     ;;; until 1000 samples have been taken. A sample count will be printed
+     ;;; after each iteration.
+     (sb-sprof:with-profiling (:max-samples 1000
+                               :report :flat
+                               :loop t
+                               :show-progress t)
+       (cpu-test 24))
+     
+     ;;;; Allocation profiling
+     
+     (defun foo (&amp;rest args)
+       (mapcar (lambda (x) (float x 1d0)) args))
+     
+     (defun bar (n)
+       (declare (fixnum n))
+       (apply #'foo (loop repeat n collect n)))
+     
+     (sb-sprof:with-profiling (:max-samples 10000
+                               :mode :alloc
+                               :report :flat)
+       (bar 1000))
+</pre>
+<h4 class="subsection">14.2.2 Output</h4>
+
+<p>The flat report format will show a table of all functions that the
+profiler encountered on the call stack during sampling, ordered by the
+number of samples taken while executing that function.
+
+<pre class="lisp">                Self        Total        Cumul
+       Nr  Count     %  Count     %  Count     %    Calls  Function
+     ------------------------------------------------------------------------
+        1     69  24.4     97  34.3     69  24.4 67108864  CPU-TEST-INNER
+        2     64  22.6     64  22.6    133  47.0        -  SB-VM::GENERIC-+
+        3     39  13.8    256  90.5    172  60.8        1  CPU-TEST
+        4     31  11.0     31  11.0    203  71.7        -  SB-KERNEL:TWO-ARG-XOR
+</pre>
+   <p>For each function, the table will show three absolute and relative
+sample counts. The Self column shows samples taken while directly
+executing that function. The Total column shows samples taken while
+executing that function or functions called from it (sampled to a
+platform-specific depth). The Cumul column shows the sum of all
+Self columns up to and including that line in the table.
+
+   <p>Additionally the Calls column will record the amount of calls that were
+made to the function during the profiling run. This value will only
+be reported for functions that have been explicitly marked for call counting
+with <code>profile-call-counts</code>.
+
+   <p>The profiler also hooks into the disassembler such that instructions which
+have been sampled are annotated with their relative frequency of
+sampling.  This information is not stored across different sampling
+runs.
+
+<pre class="lisp">     ;      6CF:       702E             JO L4              ; 6/242 samples
+     ;      6D1:       D1E3             SHL EBX, 1
+     ;      6D3:       702A             JO L4
+     ;      6D5: L2:   F6C303           TEST BL, 3         ; 2/242 samples
+     ;      6D8:       756D             JNE L8
+     ;      6DA:       8BC3             MOV EAX, EBX       ; 5/242 samples
+     ;      6DC: L3:   83F900           CMP ECX, 0         ; 4/242 samples
+</pre>
+   <h4 class="subsection">14.2.3 Platform support</h4>
+
+<p>This module is known not to work consistently on the Alpha platform,
+for technical reasons related to the implementation of a machine
+language idiom for marking sections of code to be treated as atomic by
+the garbage collector;  However, it should work on other platforms,
+and the deficiency on the Alpha will eventually be rectified.
+
+   <p>Allocation profiling is only supported on SBCL builds that use
+the generational garbage collector. Tracking of call stacks at a
+depth of more than two levels is only supported on x86 and x86-64.
+
+<h4 class="subsection">14.2.4 Macros</h4>
+
+<p><a name="Macro-sb_002dsprof_003awith_002dprofiling"></a>
+
+<div class="defun">
+&mdash; Macro: <b>sb-sprof:with-profiling</b> (<var>&amp;key sample-interval alloc-interval max-samples reset mode loop max-depth show-progress threads report</var>)<var> &amp;body body<a name="index-sb_002dsprof_003awith_002dprofiling-571"></a></var><br>
+<blockquote><p><a name="index-sb_002dsprof_003awith_002dprofiling-572"></a>Repeatedly evaluate <code>body</code> with statistical profiling turned on. 
+   In multi-threaded operation, only the thread in which <code>with-profiling</code>
+   was evaluated will be profiled by default. If you want to profile
+   multiple threads, invoke the profiler with <code>start-profiling</code>.
+
+        <p>The following keyword args are recognized:
+
+          <dl>
+<dt><code>:sample-interval</code><em> &lt;n&gt;</em><dd>     Take a sample every &lt;n&gt; seconds. Default is <code>*sample-interval*</code>.
+
+          <br><dt><code>:alloc-interval</code><em> &lt;n&gt;</em><dd>     Take a sample every time &lt;n&gt; allocation regions (approximately
+     8kB) have been allocated since the last sample. Default is
+     <code>*alloc-interval*</code>.
+
+          <br><dt><code>:mode</code><em> &lt;mode&gt;</em><dd>     If <code>:cpu</code>, run the profiler in <code>cpu</code> profiling mode. If <code>:alloc</code>, run the
+     profiler in allocation profiling mode. If <code>:time</code>, run the profiler
+     in wallclock profiling mode.
+
+          <br><dt><code>:max-samples</code><em> &lt;max&gt;</em><dd>     Repeat evaluating body until &lt;max&gt; samples are taken. 
+     Default is <code>*max-samples*</code>.
+
+          <br><dt><code>:max-depth</code><em> &lt;max&gt;</em><dd>     Maximum call stack depth that the profiler should consider. Only
+     has an effect on x86 and x86-64.
+
+          <br><dt><code>:report</code><em> &lt;type&gt;</em><dd>     If specified, call <code>report</code> with <code>:type</code> &lt;type&gt; at the end.
+
+          <br><dt><code>:reset</code><em> &lt;bool&gt;</em><dd>     It true, call <code>reset</code> at the beginning.
+
+          <br><dt><code>:threads</code><em> &lt;list-form&gt;</em><dd>     Form that evaluates to the list threads to profile, or <code>:all</code> to indicate
+     that all threads should be profiled. Defaults to the current
+     thread. (Note: <code>start-profiling</code> defaults to all threads.)
+
+          <p><code>:threads</code> has no effect on call-counting at the moment.
+
+          <p>On some platforms (eg. Darwin) the signals used by the profiler are
+     not properly delivered to threads in proportion to their <code>cpu</code> usage
+     when doing <code>:cpu</code> profiling. If you see empty call graphs, or are obviously
+     missing several samples from certain threads, you may be falling afoul
+     of this.
+
+          <br><dt><code>:loop</code><em> &lt;bool&gt;</em><dd>     If true (the default) repeatedly evaluate <code>body</code>. If false, evaluate
+     if only once. 
+</dl>
+
+        </blockquote></div>
+
+   <p><a name="Macro-sb_002dsprof_003awith_002dsampling"></a>
+
+<div class="defun">
+&mdash; Macro: <b>sb-sprof:with-sampling</b> (<var>&amp;optional on</var>)<var> &amp;body body<a name="index-sb_002dsprof_003awith_002dsampling-573"></a></var><br>
+<blockquote><p><a name="index-sb_002dsprof_003awith_002dsampling-574"></a>Evaluate body with statistical sampling turned on or off. 
+</p></blockquote></div>
+
+<h4 class="subsection">14.2.5 Functions</h4>
+
+<p><a name="Function-sb_002dsprof_003areport"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-sprof:report</b><var> &amp;key type max min-percent call-graph sort-by sort-order stream show-progress<a name="index-sb_002dsprof_003areport-575"></a></var><br>
+<blockquote><p><a name="index-sb_002dsprof_003areport-576"></a>Report statistical profiling results.  The following keyword
+   args are recognized:
+
+          <dl>
+<dt><code>:type</code><em> &lt;type&gt;</em><dd>      Specifies the type of report to generate.  If <code>:flat</code>, show
+      flat report, if <code>:graph</code> show a call graph and a flat report. 
+      If nil, don't print out a report.
+
+          <br><dt><code>:stream</code><em> &lt;stream&gt;</em><dd>      Specify a stream to print the report on.  Default is
+      <code>*standard-output*</code>.
+
+          <br><dt><code>:max</code><em> &lt;max&gt;</em><dd>      Don't show more than &lt;max&gt; entries in the flat report.
+
+          <br><dt><code>:min-percent</code><em> &lt;min-percent&gt;</em><dd>      Don't show functions taking less than &lt;min-percent&gt; of the
+      total time in the flat report.
+
+          <br><dt><code>:sort-by</code><em> &lt;column&gt;</em><dd>      If <code>:samples</code>, sort flat report by number of samples taken. 
+      If <code>:cumulative-samples</code>, sort flat report by cumulative number of samples
+      taken (shows how much time each function spent on stack.) Default
+      is <code>*report-sort-by*</code>.
+
+          <br><dt><code>:sort-order</code><em> &lt;order&gt;</em><dd>      If <code>:descending</code>, sort flat report in descending order. If <code>:ascending</code>,
+      sort flat report in ascending order. Default is <code>*report-sort-order*</code>.
+
+          <br><dt><code>:show-progress</code><em> &lt;bool&gt;</em><dd>     If true, print progress messages while generating the call graph.
+
+          <br><dt><code>:call-graph</code><em> &lt;graph&gt;</em><dd>     Print a report from &lt;graph&gt; instead of the latest profiling
+     results.
+
+        </dl>
+
+        <p>Value of this function is a <code>call-graph</code> object representing the
+resulting call-graph, or <code>nil</code> if there are no samples (eg. right after
+calling <code>reset</code>.) 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dsprof_003areset"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-sprof:reset</b><var><a name="index-sb_002dsprof_003areset-577"></a></var><br>
+<blockquote><p><a name="index-sb_002dsprof_003areset-578"></a>Reset the profiler. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dsprof_003astart_002dprofiling"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-sprof:start-profiling</b><var> &amp;key max-samples mode sample-interval alloc-interval max-depth threads sampling<a name="index-sb_002dsprof_003astart_002dprofiling-579"></a></var><br>
+<blockquote><p><a name="index-sb_002dsprof_003astart_002dprofiling-580"></a>Start profiling statistically in the current thread if not already profiling. 
+The following keyword args are recognized:
+
+          <dl>
+<dt><code>:sample-interval</code><em> &lt;n&gt;</em><dd>     Take a sample every &lt;n&gt; seconds.  Default is <code>*sample-interval*</code>.
+
+          <br><dt><code>:alloc-interval</code><em> &lt;n&gt;</em><dd>     Take a sample every time &lt;n&gt; allocation regions (approximately
+     8kB) have been allocated since the last sample. Default is
+     <code>*alloc-interval*</code>.
+
+          <br><dt><code>:mode</code><em> &lt;mode&gt;</em><dd>     If <code>:cpu</code>, run the profiler in <code>cpu</code> profiling mode. If <code>:alloc</code>, run
+     the profiler in allocation profiling mode. If <code>:time</code>, run the profiler
+     in wallclock profiling mode.
+
+          <br><dt><code>:max-samples</code><em> &lt;max&gt;</em><dd>     Maximum number of samples.  Default is <code>*max-samples*</code>.
+
+          <br><dt><code>:max-depth</code><em> &lt;max&gt;</em><dd>     Maximum call stack depth that the profiler should consider. Only
+     has an effect on x86 and x86-64.
+
+          <br><dt><code>:threads</code><em> &lt;list&gt;</em><dd>     List threads to profile, or <code>:all</code> to indicate that all threads should be
+     profiled. Defaults to <code>:all</code>. (Note: <code>with-profiling</code> defaults to the current
+     thread.)
+
+          <p><code>:threads</code> has no effect on call-counting at the moment.
+
+          <p>On some platforms (eg. Darwin) the signals used by the profiler are
+     not properly delivered to threads in proportion to their <code>cpu</code> usage
+     when doing <code>:cpu</code> profiling. If you see empty call graphs, or are obviously
+     missing several samples from certain threads, you may be falling afoul
+     of this.
+
+          <br><dt><code>:sampling</code><em> &lt;bool&gt;</em><dd>     If true, the default, start sampling right away. 
+     If false, <code>start-sampling</code> can be used to turn sampling on. 
+</dl>
+
+        </blockquote></div>
+
+   <p><a name="Function-sb_002dsprof_003astop_002dprofiling"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-sprof:stop-profiling</b><var><a name="index-sb_002dsprof_003astop_002dprofiling-581"></a></var><br>
+<blockquote><p><a name="index-sb_002dsprof_003astop_002dprofiling-582"></a>Stop profiling if profiling. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dsprof_003aprofile_002dcall_002dcounts"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-sprof:profile-call-counts</b><var> &amp;rest names<a name="index-sb_002dsprof_003aprofile_002dcall_002dcounts-583"></a></var><br>
+<blockquote><p><a name="index-sb_002dsprof_003aprofile_002dcall_002dcounts-584"></a>Mark the functions named by <code>names</code> as being subject to call counting
+during statistical profiling. If a string is used as a name, it will
+be interpreted as a package name. In this case call counting will be
+done for all functions with names like <code>x</code> or (SETF X), where <code>x</code> is a symbol
+with the package as its home package. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dsprof_003aunprofile_002dcall_002dcounts"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-sprof:unprofile-call-counts</b><var><a name="index-sb_002dsprof_003aunprofile_002dcall_002dcounts-585"></a></var><br>
+<blockquote><p><a name="index-sb_002dsprof_003aunprofile_002dcall_002dcounts-586"></a>Clear all call counting information. Call counting will be done for no
+functions during statistical profiling. 
+</p></blockquote></div>
+
+<h4 class="subsection">14.2.6 Variables</h4>
+
+<p><a name="Variable-sb_002dsprof_003a_002amax_002dsamples_002a"></a>
+
+<div class="defun">
+&mdash; Variable: <b>sb-sprof:*max-samples*</b><var><a name="index-sb_002dsprof_003a_002amax_002dsamples_002a-587"></a></var><br>
+<blockquote><p><a name="index-sb_002dsprof_003a_002amax_002dsamples_002a-588"></a>Default number of traces taken. This variable is somewhat misnamed:
+each trace may actually consist of an arbitrary number of samples, depending
+on the depth of the call stack. 
+</p></blockquote></div>
+
+   <p><a name="Variable-sb_002dsprof_003a_002asample_002dinterval_002a"></a>
+
+<div class="defun">
+&mdash; Variable: <b>sb-sprof:*sample-interval*</b><var><a name="index-sb_002dsprof_003a_002asample_002dinterval_002a-589"></a></var><br>
+<blockquote><p><a name="index-sb_002dsprof_003a_002asample_002dinterval_002a-590"></a>Default number of seconds between samples. 
+</p></blockquote></div>
+
+<h4 class="subsection">14.2.7 Credits</h4>
+
+<p><code>sb-sprof</code> is an SBCL port, with enhancements, of Gerd
+Moellmann's statistical profiler for CMUCL.
+
+   </body></html>
+

@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>9.1.1 Connecting Servers and Clients</TITLE>
+<META NAME="description" CONTENT="9.1.1 Connecting Servers and Clients">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3818" HREF="node247.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3816" HREF="node245.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3810" HREF="node245.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3820" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3821" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3819" HREF="node247.html">9.1.2 Remote Evaluations</A>
+<B>Up:</B> <A NAME="tex2html3817" HREF="node245.html">9.1 The REMOTE Package</A>
+<B> Previous:</B> <A NAME="tex2html3811" HREF="node245.html">9.1 The REMOTE Package</A>
+<BR> <P>
+<H2><A NAME="SECTION001011000000000000000">9.1.1 Connecting Servers and Clients</A></H2>
+<P>
+Before a client can connect to a server, it must know the network address on
+which the server accepts connections.  Network addresses consist of a host
+address or name, and a port number.  Host addresses are either a string of the
+form <tt>VANCOUVER.SLISP.CS.CMU.EDU</tt> or a 32 bit unsigned integer.  Port
+numbers are 16 bit unsigned integers.  Note: <i>port</i> in this context has
+nothing to do with Mach ports and message passing.
+<P>
+When a process wants to receive connection requests (that is, become a
+server), it first picks an integer to use as the port.  Only one server
+(Lisp or otherwise) can use a given port number on a given machine at
+any particular time.  This can be an iterative process to find a free
+port: picking an integer and calling <tt>create-request-server</tt>.  This
+function signals an error if the chosen port is unusable.  You will
+probably want to write a loop using <tt>handler-case</tt>, catching
+conditions of type error, since this function does not signal more
+specific conditions.
+<P>
+<b>[Function]</b><BR> 
+<tt> wire: create-request-server</tt> <em> <i>port</i> <i>&amp;optional</i> <i>on-connect</i></em><BR>
+<P>
+  <tt>create-request-server</tt> sets up the current Lisp to accept
+  connections on the given port.  If port is unavailable for any
+  reason, this signals an error.  When a client connects to this port,
+  the acceptance mechanism makes a wire structure and invokes the
+  <i>on-connect</i> function.  Invoking this function has a couple
+  purposes, and <i>on-connect</i> may be <i>nil</i> in which case the
+  system foregoes invoking any function at connect time.
+<P>
+  The <i>on-connect</i> function is both a hook that allows you access
+  to the wire created by the acceptance mechanism, and it confirms the
+  connection.  This function takes two arguments, the wire and the
+  host address of the connecting process.  See the section on host
+  addresses below.  When <i>on-connect</i> is <i>nil</i>, the request server
+  allows all connections.  When it is non-<i>nil</i>, the function returns
+  two values, whether to accept the connection and a function the
+  system should call when the connection terminates.  Either value may
+  be <i>nil</i>, but when the first value is <i>nil</i>, the acceptance mechanism
+  destroys the wire.
+<P>
+  <tt>create-request-server</tt> returns an object that
+  <tt>destroy-request-server</tt> uses to terminate a connection.
+<P>
+<b>[Function]</b><BR> 
+<tt> wire: destroy-request-server</tt> <em> <i>server</i></em><BR>
+<P>
+  <tt>destroy-request-server</tt> takes the result of
+  <tt>create-request-server</tt> and terminates that server.  Any
+  existing connections remain intact, but all additional connection
+  attempts will fail.
+<P>
+<b>[Function]</b><BR> 
+<tt> wire: connect-to-remote-server</tt> <em> <i>host</i> <i>port</i> <i>&amp;optional</i> <i>on-death</i></em><BR>
+<P>
+  <tt>connect-to-remote-server</tt> attempts to connect to a remote
+  server at the given <i>port</i> on <i>host</i> and returns a wire
+  structure if it is successful.  If <i>on-death</i> is non-<i>nil</i>, it is
+  a function the system invokes when this connection terminates.
+<P>
+<HR><A NAME="tex2html3818" HREF="node247.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3816" HREF="node245.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3810" HREF="node245.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3820" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3821" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3819" HREF="node247.html">9.1.2 Remote Evaluations</A>
+<B>Up:</B> <A NAME="tex2html3817" HREF="node245.html">9.1 The REMOTE Package</A>
+<B> Previous:</B> <A NAME="tex2html3811" HREF="node245.html">9.1 The REMOTE Package</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

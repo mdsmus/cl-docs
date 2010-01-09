@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Non-Descriptor Representations</TITLE>
+<META NAME="description" CONTENT="Non-Descriptor Representations">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2831" HREF="node170.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2829" HREF="node167.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2823" HREF="node168.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2833" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2834" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2832" HREF="node170.html">5.11.3 Variables</A>
+<B>Up:</B> <A NAME="tex2html2830" HREF="node167.html">5.11 Numbers</A>
+<B> Previous:</B> <A NAME="tex2html2824" HREF="node168.html">5.11.1 Descriptors</A>
+<BR> <P>
+<H2><A NAME="SECTION006112000000000000000">Non-Descriptor Representations</A></H2>
+<P>
+<A NAME="nondescriptor">&#160;</A>
+<A NAME="10519">&#160;</A>
+<A NAME="10520">&#160;</A>
+<P>
+From the discussion above, we can see that the standard descriptor
+representation has many problems, the worst being number consing.
+Common Lisp compilers try to avoid these descriptor efficiency problems by using
+<i>non-descriptor</i> representations.  A compiler that uses non-descriptor
+representations can compile this function so that it does no number consing:
+<BLOCKQUOTE> <PRE>(defun multby (vec n)
+  (declare (type (simple-array single-float (*)) vec)
+           (single-float n))
+  (dotimes (i (length vec))
+    (setf (aref vec i)
+          (* n (aref vec i)))))
+</PRE> </BLOCKQUOTE>
+If a descriptor representation were used, each iteration of the loop might
+cons two floats and do three times as many memory references.
+<P>
+As its negative definition suggests, the range of possible non-descriptor
+representations is large.  The performance improvement from non-descriptor
+representation depends upon both the number of types that have non-descriptor
+representations and the number of contexts in which the compiler is forced to
+use a descriptor representation.
+<P>
+Many Common Lisp compilers support non-descriptor representations for
+float types such as <tt>single-float</tt> and <tt>double-float</tt>
+(section <A HREF="node174.html#floatefficiency">5.11.7</A>.)  Python adds support for full
+word integers (see section&nbsp;<A HREF="node173.html#wordintegers">5.11.6</A>), characters
+(see section&nbsp;<A HREF="node178.html#characters">5.11.11</A>) and system-area pointers (unconstrained
+pointers, see section&nbsp;<A HREF="node204.html#systemareapointers">6.5</A>.)  Many Common Lisp compilers
+support non-descriptor representations for variables (section
+<A HREF="node170.html#NDvariables">5.11.3</A>) and array elements (section
+<A HREF="node175.html#specializedarraytypes">5.11.8</A>.)  Python adds support for
+non-descriptor arguments and return values in local call
+(see section&nbsp;<A HREF="node177.html#numberlocalcall">5.11.10</A>) and structure slots (see section&nbsp;<A HREF="node176.html#rawslots">5.11.9</A>).
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

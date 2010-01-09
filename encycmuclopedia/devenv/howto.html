@@ -1,0 +1,953 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+<LINK rel="stylesheet" href="/dan.css">
+<title>CMU Common Lisp on Linux</title>
+</head><body>
+
+<h1>CMU Common Lisp on Linux</h1>
+
+<p><i>Last update: $Date: 2000/06/26 20:10:11 $</i>
+
+<p><b>Licence:</b> this document is placed in the public domain, for
+unencumbered use, modification and distribution.  I ask however that
+modified versions carry a notice describing the changes made, the
+author of the changes, and a pointer to this original version.  This
+is a request which I cannot enforce other than by writing rude things 
+about people who don't.
+
+<p>Your <a href="mailto:dan@telent.net">comments</a> (on the document,
+preferably, not the licence) are always appreciated.
+
+<!-- put point on this line and evaluate (load "make-contents") -->
+<!-- CONTENTS_START -->
+<ul><li><a href="#introduction">Introduction</a>
+<ul><li>The Rant
+<li>The Point
+<li>Conventions
+</ul>
+<li><a href="#you_will_need">You will need</a>
+<ul><li>To know things
+<li>Linux
+<li>CMUCL
+<li>alien
+<li>The HyperSpec
+<li>Emacs
+<li>ILISP
+</ul>
+<li><a href="#getting_started">Getting Started</a>
+<ul><li>CMUCL
+<li>Emacs 
+<li>ILISP
+<li>Other elisp
+</ul>
+<li><a href="#using_it">Using it</a>
+<ul><li>See if it works
+<li>Debugging
+<li>Logical pathnames
+<li>Creating a project
+<li> Networking
+<li> OS interfaces
+<li>Multithreading
+<li> CORBA
+<li> Graphics interfaces
+</ul>
+<li><a href="#references">References</a>
+<ul><li>Documents on your local disk
+<li>Web sites and online documents
+<li>Books
+</ul>
+</ul>
+<!-- CONTENTS_END -->
+
+
+
+
+<hr>
+<h1><a name="introduction">Introduction</a></h1>
+
+<p><b>Warning: Contents under pressure</b>.
+
+<h2>The Rant</h2>
+
+<p> I kept hearing nice things about Lisp.  Speak to anyone who
+programmed real systems prior to the widespread adoption of Unix (if
+your local stores don't stock them, try ``The Unix-Haters'
+Handbook''), and you find that a typical Lisp system has (had) amazing
+programmer productivity tools: online hypertexted manuals,
+cross-reference things, call-graph generators, code coverage
+generators, an advanced debugger, incremental development and testing
+utilities, and so forth.  Ten years later, gdb on Linux doesn't work
+properly with threads and shared libraries, Emacs can't indent Perl
+correctly, a new exploit caused by a programmer's careless use of
+fixed-length string buffers is found every week in some utility or
+other, <I>weird shared library</i> things happen when you don't expect
+them to, and the program taking most of the available memory on my
+computer is a glorified help file viewer with a tcp sockets interface
+stuck on it.  This is progress?
+
+<h2>The Point</h2>
+
+<p> ``The Lisp programming environment'' has the potential to be a lot
+better than ``the Unix programming environment''.  Right now it
+doesn't come that way out of the box (for values of `it' constrained
+to `free libre Lisp setups that work on Linux/x86') and if you're new
+to Lisp, setting it up so it <i>does</i> is about as much fun as, say,
+learning sendmail.cf rewrite rules without use of the Bat book.  
+
+<p>So, the aim of this document isn't to tell you how to program Lisp
+(there are some good books on that, see the <a
+href="#references">References</a> section at the end), it's to provide
+a roadmap towards a comfortable free Lisp programming environment
+based on Linux/x86.  I'm trying to cover the gaps in the textbook
+where it says ``your local wizard will be able to tell you how to do
+this'' - not that I qualify on either count, but the experience of
+figuring it out without one is still fresh in my mind.
+
+<h2>Conventions</h2>
+
+<p>A number of syntactic conventions have been adopted throughout this
+document.  Most of them are pretty obvious, but just in case:
+
+<ul>
+
+<li><tt>typewriter</tt> text refers to commands, Lisp names, and
+general `computerish' things.  
+
+<li> <i>italic</i> text is for variables: for example, if I write 
+
+<blockquote>
+To compile <i>filename</i><tt>.lisp</tt>, type <tt>(compile-file
+"</tt><i>filename</i><tt>")</tt>
+</blockquote>
+
+you should be able to work out that <tt>(compile-file "foo")</tt> is what
+you type to compile <tt>foo.lisp</tt>.  Frankly, if you're fluent in
+English and that wasn't obvious anyway, you probably have more
+pressing problems than learning Lisp.
+
+<li> Sometimes examples to be typed in are shown.  The system's prompt
+is usually left in to indicate what kind of thing to type them into: 
+<tt>$</tt> is a Bourne-style shell (csh weenies will need to do their
+own translation), <tt>&#35;</tt> is the same thing again, but you'll
+need to be super-user, and <tt>*</tt> is the CMUCL prompt character,
+so really that means `cause this to be evaluated as a Lisp
+expression'.  Thus
+
+<pre>
+$ id
+uid=500(dan) gid=500(dan) groups=500(dan),100(users)
+* (+ 1 2)
+3
+# /sbin/reboot
+</pre>
+
+<p>That last one doesn't seem to produce much output.  Odd, that.
+
+</ul>
+
+
+
+<h1><a name="you_will_need">You will need</a></h1>
+
+<h2>To know things</h2>
+
+<p> To get much value from this document, you will need a basic
+understanding of Linux or other Unix, and of Emacs.  You should know
+what to do when I write "copy the resulting file to
+<tt>/usr/lib/cmucl/lisp.core</tt>", and you should know what to do
+when I write "evaluate this by pressing M-C-x" or "add this to your
+.emacs"
+
+<h2>Linux</h2>
+
+<p>Obviously.  To set up a Lisp environment like mine, you need a
+Linux system like mine.  That means libc 6.0 (glibc 2.0) or 6.1 (2.1).
+Suitable distributions include 
+
+<ul> 
+<li> Red Hat 5.1, 5.2 - glibc 2.0
+<li> Red Hat 6.0 - glibc 2.1
+<li> Debian 2.1 (`slink') - glibc 2.0
+<li> Debian 2.2 (`potato') - glibc 2.1
+</ul>
+
+<p> If you're using Glibc 2.1 you need to be running linux 2.2.13 (or
+maybe 2.3.x) and to have configured the kernel for 1Gb max physical
+memory not 2Gb.  This advice applies to cmucl 2.4.17; newer versions
+have since been released so I may be out of date.
+
+<h2>CMUCL</h2>
+
+<P> The four basic options for ANSI-ish Common Lisp on Linux are
+<ul>
+<li> <a href="http://clisp.cons.org/">CLISP</a> - free, small,
+bytecode
+<li> <a href="http://cmucl.cons.org/">CMUCL</a> - free, large,
+native code
+<li> <a href="http://www.franz.com">Allegro Common Lisp</a> -
+evaluation version of their proprietary system.  
+<li> <a href="http://www.harlequin.com">Harlequin LispWorks</a>  -
+evaluation version of their proprietary system.  Time-limited.
+</ul>
+
+<p> The choice between CMUCL and CLISP is mostly a size/speed
+tradeoff, except for some `oddball' uses - CLISP has very fast bignum
+support but a bit missing from its CLOS support.  I don't attempt here
+to give arguments for one or the other, so go and decide which you'd
+rather use, and come back here if you choose CMUCL.
+
+<p> CMUCL is my choice for fast execution and near-ANSI compliance.
+It's written in Common Lisp in a rather unportable fashion, so if you
+want to compile it yourself you'll need a working binary package
+installed first anyway.  It's currently at version 18b, but you're
+less likely to find that actual version anywhere than you are to find
+the Debian-packaged version which is basically the same.  Debian
+`slink' (glibc 2.0-based) has 2.4.8, `potato' (2.1-based) has 2.4.20.
+Pick the one appropriate to your libc version, and if your system
+doesn't understand Debian packages, <tt>alien</tt> can translate them
+for you.
+
+<h3>Download</h3>
+<table border=0>
+<tr><td colspan=3>The CMUCL lisp compiler and development system </td></tr>
+<tr>
+<th width="30%"> </th>
+<th>Glibc 2.0</th>
+<th>Glibc 2.1</th>
+</tr>
+<tr><td> </td>
+<td><a href="http://www.debian.org/Packages/stable/devel/cmucl.html">
+http://www.debian.org/Packages/ stable/devel/cmucl.html</a></td>
+<td><a href="http://www.debian.org/Packages/unstable/devel/cmucl.html">
+http://www.debian.org/Packages/ unstable/devel/cmucl.html</a></td>
+</tr>
+
+<tr><td colspan=2>A lisp core that is compiled with safe options. </td></tr>
+<tr><td> </td>
+<td>(not available)</td>
+<td><a
+href="http://www.debian.org/Packages/unstable/devel/cmucl-safe.html">
+http://www.debian.org/Packages/ unstable/devel/cmucl-safe.html</a></td>
+</tr>
+
+<tr><td colspan=2>A lisp core that is compiled with small options. </td>
+</tr><tr><td> </td>
+<td>(not available)</td>
+<td><a
+href="http://www.debian.org/Packages/unstable/devel/cmucl-small.html">
+http://www.debian.org/Packages/ unstable/devel/cmucl-small.html</a></td>
+</tr>
+
+<tr><td colspan=2>A lisp core that is compiled with the normal
+options  - fairly close to the standard 18b release.  Beginners are
+advised to use the -safe image instead</td>
+</tr><tr><td> </td>
+<td>(not available)</td>
+<td><a
+href="http://www.debian.org/Packages/unstable/devel/cmucl-normal.html">
+http://www.debian.org/Packages/ unstable/devel/cmucl-normal.html</a></td>
+</tr>
+
+<tr><td colspan=2>The Motif interface for CMUCL. </td>
+</tr><tr><td> </td>
+<td><a
+href="http://www.debian.org/Packages/stable/devel/cmucl-clm.html">
+http://www.debian.org/Packages/ stable/devel/cmucl-clm.html</a></td>
+<td><a
+href="http://www.debian.org/Packages/unstable/devel/cmucl-clm.html">
+http://www.debian.org/Packages/ unstable/devel/cmucl-clm.html</a></td>
+</tr>
+
+<tr><td colspan=2>The CMUCL CLX library - An xlib like library for X.</td>
+</tr>
+<tr><td> </td>
+<td><a
+href="http://www.debian.org/Packages/stable/devel/cmucl-clx.html">
+http://www.debian.org/Packages/ stable/devel/cmucl-clx.html</a></td>
+<td><a
+href="http://www.debian.org/Packages/unstable/devel/cmucl-clx.html">
+http://www.debian.org/Packages/ unstable/devel/cmucl-clx.html</a></td>
+</tr>
+
+<tr><td colspan=2>The defsystem package provides a "make"-like system for Lisp. </td>
+</tr>
+<tr><td> </td>
+<td><a
+href="http://www.debian.org/Packages/stable/devel/cmucl-defsystem.html">
+http://www.debian.org/Packages/ stable/devel/cmucl-defsystem.html</a></td>
+<td><a
+href="http://www.debian.org/Packages/unstable/devel/cmucl-defsystem.html">
+http://www.debian.org/Packages/ unstable/devel/cmucl-defsystem.html</a></td>
+</tr>
+
+<tr><td colspan=2> Hemlock. An X-only Emacs-like editor for CMUCL (you don't need it if using Emacs)</td>
+</tr>
+<tr><td> </td>
+<td><a
+href="http://www.debian.org/Packages/stable/devel/cmucl-hemlock.html">
+http://www.debian.org/Packages/ stable/devel/cmucl-hemlock.html</a></td>
+<td><a
+href="http://www.debian.org/Packages/unstable/devel/cmucl-hemlock.html">
+http://www.debian.org/Packages/ unstable/devel/cmucl-hemlock.html</a></td>
+</tr>
+
+<tr><td colspan=2>The series package is a general iteration library
+for CMUCL.  If you don't know whether you want it, it probably
+wouldn't hurt anyway </td>
+</tr>
+<tr><td> </td>
+<td><a href="http://www.debian.org/Packages/stable/devel/series.html">
+http://www.debian.org/Packages/ stable/devel/series.html</a></td>
+<td><a
+href="http://www.debian.org/Packages/unstable/devel/series.html">
+http://www.debian.org/Packages/ unstable/devel/series.html</a></td>
+</tr></table>
+
+
+<h2>alien</h2>
+
+<p>If you don't use the Debian package system, you will need alien to
+convert the CMUCL packages into a format you can use.  It's available
+from <a href="http://kitenet.net/programs/alien/">
+http://kitenet.net/programs/alien/</a>
+
+
+<h2>The HyperSpec</h2>
+
+<p> Common Lisp has an ANSI standard (X3.226-1994, for the curious).
+It's distributed on laminar carbon media (a.k.a. paper) and it costs money.
+
+<p>The <a
+href="http://www.harlequin.com/education/books/HyperSpec/FrontMatter/index.html">
+Common Lisp HyperSpec</a><sup>(TM)</sup> is not officially that
+standard, but except in cases of error or HTML deficiency, contains
+exactly the same text with the addition of extensive hypertext-based
+cross-references.  <p>Get a <a
+href="http://www.harlequin.com/education/books/HyperSpec/">copy</a>
+(unless you have a lightning-fast internet link, that is, in which
+case you can use the one at <a href="http://www.harlequin.com/">
+Harlequin</a>).  It's invaluable.
+ 
+<h2>Emacs</h2>
+
+<p> I don't wish to start an editor flamewar, but if you don't use 
+Emacs you won't get much out of this document.
+
+<p> I've used FSF Emacs 19 and 20 and XEmacs 20 for Lisp.  All of them
+play nice, so choose one based on your political sympathies; everyone
+else has.  The only relevant technical difference is that version 5.8
+of ILISP (see below) doesn't seem to produce pulldown menus when used
+with XEmacs.  I can't remember key bindings, so I use FSF Emacs.
+
+<h2>ILISP</h2>
+
+<p> Currently at version 5.10.1.  This is a much better Lisp mode
+than the default Emacs one, and can be found at <a
+href="http://ilisp.cons.org/">http://ilisp.cons.org/</a>.  Xemacs also
+bundles an older version, but the Xemacs people and the ILISP people
+are presently talking to each other about getting this resolved.
+
+<hr>
+<h1><a name="getting_started">Getting Started</a></h1>
+
+<h2>CMUCL</h2>
+
+<p>Install the packages.  You almost certainly want at least
+cmucl-defsystem-2.4.x and cmucl-2.4.x, plus your choice of core image
+(-normal, -safe or -small); if you have a fast network link
+you may well find a use for the rest of it too.  You don't need
+hemlock if you have Emacs (possibly also vice versa, but I haven't
+used it, I don't know).
+
+<p>Run <tt>/usr/sbin/cmuclconfig</tt>.  To minimise time spent faffing
+around at the beginning of a Lisp session, it's possible to dump extra
+bits of code into a Lisp image so it starts up with them already
+resident (it's probably also a win in paging terms, but I don't know).
+This concept will be familiar to anyone who's watched Emacs build.
+Anyway, this script allows you to select the bits you want for your
+own custom `core' file.  I'd recommend that you include defsystem, at
+least.  Once you have a core file you will need to put it somewhere
+that Lisp can find it.  I usually just copy it over the top of the
+original (I bet dpkg loves me); the alternative is to set the
+environment variable <tt>$CMUCLLIB</tt> to whatever directory you did
+put the core file in.
+
+<h2>Emacs </h2>
+
+<p>Unless your distribution is old or broken, it should have come with
+an acceptable Emacs setup.  According to the FSSTND, Emacs will
+install architecture-independent data files into
+<tt>/usr/share/emacs/</tt><i>version</i><tt>/lisp</tt>.  If you aren't
+already on familiar terms with Emacs at the elisp level, you might
+well end up being by the time you've done any Lisp - you'll probably
+find yourself living in the editor.  If you elected not to install the
+<tt>*.el</tt> files the first time around, you might want to now.  If
+space is a concern you can gzip them and have Emacs uncompress them
+whenever you visit one - FSF Emacs has <tt>jka-compr</tt> and XEmacs
+has <tt>toggle-auto-compression</tt> for this purpose
+
+<h2>ILISP</h2>
+
+<p>Assuming ILISP 5.9 or later, it installs fairly painlessly (read
+the INSTALLATION file) unless you have an XEmacs with an older version
+installed already.  It might install painlessly even if so, but I
+haven't tried..
+
+<p> Once you've done that, it comes with installation instructions,
+which FSF Emacs users can follow and XEmacs users may have to
+improvise around (as it's already installed).  My advice would be to
+paste all/most of the <tt>ilisp.emacs</tt> file into your
+<tt>.emacs</tt>, at least until you know what it does.  The segment
+below is probably about the minimum necessary.
+
+<pre>
+(autoload 'run-ilisp "ilisp" "Select a new inferior LISP." t)
+(autoload 'cmulisp   "ilisp" "Inferior CMU Common LISP." t)
+(setq cmulisp-program "/usr/bin/lisp")
+(setq cmulisp-local-source-directory "/usr/src/cmucl/cmucl/")
+(set-default 'auto-mode-alist
+             (append '(("\\.lisp$" . lisp-mode)) auto-mode-alist))
+(add-hook 'lisp-mode-hook 
+          '(lambda () 
+             (require 'ilisp)
+             (setq indent-tabs-mode nil)))
+
+;;; the cmucl-specific stuff in ilisp runs after the hook defined
+;;; above, and overrides the binary extension to be "sparcf", which is not
+;;; what we want.  The hook below runs after that, so we can set it back
+;;; again
+
+(add-hook 'cmulisp-hook
+	  (lambda ()
+	    (setq ilisp-init-binary-extension "x86f")
+	    (setq ilisp-init-binary-command "(progn \"x86f\")")
+	    (setq ilisp-binary-extension "x86f")))
+</pre>
+
+<h2>Other elisp</h2>
+
+<p>I don't intend to go into too much elisp detail here; this is
+supposed to be about Common Lisp not Emacs.  But you may well find
+yourself writing or acquiring small elisp functions here and there,
+and needing a place to keep them.  Your options are: (1) paste them
+all into your <tt>.emacs</tt>, or (2) create a directory somewhere,
+add it to your <tt>load-path</tt> then save them each in their own
+file (or according to some logical division, at any rate) and use
+<tt>load</tt> (for straightforward Lisp) or <tt>require</tt> (for
+things that include a <tt>provide</tt> form) to load them when needed.
+
+<p> If you use XEmacs 20, you can put these files into
+<tt>~/.xemacs/lisp</tt> and they will be found automatically.  FSF
+Emacs users will need to create their own directory and add it to
+theload path by hand : <tt>(setq load-path (append '("~/elisp")
+load-path))</tt> in <tt>.emacs</tt> is an appropriate incantation.
+
+<hr>
+<h1><a name="using_it">Using it</a></h1>
+
+<H2>See if it works</h2>
+
+<p> Once everything is installed, you should be able to open Emacs,
+type <tt>M-x cmulisp RET</tt> to start the environment, then visit
+<tt>foo.lisp</tt>.  Type 
+
+<pre>
+(+ 1 2)
+</pre>
+
+and press <tt>M-C-x </tt> to have Lisp evaluate it.  The number '3'
+should be displayed in the echo area (that's the bottom line in the
+Emacs frame).  If it produces more than one line of output -- and that
+example probably won't, unless it triggers a bout of garbage
+collection -- Emacs will split the frame into two windows and display
+the answer in the new one.  Thus:
+
+<pre>
+(format nil "One line~%Two lines")
+</pre>
+
+<tt>M-C-x</tt> that, and see it show the returned string.  Now <tt>C-c
+1</tt> to make the output window go away.
+
+<p>While you're here, try the various `documentation' keys.  Position
+the cursor on 'format' and press 
+<ul>
+<li> <b>C-c a</b> to find out its argument list
+<li> <b>C-c d</b> to show its builtin documentation
+<li> <b>C-c H</b> to look up its HyperSpec entry (requires suitable
+web browser)
+</ul>
+
+<h2>Debugging</h2>
+
+<p> The first thing you need to know is how to get out of the
+debugger.  To demonstrate this, we need to get into the debugger:
+
+<pre>
+* (/ 1 0)
+
+Arithmetic error DIVISION-BY-ZERO signalled.
+Operation was KERNEL::DIVISION, operands (1 0).
+
+Restarts:
+  0: [ABORT] Return to Top-Level.
+
+Debug  (type H for help)
+
+(KERNEL::INTEGER-/-INTEGER 1 0)
+Source: Error finding source: 
+Error in function DEBUG::GET-FILE-TOP-LEVEL-FORM:  Source file no longer exists:
+  target:code/numbers.lisp.
+0] 
+</pre>
+
+<p><tt>0] </tt> is the debugger prompt.  If you cause another error,
+you could get <tt>0]]</tt> which means that you're in the debugger
+twice.  You exit by typing <tt>q</tt> to abort everything and go back
+to the top level, or the number of one of the listed restarts -
+in this case there is only the one restart <tt>0</tt> which will abort
+back to the toplevel anyway.
+
+<p>(If you don't want a recursive debug session, you can use the
+debugger command <tt>flush</tt> (or related variable
+<tt>debug::*flush-debug-errors*</tt>) to toggle whether errors while
+in the debugger are ignored or cause another level of debugger.  The
+default setting is T (ignore errors) when running from the
+command-line, NIL (recursive debug) when running with ILISP)
+
+<p>If you are repeatedly evaluating a form with errors from a Lisp
+source buffer, note that Emacs doesn't exit the debugger on its own,
+but just carries on (conceptually, it's entering the subsequent forms
+at the <tt>0]</tt> prompt).  This doesn't affect too much usually, but
+does mean that 
+<ul>
+<li> eventually you will get a message like 
+<pre>
+Help! 11 nested errors.  KERNEL:*MAXIMUM-ERROR-DEPTH* exceeded
+</pre>
+(which you can probably ignore - it means that CMUCL has dropped back
+to the <tt>*</tt> prompt on its own), 
+
+<li> although the <tt>*cmulisp*</tt> buffer is still displaying
+<tt>*</tt> as the prompt, you can type '<tt>backtrace</tt>' or other
+debugger command into it to see what happened, 
+
+<li> if you're doing something like rebinding <tt>*readtable*</tt>,
+things can get quite exciting.  There is a change to CMUCL in
+the works to optionally make it reset to the standard readtable when
+using the debugger, so look out for that when it arrives.
+
+</ul>
+<p> For tracing the flow of execution of a program, the standard CL
+macros TRACE and UNTRACE exist, and work like this
+<pre>
+* (defun fac (n) (if (> n 1) (* n (fac (1- n))) 1))
+FAC
+* (trace fac)
+(FAC)
+* (fac 3)
+  0: (FAC 3)
+    1: (FAC 2)
+      2: (FAC 1)
+      2: FAC returned 1
+    1: FAC returned 2
+  0: FAC returned 6
+6
+* 
+</pre>
+
+<p> Sometimes CMUCL refuses to trace compiled functions, complaining
+about :function-end breakpoints.  I don't know why it does this.  The
+simplest workaround is to redefine the fuction as interpreted - place
+the cursor on the function definition in the source buffer and M-C-x.
+Face it, you're now printing out two lines of text every time it gets
+called, the speed slowdown from running the interpreted version is not
+exactly going to be critical.
+
+<p>[TBD: is there a flashy GUD-style debugger for Emacs?]
+
+<h2>Logical pathnames</h2>
+
+<P>There are many kinds of file system.  Common Lisp provides
+facilities for referring to and manipulating files which minimize the
+program-visible differences between them.
+
+<p>As programmers we have the choice of representing filenames as
+strings (<i>namestrings</i>), or as <i>pathnames</i>.
+<i>Pathnames</i> are implementation-independent structured objects
+with six components: a host, a device, a directory, a name, a type,
+and a version.  The mapping onto the underlying filesystem(s) is
+defined by the implementation: in CMUCL it is documented in section
+2.13 of the User Manual
+
+<pre>
+* (make-pathname :directory "/etc" :name "inetd" :type "conf")
+#p"//etc/inetd.conf"
+</pre>
+
+<p><i>Logical pathnames</i> effectively provide a `hook' into the
+translation process for the programmer, so can be used to avoid
+hardcoding non-portable paths into programs.  There is one caveat with
+logical pathnames, however - their behaviour is defined only for
+uppercase names (which on Unix will get translated to lowercase) so
+require some degree of work if you want to refer to files with
+uppercase in their names.
+
+<pre>
+* (setf (logical-pathname-translations "FOO")
+    '(("**;*.*.*" "/full/path/to/foo/**/*.*.*")))
+* (translate-logical-pathname (make-pathname :host "FOO" :directory "BAR" :name "BAZ" :type "LISP"))
+#p"/full/path/to/foo/bar/baz.lisp"
+</pre>
+
+<p>The preferred way of maintaining these is to keep a file containing
+the list of translations for <tt>FOO</tt> in
+<tt>#p"library:FOO.translations"</tt> and use
+<tt>load-logical-pathname-defaults</tt> when you need it.
+
+<p><i>Namestrings</i> are defined for logical paths as well as for
+physical ones - the standard read/print syntax for a namestring is
+<tt>#p</tt> followed by the namestring representation.  <tt>#p</tt> is
+a reader macro that creates a pathname object
+
+<pre>
+* (type-of #p"FOO:etc;inetd.conf")
+LOGICAL-PATHNAME
+</pre>
+
+<p>As a convenience to the user, <tt>PARSE-NAMESTRING</tt> (which is
+the thing that handles <tt>#p</tt> syntax) will uppercase its argument
+when dealing with a logical pathname.  <tt>MAKE-PATHNAME</tt> might
+not, however.  That is, it doesn't in CMUCL at present, but that will
+probably change.
+
+<H2>Creating a project</h2>
+
+<p> <tt>defsystem</tt> is to Lisp as <tt>make</tt> is to C.  Which is
+to say, 
+
+<ul>
+<li> thoroughly incomprehensible at first sight
+<li> not standard, but incompatible versions are provided by most
+vendors
+</ul>
+
+<p>CMUCL comes with a portable defsystem implementation (if you
+installed it as recommended above, anyway), which originally came from
+Mark Kantrowitz's ``<a
+href="http://www.cs.cmu.edu/afs/cs/project/ai-repository/ai/lang/lisp/code/tools/mkantdoc.tgz">Portable
+Utilities for Common Lisp</a>''. 
+
+<p>You can check that your Lisp has defsystem loaded by evaluating
+<tt>*features*</tt> to see if it includes <tt>:MK-DEFSYSTEM</tt>
+- if not, see the previous section.
+
+<p>It actually turns out to be quite simple.  Your project is a
+system, which has components.  It's defined in a file called
+<i>projectname</i><tt>.system</tt> using the <tt>defsystem</tt> macro.
+Once you have that, then you can do
+
+<pre>
+* (compile-system 'my-system)
+</pre>
+and/or
+<pre>
+* (load-system 'my-system)
+</pre>
+
+<p>Here's the <tt>my-system</tt> definition, for completeness
+<pre>
+(defsystem my-system
+  :source-pathname "/home/dan/src/http-lisp/"
+  :components ((:file "socket")
+               (:file "daemon"))
+  :depends-on nil)
+</pre>
+
+<h3>defsystem and logical pathnames</h3>
+
+<p> For the most part, defsystem requires relative pathnames.  Be
+aware though that where it uses absolute names it doesn't get on too
+well with logical pathnames.  My system definitions tend to contain
+things like
+
+<pre>
+  :source-pathname #.(translate-logical-pathname #p"src:rinaldo;")
+</pre>
+
+to get around this.
+
+<h2> Networking</h2>
+
+<p> You have three options for IP networking:
+
+<ol>
+<li>The CMUCL manual (you have printed it out, haven't you?) talks
+about the REMOTE and WIRE packages.  Personally I ignore both of these
+in favour of 
+<li>the functions in <tt>code/internet.lisp</tt> and
+<tt>(system:make-fd-stream)</tt>.  For example,
+
+<pre>
+(let* ((socket (ext:connect-to-inet-socket "localhost" 80))
+       (stream (system:make-fd-stream socket :input t :output t
+                                      :buffering :none)))
+  (format stream "HEAD / HTTP/1.0~%~%")
+  (do ((l (read-line stream nil)  (read-line stream nil)))
+      ((not l) nil)
+    (format t "~S~%" l)))
+       
+"HTTP/1.1 200 OK^M"
+"Date: Tue, 12 Jan 1999 01:40:20 GMT^M"
+"Server: Apache/1.2.5^M"
+"Last-Modified: Sun, 10 Jan 1999 14:46:12 GMT^M"
+"ETag: \"48808-2b51-3698bd34\"^M"
+"Content-Length: 11089^M"
+"Accept-Ranges: bytes^M"
+"Connection: close^M"
+"Content-Type: text/html^M"
+"^M"
+NIL
+</pre>
+
+or more latterly <li><a
+href="http://ww.telent.net/cliki/db-sockets">db-sockets</a> which has
+a slightly more sane API and does rather more too (it also does UDP,
+and has a consistent interface to socket options, and so on)
+</ol>
+
+<h2> OS interfaces</h2>
+
+<p> The CMUCL User Guide is pretty good on this (mostly 
+<a href="http://www.mindspring.com/~rtoy/software/cmu-user/node221.html#SECTION00900000000000000000">Chapter 8, Alien Objects</a>
+
+ but also see 
+
+<a href="http://www.mindspring.com/~rtoy/software/cmu-user/node28.html#SECTION00350000000000000000">2.5 Garbage Collection</a>
+
+).  Fundamentally, you can call anything from Lisp that
+you can call in C.  In practice, you might have to be careful for
+anything that involves threads or signals, but read the user guide and
+see how you get on.  A fairly straightforward example is in <a
+href="pcre.lisp">pcre.lisp</a>, an interface to Philip Hazel's
+Perl-Compatible Regular Expresion library.
+
+<p>A neat feature which is said to be better than some of the
+commercial CLs is the <b>finalize</b> function. This allows you to
+allocate foreign objects and then forget about them. When they become
+garbage the GC will call your function that knows how to free the
+object.
+
+<H2>Multithreading</h2>
+
+<p> Multithreading in CMUCL is currently done with user-level threads,
+although there is work in progress to take advantage of kernel
+threads.  The code is in src/code/multi-proc.lisp, with an interface
+"based roughly on the <a
+href="http://www.harlequin.com/education/books/CLIM-2.0/GUID_333.HTM#HEADING333-0">CLIM-SYS</a>
+spec. and support needed for <a
+href="http://www.ai.mit.edu/projects/iiip/doc/cl-http/home-page.html">cl-http</a>".
+
+<p> You might want to try running
+<pre>
+* (setf mp::*idle-process* mp::*initial-process*)
+* (mp::start-lisp-connection-listener :port 3456 :password "foobar")
+</pre>
+
+then you can get a listener by telnetting to localhost port 3456 and
+supplying the password (<i>including</i> the quotes).
+
+<h2> CORBA</h2>
+
+<p>See <a href="http://ww.telent.net/cliki/CORBA"
+>http://ww.telent.net/cliki/CORBA</a> for up-to-the-minute news.
+
+<h2> Graphics interfaces</h2>
+
+<p>There are a number of options here
+<ul>
+
+<li> CLX, CLUE, CLIO correspond roughly to Xlib, Xt and a widget set
+respectively; you'd tend to use all of them at once.  The interface
+defined by CLIO could be implemented with a look &amp; feel like Motif
+or Xaw or Gtk etc - the implementation you actually get looks more
+like OpenLook than anything else.  I understand that some people like
+it ...
+
+<li> Garnet has advanced constrainable objects and things.  Ugly
+if you like the 3d motif/tk/gtk look, though.
+
+<li> cl-gtk and CLM talk down a pipe to a program written in C that
+knows <a href="http://ww.gtk.org/">Gtk</a> or Motif respectively.  CLM
+is reported to also work with LessTif.  If you have it installed, try
+<pre>
+  * (load "library:subsystems/clm-library")
+  * (load "library:subsystems/clx-library")
+  * (/ 1 0)
+
+</pre>
+to see the Motif-based debugger...
+</ul>
+
+<p> The "One True Lisp" graphics interface is <a
+href="http://www.harlequin.com/education/books/CLIM-2.0/">CLIM</a>.
+People are working on <a
+href="http://www.cons.org/free-clim/">free-clim</a>, but in the
+meantime GARNET and CLIO/CLUE are probably the two options most worth
+considering.
+
+<p>For more timely information, and some other options, see
+<a href="http://ww.telent.net/cliki/Graphics%20Toolkit"
+>http://ww.telent.net/cliki/Graphics%20Toolkit</a>
+
+<hr>
+<h1><a name="references">References</a></h1>
+
+<h2>Documents on your local disk</h2>
+
+<ul>
+<li> Everything in <tt>/usr/doc/cmucl*</tt>, esp. the user manual.
+
+<li> <tt>/usr/src/cmucl-2.4.x/src/docs/</tt>, if you installed the
+source, has compiler internals documentation.  Word from the CMUCL
+hackers is that they're "planning to re-organise" though, so it may or
+may not be accurate.
+</ul>
+
+<h2>Web sites and online documents</h2>
+
+<ul>
+
+<li> <a href="http://www.cs.cmu.edu/Groups/AI/html/cltl/cltl2.html">
+Common Lisp the Language, 2nd Edition</a>.  The first edition was once
+the definition of Common Lisp.  The second is not.  On the other
+hand, it's probably a bit more readable than the Hyperspec.
+
+<li> ``Tutorial on Good Lisp Programming Style''; <a href=
+"http://www.norvig.com/luv-slides.ps">slides</a> for the Lisp Users
+and Vendors Conference, August 10, 1993
+
+<li> Mark Kantrowitz's <a
+href="http://www.cs.cmu.edu/afs/cs/project/ai-repository/ai/lang/lisp/code/tools/mkantdoc.tgz">``Portable
+Utilities for Common Lisp''</a> User Guide.  
+
+<li> The <a
+href="http://cvs2.cons.org:8000/cmucl/doc/EncyCMUCLopedia/">
+EncyCMUCLopedia</a> - Paolo Amoroso's comprehensive collection of
+every CMUCL-related document that he's been able to find.  It even
+includes this one.
+
+<li> Can I describe a newsgroup as an online document?  Whatever, be
+sure to read <a href="news:comp.lang.lisp"><tt>comp.lang.lisp</tt></a>.  Be
+sure not to post until you know what you're talking about.  It has one
+of the highest signal/noise ratios of any unmoderated group I've seen
+on Usenet, and I hesitate even to mention it because I want it to stay
+that way.
+
+<li> Most of the Lisp-related web sites also point to each other, so
+there's not much point in listing them all here.  To get started, try
+the <a href="http://www.elwoodcorp.com/alu/">Association of Lisp
+Users</a>, and for all kinds of free software see <a
+href="http://ww.telent.net/cliki/">CLiki</a>
+
+</ul>
+
+<h2>Books</h2>
+
+<p>These are (some of) the CL books I bought, borrowed, or somehow
+have access to.  The opinions expressed about them are mine alone;
+please take them only for what they're worth (about 5p each, at last
+valuation)
+
+<uL>
+<li> <a href="http://www.eecs.harvard.edu/onlisp/acl/">Paul
+Graham; ANSI Common Lisp</a> is an introduction to ANSI CL, with a
+language reference section at the back.  
+
+<blockquote>Probably the most often recommended ANSI CL book for
+beginners.  I haven't actually read it properly, but people whose
+opinions I trust - including two of the early guinea pigs for this
+document - like it, and on that basis I'd recommend it.</blockquote>
+
+<li> By the same author, <a 
+href="http://www.eecs.harvard.edu/onlisp/onlisp/"> On Lisp:
+Advanced Techniques for Common Lisp</a> (Prentice Hall, ISBN
+0-13-030552-9) is 80% devoted to macros (my first stop if I want to
+know anything on that subject) and 20% to CLOS. 
+
+<blockquote> ``Should be on the bookshelf of every CL programmer'' -
+my copy isn't usually, as it tends to be open on my desk.  Excellent
+book.</blockquote>
+
+<li> <a href="http://www.norvig.com/paip.html">Peter Norvig; Paradigms
+of Artificial Intelligence Programming</a> (Morgan Kaufmann, ISBN
+1-55860-191-0).  It's not just about AI, as it also includes general
+Lisp style and project management topics, such as use of packages,
+error handling, robustness, common debugging situations, and system
+definitions.  
+
+<blockquote> Excellent.  Look at the comments at the location linked
+above; they're all true.  This may be an opportune moment to plug the
+rest of <a href="http://www.norvig.com/">Peter Norvig's web site</a>
+too. </blockquote>
+
+<li><a href="http://www.amazon.com/exec/obidos/ASIN/0262610744">
+Kiczales, des Rivi&egrave;res, Bobrow; The Art of the Metaobject
+Protocol</a> (MIT Press, ISBN 0-262-61074-4).  The MOP is not part of
+ANSI CL per se, but is included in many CLOS implementations
+(including PCL as used in CMUCL).  It provides a way of observing and
+changing the behaviour of the object system - the magic buzzwords
+include `reflection' and `introspection'.  The book is illuminating
+for explaining not only how the MOP is, but quite a lot of <i>why</i>
+too.
+
+<blockquote> Basically, this is the manual for the MOP, and if you
+want to do metathings you're going to struggle without it.  
+
+<p> Be aware however: it's not really intended as an introduction to
+CLOS - if you aren't familiar with CLOS already you might prefer
+something like "Object Oriented Programming in Common Lisp" by Sonya
+Keene.  Disclaimer: I haven't tried it, but it's favourably thought of
+on comp.lang.lisp and elsewhere
+</blockquote>
+
+<li><a href="http://www.amazon.com/exec/obidos/ASIN/0201083191">
+Winston &amp; Horn; LISP Third edition</a> (Addison Wesley, ISBN
+0-201-08319-1).  Three parts: introduction to programming, `advanced
+topics' and example programs.  I bought it because it was the only Lisp
+book in Dillons (fortunately, Borders have now opened a shop near me).
+
+<blockquote>I've not actually looked at it much since; I already can
+program ...  If I sound lukewarm about this book, I probably am -
+compare with ANSI Common Lisp or Norvig, and decide for yourself.
+</blockquote>
+
+</ul>
+
+<p>I'm not suggesting that you need all of these; I have a real
+struggle going past a computer bookstore without buying something, but
+that doesn't mean you have to have.  If you want a second opinion, <a
+href="http://www.amazon.com/">Amazon</a> have a reasonable <a
+href="http://www.amazon.com/exec/obidos/subst/categories/computer-science/what-is-lisp-article/002-1737507-6981456">summary</a>
+of Lisp books.  Note that despite anything they say, `Common Lisp: the
+Language' is <i>not</i> the official specification for ANSI CL: see
+the HyperSpec instead.  Also, you may want to avoid buying it and use
+the copy on the Web as listed above.
+
+<h3><a name="credits">Credits</a></h3>
+
+<p> All the mistakes in this document are mine.  Credit for the bits
+which are right should also go to 
+
+Hannu Rummukainen,
+Paul Foley, 
+Paolo Amoroso, 
+Peter VanEynde,
+Raymond Toy,
+Sam Steingold
+
+and others
+
+<hr>
+<address> <a href="/index.html">Daniel Barlow</a></address>
+</body></html>

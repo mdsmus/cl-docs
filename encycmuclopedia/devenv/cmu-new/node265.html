@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Debug-sources</TITLE>
+<META NAME="description" CONTENT="Debug-sources">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html4054" HREF="node266.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html4052" HREF="node255.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html4046" HREF="node264.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html4056" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html4057" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html4055" HREF="node266.html">10.9 Source Translation Utilities</A>
+<B>Up:</B> <A NAME="tex2html4053" HREF="node255.html">10 Debugger Programmer's Interface</A>
+<B> Previous:</B> <A NAME="tex2html4047" HREF="node264.html">Code-locations</A>
+<BR> <P>
+<H1><A NAME="SECTION001180000000000000000">Debug-sources</A></H1>
+<P>
+Debug-sources represent how to get back the source for some code.  The
+source is either a file (<tt>compile-file</tt> or <tt>load</tt>), a
+lambda-expression (<tt>compile</tt>, <tt>defun</tt>, <tt>defmacro</tt>), or
+a stream (something particular to CMU Common Lisp,
+<tt>compile-from-stream</tt>).
+<P>
+When compiling a source, the compiler counts each top-level form it
+processes, but when the compiler handles multiple files as one block
+compilation, the top-level form count continues past file boundaries.
+Therefore <tt>code-location-top-level-form-offset</tt> returns an offset
+that does not always start at zero for the code-location's
+debug-source.  The offset into a particular source is
+<tt>code-location-top-level-form-offset</tt> minus
+<tt>debug-source-root-number</tt>.
+<P>
+Inside a top-level form, a code-location's form number indicates the
+subform corresponding to the code-location.
+<P>
+<b>[Function]</b><BR> 
+<tt>  debug-source-from</tt> <em> <i>debug-source</i></em><BR>
+<P>
+  This function returns an indication of the type of source.  The
+  following are the possible values:
+  <DL ><DT><STRONG><tt>:file</tt></STRONG>
+<DD> from a file (obtained by <tt>compile-file</tt> if
+    compiled).
+  <DT><STRONG><tt>:lisp</tt></STRONG>
+<DD> from Lisp (obtained by <tt>compile</tt> if
+    compiled).
+  <DT><STRONG><tt>:stream</tt></STRONG>
+<DD> from a non-file stream (CMU Common Lisp supports
+    <tt>compile-from-stream</tt>).
+<P>
+</DL>
+<P>
+<b>[Function]</b><BR> 
+<tt>  debug-source-name</tt> <em> <i>debug-source</i></em><BR>
+<P>
+  This function returns the actual source in some sense represented by
+  debug-source, which is related to <tt>debug-source-from</tt>:
+  <DL ><DT><STRONG><tt>:file</tt></STRONG>
+<DD> the pathname of the file.
+  <DT><STRONG><tt>:lisp</tt></STRONG>
+<DD> a lambda-expression.
+  <DT><STRONG><tt>:stream</tt></STRONG>
+<DD> some descriptive string that's otherwise
+    useless.
+<P>
+</DL>
+<P>
+<b>[Function]</b><BR> 
+<tt>  debug-source-created</tt> <em> <i>debug-source</i></em><BR>
+<P>
+  This function returns the universal time someone created the source.
+  This may be <i>nil</i> if it is unavailable.
+<P>
+<b>[Function]</b><BR> 
+<tt>  debug-source-compiled</tt> <em> <i>debug-source</i></em><BR>
+<P>
+  This function returns the time someone compiled the source.  This is
+  <i>nil</i> if the source is uncompiled.
+<P>
+<b>[Function]</b><BR> 
+<tt>  debug-source-root-number</tt> <em> <i>debug-source</i></em><BR>
+<P>
+  This returns the number of top-level forms processed by the compiler
+  before compiling this source.  If this source is uncompiled, this is
+  zero.  This may be zero even if the source is compiled since the
+  first form in the first file compiled in one compilation, for
+  example, must have a root number of zero--the compiler saw no other
+  top-level forms before it.
+<P>
+<HR><A NAME="tex2html4054" HREF="node266.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html4052" HREF="node255.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html4046" HREF="node264.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html4056" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html4057" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html4055" HREF="node266.html">10.9 Source Translation Utilities</A>
+<B>Up:</B> <A NAME="tex2html4053" HREF="node255.html">10 Debugger Programmer's Interface</A>
+<B> Previous:</B> <A NAME="tex2html4047" HREF="node264.html">Code-locations</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

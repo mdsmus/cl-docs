@@ -1,0 +1,92 @@
+<html lang="en">
+<head>
+<title>Implementation (Linux x86) - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Threading.html#Threading" title="Threading">
+<link rel="prev" href="Sessions_002fDebugging.html#Sessions_002fDebugging" title="Sessions/Debugging">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Implementation-(Linux-x86)"></a>
+<a name="Implementation-_0028Linux-x86_0029"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Sessions_002fDebugging.html#Sessions_002fDebugging">Sessions/Debugging</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Threading.html#Threading">Threading</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">11.7 Implementation (Linux x86/x86-64)</h3>
+
+<p>Threading is implemented using pthreads and some Linux specific bits
+like futexes.
+
+   <p>On x86 the per-thread local bindings for special variables is achieved
+using the %fs segment register to point to a per-thread storage area. 
+This may cause interesting results if you link to foreign code that
+expects threading or creates new threads, and the thread library in
+question uses %fs in an incompatible way. On x86-64 the r12 register
+has a similar role.
+
+   <p>Queues require the <code>sys_futex()</code> system call to be available:
+this is the reason for the NPTL requirement.  We test at runtime that
+this system call exists.
+
+   <p>Garbage collection is done with the existing Conservative Generational
+GC.  Allocation is done in small (typically 8k) regions: each thread
+has its own region so this involves no stopping. However, when a
+region fills, a lock must be obtained while another is allocated, and
+when a collection is required, all processes are stopped.  This is
+achieved by sending them signals, which may make for interesting
+behaviour if they are interrupted in system calls.  The streams
+interface is believed to handle the required system call restarting
+correctly, but this may be a consideration when making other blocking
+calls e.g. from foreign library code.
+
+   <p>Large amounts of the SBCL library have not been inspected for
+thread-safety.  Some of the obviously unsafe areas have large locks
+around them, so compilation and fasl loading, for example, cannot be
+parallelized.  Work is ongoing in this area.
+
+   <p>A new thread by default is created in the same POSIX process group and
+session as the thread it was created by.  This has an impact on
+keyboard interrupt handling: pressing your terminal's intr key
+(typically <kbd>Control-C</kbd>) will interrupt all processes in the
+foreground process group, including Lisp threads that SBCL considers
+to be notionally `background'.  This is undesirable, so background
+threads are set to ignore the SIGINT signal.
+
+   <p><code>sb-thread:make-listener-thread</code> in addition to creating a new
+Lisp session makes a new POSIX session, so that pressing
+<kbd>Control-C</kbd> in one window will not interrupt another listener -
+this has been found to be embarrassing.
+
+   </body></html>
+

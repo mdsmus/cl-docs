@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 3, Lesson 1</title> 
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 3 - Essential Lisp in Twelve Lessons</h1> 
+
+<h2><A NAME="lesson-1">Lesson 1 - Essential Syntax</A></h2> 
+<ul>
+<li><A NAME="list">Lists are surrounded by parentheses</A>
+
+<P>This is the first thing you need to know about Lisp: anything surrounded 
+by parentheses is a <A NAME="list">list</A>.  Here are some examples of 
+things that are lists:</P>
+
+<pre>(1 2 3 4 5)
+(a b c)
+(cat 77 dog 89)
+</pre> 
+
+<P>As I said, anything surrounded by parentheses is a list.  When you hear a 
+statement like that, you probably want to ask two questions:</P>
+
+<ol>
+<li>What if I put parentheses around <em>nothing</em>?
+<li>What if I put parentheses around <em>another list</em>?
+</ol> 
+
+<P>In both cases the answer is the same.  You still have a list.  So the 
+following are also lists:</P>
+
+<pre>()
+(())
+((()))
+((a b c))
+((1 2) 3 4)
+(mouse (monitor 512 342) (keyboard US))
+(defun factorial (x) (if (eql x 0) 1 (* x (factorial (- x 1)))))
+</pre> 
+
+<P>The only time you don't have a list is when you have a right parenthesis 
+without a matching left parenthesis or vice versa, as in the following 
+four examples:</P>
+
+<pre>(a b c(
+((25 g) 34
+((())
+(()))
+</pre> 
+
+<P>This is nothing to lose sleep over -- Lisp will tell you when there's a 
+mismatch.  Also, the editor that you use for writing Lisp programs will 
+almost certainly give you a way to automatically find matching 
+parentheses.  We'll look at editors in <a href="chapter27.html">Chapter 
+27</a>.</P>
+
+<P>A list can be a lot of things in Lisp.  In the most general sense, a list 
+can be either a program or data.  And because lists can themselves be made 
+of other lists, you can have arbitrary combinations of data and programs 
+mixed at different levels of list structure -- this is what makes Lisp so 
+flexible for those who understand it, and so confusing for those who 
+don't.  We'll work hard to remove that confusion as this chapter 
+continues.</P>
+
+<P><A NAME="atom">Atoms are separated by whitespace or parentheses</A>
+Now that you can recognize a list, you'd like to have a name for the 
+things that appear between the parentheses -- the things that are not 
+themselves lists, but rather (in our examples so far) words and numbers.  
+These things are called <A NAME="atoms">atoms</A>.</P>
+
+<P>Accordingly, these words and numbers are all atoms:</P>
+
+<pre>1
+25
+342
+mouse
+factorial
+x
+</pre> 
+
+<P>Lisp lets us use just about any characters to make up an atom.  For now, 
+we'll say that any sequence of letters, digits, and punctuation characters 
+is an atom if it is preceded and followed by a blank space (this includes 
+the beginning or end of a line) or a parenthesis.  The following are all 
+atoms:</P>
+
+<pre>-
+*
+@comport
+funny%stuff
+9^
+case-2
+</pre> 
+
+<P>One thing you should remember, if you're experienced in another 
+programming language, is that characters traditionally reserved as 
+operators have no special meaning when they appear within a Lisp atom. For 
+example, <code>case-2</code> is an atom, and <em>not</em> an arithmetic 
+expression.</P>
+
+<P>Since an atom can be marked off by either whitespace or a parenthesis, we 
+could eliminate any whitespace between an atom and a parenthesis, or 
+between two parentheses.  Thus, the following two lists are identical:</P>
+
+<pre>(defun factorial (x) (if (eql x 0) 1 (* x (factorial (- x 1)))))
+(defun factorial(x)(if(eql x 0)1(* x(factorial(- x 1)))))
+</pre> 
+
+<P>In practice, we'd <em>never</em> write the second list.  In fact, we'd 
+probably split the list across multiple lines and indent each line to 
+improve readability; this list is in fact a small program, and formatting 
+it as follows makes it easier to read for a Lisp programmer:</P>
+
+<pre>(defun factorial (x)
+  (if (eql x 0)
+    1 
+    (* x (factorial (- x 1)))))
+</pre> 
+
+<P>For now, you don't need to worry about what this means or how you'd know 
+to do this kind of indentation.  As we get further into this chapter, 
+you'll see more examples of indentation.  Subsequent chapters will show 
+additional examples, and I'll point out how to use indentation to improve 
+readability of many new constructs.  <a href="chapter28.html">Chapter 
+28</a> will address elements of Lisp style, including the proper use of 
+indentation.</P>
+
+</ul> 
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter02.html">Chapter 2</a> | <A HREF="chapter03.html">Chapter 3, Introduction</A> | Chapter 3, Lesson 1 | <A HREF="chapter03-02.html">Chapter 3, Lesson 2</A> | <a href="chapter04.html">Chapter 4</a>
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its 
+author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

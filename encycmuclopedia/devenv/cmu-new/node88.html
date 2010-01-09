@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>4.4 Interpreting Error Messages</TITLE>
+<META NAME="description" CONTENT="4.4 Interpreting Error Messages">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1718" HREF="node89.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1716" HREF="node83.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1710" HREF="node87.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1720" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1721" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1719" HREF="node89.html">4.4.1 The Parts of </A>
+<B>Up:</B> <A NAME="tex2html1717" HREF="node83.html">4 The Compiler</A>
+<B> Previous:</B> <A NAME="tex2html1711" HREF="node87.html">4.3.1 Undefined Warnings</A>
+<BR> <P>
+<H1><A NAME="SECTION00540000000000000000">4.4 Interpreting Error Messages</A></H1>
+<P>
+<A NAME="errormessages">&#160;</A>
+<A NAME="9379">&#160;</A>
+<A NAME="9380">&#160;</A>
+<P>
+One of Python's unique features is the level of source location
+information it provides in error messages.  The error messages contain
+a lot of detail in a terse format, to they may be confusing at first.
+Error messages will be illustrated using this example program:
+<BLOCKQUOTE> <PRE>(defmacro zoq (x)
+  `(roq (ploq (+ ,x 3))))
+<P>
+(defun foo (y)
+  (declare (symbol y))
+  (zoq y))
+</PRE> </BLOCKQUOTE>
+The main problem with this program is that it is trying to add <tt>3</tt> to a
+symbol.  Note also that the functions <tt>roq</tt> and <tt>ploq</tt> aren't defined
+anywhere.
+<P>
+<BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html1722" HREF="node89.html#SECTION00541000000000000000">4.4.1 The Parts of the Error Message</A>
+<LI> <A NAME="tex2html1723" HREF="node90.html#SECTION00542000000000000000">4.4.2 The Original and Actual Source</A>
+<LI> <A NAME="tex2html1724" HREF="node91.html#SECTION00543000000000000000">4.4.3 The Processing Path</A>
+<LI> <A NAME="tex2html1725" HREF="node92.html#SECTION00544000000000000000">4.4.4 Error Severity</A>
+<LI> <A NAME="tex2html1726" HREF="node93.html#SECTION00545000000000000000">4.4.5 Errors During Macroexpansion</A>
+<LI> <A NAME="tex2html1727" HREF="node94.html#SECTION00546000000000000000">4.4.6 Read Errors</A>
+<LI> <A NAME="tex2html1728" HREF="node95.html#SECTION00547000000000000000">4.4.7 Error Message Parameterization</A>
+</UL>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

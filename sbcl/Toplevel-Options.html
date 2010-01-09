@@ -1,0 +1,94 @@
+<html lang="en">
+<head>
+<title>Toplevel Options - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Command-Line-Options.html#Command-Line-Options" title="Command Line Options">
+<link rel="prev" href="Runtime-Options.html#Runtime-Options" title="Runtime Options">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Toplevel-Options"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Runtime-Options.html#Runtime-Options">Runtime Options</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Command-Line-Options.html#Command-Line-Options">Command Line Options</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">2.3.2 Toplevel Options</h4>
+
+     <dl>
+<dt><code>--sysinit </code><var>filename</var><dd>Load filename instead of the default system initialization file
+(see <a href="System-Initialization-File.html#System-Initialization-File">System Initialization File</a>.)
+
+     <br><dt><code>--no-sysinit</code><dd>Don't load a system-wide initialization file.  If this option is given,
+the <code>--sysinit</code> option is ignored.
+
+     <br><dt><code>--userinit </code><var>filename</var><dd>Load filename instead of the default user initialization file
+(see <a href="User-Initialization-File.html#User-Initialization-File">User Initialization File</a>.)
+
+     <br><dt><code>--no-userinit</code><dd>Don't load a user initialization file.  If this option is given,
+the <code>--userinit</code> option is ignored.
+
+     <br><dt><code>--eval </code><var>command</var><dd>After executing any initialization file, but before starting the
+read-eval-print loop on standard input, read and evaluate the com-
+mand given. More than one <code>--eval</code> option can be used, and all
+will be read and executed, in the order they appear on the command
+line.
+
+     <br><dt><code>--load </code><var>filename</var><dd>This is equivalent to <code>--eval '(load "</code><var>filename</var><code>")'</code>. The
+special syntax is intended to reduce quoting headaches when invoking
+SBCL from shell scripts.
+
+     <br><dt><code>--noprint</code><dd>When ordinarily the toplevel "read-eval-print loop" would be exe-
+cuted, execute a "read-eval loop" instead, i.e. don't print a prompt
+and don't echo results. Combined with the <code>--noinform</code> runtime
+option, this makes it easier to write Lisp "scripts" which work
+cleanly in Unix pipelines.
+
+     <br><dt><code>--disable-debugger</code><dd>By default when SBCL encounters an error, it enters the builtin
+debugger, allowing interactive diagnosis and possible intercession. 
+This option disables the debugger, causing errors to print a backtrace
+and exit with status 1 instead. When given, this option takes effect
+before loading of initialization files or processing <code>--eval</code> and
+<code>--load</code> options. See <code>sb-ext:disable-debugger</code> for details. 
+See <a href="Debugger-Entry.html#Debugger-Entry">Debugger Entry</a>.
+
+     <br><dt><code>--script </code><var>filename</var><dd>Implies <code>--no-userinit</code> <code>--no-sysinit</code>
+<code>--disable-debugger</code> <code>--end-toplevel-options</code>.
+
+     <p>Causes the system to load the specified file instead of entering the
+read-eval-print-loop, and exit afterwards. If the file begins with a
+shebang line, it is ignored.
+
+</dl>
+
+   </body></html>
+

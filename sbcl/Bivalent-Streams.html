@@ -1,0 +1,62 @@
+<html lang="en">
+<head>
+<title>Bivalent Streams - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Extensible-Streams.html#Extensible-Streams" title="Extensible Streams">
+<link rel="next" href="Gray-Streams.html#Gray-Streams" title="Gray Streams">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Bivalent-Streams"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Gray-Streams.html#Gray-Streams">Gray Streams</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Extensible-Streams.html#Extensible-Streams">Extensible Streams</a>
+<hr>
+</div>
+
+<h3 class="section">9.1 Bivalent Streams</h3>
+
+<p>A <dfn>bivalent stream</dfn> can be used to read and write both
+<code>character</code> and <code>(unsigned-byte 8)</code> values.  A bivalent
+stream is created by calling <code>open</code> with the argument <code>:element-type
+:default</code>.  On such a stream, both binary and character data can be
+read and written with the usual input and output functions.
+
+<!-- Horrible visual markup -->
+   <blockquote>
+Streams are <em>not</em> created bivalent by default for performance
+reasons.  Bivalent streams are incompatible with
+<code>fast-read-char</code>, an internal optimization in sbcl's stream
+machinery that bulk-converts octets to characters and implements a
+fast path through <code>read-char</code>. 
+</blockquote>
+
+   </body></html>
+

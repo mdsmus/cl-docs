@@ -1,0 +1,178 @@
+<html><head>
+<style type="text/css">
+div.orbit {  color: DarkGreen }
+</style>
+<title>CORBA, GNOME, CMUCL, and other macabre tales</title>
+</head>
+<body bgcolor=white>
+<h1>CORBA, GNOME, CMUCL, and other macabre tales</h1> 
+
+<p><i>$Id: gnome-lisp.html,v 1.4 2000/05/15 21:57:58 dan Exp $</i> - How's my writing?  Call <a href="mailto:dan@telent.net"
+>1-800-MAIL-ME</a>
+
+<p>New to CORBA?  Unwilling to sit through another tedious explanation
+of client/server computing just to find out what the Naming Service is
+for?  Try <a href="index.html">CORBA in 5 minutes</a> - but be warned,
+it's no more polished than this document.
+
+<p><b>New!</b> Jochen Schmidt has kindly provided a C++ program to
+print the IOR of a MICO Interface Repository.  <a
+href="mico-irdumpior-0.1.tar.gz" >mico-irdumpior-0.1.tar.gz</a>
+is a 10762 byte download.
+
+<h2>Motivation</h2>
+
+<p>In the (perhaps unlikely) event that you ever want to call GNOME
+CORBA servers from CMUCL, this worked example with the GNOME Help
+Browser may help.  
+
+<p>If you find it useful, please mail me and let me know.  Although I
+write this stuff primarily to satiate my own devious twisted desires,
+it nevertheless would be a bonus to hear from anyone who benefited as
+a result.
+
+<h2>Prerequisite</h2>
+
+<ul>
+<li>You will need CMUCL if you don't already have it.  If you're using
+i386/GNU/Linux, try the <a href="/lisp/howto.html">CMUCL-HOWTO</a>.
+Otherwise I can't help much, but see the <a
+href="http://www.cons.org/cmucl/">CMUCL home page</a> before doing
+anything too rash.
+
+<li>You will need an ORB.  CLORB is free and written entirely in Lisp
+-- which makes it easier to port than ILU.  Get the original at <a
+href="http://www.lysator.liu.se/~lenst/corba/"
+>http://www.lysator.liu.se/~lenst/corba/</a> then get 
+<a href="clorb-patch">this patch</a> (which I've also sent back to the
+maintainer, so I hope it'll be incorporated in a future version).
+That patch will probably pile up a bunch of rejects where I deleted
+CVS ident strings because they were getting in the way.
+
+<p>My CLORB-nasty-hacks repository is at <a
+href="http://loaclhost.telent.net/cgi-bin/cvsweb/telent/clorb/">http://loaclhost.telent.net/cgi-bin/cvsweb/telent/clorb/</a>.
+Feel free to browse.
+
+<li>You need GNOME installed.  I used the packages that come with Debian
+potato (read: anything reasonably up to date will do, you needn't be a
+bleeding-edge-CVS junkie).
+
+<li>You need a working Interface Repository because the ORBit one
+isn't yet.  I used the one from <a
+href="http://www.ooc.com/ob/">ORBacus</a> (formerly known as
+OmniBroker for C++) 3.2.  Note that this is not free - it's
+noncommercial use only.  You could instead use MICO: you'll
+need <a href="mico-irdumpior-0.1.tar.gz">Jochen Schmidt</a>'s handy
+utility to print the IR IOR on stdout.
+
+</li>
+</ul>
+
+<h2>Where to start</h2>
+
+<p>1) Run GNOME.  I do the full-on gdm thing, but I think that if you
+start the panel that should probably be sufficient.  You want to be
+sure that gnome-name-service is running, anyway
+
+<pre>
+:; ps ax | grep name-ser
+27251 ?        SW     0:00 [gnome-name-serv]
+25019 pts/4    S      0:00 grep name-ser
+</pre>
+
+<p>2) Start the ORBacus IR daemon 
+<pre>
+:; irserv --ior >/tmp/ior.irserv &
+</pre>
+
+<p>3) Customise <tt>clorb-options.lisp</tt> - there are two important
+changes here
+
+<ol>
+<li> <tt>*interface-repository*</tt> should be set to a filename containing the
+IR's IOR -
+<pre>
+(defparameter *interface-repository* "/tmp/ior.irserv")
+</pre>
+<li> GNOME uses Principal-based security - you need to set <tt>*principal*</tt>
+to the value contained in a file somewhere in <tt>/tmp</tt>:
+<pre>
+(defparameter *principal*
+  #.(with-open-file (i "/tmp/orbit-dan/cookie")
+      (let* ((s (make-string 2048))      ;; FIXME: is it always <2k?
+             (l (read-sequence s i)))
+        (setf (elt s l) (code-char 0))   ;; extra \0 needed too ..
+        (subseq s 0 (1+ l))))
+  "Octet sequence used for the principal field in the GIOP message.
+Used by ORBit for its cookie.")
+</pre>
+(If that doesn't work for you straight off the bat, it may be that
+you're not called "dan".  You might try changing your name and see if
+that helps)
+</li>
+</ol>
+
+<p>4) Now build all the CLORB stuff
+
+<p>5) CLORB does <i>all</i> method lookup using the IR.  So, you need to
+feed the IR with the right stuff for the GNOME Help Browser <i>and</i>
+the Interface Repository definitions themselves so that it can find
+the GNOME interfaces in the first place.  These instructions are for
+ORBacus; moderate as appropriate if you're using MICO.
+
+<pre>
+:; pwd 
+/usr/local/src/OB-3.2/ob/idl
+:; irfeed -I. -ORBrepository `cat /tmp/ior.irserv` IntRep.idl
+:; irfeed -ORBrepository `cat /tmp/ior.irserv ` /usr/share/idl/help-browser.idl 
+</pre>
+
+<p>6) I haven't yet got as far as persuading the help browser to
+activate itself from CL - and as the GNOME people are all in the
+process of changing their activation mechanism anyway, I probably
+won't until they've figured out the new one.  So, you have to start it
+by hand:
+
+<ol>
+<li> Run <tt>goad-browser</tt>.  This should pop up a window wider
+than your screen, and somewhere on it (you may have to scroll) is a
+row with Server ID <tt>gnome-help-browser</tt> and Description
+"GNOME Help Browser".  It will probably not be marked "active".  Click
+on it and then on the "Activate" icon.  The Help browser will pop up.
+
+<li>Now find the terminal window that you started
+<tt>goad-browser</tt> from.  There should be a freshly-printed IOR in
+it.  This corresponds to your help browser.  Copy it somewhere safe.
+Don't kill the help browser window
+
+</li>
+</ol>
+
+<p>7) Nearly there.  Peruse the contents of
+<tt>/usr/share/idl/help-browser.idl</tt> while readying for the final
+push.  You'll note that it's basically a very simple interface, which
+is why we're using it.  
+
+<p>8) Find your CMUCL session with CLORB loaded, and do this.  Don't
+type the comments (unless you really want to).  Don't type the <tt>*</tt>,
+which represents the CMUCL top-level prompt
+
+<pre>
+;;; substitute the IOR you got in the previous step for this one here,
+;;; otherwise it won't work
+
+* (defparameter *gnome-help*
+  (op::string_to_object (corba:orb-init) "IOR:011834402400000049444c3a68656c705f62726f777365722f73696d706c655f62726f777365723a312e300001000000000000002c0000000101004014000000746e696e6b7061642e74656c656e742e6e657400c90b0000080000000000000001000000"))
+* (clorb::invoke *gnome-help* "fetch_url" "toc:man")
+*
+</pre>
+
+<p>9) Find the Help browser window again.  Look!  It's changed content!
+Congratulations!
+
+<hr>
+<a href="http://ww.telent.net/">Daniel Barlow</a>, $Date: 2000/05/15 21:57:58 $
+
+
+
+

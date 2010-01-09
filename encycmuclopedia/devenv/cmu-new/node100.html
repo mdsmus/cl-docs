@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>4.6 Getting Existing Programs to Run</TITLE>
+<META NAME="description" CONTENT="4.6 Getting Existing Programs to Run">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1868" HREF="node101.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1866" HREF="node83.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1860" HREF="node99.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1870" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1871" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1869" HREF="node101.html">4.7 Compiler Policy</A>
+<B>Up:</B> <A NAME="tex2html1867" HREF="node83.html">4 The Compiler</A>
+<B> Previous:</B> <A NAME="tex2html1861" HREF="node99.html">4.5.3 Weakened Type Checking</A>
+<BR> <P>
+<H1><A NAME="SECTION00560000000000000000">4.6 Getting Existing Programs to Run</A></H1>
+<P>
+<A NAME="9580">&#160;</A>
+<A NAME="9581">&#160;</A>
+<A NAME="9582">&#160;</A>
+<P>
+Since Python does much more comprehensive type checking than other
+Lisp compilers, Python will detect type errors in many programs
+that have been debugged using other compilers.  These errors are
+mostly incorrect declarations, although compile-time type errors can
+find actual bugs if parts of the program have never been tested.
+<P>
+Some incorrect declarations can only be detected by run-time type
+checking.  It is very important to initially compile programs with
+full type checks and then test this version.  After the checking
+version has been tested, then you can consider weakening or
+eliminating type checks.  This applies even to previously debugged
+  programs.  Python does much more type inference than other
+Common Lisp compilers, so believing an incorrect declaration does much
+more damage.
+<P>
+The most common problem is with variables whose initial value doesn't
+match the type declaration.  Incorrect initial values will always be
+flagged by a compile-time type error, and they are simple to fix once
+located.  Consider this code fragment:
+<BLOCKQUOTE> <PRE>(prog (foo)
+  (declare (fixnum foo))
+  (setq foo ...)
+  ...)
+</PRE> </BLOCKQUOTE>
+Here the variable <tt>foo</tt> is given an initial value of <i>nil</i>, but
+is declared to be a <tt>fixnum</tt>.  Even if it is never read, the
+initial value of a variable must match the declared type.  There are
+two ways to fix this problem.  Change the declaration:
+<BLOCKQUOTE> <PRE>(prog (foo)
+  (declare (type (or fixnum null) foo))
+  (setq foo ...)
+  ...)
+</PRE> </BLOCKQUOTE>
+or change the initial value:
+<BLOCKQUOTE> <PRE>(prog ((foo 0))
+  (declare (fixnum foo))
+  (setq foo ...)
+  ...)
+</PRE> </BLOCKQUOTE>
+It is generally preferable to change to a legal initial value rather
+than to weaken the declaration, but sometimes it is simpler to weaken
+the declaration than to try to make an initial value of the
+appropriate type.
+<P>
+Another declaration problem occasionally encountered is incorrect
+declarations on <tt>defmacro</tt> arguments.  This probably usually
+happens when a function is converted into a macro.  Consider this
+macro:
+<BLOCKQUOTE> <PRE>(defmacro my-1+ (x)
+  (declare (fixnum x))
+  `(the fixnum (1+ ,x)))
+</PRE> </BLOCKQUOTE>
+Although legal and well-defined Common Lisp, this meaning of this
+definition is almost certainly not what the writer intended.  For
+example, this call is illegal:
+<BLOCKQUOTE> <PRE>(my-1+ (+ 4 5))
+</PRE> </BLOCKQUOTE>
+The call is illegal because the argument to the macro is <tt>(+ 4
+    5)</tt>, which is a <tt>list</tt>, not a <tt>fixnum</tt>.  Because of
+macro semantics, it is hardly ever useful to declare the types of
+macro arguments.  If you really want to assert something about the
+type of the result of evaluating a macro argument, then put a
+<tt>the</tt> in the expansion:
+<BLOCKQUOTE> <PRE>(defmacro my-1+ (x)
+  `(the fixnum (1+ (the fixnum ,x))))
+</PRE> </BLOCKQUOTE>
+In this case, it would be stylistically preferable to change this
+macro back to a function and declare it inline.  Macros have no
+efficiency advantage over inline functions when using Python.
+See section&nbsp;<A HREF="node155.html#inlineexpansion">5.8</A>.
+<P>
+Some more subtle problems are caused by incorrect declarations that
+can't be detected at compile time.  Consider this code:
+<BLOCKQUOTE> <PRE>(do ((pos 0 (position #<IMG WIDTH=6 HEIGHT=16 ALIGN=BOTTOM ALT="tex2html_wrap18423" SRC="img1.gif">a string :start (1+ pos))))
+    ((null pos))
+  (declare (fixnum pos))
+  ...)
+</PRE> </BLOCKQUOTE>
+Although <tt>pos</tt> is almost always a <tt>fixnum</tt>, it is <i>nil</i>
+at the end of the loop.  If this example is compiled with full type
+checks (the default), then running it will signal a type error at the
+end of the loop.  If compiled without type checks, the program will go
+into an infinite loop (or perhaps <tt>position</tt> will complain
+because <tt>(1+ nil)</tt> isn't a sensible start.)  Why?  Because if
+you compile without type checks, the compiler just quietly believes
+the type declaration.  Since <tt>pos</tt> is always a <tt>fixnum</tt>, it
+is never <i>nil</i>, so <tt>(null pos)</tt> is never true, and the loop
+exit test is optimized away.  Such errors are sometimes flagged by
+unreachable code notes (see section&nbsp;<A HREF="node136.html#deadcodenotes">5.4.5</A>), but it is still
+important to initially compile any system with full type checks, even
+if the system works fine when compiled using other compilers.
+<P>
+In this case, the fix is to weaken the type declaration to
+<tt>(or fixnum null)</tt>.<A NAME="tex2html7" HREF="footnode.html#6948"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+Note that there is usually little performance penalty for weakening a
+declaration in this way.  Any numeric operations in the body can still
+assume the variable is a <tt>fixnum</tt>, since <i>nil</i> is not a legal
+numeric argument.  Another possible fix would be to say:
+<BLOCKQUOTE> <PRE>(do ((pos 0 (position #<IMG WIDTH=6 HEIGHT=16 ALIGN=BOTTOM ALT="tex2html_wrap18423" SRC="img1.gif">a string :start (1+ pos))))
+    ((null pos))
+  (let ((pos pos))
+    (declare (fixnum pos))
+    ...))
+</PRE> </BLOCKQUOTE>
+This would be preferable in some circumstances, since it would allow a
+non-standard representation to be used for the local <tt>pos</tt>
+variable in the loop body (see section <A HREF="node170.html#NDvariables">5.11.3</A>.)
+<P>
+In summary, remember that &#305;all values that a variable &#305;ever
+has must be of the declared type, and that you should test using safe
+code initially.
+<HR><A NAME="tex2html1868" HREF="node101.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1866" HREF="node83.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1860" HREF="node99.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1870" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1871" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1869" HREF="node101.html">4.7 Compiler Policy</A>
+<B>Up:</B> <A NAME="tex2html1867" HREF="node83.html">4 The Compiler</A>
+<B> Previous:</B> <A NAME="tex2html1861" HREF="node99.html">4.5.3 Weakened Type Checking</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>3.5 Source Location Printing</TITLE>
+<META NAME="description" CONTENT="3.5 Source Location Printing">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1510" HREF="node73.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1508" HREF="node59.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1502" HREF="node71.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1512" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1513" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1511" HREF="node73.html">3.5.1 How the Source </A>
+<B>Up:</B> <A NAME="tex2html1509" HREF="node59.html">3 The Debugger</A>
+<B> Previous:</B> <A NAME="tex2html1503" HREF="node71.html">3.4.2 Note On Lexical </A>
+<BR> <P>
+<H1><A NAME="SECTION00450000000000000000">3.5 Source Location Printing</A></H1>
+<P>
+<A NAME="sourcelocations">&#160;</A>
+<A NAME="8843">&#160;</A>
+<P>
+One of CMU Common Lisp's unique capabilities is source level debugging of compiled
+code.  These commands display the source location for the current frame:
+<DL ><DT><STRONG><tt>source</tt> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>context</i></i></i><IMG WIDTH=5 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17168" SRC="img6.gif"></STRONG>
+<DD>This command displays the file that the current frame's function was defined
+from (if it was defined from a file), and then the source form responsible for
+generating the code that the current frame was executing.  If <i>context</i> is
+specified, then it is an integer specifying the number of enclosing levels of
+list structure to print.
+<P>
+<DT><STRONG><tt>vsource</tt> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>context</i></i></i><IMG WIDTH=5 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17168" SRC="img6.gif"></STRONG>
+<DD>This command is identical to <tt>source</tt>, except that it uses the
+global values of <tt>*print-level*</tt> and <tt>*print-length*</tt> instead
+of the debugger printing control variables <tt>*debug-print-level*</tt>
+and <tt>*debug-print-length*</tt>.
+<P>
+</DL>
+<P>
+The source form for a location in the code is the innermost list present
+in the original source that encloses the form responsible for generating
+that code.  If the actual source form is not a list, then some enclosing
+list will be printed.  For example, if the source form was a reference
+to the variable <tt>*some-random-special*</tt>, then the innermost
+enclosing evaluated form will be printed.  Here are some possible
+enclosing forms:
+<BLOCKQUOTE> <PRE>(let ((a *some-random-special*))
+  ...)
+<P>
+(+ *some-random-special* ...)
+</PRE> </BLOCKQUOTE>
+<P>
+If the code at a location was generated from the expansion of a macro or a
+source-level compiler optimization, then the form in the original source that
+expanded into that code will be printed.  Suppose the file
+`<tt>/usr/me/mystuff.lisp</tt>' looked like this:
+<BLOCKQUOTE> <PRE>(defmacro mymac ()
+  '(myfun))
+<P>
+(defun foo ()
+  (mymac)
+  ...)
+</PRE> </BLOCKQUOTE>
+If <tt>foo</tt> has called <tt>myfun</tt>, and is waiting for it to return, then the
+<tt>source</tt> command would print:
+<BLOCKQUOTE> <PRE>; File: /usr/me/mystuff.lisp
+<P>
+(MYMAC)
+</PRE> </BLOCKQUOTE>
+Note that the macro use was printed, not the actual function call form,
+<tt>(myfun)</tt>.
+<P>
+If enclosing source is printed by giving an argument to <tt>source</tt> or
+<tt>vsource</tt>, then the actual source form is marked by wrapping it in a list
+whose first element is <tt>#:***HERE***</tt>.  In the previous example, 
+<tt>source 1</tt> would print:
+<BLOCKQUOTE> <PRE>; File: /usr/me/mystuff.lisp
+<P>
+(DEFUN FOO ()
+  (#:***HERE***
+   (MYMAC))
+  ...)
+</PRE> </BLOCKQUOTE><BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html1514" HREF="node73.html#SECTION00451000000000000000">3.5.1 How the Source is Found</A>
+<LI> <A NAME="tex2html1515" HREF="node74.html#SECTION00452000000000000000">3.5.2 Source Location Availability</A>
+</UL>
+<HR><A NAME="tex2html1510" HREF="node73.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1508" HREF="node59.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1502" HREF="node71.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1512" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1513" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1511" HREF="node73.html">3.5.1 How the Source </A>
+<B>Up:</B> <A NAME="tex2html1509" HREF="node59.html">3 The Debugger</A>
+<B> Previous:</B> <A NAME="tex2html1503" HREF="node71.html">3.4.2 Note On Lexical </A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

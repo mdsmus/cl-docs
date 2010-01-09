@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.2.4 Union Types</TITLE>
+<META NAME="description" CONTENT="5.2.4 Union Types">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2165" HREF="node117.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2163" HREF="node112.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2157" HREF="node115.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2167" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2168" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2166" HREF="node117.html">5.2.5 The Empty Type</A>
+<B>Up:</B> <A NAME="tex2html2164" HREF="node112.html">5.2 More About Types </A>
+<B> Previous:</B> <A NAME="tex2html2158" HREF="node115.html">5.2.3 Member Types</A>
+<BR> <P>
+<H2><A NAME="SECTION00624000000000000000">5.2.4 Union Types</A></H2>
+<P>
+<A NAME="9754">&#160;</A>
+<A NAME="9756">&#160;</A>
+<P>
+The <A NAME="9757">&#160;</A><tt>or</tt> (union) type specifier is understood, and is
+meaningfully applied in many contexts.  The use of <tt>or</tt> allows
+assertions to be made about types in dynamically typed programs.  For
+example:
+<BLOCKQUOTE> <PRE>(defstruct box
+  (next nil :type (or box null))
+  (top :removed :type (or box-top (member :removed))))
+</PRE> </BLOCKQUOTE>
+The type assertion on the <tt>top</tt> slot ensures that an error will be signaled
+when there is an attempt to store an illegal value (such as <tt>:rmoved</tt>.)
+Although somewhat weak, these union type assertions provide a useful input into
+type inference, allowing the cost of type checking to be reduced.  For example,
+this loop is safely compiled with no type checks:
+<BLOCKQUOTE> <PRE>(defun find-box-with-top (box)
+  (declare (type (or box null) box))
+  (do ((current box (box-next current)))
+      ((null current))
+    (unless (eq (box-top current) :removed)
+      (return current))))
+</PRE> </BLOCKQUOTE>
+<P>
+Union types are also useful in type inference for representing types that are
+partially constrained.  For example, the result of this expression:
+<BLOCKQUOTE> <PRE>(if foo
+    (logior x y)
+    (list x y))
+</PRE> </BLOCKQUOTE>
+can be expressed as <tt>(or integer cons)</tt>.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

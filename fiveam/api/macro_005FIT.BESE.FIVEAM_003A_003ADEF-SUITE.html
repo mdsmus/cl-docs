@@ -1,0 +1,41 @@
+<html
+  ><head
+    ><title
+      >Macro DEF-SUITE</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Macro: DEF-SUITE</h1
+        ><div class="contents"
+          ><h2
+  >Documentation</h2
+><blockquote
+  >Define a new test-suite named NAME.
+
+IN (a symbol), if provided, causes this suite te be nested in the
+suite named by IN.</blockquote
+><h2
+            >Source</h2
+          ><pre class="code"
+            >(defmacro def-suite (name &amp;key description in)
+  &quot;Define a new test-suite named NAME.
+
+IN (a symbol), if provided, causes this suite te be nested in the
+suite named by IN.&quot;
+  `(progn
+     (make-suite ',name
+		 ,@(when description `(:description ,description))
+		 ,@(when in `(:in ',in)))
+     ',name))</pre
+          ><a href="../Test_0020Suites.html#macro_005FIT.BESE.FIVEAM_003A_003ADEF-SUITE"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

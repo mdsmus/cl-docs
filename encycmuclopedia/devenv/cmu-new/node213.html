@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The SERVE-EVENT Function</TITLE>
+<META NAME="description" CONTENT="The SERVE-EVENT Function">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3384" HREF="node214.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3382" HREF="node211.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3376" HREF="node212.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3386" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3387" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3385" HREF="node214.html">Using SERVE-EVENT with Unix </A>
+<B>Up:</B> <A NAME="tex2html3383" HREF="node211.html">Event Dispatching with SERVE-EVENT</A>
+<B> Previous:</B> <A NAME="tex2html3377" HREF="node212.html">7.1 Object Sets</A>
+<BR> <P>
+<H1><A NAME="SECTION00820000000000000000">The SERVE-EVENT Function</A></H1>
+<P>
+The <tt>system:serve-event</tt> function is the standard way for an application
+to wait for something to happen.  For example, the Lisp system calls
+<tt>system:serve-event</tt> when it wants input from X or a terminal stream.
+The idea behind <tt>system:serve-event</tt> is that it knows the appropriate
+action to take when any interesting event happens.  If an application calls
+<tt>system:serve-event</tt> when it is idle, then any other applications with
+pending events can run.  This allows several applications to run ``at the
+same time'' without interference, even though there is only one thread of
+control.  Note that if an application is waiting for input of any kind,
+then other applications will get events.
+<P>
+<b>[Function]</b><BR> 
+<tt> system:serve-event</tt> <em> <i>&amp;optional</i> <i>timeout</i></em><BR>
+<P>
+  This function waits for an event to happen and then dispatches to
+  the correct handler function.  If specified, <i>timeout</i> is the
+  number of seconds to wait before timing out.  A time out of zero
+  seconds is legal and causes <tt>system:serve-event</tt> to poll for
+  any events immediately available for processing.
+  <tt>system:serve-event</tt> returns <i>t</i> if it serviced at least
+  one event, and <i>nil</i> otherwise.  Depending on the application, when
+  <tt>system:serve-event</tt> returns <i>t</i>, you might want to call it
+  repeatedly with a timeout of zero until it returns <i>nil</i>.
+<P>
+  If input is available on any designated file descriptor, then this
+  calls the appropriate handler function supplied by
+  <tt>system:add-fd-handler</tt>.
+<P>
+  Since events for many different applications may arrive
+  simultaneously, an application waiting for a specific event must
+  loop on <tt>system:serve-event</tt> until the desired event happens.
+  Since programs such as Hemlock call <tt>system:serve-event</tt> for
+  input, applications usually do not need to call
+  <tt>system:serve-event</tt> at all; Hemlock allows other
+  application's handlers to run when it goes into an input wait.
+<P>
+<b>[Function]</b><BR> 
+<tt> system:serve-all-events</tt> <em> <i>&amp;optional</i> <i>timeout</i></em><BR>
+<P>
+  This function is similar to <tt>system:serve-event</tt>, except it
+  serves all the pending events rather than just one.  It returns
+  <i>t</i> if it serviced at least one event, and <i>nil</i> otherwise.
+<P>
+<HR><A NAME="tex2html3384" HREF="node214.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3382" HREF="node211.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3376" HREF="node212.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3386" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3387" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3385" HREF="node214.html">Using SERVE-EVENT with Unix </A>
+<B>Up:</B> <A NAME="tex2html3383" HREF="node211.html">Event Dispatching with SERVE-EVENT</A>
+<B> Previous:</B> <A NAME="tex2html3377" HREF="node212.html">7.1 Object Sets</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

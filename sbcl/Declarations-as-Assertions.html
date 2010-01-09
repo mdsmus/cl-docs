@@ -1,0 +1,92 @@
+<html lang="en">
+<head>
+<title>Declarations as Assertions - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Handling-of-Types.html#Handling-of-Types" title="Handling of Types">
+<link rel="next" href="Precise-Type-Checking.html#Precise-Type-Checking" title="Precise Type Checking">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Declarations-as-Assertions"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Precise-Type-Checking.html#Precise-Type-Checking">Precise Type Checking</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Handling-of-Types.html#Handling-of-Types">Handling of Types</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">3.2.1 Declarations as Assertions</h4>
+
+<p><a name="index-safety-45"></a>
+The SBCL compiler treats type declarations differently from most
+other Lisp compilers. Under default compilation policy the compiler
+doesn't blindly believe type declarations, but considers them
+assertions about the program that should be checked: all type
+declarations that have not been proven to always hold are asserted at
+runtime.
+
+   <blockquote>
+<em>Remaining bugs in the compiler's handling of types unfortunately
+provide some exceptions to this rule, see <a href="Implementation-Limitations.html#Implementation-Limitations">Implementation Limitations</a>).</em>
+</blockquote>
+
+   <p>There are three type checking policies available in SBCL,
+selectable via <code>optimize</code> declarations.
+
+     <dl>
+<!-- FIXME: This should be properly integrated with general policy -->
+<!-- stuff, once that gets cleaned up. -->
+
+     <dt><strong>Full Type Checks</strong><dd>All declarations are considered assertions to be checked at runtime,
+and all type checks are precise. The default compilation policy
+provides full type checks.
+
+     <p>Used when <code>(or (&gt;= safety 2) (&gt;= safety speed 1))</code>.
+
+     <br><dt><strong>Weak Type Checks</strong><dd>Declared types may be simplified into faster to check supertypes: for example,
+<code>(and unsigned-byte fixnum)</code> is simplified into <code>fixnum</code>.
+
+     <p><strong>Note</strong>: it is relatively easy to corrupt the heap when weak
+type checks are used if the program contains type-errors.
+
+     <p>Used when <code>(and (&lt; safety 2) (&lt; safety speed))</code>
+
+     <br><dt><strong>No Type Checks</strong><dd>All declarations are believed without assertions. Also disables
+argument count and array bounds checking.
+
+     <p><strong>Note</strong>: any type errors in code where type checks are not
+performed are liable to corrupt the heap.
+
+     <p>Used when <code>(= safety 0)</code>.
+
+   </dl>
+
+   </body></html>
+

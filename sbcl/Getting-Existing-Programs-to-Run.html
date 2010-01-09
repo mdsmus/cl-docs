@@ -1,0 +1,179 @@
+<html lang="en">
+<head>
+<title>Getting Existing Programs to Run - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Handling-of-Types.html#Handling-of-Types" title="Handling of Types">
+<link rel="prev" href="Precise-Type-Checking.html#Precise-Type-Checking" title="Precise Type Checking">
+<link rel="next" href="Implementation-Limitations.html#Implementation-Limitations" title="Implementation Limitations">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Getting-Existing-Programs-to-Run"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Implementation-Limitations.html#Implementation-Limitations">Implementation Limitations</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Precise-Type-Checking.html#Precise-Type-Checking">Precise Type Checking</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Handling-of-Types.html#Handling-of-Types">Handling of Types</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">3.2.3 Getting Existing Programs to Run</h4>
+
+<p><a name="index-Existing-programs_002c-to-run-48"></a><a name="index-Types_002c-portability-49"></a><a name="index-Compatibility-with-other-Lisps-50"></a><!-- (should also have an entry in the non-ANSI-isms section)-> -->
+
+   <p>Since SBCL's compiler does much more comprehensive type checking than
+most Lisp compilers, SBCL may detect type errors in programs that have
+been debugged using other compilers. These errors are mostly incorrect
+declarations, although compile-time type errors can find actual bugs
+if parts of the program have never been tested.
+
+   <p>Some incorrect declarations can only be detected by run-time type
+checking. It is very important to initially compile a program with
+full type checks (high <code>safety</code> optimization) and then test this
+safe version. After the checking version has been tested, then you can
+consider weakening or eliminating type checks.  <em>This applies
+even to previously debugged programs,</em> because the SBCL compiler does
+much more type inference than other Common Lisp compilers, so an
+incorrect declaration can do more damage.
+
+   <p>The most common problem is with variables whose constant initial value
+doesn't match the type declaration. Incorrect constant initial values
+will always be flagged by a compile-time type error, and they are
+simple to fix once located. Consider this code fragment:
+
+<pre class="lisp">     (prog (foo)
+       (declare (fixnum foo))
+       (setq foo ...)
+       ...)
+</pre>
+   <p>Here <code>foo</code> is given an initial value of <code>nil</code>, but is
+declared to be a <code>fixnum</code>.  Even if it is never read, the initial
+value of a variable must match the declared type.  There are two ways
+to fix this problem. Change the declaration
+
+<pre class="lisp">     (prog (foo)
+       (declare (type (or fixnum null) foo))
+       (setq foo ...)
+       ...)
+</pre>
+   <p>or change the initial value
+
+<pre class="lisp">     (prog ((foo 0))
+       (declare (fixnum foo))
+       (setq foo ...)
+       ...)
+</pre>
+   <p>It is generally preferable to change to a legal initial value rather
+than to weaken the declaration, but sometimes it is simpler to weaken
+the declaration than to try to make an initial value of the
+appropriate type.
+
+   <p>Another declaration problem occasionally encountered is incorrect
+declarations on <code>defmacro</code> arguments. This can happen when a
+function is converted into a macro. Consider this macro:
+
+<pre class="lisp">     (defmacro my-1+ (x)
+       (declare (fixnum x))
+       `(the fixnum (1+ ,x)))
+</pre>
+   <p>Although legal and well-defined Common Lisp code, this meaning of this
+definition is almost certainly not what the writer intended. For
+example, this call is illegal:
+
+<pre class="lisp">     (my-1+ (+ 4 5))
+</pre>
+   <p>This call is illegal because the argument to the macro is <code>(+ 4
+5)</code>, which is a <code>list</code>, not a <code>fixnum</code>.  Because of macro
+semantics, it is hardly ever useful to declare the types of macro
+arguments.  If you really want to assert something about the type of
+the result of evaluating a macro argument, then put a <code>the</code> in
+the expansion:
+
+<pre class="lisp">     (defmacro my-1+ (x)
+       `(the fixnum (1+ (the fixnum ,x))))
+</pre>
+   <p>In this case, it would be stylistically preferable to change this
+macro back to a function and declare it inline. 
+<!-- <!-FIXME: <xref>inline-expansion, once we crib the -->
+<!-- relevant text from the CMU CL manual.-> -->
+
+   <p>Some more subtle problems are caused by incorrect declarations that
+can't be detected at compile time.  Consider this code:
+
+<pre class="lisp">     (do ((pos 0 (position #\a string :start (1+ pos))))
+       ((null pos))
+       (declare (fixnum pos))
+       ...)
+</pre>
+   <p>Although <code>pos</code> is almost always a <code>fixnum</code>, it is <code>nil</code>
+at the end of the loop. If this example is compiled with full type
+checks (the default), then running it will signal a type error at the
+end of the loop. If compiled without type checks, the program will go
+into an infinite loop (or perhaps <code>position</code> will complain
+because <code>(1+ nil)</code> isn't a sensible start.) Why? Because if you
+compile without type checks, the compiler just quietly believes the
+type declaration. Since the compiler believes that <code>pos</code> is
+always a <code>fixnum</code>, it believes that <code>pos</code> is never
+<code>nil</code>, so <code>(null pos)</code> is never true, and the loop exit test
+is optimized away. Such errors are sometimes flagged by unreachable
+code notes, but it is still important to initially compile and test
+any system with full type checks, even if the system works fine when
+compiled using other compilers.
+
+   <p>In this case, the fix is to weaken the type declaration to <code>(or
+fixnum null)</code> <a rel="footnote" href="#fn-1" name="fnd-1"><sup>1</sup></a>.
+
+   <p>Note that there is usually little performance penalty for weakening a
+declaration in this way. Any numeric operations in the body can still
+assume that the variable is a <code>fixnum</code>, since <code>nil</code> is not a
+legal numeric argument. Another possible fix would be to say:
+
+<pre class="lisp">     (do ((pos 0 (position #\a string :start (1+ pos))))
+         ((null pos))
+       (let ((pos pos))
+         (declare (fixnum pos))
+         ...))
+</pre>
+   <p>This would be preferable in some circumstances, since it would allow a
+non-standard representation to be used for the local <code>pos</code>
+variable in the loop body. 
+<!-- <!- FIXME: <xref>ND-variables, once we crib the text from the -->
+<!-- CMU CL manual. -> -->
+
+   <div class="footnote">
+<hr>
+<h4>Footnotes</h4><p class="footnote"><small>[<a name="fn-1" href="#fnd-1">1</a>]</small> Actually, this declaration is unnecessary in
+SBCL, since it already knows that <code>position</code> returns a
+non-negative <code>fixnum</code> or <code>nil</code>.</p>
+
+   <hr></div>
+
+   </body></html>
+

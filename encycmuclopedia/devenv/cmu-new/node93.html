@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>4.4.5 Errors During Macroexpansion</TITLE>
+<META NAME="description" CONTENT="4.4.5 Errors During Macroexpansion">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1785" HREF="node94.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1783" HREF="node88.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1777" HREF="node92.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1787" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1788" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1786" HREF="node94.html">4.4.6 Read Errors</A>
+<B>Up:</B> <A NAME="tex2html1784" HREF="node88.html">4.4 Interpreting Error Messages</A>
+<B> Previous:</B> <A NAME="tex2html1778" HREF="node92.html">4.4.4 Error Severity</A>
+<BR> <P>
+<H2><A NAME="SECTION00545000000000000000">4.4.5 Errors During Macroexpansion</A></H2>
+<P>
+<A NAME="9458">&#160;</A>
+<P>
+The compiler handles errors that happen during macroexpansion, turning
+them into compiler errors.  If you want to debug the error (to debug a
+macro), you can set <tt>*break-on-signals*</tt> to <tt>error</tt>.  For
+example, this definition:
+<BLOCKQUOTE> <PRE>(defun foo (e l)
+  (do ((current l (cdr current))
+       ((atom current) nil))
+      (when (eq (car current) e) (return current))))
+</PRE> </BLOCKQUOTE>
+gives this error:
+<BLOCKQUOTE> <PRE>In: DEFUN FOO
+  (DO ((CURRENT L #) (# NIL)) (WHEN (EQ # E) (RETURN CURRENT)) )
+Error: (during macroexpansion)
+<P>
+Error in function LISP::DO-DO-BODY.
+DO step variable is not a symbol: (ATOM CURRENT)
+</PRE> </BLOCKQUOTE><BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

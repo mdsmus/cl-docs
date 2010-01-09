@@ -1,0 +1,76 @@
+<html lang="en">
+<head>
+<title>Debugger Banner - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Debugger-Entry.html#Debugger-Entry" title="Debugger Entry">
+<link rel="next" href="Debugger-Invocation.html#Debugger-Invocation" title="Debugger Invocation">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Debugger-Banner"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Debugger-Invocation.html#Debugger-Invocation">Debugger Invocation</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Debugger-Entry.html#Debugger-Entry">Debugger Entry</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">4.1.1 Debugger Banner</h4>
+
+<p>When you enter the debugger, it looks something like this:
+
+<pre class="example">     debugger invoked on a TYPE-ERROR in thread 11184:
+       The value 3 is not of type LIST.
+     
+     You can type HELP for debugger help, or (SB-EXT:QUIT) to exit from SBCL.
+     
+     restarts (invokable by number or by possibly-abbreviated name):
+       0: [ABORT   ] Reduce debugger level (leaving debugger, returning to toplevel).
+       1: [TOPLEVEL] Restart at toplevel READ/EVAL/PRINT loop.
+     (CAR 1 3)
+     0]
+</pre>
+   <p>The first group of lines describe what the error was that put us in
+the debugger.  In this case <code>car</code> was called on <code>3</code>, causing
+a <code>type-error</code>.
+
+   <p>This is followed by the &ldquo;beginner help line&rdquo;, which appears only if
+<code>sb-ext:*debugger-beginner-help*</code> is true (default).
+
+   <p>Next comes a listing of the active restart names, along with their
+descriptions &ndash; the ways we can restart execution after this error. In
+this case, both options return to top-level. Restarts can be selected
+by entering the corresponding number or name.
+
+   <p>The current frame appears right underneath the restarts, immediately
+followed by the debugger prompt.
+
+   </body></html>
+

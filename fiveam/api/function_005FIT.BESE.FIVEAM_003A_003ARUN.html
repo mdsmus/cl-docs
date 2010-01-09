@@ -1,0 +1,47 @@
+<html
+  ><head
+    ><title
+      >Function RUN</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Function: RUN</h1
+        ><div class="contents"
+          ><h2
+  >Documentation</h2
+><blockquote
+  >Run the test specified by TEST-SPEC.
+
+TEST-SPEC can be either a symbol naming a test or test suite, or
+a testable-object object. This function changes the operations
+performed by the !, !! and !!! functions.</blockquote
+><h2
+            >Source</h2
+          ><pre class="code"
+            >(defun run (test-spec)
+    &quot;Run the test specified by TEST-SPEC.
+
+TEST-SPEC can be either a symbol naming a test or test suite, or
+a testable-object object. This function changes the operations
+performed by the !, !! and !!! functions.&quot;
+    (psetf *!* (lambda ()
+		 (loop for test being the hash-keys of *test*
+		    do (setf (status (get-test test)) :unknown))
+		 (bind-run-state ((result-list '()))
+		   (%run test-spec)
+		   result-list))
+	   *!!* *!*
+	   *!!!* *!!*)
+    (funcall *!*))</pre
+          ><a href="../Running_0020Tests.html#function_005FIT.BESE.FIVEAM_003A_003ARUN"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

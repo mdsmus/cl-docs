@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.6.5 Return Values</TITLE>
+<META NAME="description" CONTENT="5.6.5 Return Values">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2547" HREF="node148.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2545" HREF="node142.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2541" HREF="node146.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2549" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2550" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2548" HREF="node148.html">5.7 Block Compilation</A>
+<B>Up:</B> <A NAME="tex2html2546" HREF="node142.html">5.6 Local Call</A>
+<B> Previous:</B> <A NAME="tex2html2542" HREF="node146.html">5.6.4 Local Tail Recursion</A>
+<BR> <P>
+<H2><A NAME="SECTION00665000000000000000">5.6.5 Return Values</A></H2>
+<P>
+<A NAME="localcallreturn">&#160;</A>
+<A NAME="10173">&#160;</A>
+<A NAME="10174">&#160;</A>
+<P>
+One of the more subtle costs of full call comes from allowing
+arbitrary numbers of return values.  This overhead can be avoided in
+local calls to functions that always return the same number of values.
+For efficiency reasons (as well as stylistic ones), you should write
+functions so that they always return the same number of values.  This
+may require passing extra <i>nil</i> arguments to <tt>values</tt> in some
+cases, but the result is more efficient, not less so.
+<P>
+When efficiency notes are enabled (see section&nbsp;<A HREF="node185.html#efficiencynotes">5.13</A>), and the
+compiler wants to use known values return, but can't prove that the
+function always returns the same number of values, then it will print
+a note like this:
+<BLOCKQUOTE> <PRE>In: DEFUN GRUE
+  (DEFUN GRUE (X) (DECLARE (FIXNUM X)) (COND (# #) (# NIL) (T #)))
+Note: Return type not fixed values, so can't use known return convention:
+  (VALUES (OR (INTEGER -536870912 -1) NULL) &amp;REST T)
+</PRE> </BLOCKQUOTE>
+<P>
+In order to implement proper tail recursion in the presence of known
+values return (see section&nbsp;<A HREF="node140.html#tailrecursion">5.5</A>), the compiler sometimes must
+prove that multiple functions all return the same number of values.
+When this can't be proven, the compiler will print a note like this:
+<BLOCKQUOTE> <PRE>In: DEFUN BLUE
+  (DEFUN BLUE (X) (DECLARE (FIXNUM X)) (COND (# #) (# #) (# #) (T #)))
+Note: Return value count mismatch prevents known return from
+      these functions:
+  BLUE
+  SNOO
+</PRE> </BLOCKQUOTE>
+See section&nbsp;<A HREF="node177.html#numberlocalcall">5.11.10</A> for the interaction between local call
+and the representation of numeric types.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

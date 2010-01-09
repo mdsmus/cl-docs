@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>9.1.4 Host Addresses</TITLE>
+<META NAME="description" CONTENT="9.1.4 Host Addresses">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3852" HREF="node250.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3850" HREF="node245.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3846" HREF="node248.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3854" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3855" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3853" HREF="node250.html">9.2 The WIRE Package</A>
+<B>Up:</B> <A NAME="tex2html3851" HREF="node245.html">9.1 The REMOTE Package</A>
+<B> Previous:</B> <A NAME="tex2html3847" HREF="node248.html">9.1.3 Remote Objects</A>
+<BR> <P>
+<H2><A NAME="SECTION001014000000000000000">9.1.4 Host Addresses</A></H2>
+<P>
+The operating system maintains a database of all the valid host
+addresses.  You can use this database to convert between host names
+and addresses and vice-versa.
+<P>
+<b>[Function]</b><BR> 
+<tt> ext: lookup-host-entry</tt> <em> <i>host</i></em><BR>
+<P>
+  <tt>lookup-host-entry</tt> searches the database for the given
+  <i>host</i> and returns a host-entry structure for it.  If it fails
+  to find <i>host</i> in the database, it returns <i>nil</i>.  <i>Host</i> is
+  either the address (as an integer) or the name (as a string) of the
+  desired host.
+<P>
+<b>[Function]</b><BR> 
+<tt> ext: host-entry-name</tt> <em> <i>host-entry</i></em><BR> 
+  <tt>ext:host-entry-aliases</tt> <EM></EM><i>host-entry</i><BR> 
+  <tt>ext:host-entry-addr-list</tt> <EM></EM><i>host-entry</i><BR> 
+  <tt>ext:host-entry-addr</tt> <EM></EM><i>host-entry</i><BR>
+<P>
+  <tt>host-entry-name</tt>, <tt>host-entry-aliases</tt>, and
+  <tt>host-entry-addr-list</tt> each return the indicated slot from the
+  host-entry structure.  <tt>host-entry-addr</tt> returns the primary
+  (first) address from the list returned by
+  <tt>host-entry-addr-list</tt>.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

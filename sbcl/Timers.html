@@ -1,0 +1,123 @@
+<html lang="en">
+<head>
+<title>Timers - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="prev" href="Threading.html#Threading" title="Threading">
+<link rel="next" href="Networking.html#Networking" title="Networking">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Timers"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Networking.html#Networking">Networking</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Threading.html#Threading">Threading</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h2 class="chapter">12 Timers</h2>
+
+<p>SBCL supports a system-wide scheduler implemented on top of
+<code>setitimer</code> that also works with threads but does not require a
+separate scheduler thread.
+
+   </ul>
+
+<pre class="lisp">     (schedule-timer (make-timer (lambda ()
+                                   (write-line "Hello, world")
+                                   (force-output)))
+                     2)
+</pre>
+   <p><a name="Structure-sb_002dext_003atimer"></a>
+
+<div class="defun">
+&mdash; Structure: <b>sb-ext:timer</b><var><a name="index-sb_002dext_003atimer-483"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003atimer-484"></a>Class precedence list: <code>timer, structure-object, t</code>
+
+        <p>Timer type. Do not rely on timers being structs as it may change in
+future versions. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003amake_002dtimer"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:make-timer</b><var> function &amp;key name thread<a name="index-sb_002dext_003amake_002dtimer-485"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003amake_002dtimer-486"></a>Create a timer object that's when scheduled runs <code>function</code>. If
+<code>thread</code> is a thread then that thread is to be interrupted with
+<code>function</code>. If <code>thread</code> is <code>t</code> then a new thread is created each timer
+<code>function</code> is run. If <code>thread</code> is <code>nil</code> then <code>function</code> can be run in any
+thread. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003atimer_002dname"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:timer-name</b><var> timer<a name="index-sb_002dext_003atimer_002dname-487"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003atimer_002dname-488"></a>Return the name of <code>timer</code>. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003atimer_002dscheduled_002dp"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:timer-scheduled-p</b><var> timer &amp;key delta<a name="index-sb_002dext_003atimer_002dscheduled_002dp-489"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003atimer_002dscheduled_002dp-490"></a>See if <code>timer</code> will still need to be triggered after <code>delta</code> seconds
+from now. For timers with a repeat interval it returns true. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003aschedule_002dtimer"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:schedule-timer</b><var> timer time &amp;key repeat-interval absolute-p<a name="index-sb_002dext_003aschedule_002dtimer-491"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003aschedule_002dtimer-492"></a>Schedule <code>timer</code> to be triggered at <code>time</code>. If <code>absolute-p</code> then <code>time</code> is
+universal time, but non-integral values are also allowed, else <code>time</code> is
+measured as the number of seconds from the current time. If
+<code>repeat-interval</code> is given, <code>timer</code> is automatically rescheduled upon
+expiry. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003aunschedule_002dtimer"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:unschedule-timer</b><var> timer<a name="index-sb_002dext_003aunschedule_002dtimer-493"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003aunschedule_002dtimer-494"></a>Cancel <code>timer</code>. Once this function returns it is guaranteed that
+<code>timer</code> shall not be triggered again and there are no unfinished
+triggers. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003alist_002dall_002dtimers"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:list-all-timers</b><var><a name="index-sb_002dext_003alist_002dall_002dtimers-495"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003alist_002dall_002dtimers-496"></a>Return a list of all timers in the system. 
+</p></blockquote></div>
+
+   </body></html>
+

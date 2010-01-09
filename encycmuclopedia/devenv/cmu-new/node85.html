@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>4.2 Calling the Compiler</TITLE>
+<META NAME="description" CONTENT="4.2 Calling the Compiler">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1683" HREF="node86.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1681" HREF="node83.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1675" HREF="node84.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1685" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1686" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1684" HREF="node86.html">4.3 Compilation Units</A>
+<B>Up:</B> <A NAME="tex2html1682" HREF="node83.html">4 The Compiler</A>
+<B> Previous:</B> <A NAME="tex2html1676" HREF="node84.html">4.1 Compiler Introduction</A>
+<BR> <P>
+<H1><A NAME="SECTION00520000000000000000">4.2 Calling the Compiler</A></H1>
+<P>
+<A NAME="9170">&#160;</A>
+Functions may be compiled using <tt>compile</tt>, <tt>compile-file</tt>, or 
+<tt>compile-from-stream</tt>.
+<P>
+<b>[Function]</b><BR> 
+<tt>  compile</tt> <em>  <i>name</i> <i>&amp;optional</i> <i>definition</i></em><BR>
+<P>
+  This function compiles the function whose name is <i>name</i>.  If
+  <i>name</i> is <i>nil</i>, the compiled function object is returned.  If
+  <i>definition</i> is supplied, it should be a lambda expression that
+  is to be compiled and then placed in the function cell of
+  <i>name</i>.  As per the proposed X3J13 cleanup
+  ``compile-argument-problems'', <i>definition</i> may also be an
+  interpreted function.
+<P>
+  The return values are as per the proposed X3J13 cleanup
+  ``compiler-diagnostics''.  The first value is the function name or
+  function object.  The second value is <i>nil</i> if no compiler
+  diagnostics were issued, and <i>t</i> otherwise.  The third value is
+  <i>nil</i> if no compiler diagnostics other than style warnings were
+  issued.  A non-<i>nil</i> value indicates that there were ``serious''
+  compiler diagnostics issued, or that other conditions of type
+  <A NAME="9190">&#160;</A><tt>error</tt> or <A NAME="9192">&#160;</A><tt>warning</tt> (but not
+  <A NAME="9194">&#160;</A><tt>style-warning</tt>) were signaled during compilation.
+<P>
+<b>[Function]</b><BR> 
+<tt>  compile-file</tt> <em> 
+    <i>input-pathname</i>
+      <tt>&amp;key</tt> <tt>:output-file</tt> <tt>:error-file</tt> <tt>:trace-file</tt>
+      <tt>:error-output</tt> <tt>:verbose</tt> <tt>:print</tt> <tt>:progress</tt>
+      <tt>:load</tt> <tt>:block-compile</tt> <tt>:entry-points</tt>
+      <tt>:byte-compile</tt></em><BR>
+<P>
+  The CMU Common Lisp <tt>compile-file</tt> is extended through the addition of
+  several new keywords and an additional interpretation of
+  <i>input-pathname</i>:
+  <DL ><DT><STRONG><i>input-pathname</i></STRONG>
+<DD> If this argument is a list of input
+    files, rather than a single input pathname, then all the source
+    files are compiled into a single object file.  In this case, the
+    name of the first file is used to determine the default output
+    file names.  This is especially useful in combination with
+    <i>block-compile</i>.
+<P>
+  <DT><STRONG><tt>:output-file</tt></STRONG>
+<DD> This argument specifies the name of the
+    output file.  <i>t</i> gives the default name, <i>nil</i> suppresses
+    the output file.
+<P>
+  <DT><STRONG><tt>:error-file</tt></STRONG>
+<DD> A listing of all the error output is
+    directed to this file.  If there are no errors, then no error file
+    is produced (and any existing error file is deleted.)  <i>t</i>
+    gives &quot;<i>name</i><tt>.err</tt>&quot; (the default), and <i>nil</i>
+    suppresses the output file.
+<P>
+  <DT><STRONG><tt>:error-output</tt></STRONG>
+<DD> If <i>t</i> (the default), then error
+    output is sent to <tt>*error-output*</tt>.  If a stream, then output
+    is sent to that stream instead.  If <i>nil</i>, then error output is
+    suppressed.  Note that this error output is in addition to (but
+    the same as) the output placed in the <i>error-file</i>.
+<P>
+  <DT><STRONG><tt>:verbose</tt></STRONG>
+<DD> If <i>t</i> (the default), then the compiler
+    prints to error output at the start and end of compilation of each
+    file.  See <A NAME="9258">&#160;</A><tt>*compile-verbose*</tt> (page&nbsp;<A HREF="node85.html#VRcompileverbose"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>).
+<P>
+  <DT><STRONG><tt>:print</tt></STRONG>
+<DD> If <i>t</i> (the default), then the compiler
+    prints to error output when each function is compiled.  See
+    <A NAME="9263">&#160;</A><tt>*compile-print*</tt> (page&nbsp;<A HREF="node85.html#VRcompileprint"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>).
+<P>
+  <DT><STRONG><tt>:progress</tt></STRONG>
+<DD> If <i>t</i> (default <i>nil</i>), then the
+    compiler prints to error output progress information about the
+    phases of compilation of each function.  This is a CMU extension
+    that is useful mainly in large block compilations.  See
+    <A NAME="9269">&#160;</A><tt>*compile-progress*</tt> (page&nbsp;<A HREF="node85.html#VRcompileprogress"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>).
+<P>
+  <DT><STRONG><tt>:trace-file</tt></STRONG>
+<DD> If <i>t</i>, several of the intermediate
+    representations (including annotated assembly code) are dumped out
+    to this file.  <i>t</i> gives &quot;<i>name</i><tt>.trace</tt>&quot;.  Trace
+    output is off by default.  See section&nbsp;<A HREF="node184.html#tracefiles">5.12.5</A>.
+<P>
+  <DT><STRONG><tt>:load</tt></STRONG>
+<DD> If <i>t</i>, load the resulting output file.
+<P>
+  <DT><STRONG><tt>:block-compile</tt></STRONG>
+<DD> Controls the compile-time resolution of
+    function calls.  By default, only self-recursive calls are
+    resolved, unless an <tt>ext:block-start</tt> declaration appears in
+    the source file.  See section&nbsp;<A HREF="node151.html#compilefileblock">5.7.3</A>.
+<P>
+  <DT><STRONG><tt>:entry-points</tt></STRONG>
+<DD> If non-null, then this is a list of the
+    names of all functions in the file that should have global
+    definitions installed (because they are referenced in other
+    files.)  See section&nbsp;<A HREF="node151.html#compilefileblock">5.7.3</A>.
+<P>
+  <DT><STRONG><tt>:byte-compile</tt></STRONG>
+<DD> If <i>t</i>, compiling to a compact
+    interpreted byte code is enabled.  Possible values are <i>t</i>,
+    <i>nil</i>, and <tt>:maybe</tt> (the default.)  See
+    <A NAME="9293">&#160;</A><tt>*byte-compile-default*</tt> (page&nbsp;<A HREF="node159.html#VRbytecompiledefault"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>) and See section&nbsp;<A HREF="node159.html#bytecompile">5.9</A>.
+<P>
+</DL>
+<P>
+  The return values are as per the proposed X3J13 cleanup
+  ``compiler-diagnostics''.  The first value from <tt>compile-file</tt>
+  is the truename of the output file, or <i>nil</i> if the file could
+  not be created.  The interpretation of the second and third values
+  is described above for <tt>compile</tt>.
+<P>
+<b>[Variable]</b><BR> 
+<tt> * compile-verbose*</tt><BR> <BR> 
+  <tt>*compile-print*</tt><BR> 
+  <tt>*compile-progress*</tt><BR>
+<P>
+  These variables determine the default values for the <tt>:verbose</tt>,
+  <tt>:print</tt> and <tt>:progress</tt> arguments to <tt>compile-file</tt>.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:compile-from-stream</tt> <em> <i>input-stream</i>
+      <tt>&amp;key</tt> <tt>:error-stream</tt>
+      <tt>:trace-stream</tt>
+      <tt>:block-compile</tt> <tt>:entry-points</tt>
+      <tt>:byte-compile</tt></em><BR>
+<P>
+  This function is similar to <tt>compile-file</tt>, but it takes all
+  its arguments as streams.  It reads Common Lisp code from
+  <i>input-stream</i> until end of file is reached, compiling into the
+  current environment.  This function returns the same two values as
+  the last two values of <tt>compile</tt>.  No output files are
+  produced.
+<P>
+<HR><A NAME="tex2html1683" HREF="node86.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1681" HREF="node83.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1675" HREF="node84.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1685" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1686" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1684" HREF="node86.html">4.3 Compilation Units</A>
+<B>Up:</B> <A NAME="tex2html1682" HREF="node83.html">4 The Compiler</A>
+<B> Previous:</B> <A NAME="tex2html1676" HREF="node84.html">4.1 Compiler Introduction</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

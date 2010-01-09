@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Appendix A</title> 
+</head> 
+
+<body bgcolor="white" text="black">
+
+<h1>Appendix A - Successful Lisp Applications</h1> 
+
+<P>Lisp is used to build applications in which the underlying data is complex and highly
+dynamic, and where symbolic manipulation is a key feature of the application.  Lisp is also
+used in situations where an application must be readily updated and customized.
+
+<p>You should be aware that Common Lisp is unlikely to become a key component of any
+commercial operating system in the forseeable future. It is very difficult to merge Lisp
+storage management techniques with code compiled for traditional pointer-centric languages.
+Therefore, Lisp must continue to provide its own operating environment. As a Lisp
+programmer, you should set your expectations accordingly. Once you become facile with Lisp,
+you'll tend to use Lisp as a workbench and proving ground for algorithmic ideas and
+programming utilities both large and small. Just don't expect to write and sell a small,
+simple program in Lisp; the size and cost of the runtime system that you must distribute
+with your program may be prohibitive.
+
+<p>On the other hand, Lisp excels as a framework for developing large, complex
+applications. Once past a certain size threshold (for program or data), the fixed overhead
+of a Lisp environment becomes inconsequential.  Also, that rich development environment makes
+it possible to develop large applications with fewer programmers since much of the algorithmic
+framework is already provided by Common Lisp's built-in data types and functions.  Knowledgeable
+Lisp programmers achieve even greater productivity by using Common Lisp to write application 
+specific programming tools and language constructs.
+
+<p>The message I want you to take away is that learning and using Lisp is a process. Unless
+the computer software industry undergoes an unexpected (and unlikely) change, having read
+this book won't get you a job. However, I'm hoping that what you've learned here will
+forever color your perceptions as to what is possible, and suggest both techniques and ways
+of thinking that will be helpful to you in building those "small" applications like word
+processors, spreadsheets, and OLTP systems.
+
+<p>Meanwhile, I'd like to show you some of the more visible applications that people have
+developed using Lisp.
+
+	<ul>
+	<li><a href="#emacs">Emacs</a> 
+	<li><a href="#G2">G2</a> 
+	<li><a href="#autocad">AutoCAD</a> 
+        <li><a href="#igor">Igor Engraver</a> 
+        <li><a href="#yahoo">Yahoo Store</a> 
+	<li><a href="#others">...</a> 
+	</ul> 
+</ul> 
+
+<h2><a name="emacs">Emacs</a> </h2> 
+
+<p>More programmers are familiar with Emacs than with any other Lisp application. Richard
+Stallman conceived Emacs as an extensible editor. He wrote his own Lisp interpreter (not a
+compiler) specifically for the tasks used in editing text - the low-level text manipulation
+functions are built-in functions of Emacs Lisp. Over the decades, Emacs has grown to
+accomodate windowing systems and has accumulated a vast library of code to support
+programming, writing and personal communications.
+
+<h2><a name="G2">G2</a></h2> 
+
+<p>Gensym wrote their G2 real-time expert system in Lisp, and later (at greater cost and
+effort) ported it to C to meet customer expectations. Gensym was able to create a real-time
+system in Lisp through careful attention to memory allocation; they eliminated 
+unpredictable garbage-collection pauses by simply not generating garbage. (See 
+<a href="chapter29.html">Chapter 29</a>.)
+
+<h2><a name="autocad">AutoCAD</a></h2> 
+
+<p>AutoCAD is a large-scale Computer Aided Design application.  A complex design can contain
+thousands or millions of parts having complex hierarchical and semantic relationships.  Like
+many application developers who face similar problems, the AutoCAD developers leaned heavily
+on Lisp for their tools and techniques.
+
+<h2><a name="igor">Igor Engraver</a></h2> 
+
+<p>Igor Engraver, written by a small team of programmers at Noteheads.com, is an editing and publishing system for musical scores. They've integrated a direct-manipulation graphical
+interface with a rule-based system that automatically adjusts the layout to conform to
+complicated rules to meet the expectations of musicians and publishers alike. If that's not
+enough, Engraver can also play your scores using MIDI instruments. Engraver is targeted to
+professional composers and musicians, who are encouraged to upload their scores to
+Noteheads' online e-commerce system for purchase by other musicians. Still want more?
+Engraver has the slickest software update mechanism you'll find anywhere: select the Check
+For Patches menu item and Engraver will connect to the Noteheads server, download any
+patches it needs, and upgrade itself all in a few tens of seconds, without interrupting
+work in progress.
+
+<h2><a name="yahoo">Yahoo Store</a></h2> 
+
+<p>Yahoo Store is one of the best high-profile Lisp success stories of the past few years.
+Paul Graham and his team, working out of an attic loft, built and operated a server-side
+e-commerce site builder for hundreds of customers using Common Lisp and generic Linux
+servers. Paul's venture was so successful that it drew the attention of Yahoo, who saw it
+as a better tool for their online stores. Paul sold his company to Yahoo for $49 million.
+An interesting aside is that Paul hired a couple dozen extra programmers during Yahoo's due
+diligence investigations, since "no one would believe that three guys in a loft" could have
+done what Paul's team accomplished with the help of Lisp. Perception is everything...
+
+<h2><a name="others">...</a></h2> 
+
+<p>Each vendor has its own list of success stories. See <a href="chapter33.html">Chapter
+33</a> for some starting points.
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter34.html">Chapter 34</a> | Appendix A
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

@@ -1,0 +1,624 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 23</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 23 - To Err is Expected; To Recover, Divine</h1> 
+
+<P>In this chapter you'll learn how to create your own error detection,
+reporting and recovery mechanisms. A good error handling strategy can
+give your program the ability to gracefully handle both expected and
+unexpected errors without failing or losing critical data.
+
+<h2>Signal your own errors and impress your users</h2>
+
+<p>One of the most common failings of computer programs is the
+failure to report failures in a meaningful way. If some input is out
+of the expected range, or if a calculation exceeds the capabilities
+of the program, or if communication does not succeed with some
+external device, a poorly-written program will simply "roll over and
+die" with a cryptic error message related to hidden details of the
+program's implementation. In theory, it's nice to be able to
+construct programs without limits; the dynamic nature of Lisp
+certainly enables this practice.
+
+<p>But in almost every non-trivial program there will always arise
+some fatal situation that can be anticipated by the programmer but
+not addressed by the program. It is precisely for these situations
+that Lisp provides the <code>ERROR</code> function.
+<code>ERROR</code> expects a format string and arguments. (We've
+seen <code>FORMAT</code> briefly in <a href="chapter04.html">Chapter
+4</a>, and will examine it in detail in <a
+href="chapter24.html">Chapter 24</a>.) <code>ERROR</code> gives your
+program a standard way to announce a fatal error. You simply compose
+an appropriate message using the format string and (optional)
+arguments, and <code>ERROR</code> takes care of the rest. 
+
+<pre>
+? (defun divide (numerator denominator)
+    (when (zerop denominator)
+      (error "Sorry, you can't divide by zero."))
+    (/ numerator denominator))
+DIVIDE
+? (divide 4 3)
+4/3
+? (divide 1 0)
+Error: Sorry, you can't divide by zero.
+</pre> 
+
+<p>Your program never returns from the call to <code>ERROR</code>.
+Instead, the Lisp debugger will be entered. You'll have an
+opportunity to examine the cause of the error while in the debugger,
+but you will not be able to resume your program's execution. This
+makes <code>ERROR</code> a rather extreme response to a problem detected
+by your program. Later, we'll see how to report problems
+<em>and</em> give the user an opportunity to correct the problem.
+We'll even see how errors can be handled automatically.
+
+<h2>Categorize errors using Conditions</h2>
+
+<blockquote> Note: If you have a really old Lisp system, it may not
+include an implementation of conditions. If so, this section and the
+following one may not be of much use to you, except to point out
+what your Lisp system lacks as compared to the current standard.
+</blockquote> 
+
+<p>An error is just a condition that requires some kind of correction
+before your program may continue.  The error may be corrected by having
+the program's user interact with the debugger, or through the intervention
+of a handler (as we'll see later in this chapter).
+
+<p>A condition is just some exceptional event that happens in your
+program. The event may be due to an error, or it could be something
+of interest that happens while your program runs. For example, a
+program that writes entries to a log file on disk might call a
+routine that handles the record formatting and writing. The logging
+routine might periodically check the amount of space available on disk
+and signal a condition when the disk becomes ninety percent full.  This
+is not an error, because the logger won't fail under this condition.
+If your program ignores the "almost-full" message from the logger, nothing
+bad will happen.  However, your program may wish to do something useful
+with the information about the available disk space, such as archiving
+the log to a different device or informing the user that some corrective
+action may be needed soon.
+
+<p>Now we know the distinction between conditions and errors.  For now, 
+we're going to focus our attention on the tools Lisp provides for 
+handling errors.  Later, we'll look at how your program can signal and
+handle conditions.
+
+<p>You could report errors using format strings as described above.
+But for the sake of consistency and maintainability, you'll probably
+want to create different classifications of errors. That way, you can
+change the presentation of an entire class of errors without searching
+your program code to change all of the similar format strings.
+
+<p>A <code>condition</code> represents some <em>exceptional
+situation</em> which occurs during the execution of your program. An 
+error is a kind of condition, but not all conditions are errors. The 
+next section will cover this distinction in greater detail.
+
+<p>You can use <code>DEFINE-CONDITION</code> to create type hierarchies
+for conditions in much the same way that you use <code>DEFCLASS</code> 
+to create type hierarchies for your program's data.
+
+<pre>
+? (define-condition whats-wrong (error)
+                    ((what :initarg :what :initform "something" :reader what))
+    (:report (lambda (condition stream)
+               (format stream "Foo! ~@(~A~) is wrong."
+                       (what condition))))
+    (:documentation "Tell the user that something is wrong."))
+WHATS-WRONG
+? (define-condition whats-wrong-and-why (whats-wrong)
+                    ((why :initarg :why :initform "no clue" :reader why))
+    (:report (lambda (condition stream)
+               (format stream "Uh oh! ~@(~A~) is wrong. Why? ~@(~A~)."
+                       (what condition)
+                       (why condition)))))
+WHATS-WRONG-AND-WHY
+? (error 'whats-wrong-and-why)
+Error: Uh oh! Something is wrong. Why? No clue.
+? (error 'whats-wrong-and-why 
+         :what "the phase variance" 
+         :why "insufficient tachyon flux")
+Error: Uh oh! The phase variance is wrong. Why? Insufficient tachyon flux.
+? (define-condition whats-wrong-is-unfathomable (whats-wrong-and-why)
+                    ()
+    (:report (lambda (condition stream)
+               (format stream "Gack! ~@(~A~) is wrong for some inexplicable reason."
+                       (what condition)))))
+WHATS-WRONG-IS-UNFATHOMABLE
+? (error 'whats-wrong-is-unfathomable)
+Error: Gack! Something is wrong for some inexplicable reason.
+</pre> 
+
+<p>As you can see, conditions have parents, slots and options just
+like classes. The <code>:REPORT</code> option is used to generate
+the textual presentation of a condition. The
+<code>:DOCUMENTATION</code> option is for the benefit of the
+programmer; you can retrieve a condition's documentation using
+<code>(DOCUMENTATION '<em>condition-name</em> 'type)</code>.
+
+<blockquote> ANSI Common Lisp also allows a
+<code>:DEFAULT-INITARGS</code> option. Some Lisp systems still base
+their implementation of conditions on the description found in Guy
+Steele's "Common Lisp: The Language, 2nd Edition" (<a
+href="chapter33.html#cltl2">CLtL2</a>); these implementations do not
+have a <code>:DEFAULT-INITARGS</code> option. </blockquote> 
+
+<a name="condition-designator"></a> 
+<p>If you've compared the <code>ERROR</code> calls in this section
+to those of the previous section, you're probably wondering how both
+a string and a symbol can designate a condition. If you pass a
+symbol to <code>ERROR</code> , it constructs a condition using
+<code>MAKE-CONDITION</code> (analogous to <code>MAKE-INSTANCE</code>
+for CLOS objects); the symbol designates the type of the condition,
+and the arguments are used to initialize the condition. If you pass
+a format string to <code>ERROR</code>, the format string and its
+arguments become initialization options for the construction of a
+condition of type <code>SIMPLE-ERROR</code>. 
+
+<p>Of course, you can also pass an instantiated condition object to
+<code>ERROR</code>:
+
+<pre>
+? (let ((my-condition (make-condition 'simple-error
+                                    :format-control "Can't do ~A."
+                                    :format-arguments '(undefined-operation))))
+  (error my-condition))
+Error: Can't do UNDEFINED-OPERATION.
+</pre> 
+
+<blockquote>
+Lisp systems designed according to <a href="chapter33.html#cltl2">CLtL2</a> 
+will use <code>:FORMAT-STRING</code> in place of <code>:FORMAT-CONTROL</code>.
+</blockquote> 
+
+<h2>Recover from Conditions using Restarts</h2>
+
+<p>In this final section, we'll see how to recover from errors. The
+simplest forms involve the use of <code>CERROR</code> or <code>ASSERT</code>.
+
+<pre>
+? (progn (cerror "Go ahead, make my day."
+                 "Do you feel lucky?")
+         "Just kidding")
+Error: Do you feel lucky?
+Restart options:
+  1: Go ahead, make my day.
+  2. Top level
+</pre> 
+
+<blockquote>
+The "Restart options" list shown in this and the following examples
+is typical, but not standard. Different Lisp systems will present
+restart information in their own ways, and may add other built in 
+options.
+</blockquote> 
+
+<p><code>CERROR</code> has two required arguments. The first
+argument is a format control string that you'll use to tell the
+program's user what will happen upon <code>continuing</code> from
+the error. The second argument is a condition designator (a format
+control string, a symbol that names a condition, or a condition
+object -- <a href="#condition-designator">see above</a>) used to
+tell the program's user about the error. 
+
+<p>The rest of <code>CERROR</code>'s arguments, when present, are
+used by the the format control strings <em>and</em> -- when the
+second argument is a symbol that names a condition type -- as
+keyword arguments to <code>MAKE-CONDITION</code> for that type.
+In either case, you have to construct the format control strings
+so that they address the proper arguments. The <code>FORMAT</code> 
+directive <code>~</code><i>n</i><code>*</code> can be used to skip
+<i>n</i> arguments (<i>n</i> is 1 if omitted).
+
+<pre>
+? (defun expect-type (object type default-value)
+    (if (typep object type)
+      object
+      (progn
+        (cerror "Substitute the default value ~2*~S."
+                "~S is not of the expected type ~S."
+                object type default-value)
+        default-value)))
+EXPECT-TYPE
+? (expect-type "Nifty" 'string "Bear")
+"Nifty"
+? (expect-type 7 'string "Bear")
+Error: 7 is not of the expected type STRING.
+Restart options:
+  1: Substitute the default value "Bear".
+  2. Top level
+  ? 1
+"Bear"
+</pre> 
+
+<p>Notice how the first format control string uses only the third
+format argument: <code>DEFAULT-VALUE</code>. It skips the first two
+format arguments with the <code>~2*</code> directive. You do similar
+things if the arguments are keyword initializer arguments when you
+provide a symbol as the second argument to <code>CERROR</code>; the
+only difference is that you have to count the keywords
+<code>and</code> the values when deciding how many arguments to
+skip. Here's the previous example, written with a designator for a
+condition of type <code>EXPECT-TYPE-ERROR</code> instead of a format
+control string. Note how we skip five arguments to get to the
+<code>DEFAULT-VALUE</code>. Note also the use of
+<code>:ALLOW-OTHER-KEYS T</code>, which permits us to add the
+<code>:IGNORE DEFAULT-VALUE</code> keyword argument which is not
+expected as an initialization argument for the
+<code>EXPECT-TYPE-ERROR</code> condition; without this, we'd get an
+error for the unexpected keyword argument.
+
+<pre>
+? (define-condition expect-type-error (error)
+                    ((object :initarg :object :reader object)
+                     (type :initarg :type :reader type))
+    (:report (lambda (condition stream)
+               (format stream "~S is not of the expected type ~S."
+                       (object condition)
+                       (type condition)))))
+EXPECT-TYPE-ERROR
+? (defun expect-type (object type default-value)
+    (if (typep object type)
+      object
+      (progn
+        (cerror "Substitute the default value ~5*~S."
+                'expect-type-error
+                :object object
+                :type type
+                :ignore default-value
+                :allow-other-keys t)
+        default-value)))
+EXPECT-TYPE
+? (expect-type "Nifty" 'string "Bear")
+"Nifty"
+? (expect-type 7 'string "Bear")
+Error: 7 is not of the expected type STRING.
+Restart options:
+  1: Substitute the default value "Bear".
+  2. Top level
+  ? 1
+"Bear"
+</pre> 
+
+<!-- assert --> 
+
+<a name="assert"></a> 
+
+<p><code>ASSERT</code> is ideal for those situations where your
+program's state must pass some test -- an <em>assertion</em>.  In its
+simplest form, <code>ASSERT</code> does only that.
+
+<pre>
+? (defun my-divide (numerator denominator)
+    (assert (not (zerop denominator)))
+    (/ numerator denominator))
+MY-DIVIDE
+? (my-divide 3 0)
+Error: Failed assertion (NOT (ZEROP DENOMINATOR))
+Restart options:
+  1. Retry the assertion
+  2. Top level
+</pre> 
+
+<p>This report is correct, but nor particularly useful; your program 
+would have signalled a <code>DIVISION-BY-ZERO</code> error without the
+<code>ASSERT</code>.  What <em>would</em> be helpful is the ability
+to correct the offending value -- the zero denominator, in this case --
+and continue from the error.  <code>ASSERT</code>'s optional second argument
+lets you list places whose values you might want to change to correct
+the problem.
+
+<pre>
+? (defun my-divide (numerator denominator)
+    (assert (not (zerop denominator)) (numerator denominator))
+    (/ numerator denominator))
+MY-DIVIDE
+? (my-divide 3 0)
+Error: Failed assertion (NOT (ZEROP DENOMINATOR))
+Restart options:
+  1. Change the values of some places, then retry the assertion
+  2. Top level
+  ? 1
+  Value for NUMERATOR: 3
+  Value for DENOMINATOR 0.5
+6.0
+</pre> 
+
+<p>Of course, the choice of values to set is up to you.  I used both
+<code>NUMERATOR</code> and <code>DENOMINATOR</code> in the example to
+emphasize the fact that the list of places does not have to be just
+the variables tested in the assertion.  (However, at least <code>one</code> 
+of the places must affect the result of the assertion.)
+
+<p>One last refinement to <code>ASSERT</code> lets you specify your own
+message to use when an assertion fails. By default, <code>ASSERT</code> may
+display the test form, but it is not required to do so.  By specifying
+a condition designator and arguments following the list of places, you
+can be assured that you know what message will be printed upon an 
+assertion failure.
+
+<pre>
+? (defun my-divide (numerator denominator)
+    (assert (not (zerop denominator)) (numerator denominator)
+            "You can't divide ~D by ~D." numerator denominator)
+    (/ numerator denominator))
+MY-DIVIDE
+? (my-divide 3 0)
+Error: You can't divide 3 by 0.
+Restart options:
+  1. Change the values of some places, then retry the assertion
+  2. Top level
+  ? 1
+  Value for NUMERATOR: 3
+  Value for DENOMINATOR 2
+3/2
+</pre> 
+
+<!-- handler-bind w/ signal to handle exceptions --> 
+
+<p>You can use <code>HANDLER-BIND</code> and <code>SIGNAL</code> to 
+process exceptions in your program.  Here's an extended example based
+upon this chapter's earlier description of how a program might use
+conditions to report on disk space availability.
+
+<pre>
+? (define-condition high-disk-utilization ()
+                    ((disk-name :initarg :disk-name :reader disk-name)
+                     (current :initarg :current :reader current-utilization)
+                     (threshold :initarg :threshold :reader threshold))
+    (:report (lambda (condition stream)
+               (format stream "Disk ~A is ~D% full; threshold is ~D%."
+                       (disk-name condition)
+                       (current-utilization condition)
+                       (threshold condition)))))
+HIGH-DISK-UTILIZATION
+? (defun get-disk-utilization (disk-name)
+    <i>;; for this example, we'll just return a fixed value</i> 
+    93)
+GET-DISK-UTILIZATION
+? (defun check-disk-utilization (name threshold)
+    (let ((utilization (disk-utilization name)))
+      (when (&gt;= utilization threshold)
+        (signal 'high-disk-utilization
+                :disk-name name
+                :current utilization
+                :threshold threshold))))
+CHECK-DISK-UTILIZATION
+? (defun log-to-disk (record name)
+    (handler-bind ((high-disk-utilization 
+                    #'(lambda (c)
+                        (when (y-or-n-p "~&amp;~A Panic?" c)
+                          (return-from log-to-disk nil)))))
+      (check-disk-utilization name 90)
+      (print record))
+    t)
+LOG-TO-DISK
+? (log-to-disk "Hello" 'disk1)
+Disk DISK1 is 93% full; threshold is 90%. Panic? (y or n)  <b>n</b> 
+"Hello" 
+T
+? (log-to-disk "Goodbye" 'disk1)
+Disk DISK1 is 93% full; threshold is 90%. Panic? (y or n)  <b>y</b> 
+NIL
+? (check-disk-utilization 'disk1 90)
+NIL
+</pre> 
+
+<!-- handled/unhandled error/signal --> 
+
+<p>Notice that the condition signalled by
+<code>CHECK-DISK-UTILIZATION</code> has an effect only when a
+handler is established for the <code>HIGH-DISK-UTILIZATION</code>
+condition. Because of this, you can write exception signalling code
+without foreknowledge that the client will provide a handler. This
+is most useful when the exception provides information about the
+running program, but is not an error if left unhandled.
+
+<!-- cerror w/ restart-bind to add restarts --> 
+
+<p>In the next example, we'll extend the restart options available 
+to <code>CERROR</code>.  <code>RESTART-BIND</code> defines, for each
+new restart, the message to be printed by the restart user interface
+and a function to be executed when the user chooses the restart.
+
+<pre>
+? (define-condition device-unresponsive ()
+                    ((device :initarg :device :reader device))
+    (:report (lambda (condition stream)
+               (format stream "Device ~A is unresponsive."
+                       (device condition)))))
+DEVICE-UNRESPONSIVE
+? (defun send-query (device query)
+    (format t "~&amp;Sending ~S ~S~%" device query))
+SEND-QUERY
+? (defun accept-response (device)
+    <i>;; For the example, the device always fails.</i> 
+    nil)
+ACCEPT-RESPONSE
+? (defun reset-device (device)
+    (format t "~&amp;Resetting ~S~%" device))
+RESET-DEVICE
+? (defun query-device (device)
+    (restart-bind ((nil #'(lambda () (reset-device device))
+                        :report-function
+                        #'(lambda (stream)
+                            (format stream "Reset device.")))
+                   (nil #'(lambda ()
+                            (format t "~&amp;New device: ")
+                            (finish-output)
+                            (setq device (read)))
+                        :report-function
+                        #'(lambda (stream)
+                            (format stream "Try a different device.")))
+                   (nil #'(lambda ()
+                            (return-from query-device :gave-up))
+                        :report-function
+                        #'(lambda (stream)
+                            (format stream "Give up."))))
+      (loop
+        (send-query device 'query)
+        (let ((answer (accept-response device)))
+          (if answer
+            (return answer)
+            (cerror "Try again."
+                    'device-unresponsive :device device))))))
+QUERY-DEVICE
+? (query-device 'foo)
+Sending FOO QUERY
+Error: Device FOO is unresponsive.
+Restart options:
+  1. Try again.
+  2. Reset device.
+  3. Try a different device.
+  4. Give up.
+  5. Top level
+  ? 1
+Sending FOO QUERY
+Error: Device FOO is unresponsive.
+Restart options:
+  1. Try again.
+  2. Reset device.
+  3. Try a different device.
+  4. Give up.
+  5. Top level
+  ? 2
+Resetting FOO
+Restart options:
+  1. Try again.
+  2. Reset device.
+  3. Try a different device.
+  4. Give up.
+  5. Top level
+  ? 1
+Sending FOO QUERY
+Error: Device FOO is unresponsive.
+Restart options:
+  1. Try again.
+  2. Reset device.
+  3. Try a different device.
+  4. Give up.
+  5. Top level
+  ? 3
+New device: <b>bar</b> 
+Restart options:
+  1. Try again.
+  2. Reset device.
+  3. Try a different device.
+  4. Give up.
+  5. Top level
+  ? 1
+Error: Device BAR is unresponsive.
+Restart options:
+  1. Try again.
+  2. Reset device.
+  3. Try a different device.
+  4. Give up.
+  5. Top level
+  ? 4
+:GAVE-UP
+</pre> 
+
+<p>The "Try again" restart is established by the <code>CERROR</code>
+form; selecting this restart lets the program continue from the
+<code>CERROR</code> form. The "Reset device", "Try a different
+device", and "Give up" restarts are created within the
+<code>RESTART-BIND</code> form; choosing one of these executes the
+associated function. Of the restarts defined within the
+<code>RESTART-BIND</code>, only the "Give up" restart transfers
+control out of the <code>CERROR</code> form -- the others return
+control to <code>CERROR</code> to again display the menu of restart
+choices.
+
+<!-- recovery strategies --> 
+
+<p>Now you've seen the basics of condition handlers and restarts.
+Lisp has additional built-in abstractions that extend these concepts.
+If you're interested, you should consult a Common Lisp reference.
+
+<p>There's one last thing you should know about handling conditions.
+As we saw earlier, <code>ERROR</code> causes your program to stop in
+the Lisp debugger. You can't continue past the call to
+<code>ERROR</code>, but most Lisp systems will let you back up,
+correct the problem that caused the error, and rerun that portion of
+the program. If you do the right thing, your program won't call
+<code>ERROR</code> again. This is an amazingly powerful tool to use
+during program development. But you don't want to expose your users
+to that kind of experience -- they won't be as impressed by the Lisp
+debugger as you are.
+
+<p>To protect your users from the debugger, you can wrap portions of
+your program in an <code>IGNORE-ERRORS</code> form.
+
+<pre>
+? (ignore-errors 
+   (error "Something bad has happened.")
+   (print "Didn't get here."))
+NIL
+#&lt;SIMPLE-ERROR #x42B26B6&gt;
+? (ignore-errors
+   (* 7 9))
+63
+</pre> 
+
+<p>If an error occurs within an <code>IGNORE-ERRORS</code> form, program
+execution ends at that point, and <code>IGNORE-ERRORS</code> returns two
+values: <code>NIL</code> and the condition signalled by <code>ERROR</code>.
+
+<p>You should use <code>IGNORE-ERRORS</code> judiciously. Use it only to
+wrap forms for which you can't otherwise provide handlers.  Note, too, that
+the values returned by <code>IGNORE-ERRORS</code> are not very informative.
+But you can decode the second return value to print the actual error
+message.
+
+<pre>
+? (defmacro report-error (&amp;body body)
+    (let ((results (gensym))
+          (condition (gensym)))
+      `(let ((,results (multiple-value-list
+                        (ignore-errors 
+                         ,@body))))
+         (if (and (null (first ,results))
+                  (typep (second ,results) 'condition)
+                  (null (nthcdr 2 ,results)))
+           (let ((,condition (second ,results)))
+             (typecase ,condition
+               (simple-condition
+                (apply #'format t 
+                       (simple-condition-format-control ,condition) 
+                       (simple-condition-format-arguments ,condition)))
+               (otherwise
+                (format t "~A error." (type-of ,condition))))
+             (values))
+           (values-list ,results)))))
+REPORT-ERROR
+? (report-error (error "I feel like I'm losing my mind, Dave."))
+I feel like I'm losing my mind, Dave.
+? (report-error (+ 1 no-variable-by-this-name))
+UNBOUND-VARIABLE error.
+? (report-error (* 7 'f))
+TYPE-ERROR error.
+? (report-error (let ((n 1)) (/ 8 (decf n))))
+DIVISION-BY-ZERO error.
+? (report-error (* 2 pi)) <i>; not an error</i> 
+6.283185307179586
+? (report-error (values 1 2 3 4)) <i>; not an error</i> 
+</pre> 
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter22.html">Chapter 22</a> | Chapter 23 | <a href="chapter24.html">Chapter 24</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

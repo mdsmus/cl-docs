@@ -1,0 +1,110 @@
+<html lang="en">
+<head>
+<title>Accessing Foreign Values - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Operations-On-Foreign-Values.html#Operations-On-Foreign-Values" title="Operations On Foreign Values">
+<link rel="next" href="Coercing-Foreign-Values.html#Coercing-Foreign-Values" title="Coercing Foreign Values">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Accessing-Foreign-Values"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Coercing-Foreign-Values.html#Coercing-Foreign-Values">Coercing Foreign Values</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Operations-On-Foreign-Values.html#Operations-On-Foreign-Values">Operations On Foreign Values</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">7.3.1 Accessing Foreign Values</h4>
+
+<div class="defun">
+&mdash; Function: <b>sb-alien:deref</b><var> pointer-or-array &amp;rest indices<a name="index-sb_002dalien_003aderef-252"></a></var><br>
+<blockquote><p><a name="index-deref-253"></a>
+The <code>sb-alien:deref</code> function returns the value pointed to by a
+foreign pointer, or the value of a foreign array element. When
+dereferencing a pointer, an optional single index can be specified to
+give the equivalent of C pointer arithmetic; this index is scaled by
+the size of the type pointed to. When dereferencing an array, the
+number of indices must be the same as the number of dimensions in the
+array type. <code>deref</code> can be set with <code>setf</code> to assign a new
+value. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Function: <b>sb-alien:slot</b><var> struct-or-union slot-name<a name="index-sb_002dalien_003aslot-254"></a></var><br>
+<blockquote><p><a name="index-slot-255"></a>
+The <code>sb-alien:slot</code> function extracts the value of the slot named
+<var>slot-name</var> from a foreign <code>struct</code> or <code>union</code>. If
+<var>struct-or-union</var> is a pointer to a structure or union, then it is
+automatically dereferenced.  <code>sb-alien:slot</code> can be set with
+<code>setf</code> to assign a new value. Note that <var>slot-name</var> is
+evaluated, and need not be a compile-time constant (but only constant
+slot accesses are efficiently compiled). 
+</p></blockquote></div>
+
+<h5 class="subsubsection">7.3.1.1 Untyped memory</h5>
+
+<p>As noted at the beginning of the chapter, the System Area Pointer
+facilities allow untyped access to foreign memory.  <acronym>SAP</acronym>s can
+be converted to and from the usual typed foreign values using
+<code>sap-alien</code> and <code>alien-sap</code> (described elsewhere), and also
+to and from integers - raw machine addresses.  They should thus be
+used with caution; corrupting the Lisp heap or other memory with
+<acronym>SAP</acronym>s is trivial.
+
+<div class="defun">
+&mdash; Function: <b>sb-sys:int-sap</b><var> machine-address<a name="index-sb_002dsys_003aint_002dsap-256"></a></var><br>
+<blockquote><p><a name="index-int_002dsap-257"></a>
+Creates a <acronym>SAP</acronym> pointing at the virtual address
+<var>machine-address</var>. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Function: <b>sb-sys:sap-ref-32</b><var> sap offset<a name="index-sb_002dsys_003asap_002dref_002d32-258"></a></var><br>
+<blockquote><p><a name="index-sap_002dref_002d32-259"></a>
+Access the value of the memory location at <var>offset</var> bytes from
+<var>sap</var>.  This form may also be used with <code>setf</code> to alter the
+memory at that location. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Function: <b>sb-sys:sap=</b><var> sap1 sap2<a name="index-sb_002dsys_003asap_003d-260"></a></var><br>
+<blockquote><p><a name="index-sap_003d-261"></a>
+Compare <var>sap1</var> and <var>sap2</var> for equality. 
+</p></blockquote></div>
+
+   <p>Similarly named functions exist for accessing other sizes of word,
+other comparisons, and other conversions.  The reader is invited to
+use <code>apropos</code> and <code>describe</code> for more details
+
+<pre class="lisp">     (apropos "sap" :sb-sys)
+</pre>
+   </body></html>
+

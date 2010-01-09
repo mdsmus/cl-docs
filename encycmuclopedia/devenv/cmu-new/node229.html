@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>8.3.1 Alien Access Operations</TITLE>
+<META NAME="description" CONTENT="8.3.1 Alien Access Operations">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3601" HREF="node230.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3599" HREF="node228.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3593" HREF="node228.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3603" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3604" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3602" HREF="node230.html">8.3.2 Alien Coercion Operations</A>
+<B>Up:</B> <A NAME="tex2html3600" HREF="node228.html">8.3 Alien Operations</A>
+<B> Previous:</B> <A NAME="tex2html3594" HREF="node228.html">8.3 Alien Operations</A>
+<BR> <P>
+<H2><A NAME="SECTION00931000000000000000">8.3.1 Alien Access Operations</A></H2>
+<P>
+<b>[Function]</b><BR> 
+<tt> alien: deref</tt> <em> <i>pointer-or-array</i> <i>&amp;rest</i> <i>indices</i></em><BR>
+<P>
+  This function returns the value pointed to by an Alien pointer or
+  the value of an Alien array element.  If a pointer, an optional
+  single index can be specified to give the equivalent of C pointer
+  arithmetic; this index is scaled by the size of the type pointed to.
+  If an array, the number of indices must be the same as the number of
+  dimensions in the array type.  <tt>deref</tt> can be set with
+  <tt>setf</tt> to assign a new value.
+<P>
+<b>[Function]</b><BR> 
+<tt> alien: slot</tt> <em> <i>struct-or-union</i> <i>slot-name</i></em><BR>
+<P>
+  This function extracts the value of slot <i>slot-name</i> from the an
+  Alien <tt>struct</tt> or <tt>union</tt>.  If <i>struct-or-union</i> is a
+  pointer to a structure or union, then it is automatically
+  dereferenced.  This can be set with <tt>setf</tt> to assign a new
+  value.  Note that <i>slot-name</i> is evaluated, and need not be a
+  compile-time constant (but only constant slot accesses are
+  efficiently compiled.)
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

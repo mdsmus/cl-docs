@@ -1,0 +1,81 @@
+<html lang="en">
+<head>
+<title>Stack Motion - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Stack-Frames.html#Stack-Frames" title="Stack Frames">
+<link rel="next" href="How-Arguments-are-Printed.html#How-Arguments-are-Printed" title="How Arguments are Printed">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Stack-Motion"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="How-Arguments-are-Printed.html#How-Arguments-are-Printed">How Arguments are Printed</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Stack-Frames.html#Stack-Frames">Stack Frames</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">4.3.1 Stack Motion</h4>
+
+<p>These commands move to a new stack frame and print the name of the
+function and the values of its arguments in the style of a Lisp
+function call:
+
+<div class="defun">
+&mdash; Debugger Command: <b>up</b><var><a name="index-up-66"></a></var><br>
+<blockquote><p>Move up to the next higher frame.  More recent function calls are
+considered to be higher on the stack. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Debugger Command: <b>down</b><var><a name="index-down-67"></a></var><br>
+<blockquote><p>Move down to the next lower frame. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Debugger Command: <b>top</b><var><a name="index-top-68"></a></var><br>
+<blockquote><p>Move to the highest frame, that is, the frame where the debugger was
+entered. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Debugger Command: <b>bottom</b><var><a name="index-bottom-69"></a></var><br>
+<blockquote><p>Move to the lowest frame. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Debugger Command: <b>frame</b> [<var>n</var>]<var><a name="index-frame-70"></a></var><br>
+<blockquote><p>Move to the frame with the specified number.  Prompts for the number if not
+supplied.  The frame with number 0 is the frame where the debugger
+was entered. 
+</p></blockquote></div>
+
+   </body></html>
+

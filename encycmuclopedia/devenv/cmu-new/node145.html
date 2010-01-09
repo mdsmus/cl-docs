@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.6.3 Closures</TITLE>
+<META NAME="description" CONTENT="5.6.3 Closures">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2525" HREF="node146.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2523" HREF="node142.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2517" HREF="node144.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2527" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2528" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2526" HREF="node146.html">5.6.4 Local Tail Recursion</A>
+<B>Up:</B> <A NAME="tex2html2524" HREF="node142.html">5.6 Local Call</A>
+<B> Previous:</B> <A NAME="tex2html2518" HREF="node144.html">5.6.2 Let Calls</A>
+<BR> <P>
+<H2><A NAME="SECTION00663000000000000000">5.6.3 Closures</A></H2>
+<P>
+<A NAME="10121">&#160;</A>
+<P>
+Local call allows for much more efficient use of closures, since the
+closure environment doesn't need to be allocated on the heap, or even
+stored in memory at all.  In this example, there is no penalty for
+<tt>localfun</tt> referencing <tt>a</tt> and <tt>b</tt>:
+<BLOCKQUOTE> <PRE>(defun foo (a b)
+  (flet ((localfun (x)
+           (1+ (* a b x))))
+    (if (= a b)
+        (localfun (- x))
+        (localfun x))))
+</PRE> </BLOCKQUOTE>
+In local call, the compiler effectively passes closed-over values as
+extra arguments, so there is no need for you to ``optimize'' local
+function use by explicitly passing in lexically visible values.
+Closures may also be subject to let optimization
+(see section&nbsp;<A HREF="node132.html#letoptimization">5.4.1</A>.)
+<P>
+Note: indirect value cells are currently always allocated on the heap
+when a variable is both assigned to (with <tt>setq</tt> or <tt>setf</tt>)
+and closed over, regardless of whether the closure is a local function
+or not.  This is another reason to avoid setting variables when you
+don't have to.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

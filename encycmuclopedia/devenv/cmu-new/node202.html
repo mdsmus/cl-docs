@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>6.3 Lisp Equivalents for C Routines</TITLE>
+<META NAME="description" CONTENT="6.3 Lisp Equivalents for C Routines">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3245" HREF="node203.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3243" HREF="node199.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3237" HREF="node201.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3247" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3248" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3246" HREF="node203.html">6.4 Type Translations</A>
+<B>Up:</B> <A NAME="tex2html3244" HREF="node199.html">6 UNIX Interface</A>
+<B> Previous:</B> <A NAME="tex2html3238" HREF="node201.html">6.2 Useful Variables</A>
+<BR> <P>
+<H1><A NAME="SECTION00730000000000000000">6.3 Lisp Equivalents for C Routines</A></H1>
+<P>
+The UNIX documentation describes the system interface in terms of C
+procedure headers.  The corresponding Lisp function will have a somewhat
+different interface, since Lisp argument passing conventions and
+datatypes are different.
+<P>
+The main difference in the argument passing conventions is that Lisp does not
+support passing values by reference.  In Lisp, all argument and results are
+passed by value.  Interface functions take some fixed number of arguments and
+return some fixed number of values.  A given ``parameter'' in the C
+specification will appear as an argument, return value, or both, depending on
+whether it is an In parameter, Out parameter, or In/Out parameter.  The basic
+transformation one makes to come up with the Lisp equivalent of a C routine is
+to remove the Out parameters from the call, and treat them as extra return
+values.  In/Out parameters appear both as arguments and return values.  Since
+Out and In/Out parameters are only conventions in C, you must determine the
+usage from the documentation.
+<P>
+Thus, the C routine declared as
+<BLOCKQUOTE> <PRE>kern_return_t lookup(servport, portsname, portsid)
+        port        servport;
+        char        *portsname;
+        int        *portsid;        /* out */
+ 
+  ...
+  *portsid = &lt;expression to compute portsid field&gt;
+  return(KERN_SUCCESS);
+ 
+</PRE> </BLOCKQUOTE>
+has as its Lisp equivalent something like
+<BLOCKQUOTE> <PRE>(defun lookup (ServPort PortsName)
+  ...
+  (values
+   success
+   &lt;expression to compute portsid field&gt;))
+</PRE> </BLOCKQUOTE>
+If there are multiple out or in-out arguments, then there are multiple
+additional returns values.
+<P>
+Fortunately, CMU Common Lisp programmers rarely have to worry about the
+nuances of this translation process, since the names of the arguments and
+return values are documented in a way so that the <tt>describe</tt> function
+(and the Hemlock <tt>Describe Function Call</tt> command, invoked with
+C-M-Shift-A) will list this information.  Since the names of arguments
+and return values are usually descriptive, the information that
+<tt>describe</tt> prints is usually all one needs to write a
+call. Most programmers use this on-line documentation nearly
+all of the time, and thereby avoid the need to handle bulky
+manuals and perform the translation from barbarous tongues.
+<P>
+<HR><A NAME="tex2html3245" HREF="node203.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3243" HREF="node199.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3237" HREF="node201.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3247" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3248" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3246" HREF="node203.html">6.4 Type Translations</A>
+<B>Up:</B> <A NAME="tex2html3244" HREF="node199.html">6 UNIX Interface</A>
+<B> Previous:</B> <A NAME="tex2html3238" HREF="node201.html">6.2 Useful Variables</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,117 @@
+<html lang="en">
+<head>
+<title>Source Location Printing - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Debugger.html#Debugger" title="Debugger">
+<link rel="prev" href="Variable-Access.html#Variable-Access" title="Variable Access">
+<link rel="next" href="Debugger-Policy-Control.html#Debugger-Policy-Control" title="Debugger Policy Control">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Source-Location-Printing"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Debugger-Policy-Control.html#Debugger-Policy-Control">Debugger Policy Control</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Variable-Access.html#Variable-Access">Variable Access</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Debugger.html#Debugger">Debugger</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">4.5 Source Location Printing</h3>
+
+<p><a name="index-Source-location-printing_002c-debugger-90"></a>
+One of the debugger's capabilities is source level debugging of
+compiled code.  These commands display the source location for the
+current frame:
+
+<div class="defun">
+&mdash; Debugger Command: <b>source</b> [<var>context</var>]<var><a name="index-source-91"></a></var><br>
+<blockquote><p>This command displays the file that the current frame's function was
+defined from (if it was defined from a file), and then the source form
+responsible for generating the code that the current frame was
+executing.  If <var>context</var> is specified, then it is an integer
+specifying the number of enclosing levels of list structure to print. 
+</p></blockquote></div>
+
+   <p>The source form for a location in the code is the innermost list present
+in the original source that encloses the form responsible for generating
+that code.  If the actual source form is not a list, then some enclosing
+list will be printed.  For example, if the source form was a reference
+to the variable <code>*some-random-special*</code>, then the innermost
+enclosing evaluated form will be printed.  Here are some possible
+enclosing forms:
+
+<pre class="lisp">     (let ((a *some-random-special*))
+       ...)
+     
+     (+ *some-random-special* ...)
+</pre>
+   <p>If the code at a location was generated from the expansion of a macro
+or a source-level compiler optimization, then the form in the original
+source that expanded into that code will be printed.  Suppose the file
+<samp><span class="file">/usr/me/mystuff.lisp</span></samp> looked like this:
+
+<pre class="lisp">     (defmacro mymac ()
+       '(myfun))
+     
+     (defun foo ()
+       (mymac)
+       ...)
+</pre>
+   <p>If <code>foo</code> has called <code>myfun</code>, and is waiting for it to
+return, then the <samp><span class="command">source</span></samp> command would print:
+
+<pre class="example">     ; File: /usr/me/mystuff.lisp
+     
+     (MYMAC)
+</pre>
+   <p>Note that the macro use was printed, not the actual function call form,
+<code>(myfun)</code>.
+
+   <p>If enclosing source is printed by giving an argument to
+<samp><span class="command">source</span></samp> or <samp><span class="command">vsource</span></samp>, then the actual source form is
+marked by wrapping it in a list whose first element is
+&lsquo;<samp><span class="samp">#:***HERE***</span></samp>&rsquo;.  In the previous example, <code>source 1</code> would
+print:
+
+<pre class="example">     ; File: /usr/me/mystuff.lisp
+     
+     (DEFUN FOO ()
+       (#:***HERE***
+        (MYMAC))
+       ...)
+</pre>
+   <ul class="menu">
+<li><a accesskey="1" href="How-the-Source-is-Found.html#How-the-Source-is-Found">How the Source is Found</a>
+<li><a accesskey="2" href="Source-Location-Availability.html#Source-Location-Availability">Source Location Availability</a>
+</ul>
+
+   </body></html>
+

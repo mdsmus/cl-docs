@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>2.12 Saving a Core Image</TITLE>
+<META NAME="description" CONTENT="2.12 Saving a Core Image">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1107" HREF="node42.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1105" HREF="node11.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1099" HREF="node40.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1109" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1110" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1108" HREF="node42.html">2.13 Pathnames</A>
+<B>Up:</B> <A NAME="tex2html1106" HREF="node11.html">2 Design Choices and </A>
+<B> Previous:</B> <A NAME="tex2html1100" HREF="node40.html">2.11.1 Process Accessors</A>
+<BR> <P>
+<H1><A NAME="SECTION003120000000000000000">2.12 Saving a Core Image</A></H1>
+<P>
+A mechanism has been provided to save a running Lisp core image and to
+later restore it.  This is convenient if you don't want to load several files
+into a Lisp when you first start it up.  The main problem is the large
+size of each saved Lisp image, typically at least 20 megabytes.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:save-lisp</tt> <em> <i>file</i>
+      <tt>&amp;key</tt> <tt>:purify</tt> <tt>:root-structures</tt> <tt>:init-function</tt>
+      <tt>:load-init-file</tt> <tt>:print-herald</tt> <tt>:site-init</tt>
+      <tt>:process-command-line</tt></em><BR>
+<P>
+  The <tt>save-lisp</tt> function saves the state of the currently
+  running Lisp core image in <i>file</i>.  The keyword arguments have
+  the following meaning:
+  <DL ><DT><STRONG><tt>:purify</tt></STRONG>
+<DD> If non-NIL (the default), the core image is
+    purified before it is saved (see <A NAME="8270">&#160;</A><tt>purify</tt> (page&nbsp;<A HREF="node41.html#FNpurify"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>).)  This reduces
+    the amount of work the garbage collector must do when the
+    resulting core image is being run.  Also, if more than one Lisp is
+    running on the same machine, this maximizes the amount of memory
+    that can be shared between the two processes.
+<P>
+  <DT><STRONG><tt>:root-structures</tt></STRONG>
+<DD>
+    <BR><IMG WIDTH=104 HEIGHT=24 ALIGN=BOTTOM ALT="change_begin" SRC="change_begin.gif"><BR>
+This should be a list of the main entry points in any newly
+      loaded systems.  This need not be supplied, but locality and/or
+      GC performance will be better if they are.  Meaningless if
+      <tt>:purify</tt> is <i>nil</i>.  See <A NAME="8276">&#160;</A><tt>purify</tt> (page&nbsp;<A HREF="node41.html#FNpurify"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>).
+<P>
+<BR><IMG WIDTH=104 HEIGHT=24 ALIGN=BOTTOM ALT="change_end" SRC="change_end.gif"><BR>
+
+<P>
+  <DT><STRONG><tt>:init-function</tt></STRONG>
+<DD> This is the function that starts running
+    when the created core file is resumed.  The default function
+    simply invokes the top level read-eval-print loop.  If the
+    function returns the lisp will exit.
+<P>
+  <DT><STRONG><tt>:load-init-file</tt></STRONG>
+<DD> If non-NIL, then load an init file;
+    either the one specified on the command line or
+    ```<tt>init.</tt>'<i>fasl-type</i>'', or, if
+    ```<tt>init.</tt>'<i>fasl-type</i>'' does not exist,
+    <tt>init.lisp</tt> from the user's home directory.  If the init file
+    is found, it is loaded into the resumed core file before the
+    read-eval-print loop is entered.
+<P>
+  <DT><STRONG><tt>:site-init</tt></STRONG>
+<DD> If non-NIL, the name of the site init file to
+    quietly load.  The default is `<tt>library:site-init</tt>'.  No error
+    is signalled if the file does not exist.
+<P>
+  <DT><STRONG><tt>:print-herald</tt></STRONG>
+<DD> If non-NIL (the default), then print out
+    the standard Lisp herald when starting.
+<P>
+  <DT><STRONG><tt>:process-command-line</tt></STRONG>
+<DD> If non-NIL (the default),
+    processes the command line switches and performs the appropriate
+    actions.
+<P>
+</DL>
+<P>
+To resume a saved file, type:
+<BLOCKQUOTE> <PRE>lisp -core file
+</PRE> </BLOCKQUOTE>
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:purify</tt> <em> 
+    <i>file</i>
+      <tt>&amp;key</tt> <tt>:root-structures</tt> <tt>:environment-name</tt></em><BR>
+<P>
+  This function optimizes garbage collection by moving all currently
+  live objects into non-collected storage.  Once statically allocated,
+  the objects can never be reclaimed, even if all pointers to them are
+  dropped.  This function should generally be called after a large
+  system has been loaded and initialized.
+<P>
+  <DL ><DT><STRONG><tt>:root-structures</tt></STRONG>
+<DD> is an optional list of objects which
+    should be copied first to maximize locality.  This should be a
+    list of the main entry points for the resulting core image.  The
+    purification process tries to localize symbols, functions, etc.,
+    in the core image so that paging performance is improved.  The
+    default value is NIL which means that Lisp objects will still be
+    localized but probably not as optimally as they could be.
+<P>
+    <i>defstruct</i> structures defined with the <tt>(:pure t)</tt>
+    option are moved into read-only storage, further reducing GC cost.
+    List and vector slots of pure structures are also moved into
+    read-only storage.
+<P>
+  <DT><STRONG><tt>:environment-name</tt></STRONG>
+<DD> is gratuitous documentation for the
+    compacted version of the current global environment (as seen in
+    <tt>c::*info-environment*</tt>.)  If <i>nil</i> is supplied, then
+    environment compaction is inhibited.
+<P>
+</DL><HR><A NAME="tex2html1107" HREF="node42.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1105" HREF="node11.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1099" HREF="node40.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1109" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1110" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1108" HREF="node42.html">2.13 Pathnames</A>
+<B>Up:</B> <A NAME="tex2html1106" HREF="node11.html">2 Design Choices and </A>
+<B> Previous:</B> <A NAME="tex2html1100" HREF="node40.html">2.11.1 Process Accessors</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

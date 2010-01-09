@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>6.6 Unix System Calls</TITLE>
+<META NAME="description" CONTENT="6.6 Unix System Calls">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3281" HREF="node206.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3279" HREF="node199.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3273" HREF="node204.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3283" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3284" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3282" HREF="node206.html">6.7 File Descriptor Streams</A>
+<B>Up:</B> <A NAME="tex2html3280" HREF="node199.html">6 UNIX Interface</A>
+<B> Previous:</B> <A NAME="tex2html3274" HREF="node204.html">6.5 System Area Pointers</A>
+<BR> <P>
+<H1><A NAME="SECTION00760000000000000000">6.6 Unix System Calls</A></H1>
+<P>
+You probably won't have much cause to use them, but all the Unix system
+calls are available.  The Unix system call functions are in the
+<tt>Unix</tt> package.  The name of the interface for a particular system
+call is the name of the system call prepended with <tt>unix-</tt>.  The
+system usually defines the associated constants without any prefix name.
+To find out how to use a particular system call, try using
+<tt>describe</tt> on it.  If that is unhelpful, look at the source in
+`<tt>syscall.lisp</tt>' or consult your system maintainer.
+<P>
+The Unix system calls indicate an error by returning <i>nil</i> as the
+first value and the Unix error number as the second value.  If the call
+succeeds, then the first value will always be non-<i>nil</i>, often <tt>t</tt>.
+<P>
+<b>[Function]</b><BR> 
+<tt> Unix: get-unix-error-msg</tt> <em> <i>error</i></em><BR>
+<P>
+  This function returns a string describing the Unix error number
+  <i>error</i>.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

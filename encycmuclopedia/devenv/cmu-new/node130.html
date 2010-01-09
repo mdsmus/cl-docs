@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.3.6 Type Check Optimization</TITLE>
+<META NAME="description" CONTENT="5.3.6 Type Check Optimization">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2335" HREF="node131.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2333" HREF="node124.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2329" HREF="node129.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2337" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2338" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2336" HREF="node131.html">5.4 Source Optimization</A>
+<B>Up:</B> <A NAME="tex2html2334" HREF="node124.html">5.3 Type Inference</A>
+<B> Previous:</B> <A NAME="tex2html2330" HREF="node129.html">5.3.5 Dynamic Type Inference</A>
+<BR> <P>
+<H2><A NAME="SECTION00636000000000000000">5.3.6 Type Check Optimization</A></H2>
+<P>
+<A NAME="typecheckoptimization">&#160;</A>
+<A NAME="9964">&#160;</A>
+<A NAME="9965">&#160;</A>
+<P>
+Python backs up its support for precise type checking by minimizing
+the cost of run-time type checking.  This is done both through type
+inference and though optimizations of type checking itself.
+<P>
+Type inference often allows the compiler to prove that a value is of
+the correct type, and thus no type check is necessary.  For example:
+<BLOCKQUOTE> <PRE>(defstruct foo a b c)
+(defstruct link
+  (foo (required-argument) :type foo)
+  (next nil :type (or link null)))
+<P>
+(foo-a (link-foo x))
+</PRE> </BLOCKQUOTE>
+Here, there is no need to check that the result of <tt>link-foo</tt> is
+a <tt>foo</tt>, since it always is.  Even when some type checks are
+necessary, type inference can often reduce the number:
+<BLOCKQUOTE> <PRE>(defun test (x)
+  (let ((a (foo-a x))
+        (b (foo-b x))
+        (c (foo-c x)))
+    ...))
+</PRE> </BLOCKQUOTE>
+In this example, only one <tt>(foo-p x)</tt> check is needed.  This
+applies to a lesser degree in list operations, such as:
+<BLOCKQUOTE> <PRE>(if (eql (car x) 3) (cdr x) y)
+</PRE> </BLOCKQUOTE>
+Here, we only have to check that <tt>x</tt> is a list once.
+<P>
+Since Python recognizes explicit type tests, code that explicitly
+protects itself against type errors has little introduced overhead due
+to implicit type checking.  For example, this loop compiles with no
+implicit checks checks for <tt>car</tt> and <tt>cdr</tt>:
+<BLOCKQUOTE> <PRE>(defun memq (e l)
+  (do ((current l (cdr current)))
+      ((atom current) nil)
+    (when (eq (car current) e) (return current))))
+</PRE> </BLOCKQUOTE>
+<P>
+<A NAME="9974">&#160;</A>
+Python reduces the cost of checks that must be done through an
+optimization called <i>complementing</i>.  A complemented check for
+<i>type</i> is simply a check that the value is not of the type
+<tt>(not <i>type</i>)</tt>.  This is only interesting when something
+is known about the actual type, in which case we can test for the
+complement of <tt>(and <i>known-type</i> (not <i>type</i>))</tt>, or
+the difference between the known type and the assertion.  An example:
+<BLOCKQUOTE> <PRE>(link-foo (link-next x))
+</PRE> </BLOCKQUOTE>
+Here, we change the type check for <tt>link-foo</tt> from a test for
+<tt>foo</tt> to a test for:
+<BLOCKQUOTE> <PRE>(not (and (or foo null) (not foo)))
+</PRE> </BLOCKQUOTE>
+or more simply <tt>(not null)</tt>.  This is probably the most
+important use of complementing, since the situation is fairly common,
+and a <tt>null</tt> test is much cheaper than a structure type test.
+<P>
+Here is a more complicated example that illustrates the combination of
+complementing with dynamic type inference:
+<BLOCKQUOTE> <PRE>(defun find-a (a x)
+  (declare (type (or link null) x))
+  (do ((current x (link-next current)))
+      ((null current) nil)
+    (let ((foo (link-foo current)))
+      (when (eq (foo-a foo) a) (return foo)))))
+</PRE> </BLOCKQUOTE>
+This loop can be compiled with no type checks.  The <tt>link</tt> test
+for <tt>link-foo</tt> and <tt>link-next</tt> is complemented to
+<tt>(not null)</tt>, and then deleted because of the explicit
+<tt>null</tt> test.  As before, no check is necessary for <tt>foo-a</tt>,
+since the <tt>link-foo</tt> is always a <tt>foo</tt>.  This sort of
+situation shows how precise type checking combined with precise
+declarations can actually result in reduced type checking.
+<P>
+<HR><A NAME="tex2html2335" HREF="node131.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2333" HREF="node124.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2329" HREF="node129.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2337" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2338" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2336" HREF="node131.html">5.4 Source Optimization</A>
+<B>Up:</B> <A NAME="tex2html2334" HREF="node124.html">5.3 Type Inference</A>
+<B> Previous:</B> <A NAME="tex2html2330" HREF="node129.html">5.3.5 Dynamic Type Inference</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

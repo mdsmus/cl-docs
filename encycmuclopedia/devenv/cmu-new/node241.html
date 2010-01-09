@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>8.7.4 Calling Lisp from C</TITLE>
+<META NAME="description" CONTENT="8.7.4 Calling Lisp from C">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3748" HREF="node242.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3746" HREF="node237.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3740" HREF="node240.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3750" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3751" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3749" HREF="node242.html">8.7.5 Accessing Lisp Arrays</A>
+<B>Up:</B> <A NAME="tex2html3747" HREF="node237.html">8.7 Alien Function Calls</A>
+<B> Previous:</B> <A NAME="tex2html3741" HREF="node240.html">def-alien-routine Example</A>
+<BR> <P>
+<H2><A NAME="SECTION00974000000000000000">8.7.4 Calling Lisp from C</A></H2>
+<P>
+Calling Lisp functions from C is sometimes possible, but is rather hackish.
+See <tt>funcall0</tt> ... <tt>funcall3</tt> in the `<tt>lisp/arch.h</tt>'.  The
+arguments must be valid CMU CL object descriptors (e.g.  fixnums must be
+left-shifted by 2.)  See `<tt>compiler/generic/objdef.lisp</tt>' or the derived
+file `<tt>lisp/internals.h</tt>' for details of the object representation.
+`<tt>lisp/internals.h</tt>' is mechanically generated, and is not part of the
+source distribution.  It is distributed in the `<tt>docs/</tt>' directory of the
+binary distribution.
+<P>
+Note that the garbage collector moves objects, and won't be able to fix up any
+references in C variables, so either turn GC off or don't keep Lisp pointers
+in C data unless they are to statically allocated objects.  You can use
+<A NAME="11842">&#160;</A><tt>purify</tt> (page&nbsp;<A HREF="node41.html#FNpurify"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>) to place live data structures in static space so that they
+won't move during GC.
+<P>
+<BR><IMG WIDTH=104 HEIGHT=24 ALIGN=BOTTOM ALT="change_begin" SRC="change_begin.gif"><BR>
+<P>
+<BR><IMG WIDTH=104 HEIGHT=24 ALIGN=BOTTOM ALT="change_end" SRC="change_end.gif"><BR>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

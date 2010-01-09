@@ -1,0 +1,731 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Contents</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Table of Contents</h1>
+
+<ul>
+<li><a href="author.html">About the Author</a> 
+<li><a href="about.html">About the Book</a> 
+<li><a href="dedication.html">Dedication</a> 
+<li><a href="credits.html">Credits</a> 
+<li><a href="copyright.html">Copyright</a> 
+<li><a href="acknowledgments.html">Acknowledgments</a> 
+<li><a href="foreword.html">Foreword</a> 
+<li><a href="introduction.html">Introduction</a> 
+
+<hr>
+<a href="#ch01">1</a> <a href="#ch02">2</a> <a href="#ch03">3</a> <a href="#ch04">4</a> <a href="#ch05">5</a> <a href="#ch06">6</a> <a href="#ch07">7</a> <a href="#ch08">8</a> <a href="#ch09">9</a> <a href="#ch10">10</a> <a href="#ch11">11</a> <a href="#ch12">12</a> <a href="#ch13">13</a> <a href="#ch14">14</a> <a href="#ch15">15</a> <a href="#ch16">16</a> <a href="#ch17">17</a> <a href="#ch18">18</a> <a href="#ch19">19</a> <a href="#ch20">20</a> <a href="#ch21">21</a> <a href="#ch22">22</a> <a href="#ch23">23</a> <a href="#ch24">24</a> <a href="#ch25">25</a> <a href="#ch26">26</a> <a href="#ch27">27</a> <a href="#ch28">28</a> <a href="#ch29">29</a> <a href="#ch30">30</a> <a href="#ch31">31</a> <a href="#ch32">32</a> <a href="#ch33">33</a> <a href="#ch34">34</a> <a href="#appA">Appendix A</a> 
+<HR>
+<a name="ch01"></a>
+<li><a href="chapter01.html">Chapter 1 - Why Bother?  Or: Objections 
+Answered</a> 
+
+<P>Chapter objective: Describe the most common objections to Lisp, and answer 
+each with advice on state-of-the-art implementations and previews of what 
+this book will explain.</P>
+
+	<ul>
+	<li>I looked at Lisp before, and didn't understand it.
+	<li>I can't see the program for the parentheses.
+	<li>Lisp is very slow compared to my favorite language.
+	<li>No one else writes programs in Lisp.
+	<li>Lisp doesn't let me use graphical interfaces.
+	<li>I can't call other people's code from Lisp.
+	<li>Lisp's garbage collector causes unpredictable pauses when my program 
+	runs.
+	<li>Lisp is a huge language.
+	<li>Lisp is only for artificial intelligence research.
+	<li>Lisp doesn't have any good programming tools.
+	<li>Lisp uses too much memory.
+	<li>Lisp uses too much disk space.
+	<li>I can't find a good Lisp compiler.
+	</ul>
+	
+<HR>
+<a name="ch02"></a>
+<li><a href="chapter02.html">Chapter 2 - Is this Book for Me?</a> 
+
+<P>Chapter objective: Describe how this book will benefit the reader, with 
+specific examples and references to chapter contents.</P>
+
+	<ul>
+	<li><a href="track1.html">The Professional Programmer</a></li>
+	<li><a href="track2.html">The Student</a></li>
+	<li><a href="track3.html">The Hobbyist</a></li>
+	<li><a href="track4.html">The Former Lisp Acquaintance</a></li>
+	<li><a href="track5.html">The Curious</a></li>
+	</ul> 
+
+<HR>
+<a name="ch03"></a>
+<li><a href="chapter03.html">Chapter 3 - Essential Lisp in Twelve 
+Lessons</a> 
+
+<P>Chapter objective: Explain Lisp in its simplest form, without worrying 
+about the special cases that can confuse beginners.</P>
+
+	<ul>
+	<li><a href="chapter03-01.html">Lesson 1 - Essential Syntax</a></li>
+		<ul>
+		<li>Lists are surrounded by parentheses
+		<li>Atoms are separated by whitespace or parentheses
+		</ul> 
+	<li><a href="chapter03-02.html">Lesson 2 - Essential Evaluation</a></li>
+		<ul>
+		<li>A form is meant to be evaluated
+		<li>A function is applied to its arguments
+		<li>A function can return any number of values
+		<li>Arguments are usually not modified by a function
+		<li>Arguments are usually evaluated before function application
+		<li>Arguments are evaluated in left-to-right order
+		<li>Special forms and macros change argument evaluation
+		</ul> 
+	<li><a href="chapter03-03.html">Lesson 3 - Some Examples of Special Forms and Macros</a></li>
+		<ul>
+		<li>SETQ
+		<li>LET
+		<li>COND
+		<li>QUOTE
+		</ul> 
+	<li><a href="chapter03-04.html">Lesson 4 - Putting things together, and taking them apart</a></li>
+		<ul>
+		<li>CONS
+		<li>LIST
+		<li>FIRST and REST
+		</ul> 
+	<li><a href="chapter03-05.html">Lesson 5 - Naming and Identity</a></li>
+		<ul>
+		<li>A symbol is just a name
+		<li>A symbol is always unique
+		<li>A symbol can name a value
+		<li>A value can have more than one name
+		</ul> 
+	<li><a href="chapter03-06.html">Lesson 6 - Binding versus Assignment</a></li>
+		<ul>
+		<li>Binding creates a new place to hold a value
+		<li>Bindings have names
+		<li>A binding can have different values at the same time
+		<li>One binding is innermost
+		<li>The program can only access bindings it creates
+		<li>Assignment gives an old place a new value
+		</ul> 
+	<li><a href="chapter03-07.html">Lesson 7 - Essential Function Definition</a></li>
+		<ul>
+		<li>DEFUN defines named functions
+		<li>LAMBDA defines anonymous functions
+		</ul> 
+	<li><a href="chapter03-08.html">Lesson 8 - Essential Macro Definition</a></li>
+		<ul>
+		<li>DEFMACRO defines named macros
+		<li>Macros return a form, not values
+		</ul>
+	<li><a href="chapter03-09.html">Lesson 9 - Essential Multiple Values</a></li>
+		<ul>
+		<li>Most forms create only one value
+		<li>VALUES creates multiple (or no) values
+		<li>A few special forms receive multiple values
+		<li>Some forms pass along multiple values
+		</ul> 
+	<li><a href="chapter03-10.html">Lesson 10 - A Preview of Other Data Types</a></li>
+		<ul>
+		<li>Lisp almost always does the right thing with numbers
+		<li>Characters give Lisp something to read and write
+		<li>Arrays organize data into tables
+		<li>Vectors are one-dimensional arrays
+		<li>Strings are vectors that contain only characters
+		<li>Symbols are unique, but they have many values
+		<li>Structures let you store related data
+		<li>Type information is apparent at runtime
+		<li>Hash Tables provide quick data access from a lookup key
+		<li>Packages keep names from colliding
+		</ul> 
+	<li><a href="chapter03-11.html">Lesson 11 - Essential Input and Output</a></li>
+		<ul>
+		<li>READ accepts Lisp data
+		<li>PRINT writes Lisp data for you and for READ
+		<li>OPEN and CLOSE let you work with files
+		<li>Variations on a PRINT theme
+		</ul> 
+	<li><a href="chapter03-12.html">Lesson 12 - Essential Reader Macros</a></li>
+		<ul>
+		<li>The reader turns characters into data
+		<li>Standard reader macros handle built-in data types
+		<li>User programs can define reader macros
+		</ul> 
+	</ul> 
+
+<HR>
+<a name="ch04"></a>
+<li><a href="chapter04.html">Chapter 4 - Mastering the Essentials</a> 
+
+<P>Chapter objective: Reinforce the concepts of Chapter 3 with hands-on 
+exercises.</P>
+
+	<ul>
+	<li>Hands-on! The "toploop"
+	<li>Spotting and avoiding common mistakes
+	<li>Defining simple functions
+	<li>Using global variables and constants
+	<li>Defining recursive functions
+	<li>Tail recursion
+	<li>Exercises in naming
+	<li>Lexical binding and multiple name spaces
+	<li>Reading, writing, and arithmetic
+	<li>Other data types
+	<li>Simple macros
+	<li>Reader macros
+	</ul> 
+	
+<HR>
+<a name="ch05"></a>
+<li><a href="chapter05.html">Chapter 5 - Introducing Iteration</a> 
+
+<P>Chapter objective: Introduce the most common looping constructs.</P>
+
+<blockquote>
+"There's no such thing as an infinite loop. Eventually, the computer will 
+break." -- John D. Sullivan
+</blockquote> 
+
+	<ul>
+	<li>Simple LOOP loops forever...
+	<li>But there's a way out!
+	<li>Use DOTIMES for a counted loop
+	<li>Use DOLIST to process elements of a list
+	<li>DO is tricky, but powerful
+	</ul> 
+
+<HR>
+<a name="ch06"></a>
+<li><a href="chapter06.html">Chapter 6 - Deeper into Structures</a> 
+
+<P>Chapter objective: Show the most useful optional features of structures.</P>
+
+	<ul>
+	<li>Default values let you omit some initializers, sometimes
+	<li>Change the way Lisp prints your structures
+	<li>Alter the way structures are stored in memory
+	<li>Shorten slot accessor names
+	<li>Allocate new structures without using keyword arguments
+	<li>Define one structure as an extension of another
+	</ul> 
+
+<HR>
+<a name="ch07"></a>
+<li><a href="chapter07.html">Chapter 7 - A First Look at Objects as Fancy 
+Structures</a> 
+
+<P>Chapter objective: Introduce CLOS objects as tools for structuring data. 
+Object behaviors will be covered in a later chapter.</P>
+
+	<ul>
+	<li>Hierarchies: Classification vs. containment
+	<li>Use DEFCLASS to define new objects
+	<li>Objects have slots, with more options than structures
+	<li>Controlling access to a slot helps keep clients honest
+	<li>Override a slot accessor to do things that the client can't
+	<li>Define classes with single inheritance for specialization
+	<li>Multiple inheritance allows mix-and-match definition
+	<li>Options control initialization and provide documentation
+	<li>This is only the beginning...
+	</ul> 
+
+<HR>
+<a name="ch08"></a>
+<li><a href="chapter08.html">Chapter 8 - Lifetime and Visibility</a> 
+
+<P>Chapter objective: Show how lifetime and visibility affect the values of 
+Lisp variables during execution. This is pretty much like local and global 
+variables in other languages, but Lisp's special variables change things. 
+This chapter also sets the stage for understanding that lifetime and 
+visibility isn't just for variables.</P>
+
+	<ul>
+	<li>Everything in Lisp has both lifetime and visibility
+	<li>Lifetime: Creation, existence, then destruction
+	<li>Visibility: To see and to be seen by
+	<li>The technical names: Extent and Scope
+	<li>Really easy cases: top-level defining forms
+	<li>Scope and extent of parameters and LET variables
+	<li>Slightly trickier: special variables
+	</ul> 
+
+<HR>
+<a name="ch09"></a>
+<li><a href="chapter09.html">Chapter 9 - Introducing Error Handling and 
+Non-Local Exits</a> 
+
+<P>Chapter objective: Show three new ways of transferring control between 
+parts of a program.</P>
+
+	<ul>
+	<li>UNWIND-PROTECT: When it absolutely, positively has to run
+	<li>Gracious exits with BLOCK and RETURN-FROM
+	<li>Escape from anywhere (but not at any time) with CATCH and THROW
+	<li>Making sure files only stay open as long as needed
+	</ul> 
+
+<HR>
+<a name="ch10"></a>
+<li><a href="chapter10.html">Chapter 10 - How to Find Your Way Around, 
+Part 1</a> 
+
+<P>Chapter objective: Show how to find things in Lisp without resorting to 
+the manual.</P>
+
+	<ul>
+	<li>APROPOS: I don't remember the name, but I recognize the face
+	<li>DESCRIBE: Tell me more about yourself
+	<li>INSPECT: Open wide and say "Ah..."
+	<li>DOCUMENTATION: I know I wrote that down somewhere
+	</ul> 
+
+<HR>
+<a name="ch11"></a>
+<li><a href="chapter11.html">Chapter 11 - Destructive Modification</a> 
+
+<P>Chapter objective: Illustrate the difference between assignment and 
+binding, and show why assignment is harder to understand. Then explore 
+reasons for preferring the more difficult concept, and introduce functions 
+that use destructive modification.</P>
+
+	<ul>
+	<li>Simple assignment is destructive modification
+	<li>The risk of assignment
+	<li>Changing vs. copying: an issue of efficiency
+	<li>Modifying lists with destructive functions
+	<li>RPLACA, RPLACD, SETF ...; circularity
+	<li>Places vs. values: destructive functions don't always 
+            have the desired side-effect
+	<li>Contrast e.g. PUSH and DELETE
+	<li>Shared and constant data: Dangers of destructive changes
+	</ul> 
+
+<HR>
+<a name="ch12"></a>
+<li><a href="chapter12.html">Chapter 12 - Mapping Instead of Iteration</a> 
+
+<P>Chapter objective: Categorize and demonstrate the mapping functions. Show 
+appropriate and inappropriate uses. Introduce the concept of sequences.</P>
+
+	<ul>
+	<li>MAPCAR, MAPC, and MAPCAN process successive list elements
+	<li>MAPLIST, MAPL, and MAPCON process successive sublists
+	<li>MAP and MAP-INTO work on sequences, not just lists
+	<li>Mapping functions are good for filtering
+	<li>It's better to avoid mapping if you care about efficiency
+	<li>Predicate mapping functions test sequences
+	<li>SOME, EVERY, NOTANY, NOTEVERY
+	<li>REDUCE combines sequence elements
+	</ul> 
+
+<HR>
+<a name="ch13"></a>
+<li><a href="chapter13.html">Chapter 13 - Still More Things You Can Do 
+with Sequences</a> 
+
+<P>Chapter objective: Introduce the most useful sequence functions, and show 
+how to use them. Show how destructive sequence functions must be used to 
+have the intended effect.</P>
+
+	<ul>
+	<li>CONCATENATE: new sequences from old
+	<li>ELT and SUBSEQ get what you want from any sequence (also, COPY-SEQ)
+	<li>REVERSE turns a sequence end-for-end (also, NREVERSE)
+	<li>LENGTH: size counts after all
+	<li>COUNT: when it's what's inside that matters
+	<li>REMOVE, SUBSTITUTE, and other sequence changers
+	<li>DELETE, REMOVE-DUPLICATES, DELETE-DUPLICATES, and NSUBSTITUTE
+        <li>FILL and REPLACE
+	<li>Locating things in sequences: POSITION, FIND, SEARCH, and MISMATCH
+	<li>SORT and MERGE round out the sequence toolkit
+	</ul> 
+
+<HR>
+<a name="ch14"></a>
+<li><a href="chapter14.html">Chapter 14 - Can Objects Really Behave 
+Themselves?</a> 
+
+<P>Chapter objective: Show how generic functions work. Describe multiple 
+dispatch, inheritance, and method combination. Preview the metaobject 
+protocol.</P>
+
+	<ul>
+	<li>Generic functions give objects their behaviors
+	<li>The line between methods and objects blurs for multimethods
+	<li>Methods on non-objects?  So where does the method live?
+	<li>Generic functions work by dispatching on argument specializers
+	<li>Object inheritance matters after all; finding the applicable method
+	<li>Method combinations offer further choices
+	<li>Nothing is cast in stone; a peek at the metaobject protocol
+	</ul> 
+
+<HR>
+<a name="ch15"></a>
+<li><a href="chapter15.html">Chapter 15 - Closures</a> 
+
+<P>Chapter objective: Show how closures capture free variables for use in 
+other execution contexts. Demonstrate with some practical applications.</P>
+
+	<ul>
+	<li>Is it a function of the lifetime, or the lifetime of a function?
+	<li>How to spot a free variable, and what to do about it.
+	<li>Using closures to keep private, secure information.
+	<li>Functions that return functions, and how they differ from macros.
+	</ul> 
+
+<HR>
+<a name="ch16"></a>
+<li><a href="chapter16.html">Chapter 16 - How to Find Your Way Around, 
+Part 2</a> 
+
+<P>Chapter objective: Learn what the Lisp compiler does to your code, and 
+how to watch what your code does as it runs.</P>
+
+<blockquote>
+"DISASSEMBLE is your friend." -- Bill St. Clair
+</blockquote> 
+
+	<ul>
+	<li>DISASSEMBLE: I always wondered what they put inside those things...
+	<li>BREAK and backtrace: How did I end up here?
+	<li>TRACE and STEP: I'm watching you!
+	</ul> 
+
+<HR>
+<a name="ch17"></a>
+<li><a href="chapter17.html">Chapter 17 - Not All Comparisons are 
+Equal</a> 
+
+<P>Chapter objective: Tell how and why Lisp has so many different comparison 
+functions. Give guidelines for proper choice.</P>
+
+	<ul>
+	<li>The longer the test, the more it tells you
+	<li>EQ is true for identical symbols
+	<li>EQL is also true for identical numbers and characters
+	<li>EQUAL is usually true for things that print the same
+	<li>EQUALP ignores number type and character case
+	<li>Longer tests are slower; know what you're comparing
+	<li>Specialized tests run faster on more restricted data types
+	</ul>
+
+<HR>
+<a name="ch18"></a>
+<li><a href="chapter18.html">Chapter 18 - Very Logical, Indeed...</a> 
+
+<P>Chapter objective: Describe common logical functions, and conditional 
+evaluation. Introduce bit manipulation functions, bit vectors, and 
+generalized byte manipulation.</P>
+
+	<ul>
+	<li>AND and OR evaluate only as much as they need
+	<li>Bits, bytes, and Boole
+	<li>Bit vectors can go on forever
+	<li>Chunks of bits make bytes
+	</ul> 
+
+<HR>
+<a name="ch19"></a>
+<li><a href="chapter19.html">Chapter 19 - Streams</a> 
+
+<P>Chapter objective: Introduce streams as generalized I/O facilities. 
+Emphasize interchangeability of streams attached to different devices.</P>
+
+	<ul>
+	<li>Streams provide a pipe to supply or accept data
+	<li>Creating streams on files
+	<li>Creating streams on strings
+	<li>Binary I/O
+	</ul> 
+
+<HR>
+<a name="ch20"></a>
+<li><a href="chapter20.html">Chapter 20 - Macro Etiquette</a> 
+
+<P>Chapter objective: Go beyond the simple examples of chapters 3 and 4 to 
+show how to properly construct macros to solve a wide variety of problems.</P>
+
+	<ul>
+	<li>Macros are programs that generate programs
+	<li>Close up: how macros work
+	<li>Backquote looks like a substitution template
+	<li>Beyond the obvious, part 1: compute, then generate
+	<li>Beyond the obvious, part 2: macros that define macros
+	<li>Tricks of the trade: elude capture using GENSYM
+	<li>Macros vs. inlining
+	</ul> 
+
+<HR>
+<a name="ch21"></a>
+<li><a href="chapter21.html">Chapter 21 - Fancy Tricks with Function and 
+Macro Arguments</a> 
+
+<P>Chapter objective: Describe lambda-list options. Show how they can be used 
+to clarify programs.</P>
+
+	<ul>
+	<li>Keywords let you name your parameters
+	<li>Default values for when you'd rather not say
+	<li>Add some structure to your macros by taking apart arguments
+	</ul> 
+
+<HR>
+<a name="ch22"></a>
+<li><a href="chapter22.html">Chapter 22 - How to Find Your Way Around, 
+Part 3</a> 
+
+<P>Chapter objective: Learn how to find out about objects and methods. Learn 
+specialized techniques to alter or monitor program behavior without 
+changing the source code.</P>
+
+	<ul>
+	<li>Class and method browsers help you find your way in a sea of objects
+	<li>ADVISE lets you modify a function's behavior without changing the 
+	function
+	<li>WATCH lets you open a window on interesting variables
+	</ul> 
+
+<HR>
+<a name="ch23"></a>
+<li><a href="chapter23.html">Chapter 23 - To Err is Expected; To Recover, 
+Divine</a> 
+
+<P>Chapter objective: Show how to create your own error detection and 
+recovery mechanisms.</P>
+
+	<ul>
+	<li>Signal your own errors and impress your users
+	<li>Categorize errors using Conditions
+	<li>Recover from Conditions using Restarts
+	</ul> 
+
+<HR>
+<a name="ch24"></a>
+<li><a href="chapter24.html">Chapter 24 - FORMAT Speaks a Different 
+Language</a> 
+
+<P>Chapter objective: Describe the most useful functions of the FORMAT 
+function.</P>
+
+	<ul>
+	<li>FORMAT rhymes with FORTRAN, sort of...
+	<li>Formatting
+	<li>Iteration
+	<li>Conditionals
+	<li>Floobydust
+	</ul> 
+
+<HR>
+<a name="ch25"></a>
+<li><a href="chapter25.html">Chapter 25 - Connecting Lisp to the Real 
+World</a> 
+
+<P>Chapter objective: Describe FFI in general, and give examples from actual 
+implementations. Show how to use wrappers to call C++ functions. Show how 
+callbacks allow C programs to call Lisp functions. Give an example using 
+TCP/IP access.</P>
+
+	<ul>
+	<li>Foreign Function Interfaces let you talk to programs written in
+	"foreign languages"
+	<li>Would you wrap this, please?
+	<li>I'll call you back...
+	<li>Network Interfaces: beyond these four walls
+	</ul> 
+
+<HR>
+<a name="ch26"></a>
+<li><a href="chapter26.html">Chapter 26 - Put on a Happy Face: Interface 
+Builders</a> 
+
+<P>Chapter objective: Discuss event-driven interfaces and GUI builders in 
+general, then show examples from major desktop Common Lisp platforms. 
+Conclude with a discussion of platform-independent Lisp GUIs such as 
+Garnet and CLIM.</P>
+
+	<ul>
+	<li>Event-driven interfaces
+	<li>Graphical programming
+	<li>Example: MCL's Interface Toolkit
+	<li>Platform-independent interfaces
+	</ul> 
+
+<HR>
+<a name="ch27"></a>
+<li><a href="chapter27.html">Chapter 27 - A Good Editor is Worth a 
+Thousand Keystrokes</a> 
+
+<P>Chapter objective: Show how Lisp's simple syntax combines with an 
+integrated editor to ease many of the common tasks of writing a Lisp 
+program.</P>
+
+	<ul>
+	<li>Simple syntax; smart editors
+	<li>Matching and flashing
+	<li>Automatic indentation
+	<li>Symbol completion
+	<li>Finding definitions
+	<li>On-line documentation
+	<li>Access to debugging tools
+	<li>Extending the editor using Lisp
+	</ul> 
+
+<HR>
+<a name="ch28"></a>
+<li><a href="chapter28.html">Chapter 28 - Practical Techniques for 
+Programming</a> 
+
+<P>Chapter objective: Provide useful guidelines for Lisp style. Give 
+practical advice on tradeoffs among debugging, performance, and 
+readability.</P>
+
+	<ul>
+	<li>Elements of Lisp style
+	<li>Property lists are handy for small (very small) ad-hoc databases
+	<li>Declarations help the compiler, sometimes
+	<li>DEFVAR versus DEFPARAMETER
+	<li>Define constants with DEFCONSTANT
+	<li>Know when (not) to use the compiler
+	<li>Speed vs. ability to debug
+	<li>Efficiency: spotting it, testing it
+	<li>Recognizing inefficiency, profiling; performance vs. readability
+	</ul> 
+
+<HR>
+<a name="ch29"></a>
+<li><a href="chapter29.html">Chapter 29 - I Thought it was Your Turn to 
+Take Out the Garbage</a> 
+
+<P>Chapter objective: Describe the benefits and costs of garbage collection. 
+Show how to improve program performance by reducing the amount of garbage 
+it generates.</P>
+
+	<ul>
+	<li>What is garbage?
+	<li>Why is garbage collection important?
+	<li>How does garbage collection work?
+	<li>What effect does garbage have on my program?
+	<li>How can I reduce garbage collection pauses in my program?
+	</ul> 
+
+<HR>
+<a name="ch30"></a>
+<li><a href="chapter30.html">Chapter 30 - Helpful Hints for Debugging and 
+Bug-Proofing</a> 
+
+<P>Chapter objective: Describe use of Lisp's debugging tools.</P>
+
+	<ul>
+	<li>Finding the cause of an error
+	<li>Reading backtraces, compiler settings for debugging
+	<li>Simple debugging tools
+	<li>BREAK, PRINT
+	<li>Power tools for tough problems
+	<li>TRACE, STEP, ADVISE, WATCH
+	<li>Into the belly of the beast
+	<li>INSPECT, DESCRIBE
+	<li>Continuing from an error
+	<li>Problems with unwanted definitions
+	<li>Package problems; method definitions
+	<li>The problem with macros
+	<li>Runtime tests catch "can't happen cases" when they do...
+	<li>Use method dispatch rather than case dispatch
+	</ul> 
+
+<HR>
+<a name="ch31"></a>
+<li><a href="chapter31.html">Chapter 31 - Handling Large Projects in 
+Lisp</a> 
+
+<P>Chapter objective: Describe strategies and tools used to organize Lisp 
+programs for large projects and team efforts.</P>
+
+	<ul>
+	<li>Packages keep your names separate from my names
+	<li>System builders let you describe dependencies
+	<li>Source control systems keep track of multiple revisions
+	<li>Modules: another way to describe file dependencies
+	<li>PROVIDE and REQUIRE
+	</ul> 
+
+<HR>
+<a name="ch32"></a>
+<li><a href="chapter32.html">Chapter 32 - Dark Corners and Curiosities</a> 
+
+<P>Chapter objective: Describe some Lisp features that are newer, 
+unstandardized, experimental, or controversial.</P>
+
+	<ul>
+	<li>Extended LOOP: Another little language
+	<li>TAGBODY: GO if you must
+	<li>Processes & Stack Groups: Juggling multiple tasks
+	<li>Series: Another approach to iteration and filtering
+	</ul> 
+
+<HR>
+<a name="ch33"></a>
+<li><a href="chapter33.html">Chapter 33 - Where to Go Next</a> 
+
+<P>Chapter objective: Provide pointers to other sources of information and 
+products.</P>
+
+	<ul>
+	<li>Suggestions for further reading
+	<li>On-line sources
+	<li>Commercial vendors
+	</ul> 
+
+<HR>
+<a name="ch34"></a>
+<li><a href="chapter34.html">Chapter 34 - Lisp History, or: Origins of 
+Misunderstandings</a> 
+
+<P>Chapter objective: Give a short history of Lisp's development, providing 
+insights to some lingering misconceptions.</P>
+
+	<ul>
+	<li>John McCarthy's Notation
+	<li>Earliest implementations
+	<li>Special hardware
+	<li>Diverging dialects
+	<li>The DARPA directive
+	<li>East vs. West, and European competition
+	<li>The emergence of compilers for stock hardware
+	<li>The long road to standardization
+	<li>State of the Art?
+	</ul> 
+
+<HR>
+<a name="appA"></a>
+<li><a href="appendix-a.html">Appendix A - Successful Lisp 
+Applications</a> 
+
+<P>Chapter objective: Describe large successful applications built in Lisp.</P>
+
+	<ul>
+	<li>Emacs
+	<li>G2
+	<li>AutoCad
+        <li>Igor Engraver
+        <li>Yahoo Store
+	<li>...
+	</ul> 
+</ul> 
+
+<hr>
+<div align="center">
+<a href="cover.html">Cover</a> <br> <a href="author.html">About the Author</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its 
+author.  Online distribution is restricted to the author's site.
+</address>
+</body> </html> 

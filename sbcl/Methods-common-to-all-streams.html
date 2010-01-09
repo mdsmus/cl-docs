@@ -1,0 +1,77 @@
+<html lang="en">
+<head>
+<title>Methods common to all streams - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Gray-Streams.html#Gray-Streams" title="Gray Streams">
+<link rel="prev" href="Gray-Streams-classes.html#Gray-Streams-classes" title="Gray Streams classes">
+<link rel="next" href="Input-stream-methods.html#Input-stream-methods" title="Input stream methods">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Methods-common-to-all-streams"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Input-stream-methods.html#Input-stream-methods">Input stream methods</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Gray-Streams-classes.html#Gray-Streams-classes">Gray Streams classes</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Gray-Streams.html#Gray-Streams">Gray Streams</a>
+<hr>
+</div>
+
+<h4 class="subsection">9.2.2 Methods common to all streams</h4>
+
+<p>These generic functions can be specialized on any generalized instance
+of fundamental-stream.
+
+   <p><a name="Generic_002dFunction-common_002dlisp_003astream_002delement_002dtype"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>common-lisp:stream-element-type</b><var> stream<a name="index-common_002dlisp_003astream_002delement_002dtype-317"></a></var><br>
+<blockquote><p><a name="index-common_002dlisp_003astream_002delement_002dtype-318"></a>Return a type specifier for the kind of object returned by the
+  <code>stream</code>. The class <code>fundamental-character-stream</code> provides a default method
+  which returns <code>character</code>. 
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-common_002dlisp_003aclose"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>common-lisp:close</b><var> stream &amp;key abort<a name="index-common_002dlisp_003aclose-319"></a></var><br>
+<blockquote><p><a name="index-common_002dlisp_003aclose-320"></a>Close the given <code>stream</code>. No more I/O may be performed, but
+  inquiries may still be made. If <code>:abort</code> is true, an attempt is made
+  to clean up the side effects of having created the stream. 
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dgray_003astream_002dfile_002dposition"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-gray:stream-file-position</b><var> stream &amp;optional position-spec<a name="index-sb_002dgray_003astream_002dfile_002dposition-321"></a></var><br>
+<blockquote><p><a name="index-sb_002dgray_003astream_002dfile_002dposition-322"></a>Used by <code>file-position</code>. Returns or changes the current position within <code>stream</code>. 
+</p></blockquote></div>
+
+   </body></html>
+

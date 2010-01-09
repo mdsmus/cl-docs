@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>4.4.4 Error Severity</TITLE>
+<META NAME="description" CONTENT="4.4.4 Error Severity">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1773" HREF="node93.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1771" HREF="node88.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1765" HREF="node91.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1775" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1776" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1774" HREF="node93.html">4.4.5 Errors During Macroexpansion</A>
+<B>Up:</B> <A NAME="tex2html1772" HREF="node88.html">4.4 Interpreting Error Messages</A>
+<B> Previous:</B> <A NAME="tex2html1766" HREF="node91.html">4.4.3 The Processing Path</A>
+<BR> <P>
+<H2><A NAME="SECTION00544000000000000000">4.4.4 Error Severity</A></H2>
+<P>
+<A NAME="errorseverity">&#160;</A>
+<A NAME="9454">&#160;</A>
+<A NAME="9455">&#160;</A>
+<P>
+There are three levels of compiler error severity:
+<DL ><DT><STRONG>Error</STRONG>
+<DD> This severity is used when the compiler encounters a
+  problem serious enough to prevent normal processing of a form.
+  Instead of compiling the form, the compiler compiles a call to
+  <tt>error</tt>.  Errors are used mainly for signaling syntax errors.
+  If an error happens during macroexpansion, the compiler will handle
+  it.  The compiler also handles and attempts to proceed from read
+  errors.
+<P>
+<DT><STRONG>Warning</STRONG>
+<DD> Warnings are used when the compiler can prove that
+  something bad will happen if a portion of the program is executed,
+  but the compiler can proceed by compiling code that signals an error
+  at runtime if the problem has not been fixed:
+  <UL>
+<LI> Violation of type declarations, or
+<LI> Function calls that have the wrong number of arguments or
+    malformed keyword argument lists, or
+<LI> Referencing a variable declared <tt>ignore</tt>, or unrecognized
+    declaration specifiers.
+  </UL>
+<P>
+  In the language of the Common Lisp standard, these are situations where
+  the compiler can determine that a situation with undefined
+  consequences or that would cause an error to be signaled would
+  result at runtime.
+<P>
+<DT><STRONG>Note</STRONG>
+<DD> Notes are used when there is something that seems a bit
+  odd, but that might reasonably appear in correct programs.
+<P>
+</DL>
+Note that the compiler does not fully conform to the proposed X3J13
+``compiler-diagnostics'' cleanup.  Errors, warnings and notes mostly
+correspond to errors, warnings and style-warnings, but many things
+that the cleanup considers to be style-warnings are printed as
+warnings rather than notes.  Also, warnings, style-warnings and most
+errors aren't really signaled using the condition system.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

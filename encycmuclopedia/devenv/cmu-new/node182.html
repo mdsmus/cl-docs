@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.12.3 Complex Argument Syntax</TITLE>
+<META NAME="description" CONTENT="5.12.3 Complex Argument Syntax">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2990" HREF="node183.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2988" HREF="node179.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2982" HREF="node181.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2992" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2993" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2991" HREF="node183.html">5.12.4 Mapping and Iteration</A>
+<B>Up:</B> <A NAME="tex2html2989" HREF="node179.html">5.12 General Efficiency Hints</A>
+<B> Previous:</B> <A NAME="tex2html2983" HREF="node181.html">5.12.2 Avoid Unnecessary Consing</A>
+<BR> <P>
+<H2><A NAME="SECTION006123000000000000000">5.12.3 Complex Argument Syntax</A></H2>
+<P>
+<A NAME="10709">&#160;</A>
+<A NAME="10710">&#160;</A>
+<A NAME="10711">&#160;</A>
+<A NAME="10712">&#160;</A>
+<P>
+Common Lisp has very powerful argument passing mechanisms.  Unfortunately, two
+of the most powerful mechanisms, rest arguments and keyword arguments, have a
+significant performance penalty:
+<UL>
+<LI>
+With keyword arguments, the called function has to parse the supplied keywords
+by iterating over them and checking them against the desired keywords.
+<LI>
+With rest arguments, the function must cons a list to hold the arguments.  If a
+function is called many times or with many arguments, large amounts of memory
+will be allocated.
+</UL>
+<P>
+Although rest argument consing is worse than keyword parsing, neither problem
+is serious unless thousands of calls are made to such a function.  The use of
+keyword arguments is strongly encouraged in functions with many arguments or
+with interfaces that are likely to be extended, and rest arguments are often
+natural in user interface functions.
+<P>
+Optional arguments have some efficiency advantage over keyword
+arguments, but their syntactic clumsiness and lack of extensibility
+has caused many Common Lisp programmers to abandon use of optionals
+except in functions that have obviously simple and immutable
+interfaces (such as <tt>subseq</tt>), or in functions that are only
+called in a few places.  When defining an interface function to be
+used by other programmers or users, use of only required and keyword
+arguments is recommended.
+<P>
+Parsing of <tt>defmacro</tt> keyword and rest arguments is done at
+compile time, so a macro can be used to provide a convenient syntax
+with an efficient implementation.  If the macro-expanded form contains
+no keyword or rest arguments, then it is perfectly acceptable in inner
+loops.
+<P>
+Keyword argument parsing overhead can also be avoided by use of inline
+expansion (see section&nbsp;<A HREF="node155.html#inlineexpansion">5.8</A>) and block compilation (section
+<A HREF="node148.html#blockcompilation">5.7</A>.)
+<P>
+Note: the compiler open-codes most heavily used system functions which have
+keyword or rest arguments, so that no run-time overhead is involved.
+<P>
+<HR><A NAME="tex2html2990" HREF="node183.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2988" HREF="node179.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2982" HREF="node181.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2992" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2993" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2991" HREF="node183.html">5.12.4 Mapping and Iteration</A>
+<B>Up:</B> <A NAME="tex2html2989" HREF="node179.html">5.12 General Efficiency Hints</A>
+<B> Previous:</B> <A NAME="tex2html2983" HREF="node181.html">5.12.2 Avoid Unnecessary Consing</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

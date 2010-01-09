@@ -1,0 +1,89 @@
+<html lang="en">
+<head>
+<title>Debug Tail Recursion - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Stack-Frames.html#Stack-Frames" title="Stack Frames">
+<link rel="prev" href="Function-Names.html#Function-Names" title="Function Names">
+<link rel="next" href="Unknown-Locations-and-Interrupts.html#Unknown-Locations-and-Interrupts" title="Unknown Locations and Interrupts">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Debug-Tail-Recursion"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Unknown-Locations-and-Interrupts.html#Unknown-Locations-and-Interrupts">Unknown Locations and Interrupts</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Function-Names.html#Function-Names">Function Names</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Stack-Frames.html#Stack-Frames">Stack Frames</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">4.3.4 Debug Tail Recursion</h4>
+
+<p><a name="index-Tail-recursion-77"></a><a name="index-Recursion_002c-tail-78"></a>
+The compiler is &ldquo;properly tail recursive.&rdquo; If a function call is in
+a tail-recursive position, the stack frame will be deallocated
+<em>at the time of the call</em>, rather than after the call returns. 
+Consider this backtrace:
+
+<pre class="example">     (BAR ...)
+     (FOO ...)
+</pre>
+   <p>Because of tail recursion, it is not necessarily the case that
+<code>FOO</code> directly called <code>BAR</code>.  It may be that <code>FOO</code>
+called some other function <code>FOO2</code> which then called <code>BAR</code>
+tail-recursively, as in this example:
+
+<pre class="lisp">     (defun foo ()
+       ...
+       (foo2 ...)
+       ...)
+     
+     (defun foo2 (...)
+       ...
+       (bar ...))
+     
+     (defun bar (...)
+       ...)
+</pre>
+   <p>Usually the elimination of tail-recursive frames makes debugging more
+pleasant, since these frames are mostly uninformative.  If there is any
+doubt about how one function called another, it can usually be
+eliminated by finding the source location in the calling frame. 
+See <a href="Source-Location-Printing.html#Source-Location-Printing">Source Location Printing</a>.
+
+   <p>The elimination of tail-recursive frames can be prevented by disabling
+tail-recursion optimization, which happens when the <code>debug</code>
+optimization quality is greater than <code>2</code>. 
+See <a href="Debugger-Policy-Control.html#Debugger-Policy-Control">Debugger Policy Control</a>.
+
+<!-- FIXME: reinstate this link once the chapter is in the manual. -->
+<!-- For a more thorough discussion of tail recursion, @ref{tail-recursion}. -->
+   </body></html>
+

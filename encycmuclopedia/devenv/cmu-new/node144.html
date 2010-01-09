@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.6.2 Let Calls</TITLE>
+<META NAME="description" CONTENT="5.6.2 Let Calls">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2513" HREF="node145.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2511" HREF="node142.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2505" HREF="node143.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2515" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2516" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2514" HREF="node145.html">5.6.3 Closures</A>
+<B>Up:</B> <A NAME="tex2html2512" HREF="node142.html">5.6 Local Call</A>
+<B> Previous:</B> <A NAME="tex2html2506" HREF="node143.html">Self-Recursive Calls</A>
+<BR> <P>
+<H2><A NAME="SECTION00662000000000000000">5.6.2 Let Calls</A></H2>
+<P>
+<A NAME="letcalls">&#160;</A>
+Because local call avoids unnecessary call overheads, the compiler
+internally uses local call to implement some macros and special forms
+that are not normally thought of as involving a function call.  For
+example, this <tt>let</tt>:
+<BLOCKQUOTE> <PRE>(let ((a (foo))
+      (b (bar)))
+  ...)
+</PRE> </BLOCKQUOTE>
+is internally represented as though it was macroexpanded into:
+<BLOCKQUOTE> <PRE>(funcall #'(lambda (a b)
+             ...)
+         (foo)
+         (bar))
+</PRE> </BLOCKQUOTE>
+This implementation is acceptable because the simple cases of local
+call (equivalent to a <tt>let</tt>) result in good code.  This doesn't
+make <tt>let</tt> any more efficient, but does make local calls that are
+semantically the same as <tt>let</tt> much more efficient than full
+calls.  For example, these definitions are all the same as far as the
+compiler is concerned:
+<BLOCKQUOTE> <PRE>(defun foo ()
+  ...some other stuff...
+  (let ((a something))
+    ...some stuff...))
+<P>
+(defun foo ()
+  (flet ((localfun (a)
+           ...some stuff...))
+    ...some other stuff...
+    (localfun something)))
+<P>
+(defun foo ()
+  (let ((funvar #'(lambda (a)
+                    ...some stuff...)))
+    ...some other stuff...
+    (funcall funvar something)))
+</PRE> </BLOCKQUOTE>
+<P>
+Although local call is most efficient when the function is called only
+once, a call doesn't have to be equivalent to a <tt>let</tt> to be more
+efficient than full call.  All local calls avoid the overhead of
+argument count checking and keyword argument parsing, and there are a
+number of other advantages that apply in many common situations.
+See section&nbsp;<A HREF="node132.html#letoptimization">5.4.1</A> for a discussion of the optimizations done on
+let calls.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

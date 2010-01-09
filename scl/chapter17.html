@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 17</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 17 - Not All Comparisons are Equal</h1> 
+
+<P>Up to this point, I've shown you various comparison functions without
+really saying much about the differences between them. In this chapter,
+I'll (finally) tell you about how and why the comparison functions differ
+and offer some guidelines for their proper use.
+
+<h2>The longer the test, the more it tells you</h2>
+
+<p>Lisp has a core set of comparison functions that work on virtually
+any kind of object.  These are:
+
+<ul>
+<li><code>EQ</code> 
+<li><code>EQL</code> 
+<li><code>EQUAL</code> 
+<li><code>EQUALP</code> 
+</ul> 
+
+<p>The tests with the shorter names support stricter definitions of
+equality. The tests with the longer implement less restrictive, perhaps
+more intuitive, definitions of equality.  We'll learn about each of the four
+definitions in the following sections.
+
+<h2>EQ is true for identical symbols</h2>
+
+<p><code>EQ</code> is true for identical symbols. In fact, it's true
+for any identical object. In other words, an object is
+<code>EQ</code> to itself. Even a composite object, such as a list,
+is <code>EQ</code> to itself. (But two lists are <em>not</em>
+<code>EQ</code> just because they look the same when printed; they
+must truly be the <em>same</em> list to be <code>EQ</code>.) Under
+the covers, <code>EQ</code> just compares the memory addresses of
+objects. 
+
+<p>The reason that symbols are <em>EQ</em> when they have the same
+name (and are in the same package) is that the Lisp reader
+<em>interns</em> symbols as it reads them. The first time the reader
+sees a symbol, it creates it. On subsequent appearances, the reader
+simply uses the existing symbol.
+
+<p><code>EQ</code> is not guaranteed to be true for identical
+characters or numbers. This is because most Lisp systems don't
+assign a unique memory address to a particular number or character;
+numbers and characters are generally created as needed and stored
+temporarily in the hardware registers of the processor.
+
+<h2>EQL is also true for identical numbers and characters</h2>
+
+<p><code>EQL</code> retains <code>EQ</code>'s notion of equality,
+and extends it to identical numbers and characters. Numbers must
+agree in value <em>and</em> type; thus 0.0 is <em>not</em>
+<code>EQL</code> to 0. Characters must be truly identical;
+<code>EQL</code> is case sensitive.
+
+<h2>EQUAL is usually true for things that print the same</h2>
+
+<p><code>EQ</code> and <code>EQL</code> are not generally true for
+lists that print the same. Lists that are not <code>EQ</code> but
+have the same structure will be indistinguishable when printed; they
+will also be <code>EQUAL</code>.
+
+<p>Strings are also considered <code>EQUAL</code> if they print the
+same. Like <code>EQL</code>, the comparison of characters within strings
+is case-sensitive.
+
+<h2>EQUALP ignores number type and character case</h2>
+
+<p><code>EQUALP</code> is the most permissive of the core comparison
+functions. Everything that is <code>EQUAL</code> is also <code>EQUALP</code>.
+But <code>EQUALP</code> ignores case distinctions between characters, and 
+applies the (typeless) mathematical concept of equality to numbers; thus
+0.0 is <code>EQUALP</code> to 0.
+
+<p>Furthermore, <code>EQUALP</code> is true if corresponding elements
+are <code>EQUALP</code> in the following composite data types:
+
+<ul>
+<li>Arrays
+<li>Structures
+<li>Hash Tables
+</ul> 
+
+<h2>Longer tests are slower; know what you're comparing</h2>
+
+<p>The generality of the above longer-named tests comes with a price.
+They must test the types of their arguments to decide what kind of
+equality is applicable; this takes time. 
+
+<p><code>EQ</code> is blind to type of an object; either the objects
+are the same object, or they're not. This kind of test typically
+compiles into one or two machine instructions and is very fast.
+
+<p>You can avoid unnecessary runtime overhead by using the most 
+restrictive (shortest-named) test that meets your needs.
+
+<h2>Specialized tests run faster on more restricted data types</h2>
+
+<p>If you know the type of your data in advance, you can use comparisons
+that are specialized to test that particular type of data. Tests are 
+available for characters, strings, lists, and numbers.  And, of course,
+there are also comparisons for other relationships besides equality.
+
+<ul>
+<li>Characters
+<ul>
+ <li><code>CHAR=</code> 
+ <li><code>CHAR/=</code> 
+ <li><code>CHAR&lt;</code> 
+ <li><code>CHAR&lt;=</code> 
+ <li><code>CHAR&gt;</code> 
+ <li><code>CHAR&gt;=</code> 
+ <li><code>CHAR-EQUAL</code> 
+ <li><code>CHAR-NOT-EQUAL</code> 
+</ul> 
+<li>Strings
+<ul>
+ <li><code>STRING=</code> 
+ <li><code>STRING/=</code> 
+ <li><code>STRING&lt;</code> 
+ <li><code>STRING&lt;=</code> 
+ <li><code>STRING&gt;</code> 
+ <li><code>STRING&gt;=</code> 
+ <li><code>STRING-EQUAL</code> 
+ <li><code>STRING-NOT-EQUAL</code> 
+</ul> 
+<li>Lists
+<ul>
+ <li><code>TREE-EQUAL</code> 
+</ul> 
+<li>Numbers
+<ul>
+ <li>=
+ <li>/=
+ <li>&lt;
+ <li>&lt;=
+ <li>&gt;
+ <li>&gt;=
+</ul> 
+</ul> 
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter16.html">Chapter 16</a> | Chapter 17 | <a href="chapter18.html">Chapter 18</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

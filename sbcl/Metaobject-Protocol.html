@@ -1,0 +1,192 @@
+<html lang="en">
+<head>
+<title>Metaobject Protocol - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Beyond-the-ANSI-Standard.html#Beyond-the-ANSI-Standard" title="Beyond the ANSI Standard">
+<link rel="prev" href="Garbage-Collection.html#Garbage-Collection" title="Garbage Collection">
+<link rel="next" href="Support-For-Unix.html#Support-For-Unix" title="Support For Unix">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Metaobject-Protocol"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Support-For-Unix.html#Support-For-Unix">Support For Unix</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Garbage-Collection.html#Garbage-Collection">Garbage Collection</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Beyond-the-ANSI-Standard.html#Beyond-the-ANSI-Standard">Beyond the ANSI Standard</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">6.2 Metaobject Protocol</h3>
+
+<p>SBCL supports a metaobject protocol which is intended to be compatible
+with AMOP; present exceptions to this (as distinct from current bugs)
+are:
+
+     <ul>
+
+     <li><a name="index-compute_002deffective_002dmethod-153"></a><a name="index-sb_002dmop_003acompute_002deffective_002dmethod-154"></a><code>compute-effective-method</code> only returns one value, not two.
+
+     <p>There is no record of what the second return value was meant to
+indicate, and apparently no clients for it.
+
+     <li><a name="index-generic_002dfunction-155"></a><a name="index-standard_002dgeneric_002dfunction-156"></a><a name="index-funcallable_002dstandard_002dobject-157"></a><a name="index-sb_002dmop_003afuncallable_002dstandard_002dobject-158"></a><a name="index-standard_002dobject-159"></a><a name="index-function-160"></a>The direct superclasses of <code>sb-mop:funcallable-standard-object</code> are
+<code>(function standard-object)</code>, not <code>(standard-object function)</code>.
+
+     <p>This is to ensure that the <code>standard-object</code> class is the last of
+the standardized classes before <code>t</code> appearing in the class
+precedence list of <code>generic-function</code> and
+<code>standard-generic-function</code>, as required by section 1.4.4.5 of the
+ANSI specification.
+
+     <li><a name="index-ensure_002dgeneric_002dfunction-161"></a><a name="index-generic_002dfunction_002ddeclarations-162"></a><a name="index-sb_002dmop_003ageneric_002dfunction_002ddeclarations-163"></a>the arguments <code>:declare</code> and <code>:declarations</code> to
+<code>ensure-generic-function</code> are both accepted, with the leftmost
+argument defining the declarations to be stored and returned by
+<code>generic-function-declarations</code>.
+
+     <p>Where AMOP specifies <code>:declarations</code> as the keyword argument to
+<code>ensure-generic-function</code>, the Common Lisp standard specifies
+<code>:declare</code>.  Portable code should use <code>:declare</code>.
+
+     <li><a name="index-validate_002dsuperclass-164"></a><a name="index-finalize_002dinheritance-165"></a><a name="index-sb_002dmop_003avalidate_002dsuperclass-166"></a><a name="index-sb_002dmop_003afinalize_002dinheritance-167"></a><a name="index-standard_002dclass-168"></a><a name="index-funcallable_002dstandard_002dclass-169"></a><a name="index-sb_002dmop_003afuncallable_002dstandard_002dclass-170"></a><a name="index-function-171"></a><a name="index-sb_002dmop_003aclass_002dprototype-172"></a><a name="index-class_002dprototype-173"></a>although SBCL obeys the requirement in AMOP that
+<code>validate-superclass</code> should treat <code>standard-class</code> and
+<code>funcallable-standard-class</code> as compatible metaclasses, we
+impose an additional requirement at class finalization time: a class
+of metaclass <code>funcallable-standard-class</code> must have
+<code>function</code> in its superclasses, and a class of metaclass
+<code>standard-class</code> must not.
+
+     <p><a name="index-typep-174"></a><a name="index-class_002dof-175"></a><a name="index-subtypep-176"></a>After a class has been finalized, it is associated with a class
+prototype which is accessible by a standard mop function
+<code>sb-mop:class-prototype</code>.  The user can then ask whether this
+object is a <code>function</code> or not in several different ways: whether it
+is a function according to <code>typep</code>; whether its <code>class-of</code> is
+<code>subtypep</code> <code>function</code>, or whether <code>function</code> appears in
+the superclasses of the class.  The additional consistency requirement
+comes from the desire to make all of these answers the same.
+
+     <p>The following class definitions are bad, and will lead to errors
+either immediately or if an instance is created:
+     <pre class="lisp">          (defclass bad-object (funcallable-standard-object)
+            ()
+            (:metaclass standard-class))
+</pre>
+     <pre class="lisp">          (defclass bad-funcallable-object (standard-object)
+            ()
+            (:metaclass funcallable-standard-class))
+</pre>
+     <p>The following definition is acceptable:
+     <pre class="lisp">          (defclass mixin ()
+            ((slot :initarg slot)))
+          (defclass funcallable-object (funcallable-standard-object mixin)
+            ()
+            (:metaclass funcallable-standard-class))
+</pre>
+     <p>and leads to a class whose instances are funcallable and have one slot.
+
+     <p><a name="index-funcallable_002dstandard_002dobject-177"></a><a name="index-sb_002dmop_003afuncallable_002dstandard_002dobject-178"></a>Note that this requirement also applies to the class
+<code>sb-mop:funcallable-standard-object</code>, which has metaclass
+<code>sb-mop:funcallable-standard-class</code> rather than
+<code>standard-class</code> as AMOP specifies.
+
+     <li>the requirement that &ldquo;No portable class C_p may inherit, by
+virtue of being a direct or indirect subclass of a specified class, any
+slot for which the name is a symbol accessible in the
+<code>common-lisp-user</code> package or exported by any package defined in
+the ANSI Common Lisp standard.&rdquo; is interpreted to mean that the
+standardized classes themselves should not have slots named by external
+symbols of public packages.
+
+     <p>The rationale behind the restriction is likely to be similar to the ANSI
+Common Lisp restriction on defining functions, variables and types named
+by symbols in the Common Lisp package: preventing two independent pieces
+of software from colliding with each other.
+
+     <li><a name="index-slot_002dvalue_002dusing_002dclass-179"></a><a name="index-sb_002dmop_003aslot_002dvalue_002dusing_002dclass-180"></a><a name="index-g_t_0028setf-slot_002dvalue_002dusing_002dclass_0029-181"></a><a name="index-g_t_0028setf-sb_002dmop_003aslot_002dvalue_002dusing_002dclass_0029-182"></a><a name="index-slot_002dboundp_002dusing_002dclass-183"></a><a name="index-sb_002dmop_003aslot_002dboundp_002dusing_002dclass-184"></a>specializations of the <code>new-value</code> argument to <code>(setf
+sb-mop:slot-value-using-class)</code> are not allowed: all user-defined
+methods must have a specializer of the class <code>t</code>.
+
+     <p>This prohibition is motivated by a separation of layers: the
+<code>slot-value-using-class</code> family of functions is intended for use in
+implementing different and new slot allocation strategies, rather than
+in performing application-level dispatching.  Additionally, with this
+requirement, there is a one-to-one mapping between metaclass, class and
+slot-definition-class tuples and effective methods of <code>(setf
+slot-value-using-class)</code>, which permits optimization of <code>(setf
+slot-value-using-class)</code>'s discriminating function in the same manner as
+for <code>slot-value-using-class</code> and <code>slot-boundp-using-class</code>.
+
+     <p>Note that application code may specialize on the <code>new-value</code>
+argument of slot accessors.
+
+     <li><a name="index-defclass-185"></a><a name="index-ensure_002dclass-186"></a><a name="index-ensure_002dclass_002dusing_002dclass-187"></a><a name="index-sb_002dmop_003aensure_002dclass-188"></a><a name="index-sb_002dmop_003aensure_002dclass_002dusing_002dclass-189"></a><a name="index-find_002dclass-190"></a><a name="index-class_002dname-191"></a>the class named by the <code>name</code> argument to <code>ensure-class</code>, if
+any, is only redefined if it is the proper name of that class;
+otherwise, a new class is created.
+
+     <p>This is consistent with the description of <code>ensure-class</code> in AMOP
+as the functional version of <code>defclass</code>, which has this behaviour;
+however, it is not consistent with the weaker requirement in AMOP, which
+states that any class found by <code>find-class</code>, no matter what its
+<code>class-name</code>, is redefined.
+
+   </ul>
+
+   <p>In addition, SBCL supports extensions to the Metaobject protocol from
+AMOP; at present, they are:
+
+     <ul>
+<li><a name="index-defmethod-192"></a><a name="index-find_002dclass-193"></a><a name="index-intern_002deql_002dspecializer-194"></a><a name="index-sb_002dmop_003aintern_002deql_002dspecializer-195"></a><a name="index-make_002dmethod_002dspecializers_002dform-196"></a><a name="index-sb_002dpcl_003amake_002dmethod_002dspecializers_002dform-197"></a><a name="index-make_002dmethod_002dlambda-198"></a><a name="index-sb_002dmop_003amake_002dmethod_002dlambda-199"></a>compile-time support for generating specializer metaobjects from
+specializer names in <code>defmethod</code> forms is provided by the
+<code>make-method-specializers-form</code> function, which returns a form
+which, when evaluated in the lexical environment of the
+<code>defmethod</code>, returns a list of specializer metaobjects.  This
+operator suffers from similar restrictions to those affecting
+<code>make-method-lambda</code>, namely that the generic function must be
+defined when the <code>defmethod</code> form is expanded, so that the
+correct method of <code>make-method-specializers-form</code> is invoked. 
+The system-provided method on <code>make-method-specializers-form</code>
+generates a call to <code>find-class</code> for each symbol specializer
+name, and a call to <code>intern-eql-specializer</code> for each <code>(eql
+</code><var>x</var><code>)</code> specializer name.
+
+     <li><a name="index-find_002dmethod-200"></a><a name="index-parse_002dspecializer_002dusing_002dclass-201"></a><a name="index-unparse_002dspecializer_002dusing_002dclass-202"></a><a name="index-sb_002dpcl_003aparse_002dspecializer_002dusing_002dclass-203"></a><a name="index-sb_002dpcl_003aunparse_002dspecializer_002dusing_002dclass-204"></a>run-time support for converting between specializer names and
+specializer metaobjects, mostly for the purposes of
+<code>find-method</code>, is provided by
+<code>parse-specializer-using-class</code> and
+<code>unparse-specializer-using-class</code>, which dispatch on their first
+argument, the generic function associated with a method with the given
+specializer.  The system-provided methods on those methods convert
+between classes and proper names and between lists of the form
+<code>(eql </code><var>x</var><code>)</code> and interned eql specializer objects.
+
+   </ul>
+
+   </body></html>
+

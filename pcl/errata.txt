@@ -1,0 +1,121 @@
+-*- mode: outline -*-
+
+* Chapter 1
+
+** p. 2 "they payoff" should be "the payoff"
+
+** page 4: "Haskel", the functional language is called Haskell.
+
+** page 36: "If you pass MACROEXPAND-1>>,<< a form..."
+
+* Chapter 3
+
+**  Should describe how to get rid of WHERE function before defining WHERE macro.
+
+**  Twiddle in pathname (e.ge ~/my-cds.db) doesn't work in all Lisps. May try to create directory named ~
+
+* Chapter 4
+
+** Page 41, note 10: A lambda form is a list whose first element is a lamba expression.  (CLHS 3.1.2.1.2.4)
+
+**  Footnote 18. EQL should be set all in code style. "L" is not.
+
+* Chapter 7
+
+** Page 87: The first version of the loop says "Waiting~%" and "(sleep 60)", the second says "Waiting ...~%" and "(sleep 1)".
+
+* Chapter 9
+
+** p.97 - macro parameters paragraph 2 the three element are -> the three elements are
+
+** Extaneous COMBINE-RESULTS in TETS-ARITHMETIC
+
+    (deftest test-arithmetic ()
+      (combine-results
+       (test-+)
+       (test-*)))
+
+should be:
+
+    (deftest test-arithmetic ()
+      (test-+)
+      (test-*))
+
+and the results will then be:
+
+    CL-USER> (test-arithmetic)
+    pass ... (TEST-ARITHMETIC TEST-+): (= (+ 1 2) 3)
+    pass ... (TEST-ARITHMETIC TEST-+): (= (+ 1 2 3) 6)
+    pass ... (TEST-ARITHMETIC TEST-+): (= (+ -1 -3) -4)
+    pass ... (TEST-ARITHMETIC): (TEST-+)
+    pass ... (TEST-ARITHMETIC TEST-*): (= (* 2 2) 4)
+    pass ... (TEST-ARITHMETIC TEST-*): (= (* 3 5) 15)
+    pass ... (TEST-ARITHMETIC): (TEST-*)
+    T
+
+
+* Chapter 10
+
+** Page 122: "The read syntax for character>>s<< objects..."
+
+
+* Chapter 15
+
+** Possible problem with PROBE-FILE and EXT:PROBE-DIRECTORY in CLISP on Windows
+
+In CLISP 2.33.2 on Windows PROBE-FILE and EXT:PROBE-DIRECTORY don't
+behave like they does on Unix--they only signals an error if the
+pathname structure doesn't match the expected type (file or
+directory). (Or something, Original reader sent a clarification. And
+apparently CL-FAD handles this right so should check that.)
+
+** Wrong error message in FILE-EXIST-P
+
+Error case in definition of file-exist-p says "list-directory not
+implemented" rather than "file-exist-p not implemented". (fixed on
+web)
+
+* Chapter 24
+
+**  s/falways/always/  in Footnote 8.
+
+* Chapter 25
+
+** ID3-P function should specify stream type
+
+The function definition:
+
+    (defun id3-p (file)
+      (with-open-file (in file)
+        (string= "ID3" (read-value 'iso-8859-1-string in :length 3))))
+
+should specify the stream with :element-type '(unsigned-byte 8) as
+follows:
+
+    (defun id3-p (file)
+      (with-open-file (in file :element-type '(unsigned-byte 8))
+        (string= "ID3" (read-value 'iso-8859-1-string in :length 3))))
+
+[Fixed in online version 2005-04-07]
+
+** encoded-string-length doesn't account for byte-order-mark
+
+The function:
+
+    (defun encoded-string-length (string encoding terminated)
+      (let ((characters (+ (length string) (if terminated 1 0))))
+        (* characters (ecase encoding (0 1) (1 2)))))
+
+needs to account for the byte order mark if the UCS-2
+encoding is used.
+
+** *id3-v1-genres*
+
+Due to overzealous copyediting, in the DEFPARAMETER of *id3-v1-genres*
+"Psychedelic" is spelled correctly while in the spec
+it is mis-spelled "Psychadelic" Similarly, the genre "Humor" should be
+"Humour".
+
+* Chapter 30
+
+**  &lt and &gt should be &lt; and &gt;

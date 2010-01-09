@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>2.7.2 The TTY Inspector</TITLE>
+<META NAME="description" CONTENT="2.7.2 The TTY Inspector">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1036" HREF="node36.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1034" HREF="node33.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1030" HREF="node34.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1038" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1039" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1037" HREF="node36.html">2.8 Load</A>
+<B>Up:</B> <A NAME="tex2html1035" HREF="node33.html">2.7 The Inspector</A>
+<B> Previous:</B> <A NAME="tex2html1031" HREF="node34.html">2.7.1 The Graphical Interface</A>
+<BR> <P>
+<H2><A NAME="SECTION00372000000000000000">2.7.2 The TTY Inspector</A></H2>
+<P>
+If X is unavailable, a terminal inspector is invoked.  The TTY inspector
+is a crude interface to <tt>describe</tt> which allows objects to be
+traversed and maintains a history.  This inspector prints information
+about and object and a numbered list of the components of the object.
+The command-line based interface is a normal
+<tt>read</tt>-<tt>eval</tt>-<tt>print</tt> loop, but an integer <i>n</i>
+descends into the <i>n</i>'th component of the current object, and
+symbols with these special names are interpreted as commands:
+<DL ><DT><STRONG>U</STRONG>
+<DD> Move back to the enclosing object.  As you descend into the
+components of an object, a stack of all the objects previously seen is
+kept.  This command pops you up one level of this stack.
+<P>
+<DT><STRONG>Q, E</STRONG>
+<DD> Return the current object from <tt>inspect</tt>.
+<P>
+<DT><STRONG>R</STRONG>
+<DD> Recompute object display, and print again.  Useful if the
+object may have changed.
+<P>
+<DT><STRONG>D</STRONG>
+<DD> Display again without recomputing.
+<P>
+<DT><STRONG>H, ?</STRONG>
+<DD> Show help message.
+<P>
+</DL><BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

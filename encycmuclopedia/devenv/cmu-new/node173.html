@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.11.6 Word Integers</TITLE>
+<META NAME="description" CONTENT="5.11.6 Word Integers">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2879" HREF="node174.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2877" HREF="node167.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2871" HREF="node172.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2881" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2882" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2880" HREF="node174.html">5.11.7 Floating Point Efficiency</A>
+<B>Up:</B> <A NAME="tex2html2878" HREF="node167.html">5.11 Numbers</A>
+<B> Previous:</B> <A NAME="tex2html2872" HREF="node172.html">5.11.5 Fixnums</A>
+<BR> <P>
+<H2><A NAME="SECTION006116000000000000000">5.11.6 Word Integers</A></H2>
+<P>
+<A NAME="wordintegers">&#160;</A>
+<A NAME="10626">&#160;</A>
+<P>
+Python is unique in its efficient implementation of arithmetic
+on full-word integers through non-descriptor representations and open coding.
+Arithmetic on any subtype of these types:
+<BLOCKQUOTE> <PRE>(signed-byte 32)
+(unsigned-byte 32)
+</PRE> </BLOCKQUOTE>
+is reasonably efficient, although subtypes of <tt>fixnum</tt> remain
+somewhat more efficient.
+<P>
+If a word integer must be represented as a descriptor, then the
+<tt>bignum</tt> representation is used, with its associated consing
+overhead.  The support for word integers in no way changes the
+language semantics, it just makes arithmetic on small bignums vastly
+more efficient.  It is fine to do arithmetic operations with mixed
+<tt>fixnum</tt> and word integer operands; just declare the most
+specific integer type you can, and let the compiler decide what
+representation to use.
+<P>
+In fact, to most users, the greatest advantage of word integer
+arithmetic is that it effectively provides a few guard bits on the
+fixnum representation.  If there are missing assertions on
+intermediate values in a fixnum expression, the intermediate results
+can usually be proved to fit in a word.  After the whole expression is
+evaluated, there will often be a fixnum assertion on the final result,
+allowing creation of a fixnum result without even checking for
+overflow.
+<P>
+The remarks in section <A HREF="node172.html#fixnums">5.11.5</A> about fixnum result type also
+apply to word integers; you must be careful to give the compiler
+enough information to prove that the result is still a word integer.
+This time, though, when we blow out of word integers we land in into
+generic bignum arithmetic, which is much worse than sleazing from
+<tt>fixnum</tt>s to word integers.  Note that mixing
+<tt>(unsigned-byte 32)</tt> arguments with arguments of any signed
+type (such as <tt>fixnum</tt>) is a no-no, since the result might not be
+unsigned.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,506 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 14</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 14 - Can Objects Really Behave Themselves?</h1> 
+
+<P>This chapter continues the treatment of CLOS (the Common Lisp
+Object System) that we began in <a href="chapter07.html">Chapter
+7</a>, in which we saw how objects store data. In this chapter we'll
+learn about how objects get their behaviors.
+
+<h2>Generic functions give objects their behaviors</h2>
+
+<p>A generic function provides behavior based upon the type of an
+object. The behavior is selected according to the types of the arguments
+to the generic function. The generic function dispatches control to a
+particular method that provides the best match to the argument types
+that you use to invoke the generic function.
+
+<p><img src="gifs/simple-gf-invocation.gif">
+
+<p>You define a method using Lisp's <code>DEFMETHOD</code> macro.  In its
+simplest form, <code>DEFMETHOD</code> expects a name and a <em>specialized</em> 
+lambda list.  The specialized lambda list is similar to the list of formal
+parameters you supply for a <code>LAMBDA</code> or <code>DEFUN</code> form;
+the difference is that you can specify the type of each parameter.  The
+method will only be invoked when the generic function call (which looks
+<em>exactly</em> like a function call) specifies parameters that are 
+of matching types.  To specialize a parameter in a <code>DEFMETHOD</code> 
+form, simply name the parameter and its type in a list.  For example:
+
+<pre>
+(defmethod method1 ((param1 number) (param2 string)) ...)
+(defmethod method2 ((param2 float) (param2 sequence)) ...)
+</pre> 
+
+<p>You can also leave the type of a parameter unspecified by just
+giving its name; this kind of parameter will match <em>any</em> data type.
+In this example, the first parameter is not specialized:
+
+<pre>
+(defmethod method3 (param1 (param2 vector)) ...)
+</pre> 
+
+<p>Note that the parameter types do not <em>have</em> to be CLOS
+class types. If you <em>want</em> to specialize a method to one
+particular CLOS class, you can specialize one of the arguments to
+that class, as we saw in the first figure in this chapter. If you
+have specialized one parameter to a CLOS class, and leave the other
+parameters unspecialized, then you've emulated the single-dispatch
+method common to certain "classic" object-based programming
+languages. In this limited case you can think of a method as being
+associated with a class.  We'll see in the next section that this
+association breaks down when we associate a method with multiple
+classes.
+
+<p>You're probably wondering how generic functions get created, when all
+you do is to define methods. When you define a method, Lisp creates a
+generic function if one does not already exist. When Lisp creates this
+generic function for you, it makes note of the name, the number of
+required and optional arguments, and the presence and names of keyword
+parameters. When you create another method of the same name, it must
+agree with the generic function on the details of the parameters which
+were recorded in the generic function.  This agreement is called 
+<em>lambda list congruence</em> -- Lisp will signal an error if you
+attempt to create a new method with a non-congruent lambda list.
+
+<h2>The line between methods and objects blurs for multimethods</h2>
+
+<p>A multimethod is a method that is selected based upon the types of
+two or more of its arguments. When you have a method that is selected
+for two or more classes, then we can't really say that a class (or an
+object, which is an instance of that class) "has" a particular method.
+
+<h2>Methods on non-objects?  So where does the method live?</h2>
+
+<p>The association of methods to classes gets even more tenuous when
+we consider that one or more of a method's arguments may specialize
+on an object that is not a class. If we expect to find some convenient
+way to say that a method "belongs to" a particular class, we're simply
+not going to find it.
+
+<p>Simpler (and less capable) object systems than CLOS <em>do</em> 
+associate a method with a particular class.  CLOS does not.  This is
+an important point, so let me rephrase it: CLOS methods are <em>not</em> 
+a part of any class for which they may provide services.
+
+<p>A method is a part of a generic function. The generic function analyzes
+the actual parameters and selects a method to invoke based upon a match
+between actual parameters and specialized lambda lists in the method
+definitions.  And, to reiterate the point made in the previous paragraph,
+generic functions are <em>not a part of</em> of any classes upon which the
+generic function's methods operate.
+
+<h2>Generic functions work by dispatching on argument specializers</h2>
+
+<p>When you define a method, the types of its parameters (in the
+specialized lambda list) declare that the method may be invoked only
+by parameters of the same, or more specific, types. For example, if
+a parameter is specialized on the type <code>NUMBER</code>, it can
+match <code>INTEGER</code>, <code>FIXNUM</code>, <code>FLOAT</code>,
+<code>BIGNUM</code>, <code>RATIONAL</code>, <code>COMPLEX</code>, or
+any other proper subtype of <code>NUMBER</code>.
+
+<p>But what if you define two methods that could match the same types?
+Consider the following definitions.
+
+<pre>
+(defmethod op2 ((x number)  (y number))  ...) <i>; method 1</i> 
+(defmethod op2 ((x float)   (y float))   ...) <i>; method 2</i> 
+(defmethod op2 ((x integer) (y integer)) ...) <i>; method 3</i> 
+(defmethod op2 ((x float)   (y number))  ...) <i>; method 4</i> 
+(defmethod op2 ((x number)  (y float))   ...) <i>; method 5</i> 
+</pre> 
+
+<p>A call of the form <code>(OP2 11 23)</code> potentially matches
+methods 1 and 3, because the arguments are both of type <i>INTEGER</i>,
+which is a subtype of <code>NUMBER</code>.  CLOS resolves ambiguity
+by choosing the more specific match, thus method 3 is selected for
+a call of <code>(OP2 11 23)</code>.
+
+<p>The same resolution strategy chooses method 5 for <code>(OP2 13
+2.9)</code>, method 4 for <code>(OP2 8.3 4/5)</code>, and method 1
+for <code>(OP2 5/8 11/3)</code>.  The general rule is that CLOS selects
+a method based upon the most specific matching types, and an argument
+is always more specific than the arguments to its right.  The second
+part of this rule means that arguments on the left serve as tiebreakers
+for those futher to the right.  Consider these methods:
+
+<pre>
+(defmethod Xop2 ((x number)  (y number))  ...) <i>; method 1</i> 
+(defmethod Xop2 ((x float)   (y number))  ...) <i>; method 2</i> 
+(defmethod Xop2 ((x number)  (y float))   ...) <i>; method 3</i> 
+</pre> 
+
+<p>A call of <code>(XOP2 5.3 4.1)</code> will invoke method 2. Both
+method 2 and method 3 are more specific than method 1. Method 2 has
+a more specialized type in the first argument position when compared
+to method 3, so method 2 is the one that is invoked. 
+
+<p>In addition to dispatching based upon argment types, CLOS can
+dispatch based upon specific objects.
+
+<pre>
+? (defmethod idiv ((numerator integer) (denominator integer))
+    (values (floor numerator denominator)))
+#&lt;STANDARD-METHOD IDIV (INTEGER INTEGER)&gt;
+? (defmethod idiv ((numerator integer) (denominator (eql 0)))
+    nil)
+#&lt;STANDARD-METHOD IDIV (INTEGER (EQL 0))&gt;
+? (idiv 4 3)
+1
+? (idiv 6 2)
+3
+? (idiv 4 0)
+NIL
+</pre> 
+
+<p>Here we've specialized on the integer 0. You can specialize on any
+object that can be distinguished using the <code>EQL</code> predicate.
+Numbers, symbols and object instances can all be tested in this way.
+See <a href="chapter17.html">Chapter 17</a> for more information on the
+<code>EQL</code> predicate.
+
+<h2>Object inheritance matters after all; finding the applicable method</h2>
+
+<p>A class is a type, and a subclass is a subtype. So when you define
+these classes:
+
+<pre>
+(defclass c1 () ...)
+(defclass c2 (c1) ...)
+</pre> 
+
+<p>then <code>C2</code> is a subclass of <code>C1</code>. If you then use
+the types <code>C1</code> and <code>C2</code> as specializers in a method
+definition, <code>C2</code> will be a more specific type (see the previous
+section) than <code>C1</code>.
+
+<p>But what if you define classes that inherit from more than one class?
+How do you decide which class is more specific than another?  Consider
+the following class definitions:
+
+<pre>
+(defclass c1 () ...)
+(defclass c2 () ...)
+(defclass c3 (c1) ...)
+(defclass c4 (c2) ...)
+(defclass c5 (c3 c2) ...)
+(defclass c6 (c5 c1) ...)
+(defclass c7 (c4 c3) ...)
+</pre> 
+
+<p>These definitions give us an inheritance hierarchy that looks
+like this; bold lines link a subclass to the first parent class,
+while lighter lines link to the second parent class:
+
+<p><img src="gifs/multiple-inheritance-graph.gif">
+
+<p>Now consider the following method definitions, which specialize
+on this class hierarchy:
+
+<pre>
+(defmethod m1 ((x c1)) ...) <i>; method 1</i> 
+(defmethod m1 ((x c2)) ...) <i>; method 2</i> 
+</pre> 
+
+<p>It's clear that calling <code>M1</code>'s generic function with 
+an object of type <code>C1</code> or <code>C3</code> will invoke
+method 1, and that calling the generic function with an object of
+type <code>C2</code> or <code>C4</code> will invoke method 2.  But 
+what happens if we call <code>M1</code>'s generic function with an 
+object of type <code>C5</code>, <code>C6</code>, or <code>C7</code>?
+These classes all inherit -- directly or indirectly -- from <em>both</em> 
+<code>C1</code> and <code>C2</code>.
+
+<p>If we invoke the generic function <code>M1</code> with an object
+of type <code>C5</code>, <code>C6</code>, or <code>C7</code>, CLOS
+must decide whether to invoke method 1 or method 2. (It can't do
+both.) This decision is based upon some measure of whether
+<code>C1</code> or <code>C2</code> is a more specific parent class.
+The measure is based upon the position of the parent class in the
+<em>class precedence list</em> of the subclass. Here are the class
+precedence lists (CPLs) for <code>C5</code>, <code>C6</code>, and
+<code>C7</code>:
+
+<pre>
+Class   CPL
+-----   ---
+C5      (C5 C3 C1 C2)
+C6      (C6 C5 C3 C1 C2)
+C7      (C7 C4 C2 C3 C1)
+</pre> 
+
+<p>Classes near the beginning of the CPL are more specific, so
+<code>C5</code> and <code>C6</code> are more specific to
+<code>C1</code> and <code>C7</code> is more specific to
+<code>C2</code>. Therefore, calling the <code>M1</code> generic
+function with an object of type <code>C5</code> or <code>C6</code>
+will invoke method 1. Calling <code>M1</code> with an object of type
+<code>C7</code> will invoke method 2.
+
+<p>The next question you should ask is "how <em>does</em> CLOS
+determine the CPL?" There is, of course, an algorithm for computing
+the CPL -- you can find this described in a Lisp reference manual.
+Or you can define some classes and ask Lisp to tell you the CPL;
+most implementations include a function named
+<code>CLASS-PRECEDENCE-LIST</code> that expects a class
+<em>object</em> as its only argument (use <code>FIND-CLASS</code> to
+get the class object from its name) and returns a CPL. 
+
+<pre>
+? (class-precedence-list (find-class 'c6))
+(C6 C5 C3 C1 C2)
+</pre> 
+
+<p>Design conservatively with multiple inheritance, and you
+shouldn't have to depend upon knowledge of the algorithm by which
+CLOS computes the CPL.
+
+<h2>Method combinations offer further choices</h2>
+
+<p>If you define methods as we've seen throughout this chapter, the
+generic function that gets created will offer a capability called
+<em>standard</em> method combination.  The methods that we've so far
+used have all been <em>primary</em> methods.  Under standard method
+combination, we can also define <em>before</em>, <em>after</em>, and
+<em>around</em> methods which get combined with the primary method.
+
+<p>To define a <em>before</em>, <em>after</em>, or <em>around</em>
+method we add a corresponding keyword (a <em>method qualifier</em>)
+to our <code>DEFMETHOD</code> form, like this:
+
+<pre>
+(defmethod madness :before (...) ...)
+(defmethod madness :after  (...) ...)
+(defmethod madness :around (...) ...)
+</pre> 
+
+<p>Let's take a look at standard method combination in action.  We'll begin
+with the <code>:BEFORE</code> and <code>:AFTER</code> methods.
+
+<pre>
+<i>; Define a primary method</i> 
+? (defmethod combo1 ((x number)) (print 'primary) 1)
+#&lt;STANDARD-METHOD COMBO1 (NUMBER)&gt;
+<i>; Define before methods</i> 
+? (defmethod combo1 :before ((x integer)) (print 'before-integer) 2)
+#&lt;STANDARD-METHOD COMBO1 :BEFORE (INTEGER)&gt;
+? (defmethod combo1 :before ((x rational)) (print 'before-rational) 3)
+#&lt;STANDARD-METHOD COMBO1 :BEFORE (RATIONAL)&gt;
+<i>; Define after methods</i> 
+? (defmethod combo1 :after ((x integer)) (print 'after-integer) 4)
+#&lt;STANDARD-METHOD COMBO1 :AFTER (INTEGER)&gt;
+? (defmethod combo1 :after ((x rational)) (print 'after-rational) 5)
+#&lt;STANDARD-METHOD COMBO1 :AFTER (RATIONAL)&gt;
+<i>; Try it</i> 
+? (combo1 17)
+
+BEFORE-INTEGER
+BEFORE-RATIONAL
+PRIMARY
+AFTER-RATIONAL
+AFTER-INTEGER
+1
+? (combo 4/5)
+
+BEFORE-RATIONAL
+PRIMARY
+AFTER-RATIONAL
+1
+</pre> 
+
+<p>When we call <code>COMBO1</code>, CLOS determines which methods
+are applicable. As we learned earlier, only one primary method is
+applicable. But, as we saw in the call to <code>(COMBO1 17)</code>,
+we can have multiple applicable <code>:BEFORE</code> and
+<code>:AFTER</code> methods. Because integer is a subtype of
+rational, an integer argument to <code>COMBO1</code>, the
+<code>:BEFORE</code> and <code>:AFTER</code> methods that specialize
+on <code>INTEGER</code> and <code>RATIONAL</code> arguments are
+applicable.
+
+<p>So CLOS has now determined a set of applicable methods: a primary
+method and some before and after methods. The standard method
+combination determines the order in which these methods get invoked.
+First, <em>all</em> of the applicable <code>:BEFORE</code> methods
+are invoked, with the more specific methods invoked <em>first</em>.
+Then the applicable primary method is invoked. Next, all of the
+applicable <code>:AFTER</code> methods are invoked, with the more
+specific methods invoked <em>last</em>. Finally, the value of the 
+primary method is returned as the value of the generic function.
+
+<p><code>:BEFORE</code> and <code>:AFTER</code> methods are often
+used to add extra behaviors to a method. They typically introduce
+some kind of side effect -- by doing I/O, by changing global state,
+or by altering slots of one or more of the objects passed as
+parameters. There are three actions not available to
+<code>:BEFORE</code> and <code>:AFTER</code> methods:
+
+<ol>
+<li>They can't alter the parameters seen by other applicable methods.
+<li>They can't alter which of the applicable methods are actually invoked.
+<li>They can't alter the value returned from the generic function.
+</ol> 
+
+<p>But the standard method combination offers a third kind of
+qualified method, the <code>:AROUND</code> method, that can perform
+all of these actions. An <code>:AROUND</code> method is defined using
+a method qualifier, just as you might expect:
+
+<pre>
+(defmethod madness :around (...) ...)
+</pre> 
+
+<p>When a generic function has one or more <code>:AROUND</code>
+methods defined, the most specific applicable <code>:AROUND</code>
+method is invoked first, even if there are applicable
+<code>:BEFORE</code> methods. At this point, the
+<code>:AROUND</code> method has complete control -- if it simply
+returns, then <em>none</em> of the other applicable methods will be
+invoked. Normally an <code>:AROUND</code> method calls
+<code>CALL-NEXT-METHOD</code> which allows control to proceed
+through other applicable methods.
+
+<p><code>CALL-NEXT-METHOD</code> calls the next most specific
+<code>:AROUND</code> method; if there are no less specific
+applicable <code>:AROUND</code> methods, then
+<code>CALL-NEXT-METHOD</code> invokes all of the applicable before,
+primary, and after methods exactly as detailed above. The value
+returned by the most specific <code>:AROUND</code> method is
+returned by the generic function; typically you'll use the value --
+or some modification thereof -- returned by
+<code>CALL-NEXT-METHOD</code>.
+
+<p>If you call <code>CALL-NEXT-METHOD</code> without arguments, it
+uses the arguments of the current method. But you can call
+<code>CALL-NEXT-METHOD</code> with arguments, and change the
+parameters seen by the called method(s).
+
+<pre>
+<i>; Define a primary method</i> 
+? (defmethod combo2 ((x number)) (print 'primary) 1)
+#&lt;STANDARD-METHOD COMBO2 (NUMBER)&gt;
+<i>; Define before methods</i> 
+? (defmethod combo2 :before ((x integer)) (print 'before-integer) 2)
+#&lt;STANDARD-METHOD COMBO2 :BEFORE (INTEGER)&gt;
+? (defmethod combo2 :before ((x rational)) (print 'before-rational) 3)
+#&lt;STANDARD-METHOD COMBO2 :BEFORE (RATIONAL)&gt;
+<i>; Define after methods</i> 
+? (defmethod combo2 :after ((x integer)) (print 'after-integer) 4)
+#&lt;STANDARD-METHOD COMBO2 :AFTER (INTEGER)&gt;
+? (defmethod combo2 :after ((x rational)) (print 'after-rational) 5)
+#&lt;STANDARD-METHOD COMBO2 :AFTER (RATIONAL)&gt;
+<i>; Define around methods</i> 
+? (defmethod combo2 :around ((x float))
+    (print 'around-float-before-call-next-method)
+    (let ((result (call-next-method (float (truncate x)))))
+      (print 'around-float-after-call-next-method)
+      result))
+#&lt;STANDARD-METHOD COMBO2 :AROUND (FLOAT)&gt;
+? (defmethod combo2 :around ((x complex)) (print 'sorry) nil)
+#&lt;STANDARD-METHOD COMBO2 :AROUND (COMPLEX)&gt;
+? (defmethod combo2 :around ((x number))
+    (print 'around-number-before-call-next-method)
+    (print (call-next-method))
+    (print 'around-number-after-call-next-method)
+    99)
+<i>; Try it</i> 
+? (combo2 17)
+
+AROUND-NUMBER-BEFORE-CALL-NEXT-METHOD 
+BEFORE-INTEGER 
+BEFORE-RATIONAL 
+PRIMARY 
+AFTER-RATIONAL 
+AFTER-INTEGER 
+1 
+AROUND-NUMBER-AFTER-CALL-NEXT-METHOD 
+99
+? (combo2 4/5)
+
+AROUND-NUMBER-BEFORE-CALL-NEXT-METHOD 
+BEFORE-RATIONAL 
+PRIMARY 
+AFTER-RATIONAL 
+1 
+AROUND-NUMBER-AFTER-CALL-NEXT-METHOD 
+99
+? (combo2 82.3)
+
+AROUND-FLOAT-BEFORE-CALL-NEXT-METHOD 
+AROUND-NUMBER-BEFORE-CALL-NEXT-METHOD 
+PRIMARY 
+1 
+AROUND-NUMBER-AFTER-CALL-NEXT-METHOD 
+AROUND-FLOAT-AFTER-CALL-NEXT-METHOD 
+99
+? (combo2 #c(1.0 -1.0))
+
+SORRY 
+NIL
+</pre> 
+
+<p>One thing you <em>can't</em> do is to provide arguments to 
+<code>CALL-NEXT-METHOD</code> that would change the applicable methods.
+In other words, you need to preserve the type of methods even as you
+change their values.  For example, the following redefinition of
+one of the <code>COMBO2</code> example methods won't work:
+
+<pre>
+? (defmethod combo2 :around ((x float))
+    (call-next-method (floor x))) <i>; FLOOR returns an integer</i> 
+#&lt;STANDARD-METHOD COMBO2 :AROUND (FLOAT)&gt;
+? (combo2 45.9)
+Error: applicable methods changed
+</pre> 
+
+<h2>Nothing is cast in stone; a peek at the metaobject protocol</h2>
+
+<p>The metaobject protocol (MOP) is a collection of functions that
+expose much of the underlying workings of CLOS. We've already seen
+one function that belongs to the MOP:
+<code>CLASS-PRECEDENCE-LIST</code>.  Some MOP functions, like 
+<code>CLASS-PRECEDENCE-LIST</code>, give you visibility into the inner
+workings of CLOS.  Here are some examples:
+
+<pre>
+Function                    Argument   Returns
+--------                    --------   -------
+CLASS-DIRECT-SUBCLASSES     a class    a list of the immediate subclasses
+CLASS-DIRECT-SUPERCLASSES   a class    a list of the immediate superclasses
+CLASS-DIRECT-SLOTS          a class    a list of non-inherited slots
+CLASS-DIRECT-METHODS        a class    a list of non-inherited methods
+</pre> 
+
+<p>Other MOP functions let you change the underlying behavior of
+CLOS. You can use this capability to extend CLOS -- perhaps to
+implement a persistent object store -- or to alter the behavior to
+more closely correspond to a different kind of object system. Such
+changes are far beyond the scope of this book. Also, you should be
+aware that the MOP is <em>not</em> (yet, as of early 1999) a
+standard part of CLOS, and there is no definition of the MOP
+recognized by any national or international standards body.
+
+<p>So far, the defining document for the MOP is <a
+href="chapter33.html#kiczales91">The Art of the Metaobject
+Protocol</a>. Most Lisp vendors provide at least a partial MOP
+implementation; you should probably start with the vendor's
+documentation if you're interested in the MOP.
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter13.html">Chapter 13</a> | Chapter 14 | <a href="chapter15.html">Chapter 15</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

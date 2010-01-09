@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>4.5.2 Precise Type Checking</TITLE>
+<META NAME="description" CONTENT="4.5.2 Precise Type Checking">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1846" HREF="node99.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1844" HREF="node96.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1838" HREF="node97.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1848" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1849" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1847" HREF="node99.html">4.5.3 Weakened Type Checking</A>
+<B>Up:</B> <A NAME="tex2html1845" HREF="node96.html">4.5 Types in Python</A>
+<B> Previous:</B> <A NAME="tex2html1839" HREF="node97.html">4.5.1 Compile Time Type </A>
+<BR> <P>
+<H2><A NAME="SECTION00552000000000000000">4.5.2 Precise Type Checking</A></H2>
+<P>
+<A NAME="precisetypechecks">&#160;</A>
+<A NAME="9528">&#160;</A>
+<A NAME="9529">&#160;</A>
+<P>
+With the default compilation policy, all type
+assertions<A NAME="tex2html5" HREF="footnode.html#2755"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>  are precisely
+checked.  Precise checking means that the check is done as though
+<tt>typep</tt> had been called with the exact type specifier that
+appeared in the declaration.  Python uses <i>policy</i> to determine
+whether to trust type assertions (see section&nbsp;<A HREF="node101.html#compilerpolicy">4.7</A>).  Type
+assertions from declarations are indistinguishable from the type
+assertions on arguments to built-in functions.  In Python, adding
+type declarations makes code safer.
+<P>
+If a variable is declared to be <tt>(integer 3 17)</tt>, then its
+value must always always be an integer between <tt>3</tt> and <tt>17</tt>.
+If multiple type declarations apply to a single variable, then all the
+declarations must be correct; it is as though all the types were
+intersected producing a single <tt>and</tt> type specifier.
+<P>
+Argument type declarations are automatically enforced.  If you declare
+the type of a function argument, a type check will be done when that
+function is called.  In a function call, the called function does the
+argument type checking, which means that a more restrictive type
+assertion in the calling function (e.g., from <tt>the</tt>) may be lost.
+<P>
+The types of structure slots are also checked.  The value of a
+structure slot must always be of the type indicated in any <tt>:type</tt>
+slot option.<A NAME="tex2html6" HREF="footnode.html#6941"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A> Because of precise type checking,
+the arguments to slot accessors are checked to be the correct type of
+structure.
+<P>
+In traditional Common Lisp compilers, not all type assertions are
+checked, and type checks are not precise.  Traditional compilers
+blindly trust explicit type declarations, but may check the argument
+type assertions for built-in functions.  Type checking is not precise,
+since the argument type checks will be for the most general type legal
+for that argument.  In many systems, type declarations suppress what
+little type checking is being done, so adding type declarations makes
+code unsafe.  This is a problem since it discourages writing type
+declarations during initial coding.  In addition to being more error
+prone, adding type declarations during tuning also loses all the
+benefits of debugging with checked type assertions.
+<P>
+To gain maximum benefit from Python's type checking, you should
+always declare the types of function arguments and structure slots as
+precisely as possible.  This often involves the use of <tt>or</tt>,
+<tt>member</tt> and other list-style type specifiers.  Paradoxically,
+even though adding type declarations introduces type checks, it
+usually reduces the overall amount of type checking.  This is
+especially true for structure slot type declarations.
+<P>
+Python uses the <tt>safety</tt> optimization quality (rather than
+presence or absence of declarations) to choose one of three levels of
+run-time type error checking: see section&nbsp;<A HREF="node102.html#optimizedeclaration">4.7.1</A>.
+See section&nbsp;<A HREF="node112.html#advancedtypestuff">5.2</A> for more information about types in
+Python.
+<P>
+<HR><A NAME="tex2html1846" HREF="node99.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1844" HREF="node96.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1838" HREF="node97.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1848" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1849" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1847" HREF="node99.html">4.5.3 Weakened Type Checking</A>
+<B>Up:</B> <A NAME="tex2html1845" HREF="node96.html">4.5 Types in Python</A>
+<B> Previous:</B> <A NAME="tex2html1839" HREF="node97.html">4.5.1 Compile Time Type </A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

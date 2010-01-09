@@ -1,0 +1,338 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 1</title> 
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 1 - Why Bother?  Or: Objections Answered</h1> 
+
+<P>Everyone knows Lisp, right?  Many of us took a course that introduced us 
+to Lisp along with three or four or more other languages.  This is how I 
+was introduced to Lisp around 1975, and I thought it was a pretty useless 
+language.  It didn't do <em>anything</em> in the usual way, it was slow, 
+and those parentheses were enough to drive anyone crazy!</P>
+
+<P>If your own Lisp experience predates 1985 or so, you probably share this 
+view.  But in 1984, the year Big Brother never <em>really</em> 
+became a reality (did it?), the year that the first bleeding-edge (but 
+pathetic by today's standards) Macintosh started volume shipments, the 
+Lisp world started changing.  Unfortunately, most programmers never 
+noticed; Lisp's fortune was tied to AI, which was undergoing a precipitous 
+decline -- The AI Winter -- just as Lisp was coming of age.  Some say this 
+was bad luck for Lisp.  I look at the resurgence of interest in other 
+dynamic languages and the problems wrestled with by practicioners and 
+vendors alike, and wonder whether Lisp wasn't too far ahead of its time.</P>
+
+<P>I changed my opinion of Lisp over the years, to the point where it's not 
+only my favorite progamming language, but also a way of structuring much 
+of my thinking about programming.  I hope that this book will convey my 
+enthusiasm, and perhaps change your opinion of Lisp.</P>
+
+<P>Below I've listed most of the common objections to Lisp.  These come from 
+coworkers, acquaintances, managers, and my own past experience.  For each 
+point, I'll describe how much is actually true, how much is a matter of 
+viewpoint, and how much is a holdover from the dark days of early Lisp 
+implementations.  As much as possible, I'll avoid drawing comparisons to 
+other languages.  Lisp has its own way, and you'll be able to make your 
+own comparisons once you understand Lisp as well as your usual language.  
+If you eventually understand Lisp enough to know when its use is 
+appropriate, or find a place for Lisp in your personal toolkit, then I've 
+done my job.</P>
+
+<P>Without further introduction, here are a baker's dozen reasons why you 
+might be avoiding Lisp:</P>
+
+<hr>
+<h2>I looked at Lisp before, and didn't understand it.</h2> 
+
+<P>This is a really tough one.  Most programming languages are more similar 
+to each other than they are to Lisp.  If you look at a family tree of 
+computer languages, you'll see that the most common languages in use today 
+are descendants of the Algol family.  Features common to languages in the 
+Algol family include algebraic notation for expressions, a block structure 
+to control visibility of variables, and a way to call subroutines for 
+value or effect.  Once you understand these concepts, you can get started 
+with another language in the family by studying the surface differences: 
+the names of keywords and the style of punctuation.</P>
+
+<P>Lisp really <em>is</em> different.  If you've only read code in Algol 
+family languages, you'll find no familiar punctuation or block structure 
+to aid your understanding of Lisp code -- just unfamiliar names appearing 
+in seemingly pointless nests of parentheses.  In Lisp, the parenthesis 
+<em>is</em> the punctuation.  Fortunately, its use is quite simple; 
+simpler than, for example, remembering the operator precedence rules of C 
+or Pascal.  Lisp development environments even provide editors that help 
+with matching opening and closing parentheses.</P>
+
+<P>Once you understand how Lisp expressions are put together, you still have 
+to learn what they mean.  This is harder because Lisp provides a lot of 
+facilities that aren't found elsewhere, or gives unfamiliar names to 
+familiar concepts.  To really understand Lisp, you need to know how it 
+works inside.  Like most good programmers, you probably have a mental 
+model of how a computer works, and how your favorite compiler translates 
+statements from your favorite language into machine code.  You'll drive 
+yourself crazy if you try this with Lisp, which seems to go to great 
+lengths to isolate you from the details of machine organization.  Yes, you 
+sacrifice some control.  Perhaps not surprisingly, you gain quite a lot in 
+program correctness once you give up worrying about how your program is 
+mapped by the compiler onto bits in the machine.  Is the tradeoff 
+worthwhile?  We'll explore that issue in a later chapter.</P>
+
+<P>This book will teach you how to read and write Lisp, how to recognize and 
+understand new words like <code>DEFUN</code>, <code>CONS</code>, and 
+<code>FLET</code>, and -- ultimately -- how to think in Lisp as well as 
+you think in your favorite programming language.</P>
+
+<hr>
+<h2>I can't see the program for the parentheses.</h2> 
+
+<P>Part of this problem is a matter of dealing with the unfamiliar.  I talked 
+about that in the previous section.  Another part of this problem is real: 
+you have to deal with a lot of parentheses.  Fortunately, Lisp programming 
+environments have editors that mechanize the process of counting 
+parentheses by flashing or highlighting matching pairs or by manipulating 
+entire balanced expressions.  Finally, there's a matter of style.  
+Judicious indentation improves the readability of Lisp programs, as it 
+does in other languages.  But vertical whitespace often hinders 
+readability in Lisp.</P>
+
+<P>I'll cover both the mechanical and stylistic aspects of Lisp code in this 
+book.  By the time you're done, you'll have an opinion on what constitues 
+readable code, and you'll be able to defend your position.  When you reach 
+that level of confidence, you'll be able to write aesthetic Lisp code, and 
+to read anyone else's code.  Parentheses won't be a concern any longer.</P>
+
+<hr>
+<h2>Lisp is very slow compared to my favorite language.</h2> 
+
+<P>Possibly...  But the difference may not be as large as you'd expect.  
+First, let's clear the table of an <em>old</em> misconception: that Lisp 
+is an interpreted language.  As a rule, most modern Lisp systems compile 
+to machine code.  A few compile to byte code that typically runs five 
+times slower than machine code.  And one or two freeware Lisp systems only 
+run interpreted code, but they're the exception.  So there's part one of 
+the answer: if you're not running a Lisp <em>compiler</em>, you should get 
+one.</P>
+
+<P>Your Lisp coding style affects execution speed.  Unfortunately, you won't 
+recognize inefficient Lisp code until you've had some experience with the 
+language.  You'll need to think about how Lisp works in order to 
+understand what makes Lisp code run slowly.  This is not hard to do, but 
+the issues are different from those for languages which expose more of the 
+underlying machine to you.</P>
+
+<P>Lisp gives you incremental compilation.  This means that you can compile 
+one function at a time and be ready to run your program instantly -- there 
+is no linkage step.  This means that you can make lots of changes quickly 
+and evaluate them for their effect on the program.  Lisp also has built-in 
+instrumentation to help you tune the performance of your program.</P>
+
+<P>You'll experience all of these things as you work your way through this 
+book.  By the time you're done, you'll know how to avoid writing 
+inefficient code in the first place, and how to use all of the available 
+tools to identify and fine tune the really critical code in your 
+programs.</P>
+
+<hr>
+<h2>No one else writes programs in Lisp.</h2> 
+
+<P>What?  I'm the only one left?  I don't think so...</P>
+
+<P>Seriously, though, there are quite a few people who write Lisp code every 
+day.  They write programs that solve tough problems, and give their 
+employers a strategic advantage.  It's hard to find good Lisp programmers 
+who are willing to move to a new employer; those companies who are using 
+Lisp guard their strategic advantage, and their Lisp programmers, quite 
+jealously.</P>
+
+<P>Now, it's mostly true that you won't find Lisp in consumer products like 
+spreadsheets, databases, word processors, and games.  But then, that's not 
+the kind of work that Lisp does best.  You <em>will</em> find Lisp in 
+products that must reason about and control complex systems and processes, 
+where the ability to reliably arrive at useful conclusions based upon 
+complex relationships among multiple sources and kinds of data is more 
+important than lightning-fast numerical calculations or spiffy graphics 
+(although modern Lisp systems come pretty close to the leaders even in the 
+latter two categories).</P>
+
+<P>Lisp is also used as an extension language because of its simple, 
+consistent syntax and the ability for system designers to add new 
+functions to Lisp without writing an entire new language.  The Emacs 
+editor and the AutoCAD drafting program are two of the best examples of 
+this use of Lisp.</P>
+
+<P>And of course Lisp is <em>still</em> the language most often used for 
+research in artificial intelligence and advanced computer language 
+design, but we won't touch on either of those subjects in this book.  When 
+you've finished this book, you'll have the knowledge needed to recognize 
+what problems you should solve using Lisp, and how to approach the 
+solution's design.</P>
+
+<P>Oh, and one more thing: It's not quite true that no mass market product 
+uses Lisp.  Microsoft's "Bob" environment for naive computer users was 
+developed (and delivered) in Lisp.</P>
+
+<hr>
+<h2>Lisp doesn't let me use graphical interfaces.</h2> 
+
+<P>This is ironic.  Some of the first graphical user interfaces appeared on 
+Lisp machines in the early 1970s.  In fact, in 1995 you can still buy a 
+DOS adaptation of one of these early Lisp environments -- with the same 
+GUI it had twenty years ago.</P>
+
+<P>The leading Lisp development environments for Windows and Macintosh 
+support only a subset of their host platform's GUI.  It's possible to add 
+support for the missing features, but easier to do it using Microsoft's 
+and Apple's preferred language: C++.</P>
+
+<P>If you want to have the same graphical user interface on your Lisp program 
+when it runs on Windows or Macintosh hosts, you can find at least two Lisp 
+windowing environments that let you do this.  The problem is that the Lisp 
+GUI will be familiar to neither Macintosh nor Windows users.</P>
+
+<P>If all you want is a quick, platform-specific graphical interface for your 
+Lisp program, any of the commercial Lisp environments will deliver what 
+you need.  They all have graphical interface builders that let you build 
+windows and dialogs with point and click or drag and drop techniques.  
+Just don't expect much in the way of bells and whistles.</P>
+
+<hr>
+<h2>I can't call other people's code from Lisp.</h2> 
+
+<P>This is mostly untrue.  Most Lisp environments give you a way to call 
+external routines using either C or Pascal calling conventions.  You can 
+also call back into Lisp from the external program.  But if you want to 
+call C++ from Lisp, you'll probably have to write a C wrapper around the 
+C++ code.</P>
+
+<hr>
+<h2>Lisp's garbage collector causes unpredictable pauses when my program 
+runs.</h2> 
+
+<P>This should probably be covered in the "Lisp is slow" discussion, but 
+there are enough interesting digressions for this to warrant its own 
+topic.  Lisp programs create garbage by destroying all references to some 
+object in memory.  In a program written in some other language, the 
+programmer must arrange to release the memory occupied by the object at 
+the same time when the last reference is destroyed.  If the program fails 
+to do this reliably, the program has a <em>memory leak</em> -- eventually 
+the program's memory space could fill up with these unreachable objects 
+and not leave enough free memory for the program to continue.  If you've 
+ever written a complex program that allocates and manually recycles a lot 
+of dynamic memory, you know how difficult a problem this can be.</P>
+
+<P>Lisp finesses the memory leakage problem by <em>never</em> allowing the 
+programmer to release unused memory.  The idea here is that the computer 
+can determine when a block of memory is unreachable with complete accuracy.  
+This unreachable block is said to be garbage because it is no longer useful 
+to any part of the program.  The garbage collector runs automatically to 
+gather all these unused blocks of memory and prepare them for reuse.  The 
+algorithms that do this are very tricky, but they come built into your Lisp 
+system.</P>
+
+<P>Historically, garbage collection <em>has been</em> slow.  The earliest 
+garbage collectors could literally lock up a system for hours.  
+Performance was so poor that early Lisp programmers would run with garbage 
+collection turned off until they completely ran out of memory, then start 
+the garbage collection manually and go home for the rest of the day.</P>
+
+<P>Over the past twenty years, a lot of good software engineering techniques 
+have been applied to improving the performance of garbage collectors.  
+Modern Lisp systems collect garbage almost continuously, a little bit at a 
+time, rather than waiting and doing it all at once.  The result is that 
+even on a very slow desktop machine a pause for garbage collection will 
+rarely exceed a second or two in duration.</P>
+
+<P>Later in this book I'll discuss garbage collection in greater detail and 
+show you techniques to avoid generating garbage; the less garbage your 
+program creates, the less work the garbage collector will have to do.</P>
+
+<hr>
+<h2>Lisp is a huge language.</h2> 
+
+<P>If you look at the book <cite>Common Lisp: The Language</cite>, weighing 
+in at about a thousand pages, or the recent (and bulkier) <cite>ANSI 
+Standard X3.226: Programming Language Common Lisp</cite>, it's easy to form 
+that opinion.  When you consider that the Lisp language has almost 
+<em>no</em> syntax, and only a couple of dozen primitive language elements 
+(called special forms), then Lisp starts to look like a <em>very small</em> 
+language.</P>
+
+<P>In fact, the manuals cited above are mostly concerned with descriptions of 
+what most other languages would call <em>library</em> functions and, to a 
+lesser degree, development tools.  Take the language manual for your 
+favorite language.  Add the manuals for three or four third-party 
+libraries -- development utilities, fancy data structures, generalized 
+I/O, etc.  Take all the manuals for your development tools -- browsers, 
+inspectors, debuggers, etc. and toss them onto the growing pile.  Now 
+count the pages.  Does a thousand pages still seem like a lot?</P>
+
+<P>By the time you've finished this book, you'll know how to find what you 
+need in Lisp, with or without a manual.</P>
+
+<hr>
+<h2>Lisp is only for artificial intelligence research.</h2> 
+
+<P>Just not true.  Lisp gets used for big projects that have to be tackled by 
+one or a few programmers.  Lisp is also good for tasks that are not well 
+defined, or that require some experimentation to find the proper 
+solution.  As it turns out, artificial intelligence meets all of these 
+criteria.  So do a lot of other applications: shop job scheduling, 
+transportation routing, military logistics, sonar and seismological echo 
+feature extraction, currency trading, computer and computer network 
+configuration, industrial process diagnosis, and more.  These aren't mass 
+market applications, but they still make lots of money (often by avoiding 
+cost) for the organizations that develop them.</P>
+
+<hr>
+<h2>Lisp doesn't have any good programming tools.</h2> 
+
+<P>I hope to convince you otherwise.  Several chapters of this book are 
+devoted to introducing you to the many useful tools provided by a Lisp 
+development environment.</P>
+
+<hr>
+<h2>Lisp uses too much memory.</h2> 
+
+<P>The Lisp development systems on both my Mac and my PC run comfortably in 
+anywhere from 4 to 8 megabytes of RAM.  Less in a pinch.  The integrated C++ 
+development environments take anywhere from 12 to 20 megabytes.  Both have 
+comparable tools and facilities.</P>
+
+<hr>
+<h2>Lisp uses too much disk space.</h2> 
+
+<P>The Lisp development systems on both my Mac and my PC use considerably 
+less disk space than the C++ environments.  Lisp space on my hard disk 
+runs from a low of about 5 megabytes for one system to a high of about 30 
+megabytes for another system that is a total programming environment, 
+including a built in file manager, WYSIWYG word processor, graphics 
+program, appointment calendar, and (almost forgot) Lisp development 
+environment.  The C++ systems run from a low of about 20 megabytes to a 
+high of about 150 megabytes.</P>
+
+<hr>
+<h2>I can't find a good Lisp compiler.</h2> 
+
+<P>Depending on what kind of computer you use, this was a problem
+as recently as a year or two ago.  And it's true that there isn't a lot of 
+competition for the Lisp marketplace -- you can count vendors on the 
+fingers of one hand.  The vendors who support the Lisp marketplace tend to 
+have been around for a long time and have good reputations.  As desktop 
+computers increase in speed and storage capacity, Lisp vendors are 
+increasingly turning their attention to these platforms.</P>
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="introduction.html">Introduction</a> | Chapter 1 | <a href="chapter02.html">Chapter 2</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its 
+author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

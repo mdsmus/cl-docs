@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Debug-errors</TITLE>
+<META NAME="description" CONTENT="Debug-errors">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3970" HREF="node259.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3968" HREF="node256.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3964" HREF="node257.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3972" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3973" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3971" HREF="node259.html">Debug-variables</A>
+<B>Up:</B> <A NAME="tex2html3969" HREF="node256.html">10.1 DI Exceptional Conditions</A>
+<B> Previous:</B> <A NAME="tex2html3965" HREF="node257.html">Debug-conditions</A>
+<BR> <P>
+<H2><A NAME="SECTION001112000000000000000">Debug-errors</A></H2>
+<P>
+These are programmer errors resulting from misuse of the debugging tools'
+programmers' interface.  You could have avoided an occurrence of one of these
+by using some routine to check the use of the routine generating the error.
+<P>
+<b>[ Condition]</b><BR> 
+<tt> debug-error</tt> <i> </i><BR> 
+This condition inherits from error, and all user programming errors inherit
+from this condition.
+<P>
+<b>[ Condition]</b><BR> 
+<tt> unhandled-condition</tt> <i> </i><BR> 
+This error results from a signalled <tt>debug-condition</tt> occurring
+without anyone handling it.
+<P>
+<b>[ Condition]</b><BR> 
+<tt> unknown-code-location</tt> <i> </i><BR> 
+This error indicates the invalid use of an unknown-code-location.
+<P>
+<b>[ Condition]</b><BR> 
+<tt> unknown-debug-variable</tt> <i> </i><BR>
+<P>
+This error indicates an attempt to use a debug-variable in conjunction with an
+inappropriate debug-function; for example, checking the variable's validity
+using a code-location in the wrong debug-function will signal this error.
+<P>
+<b>[ Condition]</b><BR> 
+<tt> frame-function-mismatch</tt> <i> </i><BR>
+<P>
+This error indicates you called a function returned by
+<tt>preprocess-for-eval</tt>
+on a frame other than the one for which the function had been prepared.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

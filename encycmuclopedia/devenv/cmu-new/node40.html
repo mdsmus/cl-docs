@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>2.11.1 Process Accessors</TITLE>
+<META NAME="description" CONTENT="2.11.1 Process Accessors">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1095" HREF="node41.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1093" HREF="node39.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1089" HREF="node39.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1097" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1098" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1096" HREF="node41.html">2.12 Saving a Core </A>
+<B>Up:</B> <A NAME="tex2html1094" HREF="node39.html">2.11 Running Programs from </A>
+<B> Previous:</B> <A NAME="tex2html1090" HREF="node39.html">2.11 Running Programs from </A>
+<BR> <P>
+<H2><A NAME="SECTION003111000000000000000">2.11.1 Process Accessors</A></H2>
+<P>
+The following functions interface the process returned by <tt>run-program</tt>:
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:process-p</tt> <em> <i>thing</i></em><BR>
+<P>
+  This function returns <i>t</i> if <i>thing</i> is a process.
+  Otherwise it returns <i>nil</i>
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:process-pid</tt> <em> <i>process</i></em><BR>
+<P>
+  This function returns the process ID, an integer, for the
+  <i>process</i>.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:process-status</tt> <em> <i>process</i></em><BR>
+<P>
+  This function returns the current status of <i>process</i>, which is
+  one of <tt>:running</tt>, <tt>:stopped</tt>, <tt>:exited</tt>, or
+  <tt>:signaled</tt>.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:process-exit-code</tt> <em> <i>process</i></em><BR>
+<P>
+  This function returns either the exit code for <i>process</i>, if it
+  is <tt>:exited</tt>, or the termination signal <i>process</i> if it is
+  <tt>:signaled</tt>.  The result is undefined for processes that are
+  still alive.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:process-core-dumped</tt> <em> <i>process</i></em><BR>
+<P>
+  This function returns <i>t</i> if someone used a Unix signal to
+  terminate the <i>process</i> and caused it to dump a Unix core image.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:process-pty</tt> <em> <i>process</i></em><BR>
+<P>
+  This function returns either the two-way stream connected to
+  <i>process</i>'s Unix &#305;PTY connection or <i>nil</i> if there is none.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:process-input</tt> <em> <i>process</i></em><BR> 
+  <tt>extensions:process-output</tt> <EM></EM><i>process</i><BR> 
+  <tt>extensions:process-error</tt> <EM></EM><i>process</i><BR>
+<P>
+  If the corresponding stream was created, these functions return the
+  input, output or error file descriptor.  <i>nil</i> is returned if there
+  is no stream.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:process-status-hook</tt> <em> <i>process</i></em><BR>
+<P>
+  This function returns the current function to call whenever
+  <i>process</i>'s status changes.  This function takes the
+  <i>process</i> as a required argument.  <tt>process-status-hook</tt> is
+  <tt>setf</tt>'able.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:process-plist</tt> <em> <i>process</i></em><BR>
+<P>
+  This function returns annotations supplied by users, and it is
+  <tt>setf</tt>'able.  This is available solely for users to associate
+  information with <i>process</i> without having to build a-lists or
+  hash tables of process structures.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:process-wait</tt> <em> 
+    <i>process</i> <i>&amp;optional</i> <i>check-for-stopped</i></em><BR>
+<P>
+  This function waits for <i>process</i> to finish.  If
+  <i>check-for-stopped</i> is non-<i>nil</i>, this also returns when
+  <i>process</i> stops.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:process-kill</tt> <em> <i>process</i> <i>signal</i> <i>&amp;optional</i> <i>whom</i></em><BR>
+<P>
+  This function sends the Unix <i>signal</i> to <i>process</i>.
+  <i>Signal</i> should be the number of the signal or a keyword with
+  the Unix name (for example, <tt>:sigsegv</tt>).  <i>Whom</i> should be
+  one of the following:
+  <DL ><DT><STRONG><tt>:pid</tt></STRONG>
+<DD> This is the default, and it indicates sending the
+    signal to <i>process</i> only.
+<P>
+  <DT><STRONG><tt>:process-group</tt></STRONG>
+<DD> This indicates sending the signal to
+    <i>process</i>'s group.
+<P>
+  <DT><STRONG><tt>:pty-process-group</tt></STRONG>
+<DD> This indicates sending the signal to
+    the process group currently in the foreground on the Unix &#305;PTY
+    connected to <i>process</i>.  This last option is useful if the
+    running program is a shell, and you wish to signal the program
+    running under the shell, not the shell itself.  If
+    <tt>process-pty</tt> of <i>process</i> is <i>nil</i>, using this option is
+    an error.
+<P>
+</DL>
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:process-alive-p</tt> <em> <i>process</i></em><BR>
+<P>
+  This function returns <i>t</i> if <i>process</i>'s status is either
+  <tt>:running</tt> or <tt>:stopped</tt>.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:process-close</tt> <em> <i>process</i></em><BR>
+<P>
+  This function closes all the streams associated with <i>process</i>.
+  When you are done using a process, call this to reclaim system
+  resources.
+<P>
+<HR><A NAME="tex2html1095" HREF="node41.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1093" HREF="node39.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1089" HREF="node39.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1097" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1098" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1096" HREF="node41.html">2.12 Saving a Core </A>
+<B>Up:</B> <A NAME="tex2html1094" HREF="node39.html">2.11 Running Programs from </A>
+<B> Previous:</B> <A NAME="tex2html1090" HREF="node39.html">2.11 Running Programs from </A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

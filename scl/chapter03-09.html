@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 3, Lesson 9</title> 
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 3 - Essential Lisp in Twelve Lessons</h1> 
+
+<h2><A NAME="lesson-9">Lesson 9 - Essential Multiple Values</A></h2> 
+
+<h3>Most forms create only one value</h3> 
+
+<P>A form typically returns only one value.  Lisp has only a small number of 
+forms which create or receive multiple values.</P>
+
+<h3>VALUES creates multiple (or no) values</h3> 
+
+<P>The <CODE>VALUES</CODE> form creates zero or more values:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (values)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (values :this)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> :THIS<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (values :this :that)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> :THIS<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> :THAT</PRE>
+
+<P>We show how many values are returned by the number of <IMG 
+SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> lines produced 
+by the evaluation of the form.  The three <CODE>VALUES</CODE> forms in the 
+example above produced zero, one, and two values, respectively.</P>
+
+<P><CODE>VALUES</CODE> is a function, and so evaluates its arguments.</P>
+
+<h3>A few special forms receive multiple values</h3> 
+
+<P>What might you want to do with multiple values in a program?  The most 
+basic operations are to:</P>
+
+<OL>
+<LI>bind each value to a separate symbol, or</LI>
+<LI>collect the values into a list.</LI>
+</OL>
+
+<P>Use <CODE>MULTIPLE-VALUE-BIND</CODE> to bind each value to a separate 
+symbol:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (multiple-value-bind (a b c) (values 2 3 5)<br>     (+ a b c))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 10</PRE>
+
+<P>If you provide more values than symbols, the excess values are ignored:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (multiple-value-bind (a b c) (values 2 3 5 'x 'y)<br>     (+ a b c))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 10</PRE>
+
+<P>If you provide fewer values than symbols, the excess symbols are bound 
+to <CODE>NIL</CODE>:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (multiple-value-bind (w x y z) (values :left :right)<br>     (list w x y z))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (:LEFT :RIGHT NIL NIL)</PRE>
+
+<h3>Some forms pass along multiple values</h3> 
+
+<P>Some forms pass along the last value in their body, rather than 
+creating a new value.  Examples include the bodies of <CODE>LET</CODE>, 
+<CODE>COND</CODE>, <CODE>DEFUN</CODE>, and <CODE>LAMBDA</CODE>.</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (let ((a 1)<br>        (b 2))<br>     (values a b))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 1<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 2<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (cond (nil 97)<br>        (t (values 3 4)))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 3<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 4<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (defun foo (p q)<br>     (values (list :p p) (list :q q)))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> FOO<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (foo 5 6)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (:P 5)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (:Q 6)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> ((lambda (r s)<br>      (values r s))<br>     7 8)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 7<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 8</PRE>
+
+
+<BLOCKQUOTE>
+<P>In the case of the function and lambda bodies, the multiple values are 
+actually returned by something called an "<EM>implicit</EM> 
+<CODE>PROGN</CODE>."  This is a fancy way of saying that the bodies can 
+contain multiple forms, and only the value of the last form is returned.</P>
+
+<P>You can use the <CODE>PROGN</CODE> special form when you want this behavior.  
+<CODE>(PROGN form1 form2 ... formN)</CODE> evaluates <CODE>form1</CODE> 
+through <CODE>formN</CODE> in order, and returns the value of 
+<CODE>formN</CODE>.</P>
+</BLOCKQUOTE>
+
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter02.html">Chapter 2</a> | <A HREF="chapter03.html">Chapter 3, Introduction</A> | <A HREF="chapter03-08.html">Chapter 3, Lesson 8</A> | Chapter 3, Lesson 9 | <A HREF="chapter03-10.html">Chapter 3, Lesson 10</A> | <a href="chapter04.html">Chapter 4</a> | 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its 
+author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

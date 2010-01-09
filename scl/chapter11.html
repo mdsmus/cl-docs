@@ -1,0 +1,437 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 11</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 11 - Destructive Modification</h1> 
+
+<p>Assignment is very different from binding, and in many cases
+results in programs that are harder to understand. Despite this,
+there are (sometimes) reasons to prefer assignment. In this chapter,
+we'll explore assignment and its relationship to destructive
+modification of data. We'll also explore several Lisp functions that
+implement destructive modification.
+
+<h2>Simple assignment is destructive modification</h2>
+
+<p>Any time your program invokes <code>SETQ</code> or
+<code>SETF</code>, it is assigning a new value to an existing
+storage location, destroying the value that was previously in that
+location. As we'll see in this chapter, there are both risks and
+benefits to the use of assignment; you need to understand the
+tradeoffs in order to write Lisp code that is both correct and 
+efficient.
+
+<h2>The risk of assignment</h2>
+
+<p>Any time you define a function that uses variables, the variables
+are either <code>bound</code> or <code>free</code>. A bound variable
+occurs within a binding form that occurs within the function
+definition. A binding form is just a form that creates a new
+association between the name of a variable and a place to store its
+value; the most common binding forms are <code>LET</code> and the
+argument list of a <code>DEFUN</code> or <code>LAMBDA</code>.
+
+<blockquote> There's a slight terminology clash in the use of the
+word <em>bound</em>. The clash is always resolved by the context of
+the word's use, but you need to be aware of the two meanings. In
+this chapter we're talking exclusively about a variable
+<em>name</em> being bound to a place to store its value; when we say
+that Lisp creates a binding for a variable, we mean that it creates
+a <em>new</em> place to store a value under a given name.
+
+<p>The other sense of <em>bound</em> -- not otherwise discussed in this
+chapter -- is the binding of a <em>value</em> to a storage location; Lisp
+supports the notion of an unbound -- or nonexistent -- value.
+</blockquote> 
+
+<a name="closures"></a> 
+<p>A variable is <em>free</em> within a function if the function
+provides no binding form for the variable's name. In the following
+example, the variable <code>E</code> is free in both functions
+<code>CLOSURE-1</code> and <code>CLOSURE-2</code>.
+
+<pre>
+? (let ((e 1))
+    (defun closure-1 () e))
+CLOSURE-1
+? (closure-1)
+1
+? e
+Error: unbound variable
+</pre> 
+
+<p>So, what happens when a function has to reference a free
+variable? Lisp creates a <em>closure</em> that captures the bindings
+of free variables for the function. Variables that are free within a
+function really do have bindings, but the bindings are outside of
+the function definition. When Lisp executes the function, it finds 
+free variables in the closure. (We'll examine closures in greater
+detail in <a href="chapter15.html">Chapter 15</a>.)
+
+<p>Closures are important because they let a function
+<code>capture</code> and retain lexical bindings. Take another look
+at the example above. When we evaluated <code>(CLOSURE-1)</code>,
+the variable <code>E</code> was no longer visible at the top level
+prompt. But because the function had a closure for that variable, it
+still has access to its binding.
+
+<p>Let's extend the previous example just a little.
+
+<pre>
+? (let ((e 1))
+    (defun closure-1 () e)
+    (setq e 7)
+    (defun closure-2 () e))
+CLOSURE-2
+? (closure-1)
+7
+? (closure-2)
+7
+</pre> 
+
+<p>Do you understand why <code>(CLOSURE-1)</code> returned 7 rather
+than 1? We created a binding for the variable <code>E</code> and
+gave it an initial value of 1. Even though <code>CLOSURE-1</code>
+was defined when <code>E</code>'s value was 1, this doesn't matter:
+the closure captures the binding -- the association between the name
+and the storage location. When we assigned 7 as the value of
+<code>E</code> (just before defining <code>CLOSURE-2</code>), we
+changed only the one storage location for that binding. Since both
+functions' free variable <code>E</code> is closed over the same
+binding, they must retrieve the same value.
+
+<p>This behavior can be used to good effect.
+
+<pre>
+? (let ((counter 0))
+    (defun counter-next ()
+      (incf counter))
+    (defun counter-reset ()
+      (setq counter 0)))
+COUNTER-RESET
+? (counter-next)
+1
+? (counter-next)
+2
+? (counter-next)
+3
+? (counter-next)
+4
+? (counter-reset)
+0
+? (counter-next)
+1
+</pre> 
+
+<p>However, some Lisp iteration forms bind their iteration variables
+just once, then assign new values on subsequent iterations.
+<code>DO</code> and <code>DO*</code> assign to their iteration
+variables. <code>DOLIST</code> and <code>DOTIMES</code> are allowed
+to assign to their iteration variables (and probably will in any
+implementation, because it is more efficient). You need to keep this
+in mind if you write code that creates a closure for an iteration
+variable. This example illustrates the point (see <a
+href="chapter12.html">Chapter 12</a> if you want to read about
+<code>MAPCAR</code>):
+
+<pre>
+<i>; Closure captures assigned variable -- probably wrong</i> 
+? (let ((fns ()))
+    (dotimes (i 3)
+      (push #'(lambda () i) fns))
+    (mapcar #'funcall fns))
+(3 3 3)
+<i>; New bindind created for each captured variable</i> 
+? (let ((fns ()))
+    (dotimes (i 3)
+      (let ((i i))
+        (push #'(lambda () i) fns)))
+    (mapcar #'funcall fns))
+(2 1 0)
+</pre> 
+
+<p>We've seen that assignment can cause unexpected behavior in the presence
+of closures. Assignment can also cause problems when shared data is
+involved.
+
+<pre>
+? (defun nil-nth (n l)
+    "Set nth element of list to nil and return modified list."
+    (setf (nth n l) nil)
+    l)
+NIL-NTH
+? (defparameter *my-list* (list 1 2 3 4))
+*MY-LIST*
+? (nil-nth 1 *my-list*)
+(1 NIL 3 4)
+? *MY-LIST*
+(1 NIL 3 4)
+</pre> 
+
+<blockquote> <em>WARNING:</em> If you're accustomed to programming
+in a language that allows by-reference modification of function
+parameters, the previous code snippet may seem very tantalizing to
+you. My advice is to put aside all thoughts of using this to emulate
+by-reference parameters, and use multiple values (<a
+href="chapter03-09.html">Chapter 3, Lesson 9</a>) to safely and
+efficiently return multiple results from a function. </blockquote> 
+
+<p>The above example is not wrong, but it is dangerous. Except in
+very special situations, we'd like our functions to accept arguments
+and return values. The problem with <code>NIL-NTH</code> is that it
+assigns a new value within the list passed as a parameter. In our
+example, this list is global, and may be shared by other parts of the
+program. If all we really wanted to do was to get a copy of the
+argument list with the Nth element set to <code>NIL</code>, then we
+shouldn't have altered the passed argument.  Here's a better way
+to implement <code>NIL-NTH</code>:
+
+<pre>
+? (defun nil-nth (n l)
+    "Return list with nth element set to nil."
+    (if (zerop n)
+      (cons nil (rest l))
+      (cons (car l) (nil-nth (1- n) (rest l)))))
+NIL-NTH
+? (defparameter *my-list* (list 1 2 3 4))
+*MY-LIST*
+? (nil-nth 1 *my-list*)
+(1 NIL 3 4)
+? *MY-LIST*
+(1 2 3 4)
+</pre> 
+
+<h2>Changing vs. copying: an issue of efficiency</h2>
+
+<p>If assignment is so fraught with peril, why not just omit it from
+the language? There are two reasons: expressiveness and efficiency.
+Assignment is the clearest way to alter shared data. And assignment
+is more efficient than binding. Binding creates a new storage
+location, which allocates storage, which consumes additional memory
+(if the binding never goes out of scope) or taxes the garbage
+collector (if the binding eventually does go out of scope).
+
+<h2>Modifying lists with destructive functions</h2>
+
+<p>Some operations on lists (and sequences -- see <a
+href="chapter12.html">Chapter 12</a>) have both destructive and
+nondestructive counterparts.
+
+<pre>
+Nondestructive    Destructive
+--------------    -----------
+SUBLIS            NSUBLIS
+SUBST             NSUBST
+SUBST-IF          NSUBST-IF
+SUBST-IF-NOT      NSUBST-IF-NOT
+APPEND            NCONC
+REVAPPEND         NRECONC
+BUTLAST           NBUTLAST
+INTERSECTION      NINTERSECTION
+SET-DIFFERENCE    NSET-DIFFERENCE
+SET-EXCLUSIVE-OR  NSET-EXCLUSIVE-OR
+UNION             NUNION
+
+REVERSE           NREVERSE
+REMOVE            DELETE
+REMOVE-IF         DELETE-IF
+REMOVE-IF-NOT     DELETE-IF-NOT
+SUBSTITUTE        NSUBSTITUTE
+SUBSTITUTE-IF     NSUBSTITUTE-IF
+SUBSTITUTE-IF-NOT NSUBSTITUTE-IF-NOT
+REMOVE-DUPLICATES DELETE-DUPLICATES
+</pre> 
+
+<p>All of these pairings have the same relationship: the destructive
+version may be faster, but may also alter shared structure.  Consider,
+for example, <code>APPEND</code> and <code>NCONC</code>. Both append
+the lists supplied as their arguments. 
+
+<pre>
+? (append (list 1 2 3) (list 4 5 6))
+(1 2 3 4 5 6)
+? (nconc (list 1 2 3) (list 4 5 6))
+(1 2 3 4 5 6)
+</pre> 
+
+<p>But <code>NCONC</code> may destructively modify all but the final
+list; it may change the tail of each list to point to the head of
+the next list. 
+
+<pre>
+? (defparameter list1 (list 1 2 3))
+LIST1
+? (defparameter list2 (list 4 5 6))
+LIST2
+? (append list1 list2)
+(1 2 3 4 5 6)
+? list1
+(1 2 3)
+? list2
+(4 5 6)
+? (nconc list1 list2)
+(1 2 3 4 5 6)
+? list1
+(1 2 3 4 5 6) <i>; Oops - compare to previous result!</i> 
+? list2
+(4 5 6)
+</pre> 
+
+<h2>RPLACA, RPLACD, SETF ...; circularity</h2>
+
+<p>A list is constructed of <code>CONS</code> cells. Each CONS has
+two parts, a <code>CAR</code> and a <code>CDR</code> (review <a
+href="chapter03-04.html">Chapter 3, Lesson 4</a>). The CAR holds the
+data for one element of the list, and the CDR holds the CONS that
+makes up the head of the rest of the list.
+
+<p><img src="gifs/list-box-and-arrow.gif">
+
+<p>By using <code>RPLACA</code> and <code>RPLACD</code> to change
+the two fields of a CONS, we can (destructively) alter the normal
+structure of a list. For example, we could splice out the second
+element of a list like this:
+
+<pre>
+? (defparameter *my-list* (list 1 2 3 4))
+*MY-LIST*
+? (rplacd *my-list* (cdr (cdr *my-list*)))
+(1 3 4)
+? *my-list*
+(1 3 4)
+</pre> 
+
+<p>We can also use these "list surgery operators" to create circular
+lists.
+
+<pre>
+? (let ((l (list 1)))
+    (rplacd l l)
+    l)
+(1 1 1 1 1 1 1 1 ... <i>; Continues until interrupt or stack overflow</i> 
+? (let ((l (list 2)))
+    (rplaca l l)
+    l)
+(((((((((((((((( ... <i>; Continues until interrupt or stack overflow</i> 
+</pre> 
+
+<p><img src="gifs/rplaca-rplacd.gif">
+
+<p>We can get the same effect using <code>(SETF CAR)</code> in place
+of <code>RPLACA</code> and <code>(SETF CDR)</code> in place of
+<code>RPLACD</code>. 
+
+<pre>
+(rplaca cons object) <i>is</i> (setf (car cons) object)
+(rplacd cons object) <i>is</i> (setf (cdr cons) object)
+</pre> 
+
+<p>The nice thing about the <code>SETF</code> notation is that it
+readily generalizes to other list accessors, such as
+<code>NTH</code>, <code>LAST</code>, <code>NTHCDR</code>, and
+<code>FOURTH</code>.
+
+<h2>Places vs. values: destructive functions don't always have the desired side-effect</h2>
+
+<p>A nondestructive function such as <code>REVERSE</code> always
+returns a freshly constructed result, so there's never any question
+but that you need to pay attention to the result. But a destructive
+function such as <code>NREVERSE</code> <em>sometimes</em> modifies
+its argument in such a way that the changed argument is identical to
+the function result. This leads some programmers to assume that
+destructive functions <em>always</em> modify the argument to match
+the result. Unfortunately, this is not true; leading to the second
+important point about the use of destructive functions: you should
+use the result of a destructive function the same way that you would
+use the result of its nondestructive counterpart.
+
+<blockquote> This also applies to <code>SORT</code> and
+<code>STABLE-SORT</code>, which are destructive and do not have a
+nondestructive counterpart. </blockquote> 
+
+<h2>Contrast e.g. PUSH and DELETE</h2>
+
+<p>Here's an example showing why you should not depend upon
+<code>DELETE</code>'s side-effects.
+
+<pre>
+? (defparameter *my-list (list 1 2 3 4))
+*MY-LIST*
+? (delete 3 *my-list*)
+(1 2 4)
+? *my-list*
+(1 2 4)
+? (delete 1 *my-list*)
+(2 4)
+? *my-list*
+(1 2 4) <i>; Not the same as function result</i> 
+</pre> 
+
+<p>But some macros, for example <code>PUSH</code> and <code>POP</code>, take
+a <em>place</em> as an argument and arrange to update the place with the
+correct value.
+
+<pre>
+? (defparameter *stack* ())
+*STACK*
+? (push 3 *stack*)
+(3)
+? (push 2 *stack*)
+(2 3)
+? (push 1 *stack*)
+(1 2 3)
+? *stack*
+(1 2 3)
+? (pop *stack*)
+1
+? *stack*
+(2 3)
+</pre> 
+
+<h2>Shared and constant data: Dangers of destructive changes</h2>
+
+<p>When you use destructive functions you should be sure to only
+modify data that your program has constructed at runtime. Here's an
+example of what can happen if you destructively modify a constant
+list.
+
+<pre>
+? (defun stomp-a-constant ()
+    (let ((l '(1 2 3))) <i>; compile-time constant data</i> 
+      (print l)
+      (setf (second l) nil) <i>; destructive modification</i> 
+      l))
+STOMP-A-CONSTANT
+? (stomp-a-constant)
+(1 2 3)
+(1 NIL 3)
+? (stomp-a-constant)
+(1 NIL 3)
+(1 NIL 3)
+</pre> 
+
+<p>This function is effectively modifying itself, as it changes the
+constant data which is bound to the variable <code>L</code>. The
+effects of this change show up in the first line of output on the
+second run (and all subsequent runs).
+
+<p>If you replace <code>'(1 2 3)</code> (which may be compiled into
+constant data) with <code>(list 1 2 3)</code> (which always creates
+a fresh list at run time) then the function's behavior will be
+identical on the first and all subsequent runs.
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter10.html">Chapter 10</a> | Chapter 11 | <a href="chapter12.html">Chapter 12</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

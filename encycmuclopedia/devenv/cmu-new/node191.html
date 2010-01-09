@@ -1,0 +1,87 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.14.1 Profile Interface</TITLE>
+<META NAME="description" CONTENT="5.14.1 Profile Interface">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3104" HREF="node192.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3102" HREF="node190.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3096" HREF="node190.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3106" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3107" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3105" HREF="node192.html">5.14.2 Profiling Techniques</A>
+<B>Up:</B> <A NAME="tex2html3103" HREF="node190.html">5.14 Profiling</A>
+<B> Previous:</B> <A NAME="tex2html3097" HREF="node190.html">5.14 Profiling</A>
+<BR> <P>
+<H2><A NAME="SECTION006141000000000000000">5.14.1 Profile Interface</A></H2>
+<P>
+<b>[Variable]</b><BR> 
+<tt> profile:* timed-functions*</tt><BR> <BR>
+<P>
+  This variable holds a list of all functions that are currently being
+  profiled.
+<P>
+<b>[Macro]</b><BR> 
+<tt> profile: profile</tt> <em> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>name</i> | <tt>:callers</tt> <tt>t</tt></i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></em><BR>
+<P>
+  This macro wraps profiling code around the named functions.  As in
+  <tt>trace</tt>, the <i>name</i>s are not evaluated.  If a function is
+  already profiled, then the function is unprofiled and reprofiled
+  (useful to notice function redefinition.)  A warning is printed for
+  each name that is not a defined function.
+<P>
+  If <tt>:callers <i>t</i></tt> is specified, then each function that calls
+  this function is recorded along with the number of calls made.
+<P>
+<b>[Macro]</b><BR> 
+<tt> profile: unprofile</tt> <em> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>name</i></i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></em><BR>
+<P>
+  This macro removes profiling code from the named functions.  If no
+  <i>name</i>s are supplied, all currently profiled functions are
+  unprofiled.
+<P>
+<BR><IMG WIDTH=104 HEIGHT=24 ALIGN=BOTTOM ALT="change_begin" SRC="change_begin.gif"><BR>
+<b>[Macro]</b><BR> 
+<tt> profile: profile-all</tt> <em> <tt>&amp;key</tt> <tt>:package</tt> <tt>:callers-p</tt></em><BR>
+<P>
+    This macro in effect calls <tt>profile:profile</tt> for each
+    function in the specified package which defaults to
+    <tt>*package*</tt>.  <tt>:callers-p</tt> has the same meaning as in
+    <tt>profile:profile</tt>.
+<P>
+<BR><IMG WIDTH=104 HEIGHT=24 ALIGN=BOTTOM ALT="change_end" SRC="change_end.gif"><BR>
+
+<P>
+<b>[Macro]</b><BR> 
+<tt> profile: report-time</tt> <em> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>name</i></i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></em><BR>
+<P>
+  This macro prints a report for each <i>name</i>d function of the
+  following information:
+  <UL>
+<LI> The total CPU time used in that function for all calls,
+<LI> the total number of bytes consed in that function for all
+    calls,
+<LI> the total number of calls,
+<LI> the average amount of CPU time per call.
+  </UL>
+  Summary totals of the CPU time, consing and calls columns are
+  printed.  An estimate of the profiling overhead is also printed (see
+  below).  If no <i>name</i>s are supplied, then the times for all
+  currently profiled functions are printed.
+<P>
+<b>[Macro]</b><BR> 
+<tt>  reset-time</tt> <em> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>name</i></i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></em><BR>
+<P>
+  This macro resets the profiling counters associated with the
+  <i>name</i>d functions.  If no <i>name</i>s are supplied, then all
+  currently profiled functions are reset.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

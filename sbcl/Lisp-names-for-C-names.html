@@ -1,0 +1,66 @@
+<html lang="en">
+<head>
+<title>Lisp names for C names - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="sb_002dposix.html#sb_002dposix" title="sb-posix">
+<link rel="next" href="Types.html#Types" title="Types">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Lisp-names-for-C-names"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Types.html#Types">Types</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="sb_002dposix.html#sb_002dposix">sb-posix</a>
+<hr>
+</div>
+
+<h4 class="subsection">15.3.1 Lisp names for C names</h4>
+
+<p>All symbols are in the <code>SB-POSIX</code> package.  This package contains a
+Lisp function for each supported Unix system call or function, a
+variable or constant for each supported Unix constant, an object type
+for each supported Unix structure type, and a slot name for each
+supported Unix structure member.  A symbol name is derived from the C
+binding's name, by (a) uppercasing, then (b) removing leading
+underscores (<code>#\_</code>) then replacing remaining underscore characters
+with the hyphen (<code>#\-</code>). The requirement to uppercase is so that in
+a standard upcasing reader the user may write <code>sb-posix:creat</code>
+instead of <code>sb-posix:|creat|</code> as would otherise be required.
+
+   <p>No other changes to &ldquo;Lispify&rdquo; symbol names are made, so <code>creat()</code>
+becomes <code>CREAT</code>, not <code>CREATE</code>.
+
+   <p>The user is encouraged not to <code>(USE-PACKAGE :SB-POSIX)</code> but instead
+to use the <code>SB-POSIX:</code> prefix on all references, as some of the
+symbols symbols contained in the SB-POSIX package have the same name as
+CL symbols (<code>OPEN</code>, <code>CLOSE</code>, <code>SIGNAL</code> etc).
+
+   </body></html>
+

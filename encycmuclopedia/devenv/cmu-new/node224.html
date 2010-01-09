@@ -1,0 +1,45 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>8.2.1 Defining Alien Types</TITLE>
+<META NAME="description" CONTENT="8.2.1 Defining Alien Types">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3540" HREF="node225.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3538" HREF="node223.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3532" HREF="node223.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3542" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3543" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3541" HREF="node225.html">8.2.2 Alien Types and </A>
+<B>Up:</B> <A NAME="tex2html3539" HREF="node223.html">8.2 Alien Types</A>
+<B> Previous:</B> <A NAME="tex2html3533" HREF="node223.html">8.2 Alien Types</A>
+<BR> <P>
+<H2><A NAME="SECTION00921000000000000000">8.2.1 Defining Alien Types</A></H2>
+<P>
+Types may be either named or anonymous.  With structure and union
+types, the name is part of the type specifier, allowing recursively
+defined types such as:
+<BLOCKQUOTE> <PRE>(struct foo (a (* (struct foo))))
+</PRE> </BLOCKQUOTE>
+An anonymous structure or union type is specified by using the name
+<i>nil</i>.  The <A NAME="11428">&#160;</A><tt>with-alien</tt> (page&nbsp;<A HREF="node233.html#FNwithalien"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>) macro defines a local scope which
+``captures'' any named type definitions.  Other types are not
+inherently named, but can be given named abbreviations using
+<tt>def-alien-type</tt>.
+<P>
+<b>[Macro]</b><BR> 
+<tt> alien: def-alien-type</tt> <em> name type</em><BR>
+<P>
+  This macro globally defines <i>name</i> as a shorthand for the Alien
+  type <i>type</i>.  When introducing global structure and union type
+  definitions, <i>name</i> may be <i>nil</i>, in which case the name to
+  define is taken from the type's name.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

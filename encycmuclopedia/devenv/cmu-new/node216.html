@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>7.4.1 Without Object Sets</TITLE>
+<META NAME="description" CONTENT="7.4.1 Without Object Sets">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3422" HREF="node217.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3420" HREF="node215.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3414" HREF="node215.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3424" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3425" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3423" HREF="node217.html">7.4.2 With Object Sets</A>
+<B>Up:</B> <A NAME="tex2html3421" HREF="node215.html">Using SERVE-EVENT with the </A>
+<B> Previous:</B> <A NAME="tex2html3415" HREF="node215.html">Using SERVE-EVENT with the </A>
+<BR> <P>
+<H2><A NAME="SECTION00841000000000000000">7.4.1 Without Object Sets</A></H2>
+<P>
+Since most applications that use CLX, can avoid the complexity of object sets,
+these routines are described in a separate section.  The routines described in
+the next section that use the object set mechanism are based on these
+interfaces.
+<P>
+<b>[Function]</b><BR> 
+<tt> ext: enable-clx-event-handling</tt> <em> <i>display</i> <i>handler</i></em><BR>
+<P>
+  This function causes <tt>system:serve-event</tt> to notice when there
+  is input on <i>display</i>'s connection to the X11 server.  When this
+  happens, <tt>system:serve-event</tt> invokes <i>handler</i> on
+  <i>display</i> in a dynamic context with an error handler bound that
+  flushes all events from <i>display</i> and returns.  By returning,
+  the error handler declines to handle the error, but it will have
+  cleared all events; thus, entering the debugger will not result in
+  infinite errors due to streams that wait via
+  <tt>system:serve-event</tt> for input.  Calling this repeatedly on the
+  same <i>display</i> establishes <i>handler</i> as a new handler,
+  replacing any previous one for <i>display</i>.
+<P>
+<b>[Function]</b><BR> 
+<tt> ext: disable-clx-event-handling</tt> <em> <i>display</i></em><BR>
+<P>
+  This function undoes the effect of
+  <tt>ext:enable-clx-event-handling</tt>.
+<P>
+<b>[Macro]</b><BR> 
+<tt> ext: with-clx-event-handling</tt> <em> (<i>display</i> <i>handler</i>) <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i>form</i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></em><BR>
+<P>
+  This macro evaluates each <i>form</i> in a context where
+  <tt>system:serve-event</tt> invokes <i>handler</i> on <i>display</i>
+  whenever there is input on <i>display</i>'s connection to the X
+  server.  This destroys any previously established handler for
+  <i>display</i>.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

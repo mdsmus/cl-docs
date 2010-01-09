@@ -1,0 +1,83 @@
+<html lang="en">
+<head>
+<title>Modular arithmetic - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Efficiency.html#Efficiency" title="Efficiency">
+<link rel="prev" href="Dynamic_002dextent-allocation.html#Dynamic_002dextent-allocation" title="Dynamic-extent allocation">
+<link rel="next" href="Miscellaneous-Efficiency-Issues.html#Miscellaneous-Efficiency-Issues" title="Miscellaneous Efficiency Issues">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Modular-arithmetic"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Miscellaneous-Efficiency-Issues.html#Miscellaneous-Efficiency-Issues">Miscellaneous Efficiency Issues</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Dynamic_002dextent-allocation.html#Dynamic_002dextent-allocation">Dynamic-extent allocation</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Efficiency.html#Efficiency">Efficiency</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">5.3 Modular arithmetic</h3>
+
+<p><a name="index-Modular-arithmetic-140"></a><a name="index-Arithmetic_002c-modular-141"></a><a name="index-Arithmetic_002c-hardware-142"></a>
+Some numeric functions have a property: <var>N</var> lower bits of the
+result depend only on <var>N</var> lower bits of (all or some)
+arguments. If the compiler sees an expression of form <code>(logand
+</code><var>exp</var> <var>mask</var><code>)</code>, where <var>exp</var> is a tree of such &ldquo;good&rdquo;
+functions and <var>mask</var> is known to be of type <code>(unsigned-byte
+</code><var>w</var><code>)</code>, where <var>w</var> is a &ldquo;good&rdquo; width, all intermediate results
+will be cut to <var>w</var> bits (but it is not done for variables and
+constants!). This often results in an ability to use simple machine
+instructions for the functions.
+
+   <p>Consider an example.
+
+<pre class="lisp">     (defun i (x y)
+       (declare (type (unsigned-byte 32) x y))
+       (ldb (byte 32 0) (logxor x (lognot y))))
+</pre>
+   <p>The result of <code>(lognot y)</code> will be negative and of type
+<code>(signed-byte 33)</code>, so a naive implementation on a 32-bit
+platform is unable to use 32-bit arithmetic here. But modular
+arithmetic optimizer is able to do it: because the result is cut down
+to 32 bits, the compiler will replace <code>logxor</code> and <code>lognot</code>
+with versions cutting results to 32 bits, and because terminals
+(here&mdash;expressions <code>x</code> and <code>y</code>) are also of type
+<code>(unsigned-byte 32)</code>, 32-bit machine arithmetic can be used.
+
+   <p>As of SBCL 0.8.5 &ldquo;good&rdquo; functions are <code>+</code>, <code>-</code>;
+<code>logand</code>, <code>logior</code>, <code>logxor</code>, <code>lognot</code> and their
+combinations; and <code>ash</code> with the positive second
+argument. &ldquo;Good&rdquo; widths are 32 on HPPA, MIPS, PPC, Sparc and x86 and
+64 on Alpha.  While it is possible to support smaller widths as well,
+currently this is not implemented.
+
+   </body></html>
+

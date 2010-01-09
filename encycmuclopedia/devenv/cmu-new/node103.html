@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The Optimize-Interface Declaration</TITLE>
+<META NAME="description" CONTENT="The Optimize-Interface Declaration">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1904" HREF="node104.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1902" HREF="node101.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1898" HREF="node102.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1906" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1907" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1905" HREF="node104.html">4.8 Open Coding and </A>
+<B>Up:</B> <A NAME="tex2html1903" HREF="node101.html">4.7 Compiler Policy</A>
+<B> Previous:</B> <A NAME="tex2html1899" HREF="node102.html">4.7.1 The Optimize Declaration</A>
+<BR> <P>
+<H2><A NAME="SECTION00572000000000000000">The Optimize-Interface Declaration</A></H2>
+<P>
+<A NAME="optimizeinterfacedeclaration">&#160;</A>
+<A NAME="9675">&#160;</A>
+<A NAME="9677">&#160;</A>
+<P>
+The <tt>extensions:optimize-interface</tt> declaration is identical in
+syntax to the <tt>optimize</tt> declaration, but it specifies the policy
+used during compilation of code the compiler automatically generates
+to check the number and type of arguments supplied to a function.  It
+is useful to specify this policy separately, since even thoroughly
+debugged functions are vulnerable to being passed the wrong arguments.
+The <tt>optimize-interface</tt> declaration can specify that arguments
+should be checked even when the general <tt>optimize</tt> policy is
+unsafe.
+<P>
+Note that this argument checking is the checking of user-supplied
+arguments to any functions defined within the scope of the
+declaration, <tt>not</tt> the checking of arguments to Common Lisp
+primitives that appear in those definitions.
+<P>
+The idea behind this declaration is that it allows the definition of
+functions that appear fully safe to other callers, but that do no
+internal error checking.  Of course, it is possible that arguments may
+be invalid in ways other than having incorrect type.  Functions
+compiled unsafely must still protect themselves against things like
+user-supplied array indices that are out of bounds and improper lists.
+See also the <tt>:context-declarations</tt> option to
+<A NAME="9685">&#160;</A><tt>with-compilation-unit</tt> (page&nbsp;<A HREF="node86.html#FNwithcompilationunit"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>).
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

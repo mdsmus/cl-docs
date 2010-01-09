@@ -1,0 +1,90 @@
+<html lang="en">
+<head>
+<title>Debugger Command Loop - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Debugger.html#Debugger" title="Debugger">
+<link rel="prev" href="Debugger-Entry.html#Debugger-Entry" title="Debugger Entry">
+<link rel="next" href="Stack-Frames.html#Stack-Frames" title="Stack Frames">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Debugger-Command-Loop"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Stack-Frames.html#Stack-Frames">Stack Frames</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Debugger-Entry.html#Debugger-Entry">Debugger Entry</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Debugger.html#Debugger">Debugger</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">4.2 Debugger Command Loop</h3>
+
+<p>The debugger is an interactive read-eval-print loop much like the
+normal top level, but some symbols are interpreted as debugger
+commands instead of being evaluated. A debugger command starts with
+the symbol name of the command, possibly followed by some arguments on
+the same line. Some commands prompt for additional input. Debugger
+commands can be abbreviated by any unambiguous prefix: <samp><span class="command">help</span></samp>
+can be typed as &lsquo;<samp><span class="samp">h</span></samp>&rsquo;, &lsquo;<samp><span class="samp">he</span></samp>&rsquo;, etc.
+
+   <p>The package is not significant in debugger commands; any symbol with
+the name of a debugger command will work. If you want to show the
+value of a variable that happens also to be the name of a debugger
+command you can wrap the variable in a <code>progn</code> to hide it from
+the command loop.
+
+   <p>The debugger prompt is &ldquo;<var>frame</var><code>]</code>&rdquo;, where <var>frame</var> is
+the number of the current frame.  Frames are numbered starting from
+zero at the top (most recent call), increasing down to the bottom. 
+The current frame is the frame that commands refer to.
+
+   <p>It is possible to override the normal printing behaviour in the
+debugger by using the <code>sb-ext:*debug-print-variable-alist*</code>.
+
+   <p><a name="Variable-sb_002dext_003a_002adebug_002dprint_002dvariable_002dalist_002a"></a>
+
+<div class="defun">
+&mdash; Variable: <b>sb-ext:*debug-print-variable-alist*</b><var><a name="index-sb_002dext_003a_002adebug_002dprint_002dvariable_002dalist_002a-63"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003a_002adebug_002dprint_002dvariable_002dalist_002a-64"></a>an association list describing new bindings for special variables
+to be used within the debugger. Eg.
+
+     <pre class="lisp">           ((*PRINT-LENGTH* . 10) (*PRINT-LEVEL* . 6) (*PRINT-PRETTY* . NIL))
+</pre>
+        <p>The variables in the <code>car</code> positions are bound to the values in the <code>cdr</code>
+during the execution of some debug commands. When evaluating arbitrary
+expressions in the debugger, the normal values of the printer control
+variables are in effect.
+
+        <p>Initially empty, <code>*debug-print-variable-alist*</code> is typically used to
+provide bindings for printer control variables. 
+</p></blockquote></div>
+
+   </body></html>
+

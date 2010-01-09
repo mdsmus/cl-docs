@@ -1,0 +1,142 @@
+<html lang="en">
+<head>
+<title>Character counting input stream - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Gray-Streams-examples.html#Gray-Streams-examples" title="Gray Streams examples">
+<link rel="next" href="Output-prefixing-character-stream.html#Output-prefixing-character-stream" title="Output prefixing character stream">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Character-counting-input-stream"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Output-prefixing-character-stream.html#Output-prefixing-character-stream">Output prefixing character stream</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Gray-Streams-examples.html#Gray-Streams-examples">Gray Streams examples</a>
+<hr>
+</div>
+
+<h5 class="subsubsection">9.2.8.1 Character counting input stream</h5>
+
+<p>It is occasionally handy for programs that process input files to
+count the number of characters and lines seen so far, and the number
+of characters seen on the current line, so that useful messages may be
+reported in case of parsing errors, etc.  Here is a character input
+stream class that keeps track of these counts.  Note that all
+character input streams must implement <code>stream-read-char<!-- /@w --></code> and
+<code>stream-unread-char<!-- /@w --></code>.
+
+<pre class="lisp">     (defclass wrapped-stream (fundamental-stream)
+       ((stream :initarg :stream :reader stream-of)))
+     
+     (defmethod stream-element-type ((stream wrapped-stream))
+       (stream-element-type (stream-of stream)))
+     
+     (defmethod close ((stream wrapped-stream) &amp;key abort)
+       (close (stream-of stream) :abort abort))
+     
+     (defclass wrapped-character-input-stream
+         (wrapped-stream fundamental-character-input-stream)
+       ())
+     
+     (defmethod stream-read-char ((stream wrapped-character-input-stream))
+       (read-char (stream-of stream) nil :eof))
+     
+     (defmethod stream-unread-char ((stream wrapped-character-input-stream)
+                                    char)
+       (unread-char char (stream-of stream)))
+     
+     (defclass counting-character-input-stream
+         (wrapped-character-input-stream)
+       ((char-count :initform 1 :accessor char-count-of)
+        (line-count :initform 1 :accessor line-count-of)
+        (col-count :initform 1 :accessor col-count-of)
+        (prev-col-count :initform 1 :accessor prev-col-count-of)))
+     
+     (defmethod stream-read-char ((stream counting-character-input-stream))
+       (with-accessors ((inner-stream stream-of) (chars char-count-of)
+                        (lines line-count-of) (cols col-count-of)
+                        (prev prev-col-count-of)) stream
+           (let ((char (call-next-method)))
+             (cond ((eql char :eof)
+                    :eof)
+                   ((char= char #\Newline)
+                    (incf lines)
+                    (incf chars)
+                    (setf prev cols)
+                    (setf cols 1)
+                    char)
+                   (t
+                    (incf chars)
+                    (incf cols)
+                    char)))))
+     
+     (defmethod stream-unread-char ((stream counting-character-input-stream)
+                                    char)
+       (with-accessors ((inner-stream stream-of) (chars char-count-of)
+                        (lines line-count-of) (cols col-count-of)
+                        (prev prev-col-count-of)) stream
+           (cond ((char= char #\Newline)
+                  (decf lines)
+                  (decf chars)
+                  (setf cols prev))
+                 (t
+                  (decf chars)
+                  (decf cols)
+                  char))
+           (call-next-method)))
+</pre>
+   <p>The default methods for <code>stream-read-char-no-hang<!-- /@w --></code>,
+<code>stream-peek-char<!-- /@w --></code>, <code>stream-listen<!-- /@w --></code>,
+<code>stream-clear-input<!-- /@w --></code>, <code>stream-read-line<!-- /@w --></code>, and
+<code>stream-read-sequence<!-- /@w --></code> should be sufficient (though the last two
+will probably be slower than methods that forwarded directly).
+
+   <p>Here's a sample use of this class:
+
+<pre class="lisp">     (with-input-from-string (input "1 2
+      3 :foo  ")
+       (let ((counted-stream (make-instance 'counting-character-input-stream
+                              :stream input)))
+         (loop for thing = (read counted-stream) while thing
+            unless (numberp thing) do
+              (error "Non-number ~S (line ~D, column ~D)" thing
+                     (line-count-of counted-stream)
+                     (- (col-count-of counted-stream)
+                        (length (format nil "~S" thing))))
+            end
+            do (print thing))))
+<pre class="verbatim">     1 
+     2 
+     3
+     Non-number :FOO (line 2, column 5)
+       [Condition of type SIMPLE-ERROR]
+</pre>
+</pre>
+   </body></html>
+

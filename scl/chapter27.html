@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 27</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 27 - A Good Editor is Worth a Thousand Keystrokes</h1> 
+
+<P>Lisp's simple syntax combines with an integrated editor to ease
+many of the common tasks of writing a Lisp program.  Anyone who tries
+to tell you that "it's hard to balance parentheses in a Lisp program"
+is using the wrong editor.
+
+<h2>Simple syntax; smart editors</h2>
+
+Lisp has a very simple syntax; it's just a bunch of tokens bracketed
+by a pair of parentheses, recursively.  This simple syntax, combined
+with the fact that the first token following a left parenthesis usually
+says something about the meaning of the following tokens, lets editors
+do relatively smart things with program text given only local information.
+
+<p>Virtually every Lisp environment comes with its own Lisp-aware editor.
+The rare (usually free and minimalist) Lisp environment that doesn't 
+provide its own editor can use Emacs, which has a mode for editing Lisp
+source code.
+
+<h2>Matching and flashing</h2>
+
+<p>As you type a Lisp program for the first time, it's handy to see
+the matching parentheses at a glance. Most Lisp editors facilitate
+this by briefly highlighting the opening parenthesis for each close
+parenthesis that you type. Highlighting can take different forms,
+depending upon the implementation. Sometimes, the text insertion
+cursor jumps back to the opening parenthesis for a fraction of a
+second (and then returns to its proper position before inserting the
+next typed character.) Another common technique is to briefly
+display the opening parenthesis in a bold font or a different color.
+And some editors even draw an outline around the entire list. No
+matter how it's done, you can see at a glance how your closing
+parentheses match their opening counterparts, with not so much as a
+pause in your typing of the program.
+
+<p>Once you've entered the program, you can find matching
+parentheses by positioning the cursor to either the beginning or
+ending parenthesis, then typing a keystroke that will either flash
+or move the cursor to the matching parenthesis.
+
+<h2>Automatic indentation</h2>
+
+<p>Parenthesis matching is important when you're entering or editing
+a program.  When you're reading a Lisp program, proper indentation is
+important to give you visual cues as to the program structure.  In fact,
+you should be able to hide the parentheses in a properly indented Lisp
+program and still understand the program.
+
+<p>Lisp editors typically supply proper indentation as you type a new
+program; with some editors this is done automatically, while others require
+that you use a different keystroke in place of the return key to end a
+line.  Together with parenthesis matching, automatic indentation lets
+you type a properly parenthesized and indented Lisp program without ever
+having to count parentheses or spaces.
+
+<p>When you edit an existing Lisp program, you'll often add or remove
+portions such that the proper indentation of the rest of the program
+must change.  If you had to readjust everything by hand, you'd become
+quickly disenchanted with Lisp.  That's why Lisp editors give you a
+way to reindent a program either a line at a time, or for an entire
+Lisp form.  Lisp programmers tend to develop a habit of finishing small 
+changes with the keystroke to reindent the portion of the program being
+edited; this gives the programmer immediate visual feedback on the 
+updated structure of the program, as expressed by its indentation.
+
+<h2>Symbol completion</h2>
+
+<p>Lisp programmers tend not to abbreviate names. The short,
+mnemonic names in Common Lisp are there for historical reasons; the
+newer additions to Lisp have fully spelled out, descriptive names.
+Fortunately, a good Lisp program editor can save you a lot of typing
+by providing a symbol completion facility.
+
+<p>Symbol completion works like this. As you type your program,
+you're using names that are both built into the Lisp system and
+defined anew by your program. As you type a name, you can press a
+symbol-completions keystroke anytime after having typed the first
+few characters. If the typed prefix <em>uniquely</em> matches some
+symbol already known to the Lisp environment (either because it's
+built in, or because you've previously typed the whole name), the
+editor will type the rest of the symbol for you. If the typed prefix
+matches more than one completion, the editor may either pick the
+first and let you cycle through the rest by repeating the completion
+keystroke, or it may present a list of possible completions from
+which you can choose.  In any case, it's important to note that 
+symbol completion does <em>not</em> depend upon having compiled 
+your program; completion works even during initial program entry.
+
+<h2>Finding definitions</h2>
+
+<p>As you develop your program, you'll often find that it's helpful
+to refer to a function that you've defined earlier; perhaps you need
+to see the source code to confirm that it will respond appropriately
+to unexpected inputs, or maybe you need to see how some vendor-supplied
+function is implemented.  Lisp editors support this kind of exploration
+with yet another keystroke; just position the cursor somewhere in a name,
+press a key, and (if the definition is accessible in source form) you're
+instantly shown a view of the defining source code.
+
+<h2>On-line documentation</h2>
+
+<p>Despite its underlying simplicity, Lisp is a large language. The
+formal ANSI specification fills some 1,500 pages of paper describing the
+language and 978 predefined symbols.  On top of that, your vendor's 
+development environment will define hundreds of thousands of additional
+symbols.  And, of course, your program will only add to the roster of
+symbol names.
+
+<p>Most Lisp editors will let you access documentation in various forms.
+For built-in and user-defined code, the editor should give you quick
+access to the documentation string and argument list.  In fact, many
+Lisp editors automatically find and inobtrusively display the argument
+list whenever you type a space following a function or macro name. A
+quick glance at the argument list helps you avoid usage mistakes.
+
+<p>Hypertext access to online manuals is becoming increasingly
+popular. Some Lisp editors will support lookups in one or more
+manuals (including the Lisp reference) in a manner similar to the
+way they support access to documentation strings.
+
+<h2>Access to debugging tools</h2>
+
+<p>The editor (or the Lisp environment in general if the environment
+is not editor-centric) should support easy access to debugging tools
+such as browsers, trace and step facilities, backtraces, inspectors,
+and program databases such as apropos, who-calls, and callers-of
+(see Chapters <a href="chapter10.html">10</a>, <a
+href="chapter16.html">16</a>, and <a href="chapter22.html">22</a>).
+
+<h2>Extending the editor using Lisp</h2>
+
+<p>The editor in many Lisp development environments is itself 
+written in Lisp.  The vendor should document the external APIs
+of the editor and supply source code; then you can add your own
+extensions to the editor and customize your Lisp environment to
+fit the way that you work.
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter26.html">Chapter 26</a> | Chapter 27 | <a href="chapter28.html">Chapter 28</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

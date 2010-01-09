@@ -1,0 +1,372 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 30</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 30 - Helpful Hints for Debugging and Bug-Proofing</h1> 
+
+<P>As with any programming language, error avoidance is the best
+debugging strategy. Take advantage of the online documentation 
+(available with most systems) and test functions, or even parts
+of functions, as you write them.
+
+<p>Still, you'll inevitably face the unexpected error, and you
+should know how to use the debugger. More often than not, a quick
+look at the error location as shown by the debugger will point out
+an obvious problem. 
+
+<p>Some problems, though, are not obvious; your program will run
+without error, but produce incorrect results. When examination of
+the code does not reveal an error, you can rely upon built in Lisp
+tools to expose the details of your program's operation and find the
+error during execution.
+
+<h2>Finding the cause of an error</h2>
+
+<p>There are two ways to notice an error. The intrusion of the Lisp
+debugger is the most obvious. The debugger will appear whenever your
+program causes Lisp to signal an error. This is often the result of
+something obvious, like trying to perform arithmetic on
+<code>NIL</code> or trying to <code>FUNCALL</code> an object that is
+not a function.
+
+<p>Your program's failure to produce expected results is also an
+error, even though the debugger never appears. In this case, your
+program doesn't make any mistakes in its use of Lisp, but the
+successful sequence of Lisp operations doesn't do what you had
+intended.  Another possibility is that your program will fail to
+terminate at all.
+
+<p>The best defense against all of these problems is to write 
+short, clear function definitions and test each one as soon as
+you've written it.  I find it helpful to write one or more test
+cases and include them as comments (bracketed by #| and |#) in
+the same file.  
+
+<h2>Reading backtraces, compiler settings for debugging</h2>
+
+<p>Every Lisp debugger will provide at least two important
+pieces of information: an error message and a stack backtrace.
+
+<p>The error message describes <em>how</em> the program failed.
+Normally, this is a description of an error encountered while 
+executing some built in Lisp function.  If your program calls
+<em>ERROR</em>, the debugger will display the message you
+specify.
+
+<p>The stack backtrace describes <em>where</em> your program
+failed by displaying the call stack at the point of the error.
+The function which signalled the error will be at the "top" of
+the stack.  Below that is the function that called the function
+which signalled the error, and so on all the way to (and
+sometimes beyond) the listener's read-eval-print loop.
+
+<p>The debugger relies upon certain information provided by
+the compiler or interpreter.  Although the details vary among
+implementations, it's safe to say that compiler optimizations
+that improve speed or reduce space tend to reduce the amount
+of information available to the debugger.  You can change these
+optimizations while debugging your program:
+
+<pre>
+(declaim (optimize (speed 0) (space 0) (debug 3)))
+</pre> 
+
+<p>If you execute this before compiling your program, the debugger
+should be able to give you more useful information. You should
+consult your vendor's documentation to learn about additional
+implementation-specific controls. If your Lisp system gives you a
+choice between using a compiler and using an interpreter, you'll
+probably find that the interpreter causes the debugger to give you
+better information.
+
+<h2>Simple debugging tools</h2>
+
+<p>If your program runs to completion but produces incorrect
+results, or if it runs but fails to terminate, then you'll need some
+additional tools. The first of these tools should be familiar to all
+programmers: insert a call to the debugger or (more commonly) insert
+a print statement.
+
+<h2>BREAK, PRINT</h2>
+
+<p><code>BREAK</code> causes your program to call the debugger.  Once
+inside the debugger you can examine the call stack.  Most debuggers 
+also allow you to examine values local to each active function on the
+call stack; by looking at these values at a critical point during your
+program's execution, you may find an important clue as to why your
+program malfunctions.
+
+<p>The debugger will allow you to continue from a break. You may
+find it helpful -- if you don't yet understand the cause of a
+problem -- to correct one or more wrong values before continuing; with
+other <code>BREAK</code> forms inserted at key points in your program,
+this strategy may lead you to a place where the error <em>is</em> 
+apparent.
+
+<p>Of course, you can always insert <code>PRINT</code> forms at key
+locations in your program and examine the resulting output.  In Lisp,
+this is most useful when you need to get a feel for what's happening
+deep inside some function.  For example, you might have a complex
+calculation to determine whether a sequence of code is executed or
+not.  A <code>PRINT</code> can tell you as the program runs.
+
+<p>Don't forget that you can use <code>FORMAT</code> to print the
+values of several variables together with explanatory text.  And with
+either <code>PRINT</code> or <code>FORMAT</code>, be careful that you
+do not change the meaning of the code by inserting the debugging
+statement.  Remember that some flow-control forms (e.g. <code>IF</code> 
+and <code>UNWIND-PROTECT</code>) expect a single form at certain places.
+Also beware of wrapping <code>PRINT</code> around a value-returning
+form; this won't work if the value-receiving form expects multiple
+values.
+
+<h2>Power tools for tough problems</h2>
+
+<p>Lisp provides additional debugging tools to help you observe the
+dynamic behavior of your program.
+
+<h2>TRACE, STEP, ADVISE, WATCH</h2>
+
+<p><code>TRACE</code> allows you to observe each call and return from
+a specific function, no matter where the function appears in your program.
+To trace a function, invoke <code>TRACE</code> with the name of the
+function.  You can do this for as many functions as needed.  You can
+also pass several function names to <code>TRACE</code>.
+
+<p>When your program runs a traced function, it will print the name of
+the function on entry and exit.  Most <code>TRACE</code> implementations
+will also print the function arguments on entry and returned values on
+exit.
+
+<p>To discontinue tracing of a function, pass its name to
+<code>UNTRACE</code>. To discontinue tracing of <em>all</em> traced
+functions, evaluate <code>(UNTRACE)</code>.
+
+<p>See <a href="chapter16.html#trace-and-step">Chapter 16</a> for an
+example of <code>TRACE</code>.
+
+<p><code>STEP</code> allows you to interactively control evaluation of
+an expression.  If you step a function invocation, you should be able
+to examine each subform of the function's definition just before it
+is evaluated.  <code>STEP</code> implementations vary widely, so you
+should consult your vendor's documentation for further details.  In
+general, the same optimizations and controls that aid the debugger will
+also aid the stepper.
+
+<p><code>STEP</code> is a very labor-intensive way to debug a program,
+since you must tell its user interface to evaluate each subform.  This
+is reasonable for straight-line code, but quickly becomes tedious in 
+the presence of looping or recursion.
+
+<p>Some Lisp implementations provide two additional tools,
+<code>ADVISE</code> and <code>WATCH</code>, that can be of use during
+debugging.  
+
+<p><code>ADVISE</code> modifies a function without changing its
+source code. <code>ADVISE</code> can usually examine the advised
+function's arguments, execute its own code, execute the advised
+function, examine the advised function's return values, and modify
+the returned values.  For debugging purposes, <code>ADVISE</code> 
+can be used to implement conditional <code>BREAK</code>s and 
+<code>TRACE</code>s, or to temporarily patch incorrect behavior
+in one part of a program while you're debugging another part.
+
+<p><code>WATCH</code> lets you specify variables to be displayed
+as your program executes.  This is normally available only in 
+Lisp implementations that provide a windowed user interface.
+Because of issues of variable scope and display update timing and
+overhead, <code>WATCH</code> is of limited value.  Most Lisp 
+implementations do not provide this tool.
+
+<h2>Into the belly of the beast</h2>
+
+<p>As you debug your program, you may need to see the internal
+details of composite objects such as lists, structures, arrays,
+streams and CLOS instances.  Lisp lets you do this whether the
+data has been defined by your program or by the Lisp runtime
+system.
+
+<h2>INSPECT, DESCRIBE</h2>
+
+<p><code>DESCRIBE</code> is a function that accepts any object as an
+argument and prints a description of that object. The form and
+content of the description may vary among Lisp implementations.
+<code>DESCRIBE</code> accepts an output stream as an optional second
+argument.
+
+<p><code>INSPECT</code> is an interactive version of
+<code>DESCRIBE</code>. This is most useful for examining complex
+objects by "drilling down" into the implementation details of
+enclosed data elements.
+
+<h2>Continuing from an error</h2>
+
+<p>When faced with the debugger, you will have a choice of restart
+actions depending upon how the error was signalled.  <code>ERROR</code> 
+requires that you abandon your program's executions.  However,
+many internal Lisp functions use <code>CERROR</code>, which gives you
+a chance to continue from an error.
+
+<p>In most debuggers, you can do quite a few useful things before
+continuing from an error:
+
+<ul>
+<li>alter variable values
+<li>redefine the function that caused the error and run it again
+<li>skip the rest of the function that caused the error and 
+    specify values to be returned
+<li>restart any function further down the call stack
+<li>skip the rest of any function further down the call stack and
+    specify values to be returned
+</ul> 
+
+<h2>Problems with unwanted definitions</h2>
+
+<p>Unwanted definitions are not usually a problem in a Lisp program.
+You can get rid of function definitions using
+<code>FMAKUNBOUND</code>, variable values with
+<code>MAKUNBOUND</code>, and even symbols with
+<code>UNINTERN</code>. In practice, there's usually no need to use
+any of these; available memory is commonly large compared to the
+size of a few misdefined variables or functions, and they will be
+eliminated anyway the next time you restart your Lisp image and load
+your program.
+
+<p>Method definitions are an entirely different matter.  Remember that
+methods must have congruent argument lists; if you change your mind
+during program development about a method's argument list -- perhaps
+you thought that it needed two arguments at first but then realized
+three arguments are really needed -- then you'll have to remove the
+old method definition before adding the new one.  Some Lisp environments
+facilitate this redefinition:
+
+<pre>
+? (defmethod baz (a b))
+#&lt;STANDARD-METHOD BAZ (T T)&gt;
+? (defmethod baz (a b c))
+Error: Incompatible lambda list in #&lt;STANDARD-METHOD BAZ (T T T)&gt;
+       for #&lt;STANDARD-GENERIC-FUNCTION BAZ #x3D2CB66&gt;.
+Restart options:
+  1. Remove 1 method from the generic-function and change its lambda list
+  2. Top levl
+  ? 
+</pre> 
+
+<p>If you simply add a method that you later decide is no longer
+wanted, you'll need a way to remove the method. The least desirable
+technique is to restart your Lisp system and reload your program
+without the unwanted definition. Another approach, provided by some
+vendors, is to interactively remove the definition using a special
+editor command or a method browser. Failing all else, you can remove
+the method manually using <code>REMOVE-METHOD</code>:
+
+<pre>
+(let* ((generic-function (symbol-function '<i>gf-name</i>))
+       (method (find-method generic-function
+                            '(<i>method-specializers</i>)
+                            (list (find-class <i>parameter-class-name</i>)
+                                  <i>; one per argument</i> 
+                                  ...))))
+  (remove-method generic-function method))
+</pre> 
+
+<p>where <i>gf-name</i> is the name of the generic function (i.e.
+the name of the method), <i>method-specializers</i> is either empty
+or a method combination specifier, such as <code>:BEFORE</code>,
+<code>:AFTER</code>, or <code>:AROUND</code>, and
+<i>parameter-class-name</i> is the name of the class on which a
+particular method parameter is specialized.
+
+<h2>Package problems; method definitions</h2>
+
+<p>Symbol conflicts across packages can be frustrating during
+development. If you have defined multiple packages for your program,
+you'll need to be careful to set the proper package (using
+<code>IN-PACKAGE</code>) before defining an object intended for that
+package.  If you inadvertently create an object in the wrong package
+and then attempt to define it in the correct package, Lisp will signal
+an error if there is a "uses" relationship between the two packages.
+The proper response is to first remove the erroneous definition using
+<code>UNINTERN</code>.
+
+<p>You can also get into trouble with packages by having unexported
+classes defined in two packages and specializing a method based on the
+wrong class.
+
+<h2>The problem with macros</h2>
+
+<p>Macros must always be defined before use.  This is especially 
+important when you redefine a macro during development: every piece
+of code that uses the redefined macro <code>must</code> be recompiled.
+You can help yourself avoid macro redefinition problems by reloading
+your source code after redefining any macro(s).
+
+<h2>Runtime tests catch "can't happen cases" when they do...</h2>
+
+<p>When I read code, finding the phrase "can't happen" in a comment
+always raises a red flag. Usually, this statement is made after the
+programmer has examined the code's execution environment and
+intended use. Unfortunately, things change and "can't happen" cases
+do happen.
+
+<p>Lisp provides a very handy facility for checking "can't happen"
+statements at runtime.  The <code>ASSERT</code> macro expects a 
+form that will evaluate to true at runtime.  If the form evaluates
+to <code>NIL</code> instead, <code>ASSERT</code> signals a continuable
+error, transferring control to the debugger.  At the very least, this
+will help you to learn which assertion was violated so you can 
+correct your program.
+
+<p><code>ASSERT</code> accepts an optional list of value places that
+the user can interactively change to satisfy the assertion.
+
+<pre>
+? (defun add-2 (n)
+    (assert (numberp n) (n))
+    (+ 2 n))
+? (add-2 3)
+5
+? (add-2 'foo)
+Error: Failed assertion (NUMBERP N)
+Restart options:
+  1. Change the values of some places, then retry the assertion
+  2. Top level
+  ? 1
+  Value for N: 4
+6
+</pre> 
+
+See <a href="chapter23.html">Chapter 23</a> for additional
+information about 
+<a href="chapter23.html#assert"><code>ASSERT</code></a> and other error
+detection and recovery techniques.
+
+<h2>Use method dispatch rather than case dispatch</h2>
+
+<p>When your program needs to make a decision based on the type of
+an object, you have two choices. You can use <code>TYPECASE</code>
+or <code>DEFMETHOD</code>. Unless you have a circumstance that
+particularly warrants the use of <code>TYPECASE</code> (or its
+variants <code>CTYPECASE</code> and <code>ETYPECASE</code>) -- and
+especially if the set of types will change during normal program
+evolution or maintenance -- you should probably construct your
+program to operate on the individual types via generic functions.
+This more clearly exposes the intent of the program and eliminates
+the likelihood that you will forget to update a
+<code>TYPECASE</code> form during maintenance.
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter29.html">Chapter 29</a> | Chapter 30 | <a href="chapter31.html">Chapter 31</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

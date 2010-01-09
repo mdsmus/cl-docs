@@ -1,0 +1,187 @@
+<html lang="en">
+<head>
+<title>Information Commands - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Debugger.html#Debugger" title="Debugger">
+<link rel="prev" href="Exiting-Commands.html#Exiting-Commands" title="Exiting Commands">
+<link rel="next" href="Function-Tracing.html#Function-Tracing" title="Function Tracing">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Information-Commands"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Function-Tracing.html#Function-Tracing">Function Tracing</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Exiting-Commands.html#Exiting-Commands">Exiting Commands</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Debugger.html#Debugger">Debugger</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">4.8 Information Commands</h3>
+
+<p>Most of these commands print information about the current frame or
+function, but a few show general information.
+
+<div class="defun">
+&mdash; Debugger Command: <b>help</b><var><a name="index-help-106"></a></var><br>
+&mdash; Debugger Command: <b>?</b><var><a name="index-g_t_003f-107"></a></var><br>
+<blockquote><p>Displays a synopsis of debugger commands. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Debugger Command: <b>describe</b><var><a name="index-describe-108"></a></var><br>
+<blockquote><p>Calls <code>describe</code> on the current function and displays the number of
+local variables. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Debugger Command: <b>print</b><var><a name="index-print-109"></a></var><br>
+<blockquote><p>Displays the current function call as it would be displayed by moving to
+this frame. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Debugger Command: <b>error</b><var><a name="index-error-110"></a></var><br>
+<blockquote><p>Prints the condition given to <code>invoke-debugger</code> and the active
+proceed cases. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Debugger Command: <b>backtrace</b> [<var>n</var>]<var><a name="index-backtrace-111"></a></var><br>
+<blockquote><p>Displays all the frames from the current to the bottom. Only shows
+<var>n</var> frames if specified. The printing is controlled by
+<code>*debug-print-variable-alist*</code>. 
+</p></blockquote></div>
+
+<!-- The new instrumentation based single stepper doesn't support -->
+<!-- the following commands, but BREAKPOINT at least should be -->
+<!-- resurrectable via (TRACE FOO :BREAK T). -->
+<!-- @cindex Breakpoints -->
+<!-- SBCL supports setting of breakpoints inside compiled functions and -->
+<!-- stepping of compiled code.  Breakpoints can only be set at known -->
+<!-- locations (@pxref{Unknown Locations and Interrupts}), so these -->
+<!-- commands are largely useless unless the @code{debug} optimize quality -->
+<!-- is at least @code{2} (@pxref{Debugger Policy Control}).  These -->
+<!-- commands manipulate breakpoints: -->
+<!-- @deffn {Debugger Command} breakpoint @var{location} [@var{option} @var{value}]* -->
+<!-- Set a breakpoint in some function.  @var{location} may be an integer -->
+<!-- code location number (as displayed by @command{list-locations}) or a -->
+<!-- keyword.  The keyword can be used to indicate setting a breakpoint at -->
+<!-- the function start (@code{:start}, @code{:s}) or function end -->
+<!-- (@code{:end}, @code{:e}).  The @command{breakpoint} command has -->
+<!-- @code{:condition}, @code{:break}, @code{:print} and @code{:function} -->
+<!-- options which work similarly to the @code{trace} options. -->
+<!-- @end deffn -->
+<!-- @deffn {Debugger Command} list-locations [@var{function}] -->
+<!-- @deffnx {Debugger Command} ll  [@var{function}] -->
+<!-- List all the code locations in the current frame's function, or in -->
+<!-- @var{function} if it is supplied.  The display format is the code -->
+<!-- location number, a colon and then the source form for that location: -->
+<!-- @example -->
+<!-- 3: (1- N) -->
+<!-- @end example -->
+<!-- If consecutive locations have the same source, then a numeric range -->
+<!-- like @code{3-5:} will be printed.  For example, a default function -->
+<!-- call has a known location both immediately before and after the call, -->
+<!-- which would result in two code locations with the same source.  The -->
+<!-- listed function becomes the new default function for breakpoint -->
+<!-- setting (via the @command{breakpoint}) command. -->
+<!-- @end deffn -->
+<!-- @deffn {Debugger Command} list-breakpoints -->
+<!-- @deffnx {Debugger Command} lb -->
+<!-- List all currently active breakpoints with their breakpoint number. -->
+<!-- @end deffn -->
+<!-- @deffn {Debugger Command} delete-breakpoint [@var{number}] -->
+<!-- @deffnx {Debugger Command} db  [@var{number}] -->
+<!-- Delete a breakpoint specified by its breakpoint number.  If no number -->
+<!-- is specified, delete all breakpoints. -->
+<!-- @end deffn -->
+<!-- @menu -->
+<!-- * Breakpoint Example:: -->
+<!-- @end menu -->
+<!-- @node  Breakpoint Example,  , Breakpoint Commands, Breakpoint Commands -->
+<!-- @comment  node-name,  next,  previous,  up -->
+<!-- @subsection Breakpoint Example -->
+<!-- Consider this definition of the factorial function: -->
+<!-- @lisp -->
+<!-- (defun ! (n) -->
+<!-- (if (zerop n) -->
+<!-- 1 -->
+<!-- (* n (! (1- n))))) -->
+<!-- @end lisp -->
+<!-- This debugger session demonstrates the use of breakpoints: -->
+<!-- @example -->
+<!-- * (break)  ; invoke debugger -->
+<!-- debugger invoked on a SIMPLE-CONDITION in thread 11184: break -->
+<!-- restarts (invokable by number or by possibly-abbreviated name): -->
+<!-- 0: [CONTINUE] Return from BREAK. -->
+<!-- 1: [ABORT   ] Reduce debugger level (leaving debugger, returning to toplevel). -->
+<!-- 2: [TOPLEVEL] Restart at toplevel READ/EVAL/PRINT loop. -->
+<!-- ("varargs entry for top level local call BREAK" "break") -->
+<!-- 0] ll #'! -->
+<!-- 0-1: (SB-INT:NAMED-LAMBDA ! (N) (BLOCK ! (IF (ZEROP N) 1 (* N (! #))))) -->
+<!-- 2: (BLOCK ! (IF (ZEROP N) 1 (* N (! (1- N))))) -->
+<!-- 3: (ZEROP N) -->
+<!-- 4: (* N (! (1- N))) -->
+<!-- 5: (1- N) -->
+<!-- 6: (! (1- N)) -->
+<!-- 7-8: (* N (! (1- N))) -->
+<!-- 9-10: (IF (ZEROP N) 1 (* N (! (1- N)))) -->
+<!-- 0] br 4 -->
+<!-- (* N (! (1- N))) -->
+<!-- 1: 4 in ! -->
+<!-- added -->
+<!-- 0] toplevel -->
+<!-- FIXME: SBCL errored out, and not in the expected way ... Copying the -->
+<!-- output verbatim from the CMUCL manual for now. -->
+<!-- common-lisp-user> (! 10) ; Call the function -->
+<!-- *Breakpoint hit* -->
+<!-- Restarts: -->
+<!-- 0: [CONTINUE] Return from BREAK. -->
+<!-- 1: [ABORT   ] Return to Top-Level. -->
+<!-- Debug  (type H for help) -->
+<!-- (! 10) ; We are now in first call (arg 10) before the multiply -->
+<!-- Source: (* N (! (1- N))) -->
+<!-- 3] st -->
+<!-- *Step* -->
+<!-- (! 10) ; We have finished evaluation of (1- n) -->
+<!-- Source: (1- N) -->
+<!-- 3] st -->
+<!-- *Breakpoint hit* -->
+<!-- Restarts: -->
+<!-- 0: [CONTINUE] Return from BREAK. -->
+<!-- 1: [ABORT   ] Return to Top-Level. -->
+<!-- Debug  (type H for help) -->
+<!-- (! 9) ; We hit the breakpoint in the recursive call -->
+<!-- Source: (* N (! (1- N))) -->
+<!-- 3] -->
+<!-- @end example -->
+   </body></html>
+

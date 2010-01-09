@@ -1,0 +1,43 @@
+<html
+  ><head
+    ><title
+      >Macro IS-FALSE</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Macro: IS-FALSE</h1
+        ><div class="contents"
+          ><h2
+  >Documentation</h2
+><blockquote
+  >Generates a pass if CONDITION returns false, generates a
+  failure otherwise. Like IS-TRUE, and unlike IS, IS-FALSE does
+  not inspect CONDITION to determine what reason to give it case
+  of test failure</blockquote
+><h2
+            >Source</h2
+          ><pre class="code"
+            >(defmacro is-false (condition &amp;rest reason-args)
+  &quot;Generates a pass if CONDITION returns false, generates a
+  failure otherwise. Like IS-TRUE, and unlike IS, IS-FALSE does
+  not inspect CONDITION to determine what reason to give it case
+  of test failure&quot;
+  `(if ,condition
+    (process-failure
+     :reason ,(if reason-args
+                  `(format nil ,@reason-args)
+                  `(format nil &quot;~S returned a true value&quot; ',condition))
+     :test-expr ',condition)
+    (add-result 'test-passed :test-expr ',condition)))</pre
+          ><a href="../Checks.html#macro_005FIT.BESE.FIVEAM_003A_003AIS-FALSE"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

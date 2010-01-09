@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.4.2 Constant Folding</TITLE>
+<META NAME="description" CONTENT="5.4.2 Constant Folding">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2379" HREF="node134.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2377" HREF="node131.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2371" HREF="node132.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2381" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2382" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2380" HREF="node134.html">5.4.3 Unused Expression Elimination</A>
+<B>Up:</B> <A NAME="tex2html2378" HREF="node131.html">5.4 Source Optimization</A>
+<B> Previous:</B> <A NAME="tex2html2372" HREF="node132.html">5.4.1 Let Optimization</A>
+<BR> <P>
+<H2><A NAME="SECTION00642000000000000000">5.4.2 Constant Folding</A></H2>
+<P>
+<A NAME="10017">&#160;</A>
+<A NAME="10018">&#160;</A>
+<P>
+Constant folding is an optimization that replaces a call of constant
+arguments with the constant result of that call.  Constant folding is
+done on all standard functions for which it is legal.  Inline
+expansion allows folding of any constant parts of the definition, and
+can be done even on functions that have side-effects.
+<P>
+It is convenient to rely on constant folding when programming, as in this
+example:
+<BLOCKQUOTE> <PRE>(defconstant limit 42)
+<P>
+(defun foo ()
+  (... (1- limit) ...))
+</PRE> </BLOCKQUOTE>
+Constant folding is also helpful when writing macros or inline
+functions, since it usually eliminates the need to write a macro that
+special-cases constant arguments.
+<P>
+<A NAME="10019">&#160;</A> Constant folding of a user
+defined function is enabled by the <tt>extensions:constant-function</tt>
+proclamation.  In this example:
+<BLOCKQUOTE> <PRE>(declaim (ext:constant-function myfun))
+(defun myexp (x y)
+  (declare (single-float x y))
+  (exp (* (log x) y)))
+<P>
+ ... (myexp 3.0 1.3) ...
+</PRE> </BLOCKQUOTE>
+The call to <tt>myexp</tt> is constant-folded to <tt>4.1711674</tt>.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

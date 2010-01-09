@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>2.13.2 Wildcard Pathnames</TITLE>
+<META NAME="description" CONTENT="2.13.2 Wildcard Pathnames">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1150" HREF="node45.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1148" HREF="node42.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1142" HREF="node43.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1152" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1153" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1151" HREF="node45.html">2.13.3 Logical Pathnames</A>
+<B>Up:</B> <A NAME="tex2html1149" HREF="node42.html">2.13 Pathnames</A>
+<B> Previous:</B> <A NAME="tex2html1143" HREF="node43.html">2.13.1 Unix Pathnames</A>
+<BR> <P>
+<H2><A NAME="SECTION003132000000000000000">2.13.2 Wildcard Pathnames</A></H2>
+<P>
+Wildcards are supported in Unix pathnames.  If `<tt>*</tt>' is specified for a
+part of a pathname, that is parsed as <tt>:wild</tt>.  `<tt>**</tt>' can be used as a
+directory name to indicate <tt>:wild-inferiors</tt>.  Filesystem operations
+treat <tt>:wild-inferiors</tt> the same as <tt>:wild</tt>, but pathname pattern
+matching (e.g. for logical pathname translation, see section&nbsp;<A HREF="node45.html#logicalpathnames">2.13.3</A>)
+matches any number of directory parts with `<tt>**</tt>' (see
+see section&nbsp;<A HREF="node51.html#wildcardmatching">2.14.1</A>.)
+<P>
+`<tt>*</tt>' embedded in a pathname part matches any number of characters.
+Similarly, `<tt>?</tt>' matches exactly one character, and `<tt>[a,b]</tt>'
+matches the characters `<tt>a</tt>' or `<tt>b</tt>'.  These pathname parts are
+parsed as <tt>pattern</tt> objects.
+<P>
+Backslash can be used as an escape character in namestring
+parsing to prevent the next character from being treated as a wildcard.  Note
+that if typed in a string constant, the backslash must be doubled, since the
+string reader also uses backslash as a quote:
+<BLOCKQUOTE> <PRE>(pathname-name &quot;foo<IMG WIDTH=14 HEIGHT=16 ALIGN=BOTTOM ALT="tex2html_wrap18376" SRC="img4.gif">*bar&quot;) =&gt; &quot;foo*bar&quot;
+</PRE> </BLOCKQUOTE><BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

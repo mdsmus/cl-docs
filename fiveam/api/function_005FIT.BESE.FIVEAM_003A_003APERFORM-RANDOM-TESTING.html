@@ -1,0 +1,56 @@
+<html
+  ><head
+    ><title
+      >Function PERFORM-RANDOM-TESTING</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Function: PERFORM-RANDOM-TESTING</h1
+        ><div class="contents"
+          ><h2
+            >Source</h2
+          ><pre class="code"
+            >(defun perform-random-testing (generators body)
+  (loop
+     with random-state = *random-state*
+     with total-counter = *max-trials*
+     with counter = *num-trials*
+     with run-at-least-once = nil
+     until (or (zerop total-counter)
+               (zerop counter))
+     do (let ((result (perform-random-testing/run-once generators body)))
+          (ecase (first result)
+            (:pass
+             (decf counter)
+             (decf total-counter)
+             (setf run-at-least-once t))
+            (:no-tests
+             (add-result 'for-all-test-no-tests
+                         :reason &quot;No tests&quot;
+                         :random-state random-state)
+             (return-from perform-random-testing nil))
+            (:guard-conditions-failed
+             (decf total-counter))
+            (:fail
+             (add-result 'for-all-test-failed
+                         :reason &quot;Found failing test data&quot;
+                         :random-state random-state
+                         :failure-values (second result)
+                         :result-list (third result))
+             (return-from perform-random-testing nil))))
+     finally (if run-at-least-once
+                 (add-result 'for-all-test-passed)
+                 (add-result 'for-all-test-never-run
+                             :reason &quot;Guard conditions never passed&quot;))))</pre
+          ><a href="../Checks.html#function_005FIT.BESE.FIVEAM_003A_003APERFORM-RANDOM-TESTING"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

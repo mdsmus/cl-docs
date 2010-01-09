@@ -1,0 +1,84 @@
+<html lang="en">
+<head>
+<title>sb-posix - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Contributed-Modules.html#Contributed-Modules" title="Contributed Modules">
+<link rel="prev" href="sb_002dgrovel.html#sb_002dgrovel" title="sb-grovel">
+<link rel="next" href="sb_002dmd5.html#sb_002dmd5" title="sb-md5">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="sb-posix"></a>
+<a name="sb_002dposix"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="sb_002dmd5.html#sb_002dmd5">sb-md5</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="sb_002dgrovel.html#sb_002dgrovel">sb-grovel</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Contributed-Modules.html#Contributed-Modules">Contributed Modules</a>
+<hr>
+</div>
+
+<h3 class="section">15.3 sb-posix</h3>
+
+<p><a name="index-Operating-System-Interface-594"></a><a name="index-System-Calls-595"></a><a name="index-Posix-596"></a>
+Sb-posix is the supported interface for calling out to the operating
+system.<a rel="footnote" href="#fn-1" name="fnd-1"><sup>1</sup></a>
+
+   <p>The scope of this interface is &ldquo;operating system calls on a typical
+Unixlike platform&rdquo;.  This is section 2 of the Unix manual, plus section
+3 calls that are (a) typically found in libc, but (b) not part of the C
+standard.  For example, we intend to provide support for
+<code>opendir()</code> and <code>readdir()</code>, but not for <code>printf()</code>. 
+That said, if your favourite system call is not included yet, you are
+encouraged to submit a patch to the SBCL mailing list.
+
+   <p>Some facilities are omitted where they offer absolutely no additional
+use over some portable function, or would be actively dangerous to the
+consistency of Lisp.  Not all functions are available on all
+platforms.
+
+<ul class="menu">
+<li><a accesskey="1" href="Lisp-names-for-C-names.html#Lisp-names-for-C-names">Lisp names for C names</a>
+<li><a accesskey="2" href="Types.html#Types">Types</a>
+<li><a accesskey="3" href="Lisp-objects-and-C-structures.html#Lisp-objects-and-C-structures">Lisp objects and C structures</a>
+<li><a accesskey="4" href="Function-Parameters.html#Function-Parameters">Function Parameters</a>
+<li><a accesskey="5" href="Function-Return-Values.html#Function-Return-Values">Function Return Values</a>
+<li><a accesskey="6" href="Functions-with-idiosyncratic-bindings.html#Functions-with-idiosyncratic-bindings">Functions with idiosyncratic bindings</a>
+</ul>
+
+   <div class="footnote">
+<hr>
+<h4>Footnotes</h4><p class="footnote"><small>[<a name="fn-1" href="#fnd-1">1</a>]</small> The functionality contained in the package
+<code>SB-UNIX</code> is for SBCL internal use only; its contents are likely to
+change from version to version.</p>
+
+   <hr></div>
+
+   </body></html>
+

@@ -1,0 +1,259 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 9</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 9 - Introducing Error Handling and Non-Local Exits</h1> 
+
+<p>In this chapter we'll see some of the specialized control flow
+forms provided by Common Lisp.
+
+<h2>UNWIND-PROTECT: When it absolutely, positively has to run</h2>
+
+<p>One of the challenges of writing robust programs is to make sure
+that important parts of your code always run, even in the presence of
+errors. Usually, this is most important when you're allocating,
+using and releasing resources such as files and memory, like this:
+
+<pre>
+<i>; Setup</i> 
+Allocate some resources
+Open some files
+<i>; Process</i> 
+Process using files and storage (may fail)
+<i>; Cleanup</i> 
+Close the files
+Release the resources
+</pre> 
+
+<p>If the processing step might fail (or be interrupted by the user)
+you should make sure that every possible exit path still goes
+through the cleanup section to close the files and release the
+storage. Better still, your program should be prepared to handle
+errors that occur during the setup phase as you allocate storage and
+open files, since any of these operations might also fail; any
+partially completed setup should still be undone in the cleanup
+section.
+
+<p>Lisp's <code>UNWIND-PROTECT</code> form makes this especially
+easy to do.
+
+<pre>
+(let (resource stream)
+  (unwind-protect
+    (progn
+      (setq resource (allocate-resource)
+            stream (open-file))
+      (process stream resource))
+    (when stream (close stream))
+    (when resource (deallocate resource))))
+</pre> 
+
+<p>Here's what happens. The <code>LET</code> binds
+<code>RESOURCE</code> and <code>STREAM</code> to <code>NIL</code> --
+we'll use the <code>NIL</code> value to mean that there has been no
+resource allocated or file opened. The first form in the
+<code>UNWIND-PROTECT</code> is a "protected" form; if control leaves
+the protected form via <em>any</em> means, then the rest of the
+forms -- the "cleanup" forms -- are guaranteed to be executed.
+
+<p>In our example, the protected form is a <code>PROGN</code> that
+calls <code>ALLOCATE-RESOURCE</code> and <code>OPEN-FILE</code> to
+set our local variables, then <code>PROCESS</code> uses these
+resources. <code>SETQ</code> assigns values sequentially to our
+local variables: <code>(ALLOCATE-RESOURCE)</code> must succeed
+before a value can be assigned to <code>RESOURCE</code>, then
+<code>OPEN-FILE</code> must succeed before its value can be assigned
+to <code>STREAM</code>. A failure (i.e. an interrupt or error) at
+any point in this sequence will transfer control out of the protected
+form.
+
+<p>If the initializations succeed and <code>PROCESS</code> returns
+normally, control continues into the cleanup forms. 
+
+<p>If anything causes the protected form to exit -- for example, an
+error or an interrupt from the keyboard -- control is transferred
+immediately to the first cleanup form. The cleanup forms are guarded
+by <code>WHEN</code> clauses so we won't try to close the stream or
+deallocate the resource if an error caused them to never be created
+in the first place.
+
+<h2>Gracious exits with BLOCK and RETURN-FROM</h2>
+
+<p>The <code>BLOCK</code> and <code>RETURN-FROM</code> forms give
+you a structured lexical exit from any nested computation. The
+<code>BLOCK</code> form has a name followed a body composed of zero
+or more forms. The <code>RETURN-FROM</code> form expects a block
+name and an optional (the default is <code>NIL</code>) return value.
+
+<pre>
+? (defun block-demo (flag)
+    (print 'before-outer)
+    (block outer
+      (print 'before-inner)
+      (print (block inner
+               (if flag
+                 (return-from outer 7)
+                 (return-from inner 3))
+               (print 'never-print-this)))
+      (print 'after-inner)
+      t))
+BLOCK-DEMO
+? (block-demo t)
+
+BEFORE-OUTER
+BEFORE-INNER
+7
+? (block-demo nil)
+
+BEFORE-OUTER
+BEFORE-INNER
+3
+AFTER-INNER
+T
+</pre> 
+
+<p>When we call <code>BLOCK-DEMO</code> with <code>T</code>, the
+<code>IF</code> statement's consequent -- <code> (return-from outer
+7)</code> -- immediately returns the value 7 from the <code>(BLOCK
+OUTER ...</code> form. Calling <code>BLOCK-DEMO</code> with
+<code>NIL</code> executes the alternate branch of the
+<code>IF</code> -- <code>(return-from inner 3)</code> -- passing the
+value 3 to the <code>PRINT</code> form wrapped around the
+<code>(BLOCK INNER ...</code> form.
+
+<p>Block names have lexical scope: <code>RETURN-FROM</code>
+transfers control to the <code>innermost</code> <code>BLOCK</code>
+with a matching name.
+
+<p>Some forms implicitly create a block around their body forms.
+When a name is associated with the form, such as with
+<code>DEFUN</code>, the block takes the same name.
+
+<pre>
+? (defun block-demo-2 (flag)
+    (when flag
+      (return-from block-demo-2 nil))
+    t)
+BLOCK-DEMO-2
+? (block-demo-2 t)
+NIL
+? (block-demo-2 nil)
+T
+</pre> 
+
+<p>Other forms, such as the simple <code>LOOP</code> and
+<code>DOTIMES</code>, establish a block named <code>NIL</code>
+around their body forms. You can return from a <code>NIL</code>
+block using <code>(RETURN-FROM NIL ...)</code>, or just
+<code>(RETURN ...)</code>.
+
+<pre>
+? (let ((i 0))
+    (loop
+      (when (&gt; i 5)
+        (return))
+      (print i)
+      (incf i)))
+
+0
+1
+2
+3
+4
+5
+NIL
+? (dotimes (i 10)
+    (when (&gt; i 3)
+      (return t))
+    (print i))
+
+0
+1
+2
+3
+T
+</pre> 
+
+<h2>Escape from anywhere (but not at any time) with CATCH and THROW</h2>
+
+<p>So <code>BLOCK</code> and <code>RETURN-FROM</code> are handy for
+tranferring control out of nested forms, but they're only useful
+when the exit points (i.e. block names) are lexically visible.  But
+what do you do if you want to break out of a chain of function calls?
+
+<pre>
+<i>; WARNING! This won't work!</i> 
+(defun bad-fn-a ()
+  (bad-fn-b))
+
+(defun bad-fn-b ()
+  (bad-fn-c))
+
+(defun bad-fn-c ()
+  (return-from bad-fn-a))  <i>; There is no block BAD-FN-A visible here!</i> 
+</pre> 
+
+<p>Enter <code>CATCH</code> and <code>THROW</code>, which let you
+establish control transfers using dynamic scope. Recall that dynamic
+scope follows the chain of active forms, rather than the textual
+enclosure of one form within another of lexical scope.
+
+<pre>
+? (defun fn-a ()
+    (catch 'fn-a
+      (print 'before-fn-b-call)
+      (fn-b)
+      (print 'after-fn-b-call)))
+FN-A
+? (defun fn-b ()
+    (print 'before-fn-c-call)
+    (fn-c)
+    (print 'after-fn-c-call))
+FN-B
+?(defun fn-c ()
+   (print 'before-throw)
+   (throw 'fn-a 'done)
+   (print 'after-throw))
+FN-C
+? (fn-a)
+
+BEFORE-FN-B-CALL 
+BEFORE-FN-C-CALL 
+BEFORE-THROW 
+DONE
+</pre> 
+
+<h2>Making sure files only stay open as long as needed</h2>
+
+<p>Opening a file just long enough to process its data is a very
+common operation. We saw above that <code>UNWIND-PROTECT</code> can
+be used to ensure that the file gets properly closed. As you might
+expect, such a common operation has its own form in Lisp.
+
+<pre>
+(with-open-file (stream "file.ext" :direction :input)
+  (do-something-with-stream stream))
+</pre> 
+
+<p><code>WITH-OPEN-FILE</code> wraps an <code>OPEN</code> and
+<code>CLOSE</code> form around the code you provide, and makes sure
+that the <code>CLOSE</code> gets called at the right time. All of
+the options available to <code>OPEN</code> may be used in
+<code>WITH-OPEN-FILE</code> -- I've shown the options you'd use to
+open a file for input.
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter08.html">Chapter 8</a> | Chapter 9 | <a href="chapter10.html">Chapter 10</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

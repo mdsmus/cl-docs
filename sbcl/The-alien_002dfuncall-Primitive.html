@@ -1,0 +1,94 @@
+<html lang="en">
+<head>
+<title>The alien-funcall Primitive - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Foreign-Function-Calls.html#Foreign-Function-Calls" title="Foreign Function Calls">
+<link rel="next" href="The-define_002dalien_002droutine-Macro.html#The-define_002dalien_002droutine-Macro" title="The define-alien-routine Macro">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="The-alien-funcall-Primitive"></a>
+<a name="The-alien_002dfuncall-Primitive"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="The-define_002dalien_002droutine-Macro.html#The-define_002dalien_002droutine-Macro">The define-alien-routine Macro</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Foreign-Function-Calls.html#Foreign-Function-Calls">Foreign Function Calls</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">7.7.1 The <code>alien-funcall</code> Primitive</h4>
+
+<div class="defun">
+&mdash; Function: <b>sb-alien:alien-funcall</b><var> alien-function &amp;rest arguments<a name="index-sb_002dalien_003aalien_002dfuncall-284"></a></var><br>
+<blockquote><p><a name="index-alien_002dfuncall-285"></a>
+The <code>alien-funcall</code> function is the foreign function call
+primitive: <var>alien-function</var> is called with the supplied
+<var>arguments</var> and its C return value is returned as a Lisp value. 
+The <var>alien-function</var> is an arbitrary run-time expression; to refer
+to a constant function, use <code>extern-alien</code> or a value defined by
+<code>define-alien-routine</code>.
+
+        <p>The type of <code>alien-function</code> must be <code>(alien (function
+...))</code>  or <code>(alien (* (function ...)))</code>.  The function type is
+used to determine how to call the function (as though it was declared
+with a prototype.)  The type need not be known at compile time, but
+only known-type calls are efficiently compiled.  Limitations:
+
+          <ul>
+<li>Structure type return values are not implemented.
+
+          <li>Passing of structures by value is not implemented.
+
+        </ul>
+
+     </blockquote></div>
+
+   <p>Here is an example which allocates a <code>(struct foo)</code>, calls a
+foreign function to initialize it, then returns a Lisp vector of all
+the <code>(* (struct foo))</code> objects filled in by the foreign call:
+
+<pre class="lisp">     ;; Allocate a foo on the stack.
+     (with-alien ((f (struct foo)))
+       ;; Call some C function to fill in foo fields.
+       (alien-funcall (extern-alien "mangle_foo" (function void (* foo)))
+                      (addr f))
+       ;; Find how many foos to use by getting the A field.
+       (let* ((num (slot f 'a))
+              (result (make-array num)))
+         ;; Get a pointer to the array so that we don't have to keep extracting it:
+         (with-alien ((a (* (array (* (struct foo)) 100)) (addr (slot f 'b))))
+           ;; Loop over the first N elements and stash them in the result vector.
+           (dotimes (i num)
+             (setf (svref result i) (deref (deref a) i)))
+           ;; Voila.
+           result)))
+</pre>
+   </body></html>
+

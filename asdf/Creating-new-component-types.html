@@ -1,0 +1,86 @@
+<html lang="en">
+<head>
+<title>asdf Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name=description content="asdf Manual">
+<meta name=generator content="makeinfo 4.2">
+<link href="http://www.gnu.org/software/texinfo/" rel=generator-home>
+<!--
+This manual describes asdf, a system definition facility for Common
+Lisp programs and libraries.
+
+<p>asdf Copyright &copy; 2001-2004 Daniel Barlow and contributors
+
+<p>This manual Copyright &copy; 2001-2004 Daniel Barlow and
+contributors
+
+<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+-->
+</head>
+<body>
+<p>
+Node:<a name="Creating%20new%20component%20types">Creating new component types</a>,
+Previous:<a rel=previous accesskey=p href="Pre-defined-subclasses-of-component.html#Pre-defined%20subclasses%20of%20component">Pre-defined subclasses of component</a>,
+Up:<a rel=up accesskey=u href="Components.html#Components">Components</a>
+<hr><br>
+
+<h4>Creating new component types</h4>
+
+<p>New component types are defined by subclassing one of the existing
+component classes and specializing methods on the new component class.
+
+<p><em>FIXME: this should perhaps be explained more throughly, not only by
+example ...</em>
+
+<p>As an example, suppose we have some implementation-dependent
+functionality that we want to isolate in one subdirectory per Lisp
+implementation our system supports.  We create a subclass of
+<code>cl-source-file</code>:
+
+<br><pre>(defclass unportable-cl-source-file (cl-source-file)
+    ())
+</pre>
+
+<p>A hypothetical function <code>system-dependent-dirname</code> gives us the
+name of the subdirectory.  All that's left is to define how to
+calculate the pathname of an <code>unportable-cl-source-file</code>.
+
+<br><pre>(defmethod component-pathname ((component unportable-cl-source-file))
+  (let ((pathname (call-next-method))
+        (name (string-downcase (system-dependent-dirname))))
+    (merge-pathnames
+     (make-pathname :directory (list :relative name))
+     pathname)))
+</pre>
+
+<p>The new component type is used in a <code>defsystem</code> form in this way:
+
+<br><pre>(defsystem :foo
+    :components
+    ((:file "packages")
+     ...
+     (:unportable-cl-source-file "threads"
+      :depends-on ("packages" ...))
+     ...
+    )
+</pre>
+
+</body></html>
+

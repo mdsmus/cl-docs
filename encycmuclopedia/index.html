@@ -1,0 +1,1342 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 3.2//EN">
+
+<HTML>
+
+
+<HEAD>
+
+<TITLE>CMU Common Lisp Documentation Collection (EncyCMUCLopedia)</TITLE>
+
+<META NAME="keywords" CONTENT="CMUCL, cmucl, common lisp documentation,
+EncyCMUCLopedia, encycmuclopedia">
+
+<META NAME="description" CONTENT="CMU Common Lisp documentation for users
+and implementors">
+
+</HEAD>
+
+
+<BODY BGCOLOR="#FFFFFF" TEXT="#000000">
+
+<H1>The EncyCMUCLopedia<BR>A CMU Common Lisp Documentation Collection</H1>
+
+<P><EM>Milano, Italy --
+<!-- hhmts start -->
+Mar 29, 2001 -- 16:17 CEST
+<!-- hhmts end -->
+</EM>
+
+<P>Paolo Amoroso (editor), <A
+HREF="mailto:amoroso@mclink.it"><CODE>amoroso@mclink.it</CODE></A>
+
+<P><A HREF="history.html">Revision history</A>
+
+<SMALL>
+<P><A NAME="contents"><STRONG>Contents</STRONG></A>
+<DL>
+  <DT><A HREF="#intro">Introduction</A>
+  <DD>
+      <UL>
+        <LI><A HREF="#overview">Overview</A>
+        <LI><A HREF="#distribution">Getting and Installing the
+            EncyCMUCLopedia</A>
+        <Li><A HREF="#method">Document Selection and Organization</A>
+        <LI><A HREF="#feedback">Feedback</A>
+        <LI><A HREF="#acknowledgments">Acknowledgments</A>
+      </UL>
+  <DT><A HREF="#paths">Suggested Reading Paths</A>
+  <DD>
+      <UL>
+        <LI><A HREF="#paths-using">Using CMU Common Lisp</A>
+        <LI><A HREF="#paths-modifying">Modifying CMU Common Lisp</A>
+        <LI><A HREF="#paths-contributing">Contributing to the Development
+            of CMU Common Lisp</A>
+      </UL>
+  <DT><A HREF="#user-doc">User Documentation</A>
+  <DD>
+      <UL>
+        <LI><A HREF="#devenv">Development Environment and Tools</A>
+        <LI><A HREF="#editors">Editors</A>
+        <LI><A HREF="#clos-user">CLOS and PCL</A>
+        <LI><A HREF="#multi-proc">Multi-processing via Threads (x86
+            port only)</A>
+        <LI><A HREF="#network">Distributed and Network Programming</A>
+        <LI><A HREF="#x-user">X Window Interface</A>
+      </UL>
+  <DT><A HREF="#impl-doc">Implementor Documentation</A>
+  <DD>
+      <UL>
+        <LI><A HREF="#internals">System Internals</A>
+        <LI><A HREF="#mips-arch">MIPS Architecture Support</A>
+        <LI><A HREF="#build-process">Build Process and Porting</A>
+        <LI><A HREF="#clos">CLOS and PCL</A>
+        <LI><A HREF="#x-impl">X Window Interface</A>
+      </UL>
+</DL>
+</SMALL>
+
+
+<H2><A NAME="intro">Introduction</A></H2>
+
+<P>In this section you will find information about the purpose of the
+EncyCMUCLopedia, its availability and structure, its copyright and
+licensing status, and how to provide feedback to the editor.
+
+
+<H3><A NAME="overview">Overview</A></H3>
+
+<P>This is the <EM>EncyCMUCLopedia</EM>, an extensive collection of
+documents concerning <A HREF="http://www.cons.org/cmucl/"><EM>CMU Common
+Lisp</EM></A> (CMU CL; a <A
+HREF="http://www.laas.fr/~emarsden/cons.org/">more complete and up to date
+site</A> is maintained by Eric Marsden). CMU CL is a free, high-quality
+ANSI Common Lisp system for Unix workstations originally developed at the
+<A HREF="http://www.cs.cmu.edu/">School of Computer Science at Carnegie
+Mellon University</A>.
+
+<P>The EncyCMUCLopedia is intended as a resource for both <A
+HREF="#user-doc">users</A> and <A HREF="#impl-doc">implementors</A>. Its
+purpose is to package and present all useful material directly related to
+CMU CL. The EncyCMUCLopedia does not contain, however, references to
+introductory Common Lisp material, for which you may check the Web site of
+the <A HREF="http://www.alu.org/">Association of Lisp Users</A> (ALU). It
+is not a tutorial or reference guide to CMU CL either.
+
+<P>The documents included here were written at different times by different
+authors, mostly CMU CL developers. The information they contain may be
+incomplete, incorrect or out of date. It is your responsibility to check
+its accuracy. As the editor of the EncyCMUCLopedia I look for interesting
+material, organize it, add appropriate comments and cross references to an
+index, and package the collection for distribution. See <A
+HREF="#method">below</A> for information on how documents are selected and
+organized.
+
+<P>All material written in the context of the CMU CL project, and the
+EncyCMUCLopedia as an aggregation of content, comes with the following
+<STRONG>lack of warranty</STRONG>:
+
+<BLOCKQUOTE>This software is distributed in the hope that it will be
+useful, but WITHOUT ANY WARRANTY. The author(s) do not accept
+responsibility to anyone for the consequences of using it or for whether it
+serves any particular purpose or works at all. No warranty is made about
+the software or its performance.
+
+This software is made available AS IS, and is distributed without warranty
+of any kind, either expressed or implied.
+
+In no event will the author(s) or their institutions be liable to you for
+damages, including lost profits, lost monies, or other special, incidental
+or consequential damages arising out of or in connection with the use or
+inability to use (including but not limited to loss of data or data being
+rendered inaccurate or losses sustained by third parties or a failure of
+the program to operate as documented) the program, even if you have been
+advised of the possibility of such damages, or for any claim by any other
+party, whether in an action of contract, negligence, or other tortious
+action.</BLOCKQUOTE>
+
+<P>For documents prepared in other contexts each entry contains
+appropriate <STRONG>copyright</STRONG>, lack of warranty and licensing
+information. Check these conditions before redistributing part or all of
+this collection, or before preparing derivative works.
+
+
+<SMALL>
+<P>[<A HREF="#contents">Contents</A>]
+</SMALL>
+
+
+<H3><A NAME="distribution">Getting and Installing the
+EncyCMUCLopedia</A></H3>
+
+<P>The EncyCMUCLopedia packages in a single collection most of the existing
+documentation on CMU CL. It also comes with a sort of annotated
+bibliography, the page you are reading now, with comments and links to the
+actual documents.
+
+<P>The distribution of the EncyCMUCLopedia is available at:
+
+<PRE>
+<A
+HREF="http://cvs2.cons.org:8000/cmucl/doc/EncyCMUCLopedia/">http://cvs2.cons.org:8000/cmucl/doc/EncyCMUCLopedia/</A>
+</PRE>
+
+and consists of a compressed archive whose name has the following
+structure:
+
+<PRE>
+encycmuclopedia-<EM>yyyymmdd[</EM>d<EM>]</EM>.tar.gz
+encycmuclopedia-<EM>yyyymmdd[</EM>d<EM>]</EM>.tar.bz2
+</PRE>
+
+where the date <CODE><EM>yyyymmdd</EM></CODE> provides version information
+and the optional <CODE>d</CODE> character flags draft releases. The version
+with the <CODE>bz2</CODE> extension was processed with the more space
+efficient <CODE>bzip2</CODE> file compressor.
+
+<P>To install the EncyCMUCLopedia you need about 10MB of disk space. Just
+extract the compressed archive in a suitable directory such as
+<CODE>/usr/local/lib/cmucl</CODE>. Then open file <CODE>index.html</CODE>
+in <CODE>doc</CODE>, the top-level directory of the distribution, with any
+Web browser.
+
+
+<SMALL>
+<P>[<A HREF="#contents">Contents</A>]
+</SMALL>
+
+
+<H3><A NAME="method">Document Selection and Organization</A></H3>
+
+<P>This collection includes material directly related to the CMU CL system,
+its development environment, language extensions and libraries. Since CMU
+CL is mostly compliant with <A
+HREF="http://www.xanalys.com/software_tools/reference/HyperSpec/FrontMatter/">ANSI
+Common Lisp</A>, general and introductory Common Lisp and CLOS documents
+have been left out from the EncyCMUCLopedia.
+
+<P>Any Common Lisp or CLOS book is a good source of information about
+standard language features. If you are interested in such material, check
+the Web site of the <A HREF="http://www.alu.org/">Association of Lisp
+Users</A> (ALU) or download the CMU CL <A
+HREF="http://www.debian.org/Packages/stable/devel/cmucl.html">distribution
+for Debian Linux</A>, which comes with Common Lisp and CLOS tutorials.
+
+<P>The documents in the EncyCMUCLopedia come from different sources and may
+be incomplete, inaccurate or out of date. They may also not cover all the
+features of the system and its use. Therefore, their grouping in the
+following sections reflects the state of available material, not a
+comprehensive and accurate classification of CMU CL's features. In other
+words, if a topic is not mentioned in the EncyCMUCLopedia, there's probably
+no documentation about it.
+
+<P>Documents are listed in <STRONG>entries</STRONG> similar to the
+following sample one:
+
+<DL>
+  <DT><EM>Document title</EM> (within each section, titles are sorted in
+      alphabetical order)
+      <BR><SMALL>Author(s) -- Last modification date</SMALL>
+      <BR>[PostScript] [PDF] [HTML] [ASCII] [Online version] [Additional
+      online material]: links to the available formats for the document
+      (you may need to configure your Web browser to view some of them),
+      and possibly to the latest online version and additional material,
+      such as source code or scripts
+  <DD>Description of the document's purpose and content.
+      <P><SMALL>Copyright and licensing information.</SMALL>
+</DL>
+
+Information about authors and modification dates is included only if
+known. Some documents may be available in only one format. For a few of the
+documents, only links to the Web sites where they are accessible are
+provided.
+
+
+<SMALL>
+<P>[<A HREF="#contents">Contents</A>]
+</SMALL>
+
+
+<H3><A NAME="feedback">Feedback</A></H3>
+
+<P>Feedback on the EncyCMUCLopedia is welcome and encouraged. If you have
+comments or suggestions, or you are willing to contribute new documents or
+corrections, write to Paolo Amoroso <A
+HREF="mailto:amoroso@mclink.it"><CODE>amoroso@mclink.it</CODE></A>. Feel
+free to critique every aspect of this work, from the selection of documents
+to the layout of this index, from its content to my unoptimized English
+compiler.
+
+
+<SMALL>
+<P>[<A HREF="#contents">Contents</A>]
+</SMALL>
+
+
+<H3><A NAME="acknowledgments">Acknowledgments</A></H3>
+
+<P>I would like to thank all those who provided me with help and
+encouragement for this project. Marco Antoniotti sent me the Motif
+interface documents he converted to LaTeX2e. Daniel Barlow contributed
+documents from his Web site. Gary Byers contributed the notes on the
+PowerPC port. Martin Cracauer hosted the EncyCMUCLopedia at <A
+HREF="http://www.cons.org/"><CODE>cons.org</CODE></A> and provided some
+material. Vinodh Das pointed out some &quot;stealth&quot; typos. Jerry
+Gregg contributed his article on installing CMU CL. Robert MacLachlan and
+Pierre R. Mai granted permission to include their newsgroup and mailing
+list messages. William Harold Newman shared his notes on SBCL. I thank
+Antonio Piccolboni for his feedback -- and you should thank him too,
+because he spared you the trouble of reading early drafts of the
+EncyCMUCLopedia. Russ Urquhart kindly converted the CLX reference manual to
+PostScript and PDF from the Interleaf source, probably making it possible
+to comfortably browse it for the first time in the history of
+Lispkind. Peter Van Eynde put together an extensive collection of CMU CL
+documents, from which I took some material.
+
+<P>Fortunately for them, I take all the responsibility for any errors,
+inaccuracies or omissions in this work. But unfortunately for them, I take
+all the fun of the project.
+
+
+<SMALL>
+<P>[<A HREF="#contents">Contents</A>]
+</SMALL>
+
+
+<H2><A NAME="paths">Suggested Reading Paths</A></H2>
+
+<P>It is not necessary to read all the material referenced in the
+EncyCMUCLopedia. Users are often interested in quickly accessing the
+documentation that may help them in solving particular problems with CMU
+CL, or in using the system and its tools to perform various tasks.
+
+<P>So the following subsections are structured around typical
+<STRONG>goal-based user profiles</STRONG>. Read their introductions to see
+whether they match the tasks you are interested in. If so, follow the
+suggested steps. The paths are ordered so that background material, and
+other important or relevant information, is given first. If you find what
+you need before the end of a path you may safely skip the remaining
+entries.
+
+<P>Regardless of the user's goals, the <A HREF="#userman"><EM>CMU Common
+Lisp User's Manual</EM></A> should probably be a <STRONG>required
+reading</STRONG> for everybody.
+
+
+<H3><A NAME="paths-using">Using CMU Common Lisp</A></H3>
+
+<P>If you are a Common Lisp programmer who needs to become familiar with
+CMU CL, or you are new to the language and need to install and use the
+system, this reading path is for you. You may stop at step 4 if you would
+just like to learn more about CMU CL in order to decide whether it's the
+right system for you. Here is what you may do:
+
+<OL>
+  <LI>learn about the features of CMU CL by checking the <A
+      HREF="#man-cmucl"><CODE>cmucl</CODE> online manual page</A>
+  <LI>read <A HREF="#linux-howto"><EM>CMU Common Lisp on Linux</EM></A> and
+      <A HREF="#installing-18c-on-rh70"><EM>Installing CMU CL 18c on Red
+      Hat Linux 7.0</EM></A> for installation and configuration information
+  <LI>read the <A HREF="#man-lisp"><CODE>lisp</CODE> online manual page</A>
+      for general usage information
+  <LI>carefully read the CMU CL <A HREF="#userman">user's manual</A> -- you
+      may want to <STRONG>print</STRONG> it and keep it handy (in case of
+      problems with CMU CL, skim the latest <A HREF="#cmucl-notes">release
+      notes</A>)
+  <LI>if you can not use or do not like the Emacs editor, read the <A
+      HREF="#hem-userman">Hemlock user's manual</A>
+  <LI>if your applications are based on CLOS, check the <A
+      HREF="#clos-user">information and tips</A> for using PCL
+  <LI>if your applications require multi-processing, available only on the
+      <STRONG>x86 port</STRONG>, read about <A HREF="#threads">threads</A>
+      and <A HREF="#locks">locks</A>
+  <LI>if you are interested in graphics programming, read about <A
+      HREF="#clm-man">CLM</A>, how it is <A
+      HREF="#motif-interface">accessed from CMU CL</A>, and the <A
+      HREF="#motif-design">differences with the CMU CL implementation</A>
+      (you may also need to check some low level <A HREF="#clx">CLX
+      functions</A>)
+</OL>
+
+
+<SMALL>
+<P>[<A HREF="#contents">Contents</A>]
+</SMALL>
+
+
+<H3><A NAME="paths-modifying">Modifying CMU Common Lisp</A></H3>
+
+<P>This reading path is for you if you need to build CMU CL from source
+because you have slightly modified the system, added minor features, or you
+would just like to customize it. Follow these steps:
+
+<OL>
+  <LI>learn how to <A HREF="#compilation-howto">build CMU CL from
+      source</A> by following the appropriate <A
+      HREF="#compilation-steps">compilation steps</A> (there are <A
+      HREF="#build-debian">specific instructions</A> for the <STRONG>Debian
+      Linux</STRONG> port</A>)
+  <LI>for learning how to change the behavior of PCL without rebuilding the
+      system, check the <A HREF="#mop">Metaobject Protocol</A>
+  <LI>if you need to customize the Hemlock editor or add new features to
+      it, read the <A HREF="#hem-imp">command implementor's manual</A>
+  <LI>you may want to skim the manual that discusses the <A
+      HREF="#cmucl-design">design of CMU CL</A>
+</OL>
+
+
+<SMALL>
+<P>[<A HREF="#contents">Contents</A>]
+</SMALL>
+
+
+<H3><A NAME="paths-contributing">Contributing to the Development of CMU
+Common Lisp</A></H3>
+
+<P>If you are an experienced Common Lisp programmer and you would like to
+do major changes to CMU CL, contribute to its maintenance and further
+development, or simply understand how it works, this reading path is for
+you. First become familiar with <A HREF="#paths-modifying">building and
+modifying</A> the system, then follow these further steps:
+
+<OL>
+  <LI>read the manual that discusses the <A HREF="#cmucl-design">design of
+      CMU CL</A>
+  <LI>read about the <A HREF="#data-types">representation of data types</A>
+  <LI>read about the <A HREF="#mem-layout">memory layout</A>
+  <LI>if you need to modify or extend PCL, read about its <A
+      HREF="#pcl-lap">method lookup strategies</A>
+  <LI>if you develop for the <STRONG>MIPS</STRONG> architecture, read the
+      notes on <A HREF="#mips-call">calling conventions</A>, <A
+      HREF="#mips-regs">register usage</A> and <A HREF="#mips-issues">other
+      relevant issues</A>
+  <LI>check the <A HREF="#sbcl-cmucl">overview of the changes</A> to CMU CL
+      in order to produce SBCL, and see whether you are able to contribute
+      to the development of this interesting experimental system
+</OL>
+
+
+<SMALL>
+<P>[<A HREF="#contents">Contents</A>]
+</SMALL>
+
+
+<H2><A NAME="user-doc">User Documentation</A></H2>
+
+<P>The documentation grouped in this section covers topics of interest to
+CMU CL <EM>users</EM>. In this context users are programmers who develop
+Common Lisp applications with CMU CL.
+
+
+<H3><A NAME="devenv">Development Environment and Tools</A></H3>
+
+<P>This subsection references documents that provide general information
+about CMU CL and discuss user interface issues, programming tools and
+language extensions.
+
+<DL>
+  <DT><EM>CMU CL bugs</EM>
+      <BR><SMALL>CMU CL developers</SMALL>
+      <BR>[<A HREF="devenv/bugs.txt">ASCII</A>]
+  <DD>A list of the known bugs of CMU CL.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><A NAME="cmucl-notes"><EM>CMU CL release notes</EM></A>
+      <BR><SMALL>CMU CL developers</SMALL>
+      <BR>[ASCII]
+  <DD>The following notes provide information about specific releases of
+      CMU CL. They discuss missing or new features, potential problems and
+      bugs, and differences with previous releases. Next to each link is
+      the version identifier of CMU CL, if known, to which the notes
+      apply. Unless otherwise stated, the notes refer to all ports of CMU
+      CL.
+      <UL>
+        <LI><A HREF="devenv/release-18c.txt">December 25, 2000</A> -- 18c
+        <LI><A HREF="devenv/RELEASE-NOTES.txt">May 1999</A> --
+            release 2.4.13 for the Debian Linux port
+        <LI><A HREF="devenv/README.1st.txt">January 5, 1997</A> -- release
+            1.03.7 of the x86 port
+        <LI><A HREF="devenv/net-README.txt">November 1994</A>(?) -- 17f,
+            <EM>General information on the net release</EM>
+        <LI><A HREF="devenv/net-announce.txt">November 1994</A>, -- 17f,
+            net release
+        <LI><A HREF="devenv/beta-release-notes.txt">November 1994</A> --
+            17f beta
+        <LI><A HREF="devenv/alpha-release-notes.txt">March 20, 1994</A> --
+            alpha
+        <LI><A HREF="devenv/alpha-notes-thru-92.txt">December 5, 1992</A>
+            -- alpha
+        <LI><A HREF="devenv/omega-release-notes.txt">February 25, 1992</A>
+            -- omega
+      </UL>
+
+      <P><SMALL>These documents are in the public domain.</SMALL>
+  <DT><A NAME="man-cmucl"><EM>CMU Common Lisp</EM></A>
+      <BR><SMALL>CMU CL developers -- October 15, 1991</SMALL>
+      <BR>[<A HREF="devenv/cmucl.txt">ASCII</A>]
+  <DD>The online manual page you can browse with the <CODE>man cmucl</CODE>
+      shell command. It provides an overview of the features of CMU CL.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><A NAME="cmuclconfig"><EM>CMU Common Lisp configuration</EM></A>
+      <BR><SMALL>Peter Van Eynde -- September 16, 1999</SMALL>
+      <BR>[<A HREF="devenv/cmuclconfig.txt">ASCII</A>]
+  <DD>This is the online manual page you can browse with the <CODE>man
+      cmuclconfig</CODE> shell command. The <CODE>cmuclconfig</CODE>
+      utility, available only on the Debian Linux port, dumps custom Lisp
+      images containing selected packages such as the CLX and Motif Toolkit
+      interfaces to the X Window system, and the Hemlock editor.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><A NAME="linux-howto"><EM>CMU Common Lisp on Linux</EM></A>
+      <BR><SMALL>Daniel Barlow -- June 26, 2000</SMALL>
+      <BR>[<A HREF="devenv/howto.html">HTML</A>] [<A
+      HREF="http://www.telent.net/lisp/howto.html">Online version</A>]
+  <DD><EM>CMU Common Lisp on Linux</EM>, currently in draft form, explains
+      to <STRONG>beginners</STRONG> how to set up, configure and use a
+      Common Lisp programming environment based on CMU CL and the Emacs
+      editor under Linux.
+
+      <P>Although the document deals mainly with Linux, most of the
+      information applies also to other ports of CMU CL.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><A NAME="man-lisp"><EM>CMU Common Lisp programming
+      environment</EM></A>
+      <BR><SMALL>CMU CL developers -- October 15, 1991</SMALL>
+      <BR>[<A HREF="devenv/lisp.txt">ASCII</A>]
+  <DD>This is the online manual page you can browse with the <CODE>man
+      lisp</CODE> shell command. It contains information about running
+      (command line options) and configuring (environment variables,
+      location of important files) CMU CL.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><A NAME="userman"><EM>CMU Common Lisp User's Manual</EM></A>
+      <BR><SMALL>Robert A. MacLachlan (editor) -- October 31, 1997</SMALL>
+      <BR>[<A HREF="devenv/cmu-new.ps">PostScript</A>] [<A
+      HREF="devenv/cmu-new/index.html">HTML</A>] [<A
+      HREF="http://www.mindspring.com/~rtoy/software/cmu-user/index.html">Online version</A>]
+  <DD>This manual is the <STRONG>most important resource</STRONG> for CMU
+      CL users and implementors. It illustrates the system's design
+      choices, the tools provided by the development environment, and the
+      language extensions.
+
+      <P>Concerning design choices, the manual describes data
+      representation, garbage collection strategies, interrupt processing
+      and other implementation dependent issues. It also extensively
+      discusses Python (the CMU CL compiler; no relation with the Python
+      programming language), and the programming styles and techniques it
+      encourages.
+
+      <P>The tools presented in the manual are the source level debugger
+      and its programming interface, the profiler, and the Python
+      compiler. Note, however, that this document does not deal with the
+      Hemlock editor, which comes with a separate <A
+      HREF="#hem-userman">user manual</A>.
+
+      <P>The language extensions described in CMU CL's user manual are the
+      facilities for running external programs, a Unix interface, event
+      dispatching facilities, a foreign function call interface, and
+      support for interprocess communication and remote procedure call. The
+      CMU CL multi-processing extension is currently available only on the
+      x86 port. For more information, refer to the <A
+      HREF="#multi-proc">documents about multi-processing</A>.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><EM>Configuring packages</EM>
+      <BR><SMALL>Peter Van Eynde -- May 1999</SMALL>
+      <BR>[<A HREF="devenv/README.packages.txt">ASCII</A>]
+  <DD>A short note on <CODE>config</CODE>, the utility for dumping custom
+      Lisp images. If you use the Debian Linux port check the <A
+      HREF="#cmuclconfig">manual of <CODE>cmuclconfig</CODE></A>, a
+      front-end to <CODE>config</CODE>.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><A NAME="README.design"><EM>Design of the Common Lisp
+      controller</EM></A>
+      <BR><SMALL>Peter Van Eynde -- November, 2000</SMALL>
+      <BR>[<A HREF="devenv/README.design.txt">ASCII</A>] [<A
+      HREF="http://www.vaneynde7.yucom.be/README.design">Online
+      version</A>] [<A
+      HREF="http://www.vaneynde7.yucom.be/clc.html">Additional online
+      material</A>]
+  <DD>The Common Lisp Controller is a proposal for standardizing the
+      installation and access to Lisp library packages. It is based on a
+      set of conventions, initialization files and scripts.
+
+      <P>This is the Common Lisp Controller specification. The first
+      version of CMU CL with support for this proposal is 2.5.0 for Debian
+      Linux.
+      
+      <P><SMALL>Included with permission.</SMALL>
+  <DT><A NAME="installing-18c-on-rh70"><EM>Installing CMU CL 18c on Red Hat
+      Linux 7.0</EM></A>
+      <BR><SMALL>Jerry Gregg -- February 13, 2001</SMALL>
+      <BR>[<A HREF="devenv/installing-18c-on-rh70.txt">ASCII</A>]
+  <DD>A short step-by-step <STRONG>guide to installing</STRONG> and
+      configuring CMU CL 18c on Red Hat Linux 7.0. Although the description
+      is based on version 18c and Red Hat Linux, it probably applies to
+      later versions of CMU CL and other Unix systems. If you have Debian
+      Linux, see <A HREF="#linux-howto"><EM>CMU Common Lisp on
+      Linux</EM></A>.
+
+      <P>This article was originally posted to the
+      <A HREF="news:comp.lang.lisp"><CODE>comp.lang.lisp</CODE></A>
+      newsgroup (<CODE>Subject: cmucl on linux (redhat 7.0) easy
+      install.</CODE>).
+
+      <P><SMALL>Included with permission.</SMALL>
+  <DT><EM>Location of the documentation included with the Debian Linux
+      port</EM>
+      <BR><SMALL>Peter Van Eynde -- May 1999</SMALL>
+      <BR>[<A HREF="devenv/README.documentation.txt">ASCII</A>]
+  <DD>A short note on the location of the documentation files included with
+      the Debian Linux port. It also explains how to install the <A
+      HREF="http://www.xanalys.com/software_tools/reference/HyperSpec/FrontMatter/">Common Lisp HyperSpec</A> within the directory hierarchy.
+      
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><EM>Location of the files included with the Debian Linux port</EM>
+      <BR><SMALL>Peter Van Eynde -- May 1999</SMALL>
+      <BR>[<A HREF="devenv/README.fsstnd.txt">ASCII</A>]
+  <DD>A list of the locations where the components of the CMU CL Debian
+      Linux port distribution are installed.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+</DL>
+
+
+<SMALL>
+<P>[<A HREF="#contents">Contents</A>]
+</SMALL>
+
+
+<H3><A NAME="editors">Editors</A></H3>
+
+<P>Documents in this subsection explain how to use Hemlock, the editor
+which comes with CMU CL, or to interact with CMU CL through Emacs.
+
+<DL>
+  <DT><A NAME="hem-userman"><EM>Hemlock User's Manual</EM></A>
+      <BR><SMALL>Bill Chiles, Robert MacLachlan</SMALL>
+      <BR>[<A HREF="devenv/user.ps">PostScript</A>]
+  <DD>Hemlock is the integrated editor which comes with CMU CL. It follows
+      the tradition of early versions of Emacs and of the Lisp Machine
+      editor ZWEI.
+
+      <P>This manual explains how to edit Lisp source code, evaluate it and
+      interact with the Lisp system, manage multiple windows, obtain
+      documentation, perform simple customizations, and more. Since Hemlock
+      is written in Lisp, the user can extensively customize it and add new
+      features. For learning how to do it see the <A
+      HREF="#hem-imp">command implementor's manual</A>.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><EM>Notes on using Hemlock</EM>
+      <BR><SMALL>Peter Van Eynde -- May 1999</SMALL>
+      <BR>[<A HREF="devenv/README.hemlock.txt">ASCII</A>]
+  <DD>This note provides basic information for starting and exiting a
+      session with Hemlock, the integrated editor included with CMU CL. For
+      an in-depth discussion of Hemlock's features see its <A
+      HREF="#hem-userman">user manual</A>.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><A NAME="ilisp"><EM>Notes on using ILISP</EM></A>
+      <BR><SMALL>Peter Van Eynde -- February 2001</SMALL>
+      <BR>[<A HREF="devenv/README.ilisp.txt">ASCII</A>]
+  <DD>ILISP is an Emacs major mode for interacting with inferior Lisp
+      processes. Besides telling where to find ILISP, this note explains
+      how to configure Emacs to work with ILISP and lists its main
+      commands.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+</DL>
+
+
+<SMALL>
+<P>[<A HREF="#contents">Contents</A>]
+</SMALL>
+
+
+<H3><A NAME="clos-user">CLOS and PCL</A></H3>
+
+<P>Information and tips for using PCL, the CLOS implementation which comes
+with CMU CL.
+
+<DL>
+  <DT><A NAME="pcl-benchmarks"><EM>Comments on some PCL benchmarks</EM></A>
+      <BR><SMALL>Pierre R. Mai -- December 8, 2000</SMALL>
+      <BR>[<A HREF="devenv/pcl-benchmarks.txt">ASCII</A>]
+  <DD>In this article, originally posted to the <A
+      HREF="news:comp.lang.lisp"><CODE>comp.lang.lisp</CODE></A> newsgroup
+      (<CODE>Subject: Re: Are there "constructors" in CLOS?</CODE>), the
+      author provides some details on the performance of a large simulation
+      toolkit written with CMU CL, whose PCL implementation outperformed
+      all the alternative implementations he tried. Some
+      data on benchmarks of PCL with the <A
+      HREF="http://clisp.sourceforge.net">CLISP</A> implementation of CLOS
+      are also included.
+
+      <P><SMALL>Included with permission.</SMALL>
+  <DT><A NAME="pcl-experience"><EM>Experience with the performance of
+      PCL</EM></A>
+      <BR><SMALL>Pierre R. Mai -- March 23, 2000</SMALL>
+      <BR>[<A HREF="devenv/pcl-experience.txt">ASCII</A>]
+  <DD>This message, originally posted to the <CODE>cmucl-imp</CODE> mailing
+      list (<CODE>Subject: Re: Spurious range warnings</CODE>), briefly
+      tells the author's experience with benchmarking the CLOS
+      implementation of CMU CL, PCL, with other CLOS implementations. He
+      used for this both micro-bencharks and large applications for
+      production use.
+
+      <P><SMALL>Included with permission.</SMALL>
+  <DT><A NAME="instance-opt.txt"><EM>Instance creation
+      optimization</EM></A>
+      <BR><SMALL>Pierre R. Mai -- November 17, 1999</SMALL>
+      <BR>[<A HREF="devenv/clos/instance-opt.txt">ASCII</A>]
+  <DD>This article, originally posted to the <A
+      HREF="news:comp.lang.lisp"><CODE>comp.lang.lisp</CODE></A> newsgroup
+      (<CODE>Subject: Re: [MOP] add-method question</CODE>), explains how
+      to optimize certain cases of instance creation. It also provides tips
+      for avoiding spurious warnings related to the integration of PCL with
+      CMU CL.
+
+      <P><SMALL>Included with permission.</SMALL>
+  <DT><A NAME="pcl-performance-impressions"><EM>Possible origin of the
+      impressions on PCL's performance</EM></A>
+      <BR><SMALL>Pierre R. Mai -- October 28, 2000</SMALL>
+      <BR>[<A HREF="devenv/pcl-performance-impressions.txt">ASCII</A>]
+  <DD>In this article, originally posted to the <A
+      HREF="news:comp.lang.lisp"><CODE>comp.lang.lisp</CODE></A> newsgroup
+      (<CODE>Subject: Re: Can I use Lisp?</CODE>), the author speculates on
+      the possible origin of the impressions on the poor performance of
+      PCL, the CMU CL implementation of CLOS.
+
+      <P><SMALL>Included with permission.</SMALL>
+  <DT><A NAME="pcl-performance.txt"><EM>Some thoughts on the performance of
+      PCL</EM></A>
+      <BR><SMALL>Pierre R. Mai -- November 12, 1999</SMALL>
+      <BR>[<A HREF="devenv/clos/pcl-performance.txt">ASCII</A>]
+  <DD>An experienced user summarizes the main areas where PCL is slower
+      than commercial implementations. He also mentions some user-visible
+      areas of the integration of PCL with CMU CL. This email message was
+      originally sent to the <A
+      HREF="http://wilson.ai.mit.edu/x3j13.html">X3J13</A> mailing list
+      (<CODE>Subject: Re: Core Lisp</CODE>).
+
+      <P><SMALL>Included with permission.</SMALL>
+  <DT><A NAME="mop-tips.txt"><EM>Tips for using PCL and its Metaobject
+      Protocol</EM></A>
+      <BR><SMALL>Pierre R. Mai -- December 8, 1999</SMALL>
+      <BR>[<A HREF="devenv/clos/mop-tips.txt">ASCII</A>]
+  <DD>This article, originally posted to the <A
+      HREF="news:comp.lang.lisp"><CODE>comp.lang.lisp</CODE></A> newsgroup
+      (<CODE>Subject: Re: MOP/pcl anomaly in CMUCL?</CODE>), provides some
+      tips for using PCL symbols and the MOP (<A HREF="#mop">Metaobject
+      Protocol</A>).
+
+      <P><SMALL>Included with permission.</SMALL>
+</DL>
+
+
+<SMALL>
+<P>[<A HREF="#contents">Contents</A>]
+</SMALL>
+
+
+<H3><A NAME="multi-proc">Multi-processing via Threads (x86 port
+only)</A></H3>
+
+<P>The documents grouped in this subsection summarize the CMU CL
+multi-processing facilities, currently available only on the x86 port and
+still under development, based on threads.
+
+<DL>
+  <DT><A NAME="locks"><EM>Locks</EM></A>
+      <BR><SMALL>CLIM developers -- <EM>CLIM 2.0 User's Guide</EM>; October
+      1998 (last update January 12, 1999)</SMALL>
+      <BR>[<A
+      HREF="http://www.xanalys.com/software_tools/reference/lwu41/climuser/GUID_336.HTM#HEADING336-0">Online version</A>]
+  <DD>CMU CL provides a multi-processing extension via threads, currently
+      available only on the x86 port, based on the model implemented by the
+      <A
+      HREF="http://www.xanalys.com/software_tools/reference/lwu41/climuser/GUIDE_1.HTM">CLIM</A> graphical user interface manager for Common Lisp.
+
+      <P>This document, available at the Web site of <A
+      HREF="http://www.xanalys.com/"><EM>Xanalys</EM></A>, is the
+      section of the CLIM manual that illustrates the functions for
+      creating and holding <EM>locks</EM> (mutexes). CMU CL, however, does
+      not support the functions for managing recursive locks
+      (<CODE>make-recursive-lock</CODE> and
+      <CODE>with-recursive-lock-held</CODE>) mentioned in the manual.
+
+      <P><SMALL>Copyright &copy; 1995-1999 Harlequin Group plc. All rights
+      reserved.
+
+      <P>Note that the EncyCMUCLopedia includes just a link to this
+      document, not the document itself.</SMALL>
+  <DT><A NAME="threads"><EM>Multi-Processing</EM></A>
+      <BR><SMALL>CLIM developers -- <EM>CLIM 2.0 User's Guide</EM>; October
+      1998 (last update January 12, 1999)</SMALL>
+      <BR>[<A
+      HREF="http://www.xanalys.com/software_tools/reference/lwu41/climuser/GUID_335.HTM#HEADING335-0">Online version</A>]
+  <DD>CMU CL provides a multi-processing extension via threads, currently
+      available only on the x86 port, based on the model implemented by the
+      <A
+      HREF="http://www.xanalys.com/software_tools/reference/lwu41/climuser/GUIDE_1.HTM">CLIM</A> graphical user interface manager for Common Lisp.
+
+      <P>This document, available at the Web site of <A
+      HREF="http://www.xanalys.com/"><EM>Xanalys</EM></A>, is the
+      section of the CLIM manual that illustrates the functions for
+      creating, destroying, accessing and waiting for processes. Notice
+      that CMU CL provides other functions not discussed in the document,
+      and that its code base is not too interrupt safe yet. The interrupt
+      safety on the x86 port, however, is improving.
+
+      <P><SMALL>Copyright &copy; 1995-1999 Harlequin Group plc. All rights
+      reserved.
+
+      <P>Note that the EncyCMUCLopedia includes just a link to this
+      document, not the document itself.</SMALL>
+</DL>
+
+
+<SMALL>
+<P>[<A HREF="#contents">Contents</A>]
+</SMALL>
+
+
+<H3><A NAME="network">Distributed and Network Programming</A></H3>
+
+<P>This subsection includes documents that deal with using CMU CL for
+network programming and developing distributed applications.
+
+<DL>
+  <DT><A NAME="gnome-lisp"><EM>CORBA, GNOME, CMUCL, and other macabre
+      tales</EM></A>
+      <BR><SMALL>Daniel Barlow -- May 15, 2000</SMALL>
+      <BR>[<A HREF="devenv/gnome-lisp.html">HTML</A>] [<A
+      HREF="http://www.telent.net/corba/gnome-lisp.html">Online
+      version</A>]
+  <DD>A description of how to call <A
+      HREF="http://www.gnome.org/">GNOME</A> <A
+      HREF="http://www.omg.org/">CORBA</A> servers from CMU CL. The
+      document illustrates a worked out example with the GNOME Help
+      Browser.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><A NAME="corba-index"><EM>CORBA in five minutes</EM></A>
+      <BR><SMALL>Daniel Barlow -- May 3, 2000</SMALL>
+      <BR>[<A HREF="devenv/corba-index.html">HTML</A>] [<A
+      HREF="http://ww.telent.net/corba/index.html">Online version</A>]
+  <DD>Background material on <A HREF="http://www.omg.org/">CORBA</A> that
+      complements <A HREF="#gnome-lisp"><EM>CORBA, GNOME, CMUCL and other
+      macabre tales</EM></A>.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+</DL>
+
+
+<SMALL>
+<P>[<A HREF="#contents">Contents</A>]
+</SMALL>
+
+
+<H3><A NAME="x-user">X Window Interface</A></H3>
+
+<P>This subsection collects documents about programming with CLX and the
+Motif Toolkit, the low and high level CMU CL interfaces to the X Window
+system.
+
+<DL>
+  <DT><A NAME="clm-man"><EM>CLM -- A Language Binding for Common Lisp and
+      OSF Motif
+      <BR>User Guide and reference Manual</EM></A>
+      <BR><SMALL>Andreas B&auml;cker, Thomas Berlage -- January 16,
+      1992</SMALL>
+      <BR>[<A HREF="x/clm.ps">PostScript</A>]
+  <DD>CLM is a Common Lisp interface to the OSF Motif X Window
+      toolkit. It allows Common Lisp programs to use Motif widgets for
+      their user interface.
+
+      <P>This is both a user guide and a reference manual for CLM. It
+      explains how to access CLM, write and debug applications, instantiate
+      widgets and handle input events. Be sure to check the
+      <STRONG>differences</STRONG> of the CMU CL Motif Toolkit Interface
+      from CLM summarized in the <A HREF="#motif-design">design notes on
+      the Motif interface</A>. You may also need to refer to the <A
+      HREF="#clx">CLX manual</A> for low-level graphics functions needed
+      for drawing into widgets.
+
+      <P><SMALL>Copyright 1992 GMD (German National Research Center for
+      Computer Science)
+
+      <P>Permission to use, copy, modify, distribute, and sell this
+      software and its documentation for any purpose is hereby granted
+      without fee, provided that the above copyright notice appear in all
+      copies and that both that copyright notice and this permission notice
+      appear in supporting documentation, and that the name of GMD not be
+      used in advertising or publicity pertaining to distribution of the
+      software without specific, written prior permission. GMD makes no
+      representations about the suitability of this software for any
+      purpose. It is provided &quot;as is&quot; without express or implied
+      warranty.
+
+      <P>GMD DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+      INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN
+      NO EVENT SHALL GMD BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+      CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+      OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
+      OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
+      USE OR PERFORMANCE OF THIS SOFTWARE.</SMALL>
+  <DT><A NAME="clx"><EM>CLX Common Lisp X Interface</EM></A>
+      <BR><SMALL>Keith Cessna, Kerry Kimbrough, Mike Myjak, LaMott Oren,
+      Dan Stenger -- 1989</SMALL>
+      <BR>[<A HREF="x/clx.ps">PostScript</A>] [<A
+      HREF="x/clx.pdf">PDF</A>] [<A
+      HREF="http://www.uni-karlsruhe.de/~unk6/clxman/index.html">Online
+      version</A>]
+  <DD>This is the reference manual of CLX, the Common Lisp interface to the
+      X Window system supported by CMU CL. CLX is at the same level of
+      abstraction of the Xlib library, which is the lowest level API
+      accessible to application programmers. For a higher level layer, see
+      the <A HREF="#motif-interface">CMU CL Motif Toolkit Interface</A>.
+
+      <P>The manual describes all the functions for performing primitive
+      graphics operations and managing input events. It is assumed that the
+      reader is familiar with Xlib.
+
+      <P><SMALL>&copy; 1988, 1989 Texas Instruments Incorporated
+
+      <P>Permission is granted to any individual or institution to use,
+      copy, modify and distribute this document, provided that this
+      complete copyright and permission notice is maintained, intact, in
+      all copies and supporting documentation. Texas Instruments
+      Incorporated makes no representations about the suitability of this
+      document or the software described herein for any purpose.  It is
+      provided &quot;as is&quot; without express or implied
+      warranty.</SMALL>
+  <DT><A NAME="motif-interface"><EM>CMUCL Motif Toolkit</EM></A>
+      <BR><SMALL>CMU CL developers</SMALL>
+      <BR>[<A HREF="x/motif-toolkit.ps">PostScript</A>]
+  <DD>CLM is a Common Lisp interface to the OSF Motif X Window toolkit. CMU
+      CL supports a similar interface, the Motif Toolkit Interface, which
+      is based on a server that provides Lisp clients with access to Motif
+      functions through remote procedure call facilities.
+
+      <P>This document explains how to start the server, connect to it and
+      invoke Motif functions. Be sure to check the
+      <STRONG>differences</STRONG> with CLM summarized in the <A
+      HREF="#motif-design">design notes on the Motif interface</A>. For
+      more information on CLM programming, see the <A HREF="#clm-man">CLM
+      manual</A>.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+</DL>
+
+
+<SMALL>
+<P>[<A HREF="#contents">Contents</A>]
+</SMALL>
+
+
+<H2><A NAME="impl-doc">Implementor Documentation</A></H2>
+
+<P>The documentation grouped in this section, which covers advanced topics,
+is meant for CMU CL <EM>implementors</EM>. In this context implementors are
+experienced Common Lisp programmers who are interested in contributing to
+the development of CMU CL, building the system from source or understanding
+how it works.
+
+
+<H3><A NAME="internals">System Internals</A></H3>
+
+<P>Documents in this subsection discuss the design and implementation of
+the CMU CL system, its compiler and runtime libraries.
+
+<DL>
+  <DT><A NAME="mem-layout"><EM>CMU Common Lisp Memory Layout under New Type
+      Scheme</EM></A>
+      <BR><SMALL>David B. McDonald -- 1991</SMALL>
+      <BR>[<A HREF="impl/dave-memory-layout.ps">PostScript</A>]
+  <DD>This document describes possible memory layouts for CMU CL under Mach
+      and Unix systems. It discusses memory maps and segment organizations,
+      stack layouts, storage management and image dumping.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><A NAME="cmucl-design"><EM>Design of CMU Common Lisp</EM></A>
+      <BR><SMALL>Robert MacLachlan (editor) -- 1994 (last modified August
+      1999)</SMALL>
+      <BR>[<A HREF="impl/design.ps">PostScript</A>]
+  <DD>This is the <STRONG>main resource</STRONG> for developers interested
+      in extending CMU CL or understanding how it works. The document,
+      which is still in draft form, discusses internal details of the
+      compiler and run-time system. It describes the general architecture
+      of the compiler, internal representation issues, code generation,
+      optimizations and retargeting. Concerning the run-time system, object
+      representation and memory management are also discussed.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><EM>General information on CMU CL 2.4.13 for Debian Linux</EM>
+      <BR><SMALL>Peter Van Eynde -- May 1999</SMALL>
+      <BR>[<A HREF="impl/README-cmucl-2.4.13.txt">ASCII</A>]
+  <DD>A short note on some differences of the Debian Linux port with
+      previous versions.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><A NAME="hem-imp"><EM>Hemlock Command Implementor's Manual</EM></A>
+      <BR><SMALL>Bill Chiles, Robert MacLachlan -- February 1992</SMALL>
+      <BR>[<A HREF="devenv/cim.ps">PostScript</A>]
+  <DD>Hemlock is the integrated editor which comes with CMU CL. It follows
+      the tradition of early versions of Emacs and of the Lisp Machine
+      editor ZWEI. Since Hemlock is written in Lisp, the user can
+      extensively customize it and add new features.
+
+      <P>The manual illustrates the functions, macros and data structures
+      needed for modifying existing commands or adding new ones. For
+      learning how to use Hemlock for editing Lisp source code, see the <A
+      HREF="#hem-userman">user's manual</A>.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><A NAME="global-optimization"><EM>Notes on Global
+      Optimization</EM></A>
+      <BR><SMALL>Robert MacLachlan -- January 23, 2001</SMALL>
+      <BR>[<A HREF="impl/global-optimization.txt">ASCII</A>]
+  <DD>This message, originally posted to the <CODE>cmucl-imp</CODE> mailing
+      list (<CODE>Subject: Re: Non Vector SIMPLE Arrays.</CODE>), provides
+      information on global optimization motivated by a discussion on array
+      implementation. It deals with reaching definitions, loop invariants
+      and common subexpression elimination.
+
+      <P><SMALL>Included with permission.</SMALL>
+  <DT><A NAME="compiler-implementation"><EM>Notes on the Implementation of
+      the Compiler</EM></A>
+      <BR><SMALL>Robert MacLachlan -- January 23, 2001</SMALL>
+      <BR>[<A HREF="impl/compiler-implementation.txt">ASCII</A>]
+  <DD>This message, originally posted to the <CODE>cmucl-imp</CODE> mailing
+      list (<CODE>Subject: Re: Non Vector SIMPLE Arrays.</CODE>), collects
+      miscellaneous notes on the implementation of the compiler. Among the
+      discussed topics are compilation phases, various kinds of analysis,
+      intermediate code representation, optimizations, types and virtual
+      operations.
+
+      <P><SMALL>Included with permission.</SMALL>
+  <DT><EM>Outline of Design of CMU Common Lisp</EM>
+      <BR><SMALL>Robert MacLachlan -- 1994</SMALL>
+      <BR>[<A HREF="impl/outline.txt">ASCII</A>]
+  <DD>This is the outline of the <A HREF="#cmucl-design">manual</A>
+      describing the internal design of CMU CL. The outline may be useful
+      for undesrtanding the completion status of various sections and
+      evaluating the accuracy of the information they present.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><A NAME="data-types"><EM>Representation of data types</EM></A>
+      <BR><SMALL>Robert MacLachlan</SMALL>
+      <BR>[<A HREF="impl/internal-design.txt">ASCII</A>]
+  <DD>This document illustrates the internal representation of primitive
+      data types and how garbage collection deals with them.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><EM>TODO list for Hemlock</EM>
+      <BR><SMALL>CMU CL developers</SMALL>
+      <BR>[<A HREF="impl/things-to-do.txt">ASCII</A>]
+  <DD>This is a list of the features CMU CL developers planned to add to
+      the integrated editor Hemlock. For some of the features, suggestions
+      for implementation are provided. The document also discusses
+      interesting ideas for which more thought is required. Refer to the <A
+      HREF="#hem-userman">user's manual</A> for more information about
+      Hemlock.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><EM>TODO list for the Debian Linux port of CMU CL</EM>
+      <BR><SMALL>Peter Van Eynde -- May 1999</SMALL>
+      <BR>[<A HREF="impl/TO.DO.txt">ASCII</A>]
+  <DD>A short note listing some of the improvements that the Debian Linux
+      port maintainer plans to add to the distribution.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+</DL>
+
+
+<SMALL>
+<P>[<A HREF="#contents">Contents</A>]
+</SMALL>
+
+
+<H3><A NAME="mips-arch">MIPS Architecture Support</A></H3>
+
+<P>The documents grouped in the entries below discuss the CMU CL compiler
+support for the MIPS processor architecture.
+
+<DL>
+  <DT><A NAME="mips-regs"><EM>MIPS register usage</EM></A>
+      <BR><SMALL>CMU CL developers</SMALL>
+      <BR>[<A HREF="impl/mips-regs.txt">ASCII</A>]
+  <DD>A table illustrating how CMU CL uses the registers of a MIPS CPU.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><A NAME="mips-call"><EM>Notes on MIPS calling conventions</EM></A>
+      <BR><SMALL>Robert A. MacLachlan -- February 7, 1990</SMALL>
+      <BR>[<A HREF="impl/notes.txt">ASCII</A>]
+  <DD>This note describes the calling conventions followed by the various
+      kinds of function calls.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><A NAME="mips-issues"><EM>Random notes on MIPS specific
+      issues</EM></A>
+      <BR><SMALL>Chris Hoover -- March 2, 1990</SMALL>
+      <BR>[<A HREF="impl/random-doc.txt">ASCII</A>]
+  <DD>This note describes functions used by the back-end of the CMU CL
+      compiler for the MIPS architecture.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+</DL>
+
+
+<SMALL>
+<P>[<A HREF="#contents">Contents</A>]
+</SMALL>
+
+
+<H3><A NAME="build-process">Build Process and Porting</A></H3>
+
+<P>Here you will learn how to build a running CMU CL system from source or
+port it to new architectures.
+
+<DL>
+  <DT><A NAME="build-debian"><EM>Building the Debian Linux port</EM></A>
+      <BR><SMALL>Peter Van Eynde -- May 1999</SMALL>
+      <BR>[<A HREF="impl/README.Building.txt">ASCII</A>]
+  <DD>A short note with instructions for building the Debian Linux port
+      from the Debian CMU CL sources. Note that, unlike other ports, the
+      build process of the Debian one is based on a makefile.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><A NAME="compilation-howto"><EM>CMU CL Compilation howto</EM></A>
+      <BR><SMALL>Paul Werkowski -- July 2000</SMALL>
+      <BR>[<A HREF="impl/CompileCL.howto.txt">ASCII</A>] [<A
+      HREF="http://www.cons.org/cmucl/cmucl-build/CompileCL.howto">Online
+      version</A>] [<A
+      HREF="http://www.cons.org/cmucl/cmucl-build/">Additional online
+      material</A>]
+  <DD>Compiling CMU CL from source is tricky both because the system, being
+      based on a <EM>self-compiler</EM> (a compiler written in its own
+      language), requires an already running CMU CL system, and because it
+      interacts in complicated ways with the build environment.
+
+      <P>The <EM>CMU CL Compilation howto</EM>, which is currently
+      <STRONG>out of date</STRONG>, explains the compilation process and
+      some of the custom scripts it's based on. The <CODE>README</CODE>
+      file mentioned in the note at the beginning of the document is <A
+      HREF="#compilation-steps"><EM>CMU CL compilation steps</EM></A>.
+
+      <P>If you use the Debian Linux port, check its simpler <A
+      HREF="#build-debian">compilation procedure</A>.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><A NAME="compilation-steps"><EM>CMU CL compilation steps</EM></A>
+      <BR><SMALL>Martin Cracauer -- July 2000</SMALL>
+      <BR>[<A HREF="devenv/README-build-instructions.txt">ASCII</A>] [<A
+      HREF="http://www.cons.org/cmucl/cmucl-build/README">Online
+      version</A>] [<A
+      HREF="http://www.cons.org/cmucl/cmucl-build/">Additional online
+      material</A>]
+  <DD>This document lists and explains the shell commands that a user has
+      to issue for building CMU CL from source. For more information on
+      compiling the system, see the <A
+      HREF="#compilation-howto">compilation howto</A>.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><A NAME="ppc-port"><EM>CMU CL PowerPC Port Notes</EM></A>
+      <BR><SMALL>Gary Byers -- February 2001</SMALL>
+      <BR>[<A HREF="impl/ppc-port.txt">ASCII</A>]
+  <DD>Around 1997 Gary Byers ported CMU CL, with sources from a prerelease
+      of the 18a branch, to the PowerPC architecture under MkLinux DR3 (the
+      kernel was probably 2.0.32, with a pre-<CODE>glibc</CODE>
+      <CODE>libc</CODE> snapshot that had been ported to the PowerPC). These
+      notes from that project deal with memory addresses, Lisp kernel and
+      signal handling, Unix interface, backend issues and more. They are
+      useful to developers interested in reviving the port.
+
+      <P>Gary's compiler code has been integrated into the main CMU CL
+      source tree and updated for changes since it was written. The C code
+      and some of the supporting Lisp code has not been integrated yet, and
+      it may need some work before it can run.
+
+      <P><SMALL>Included with permission.</SMALL>
+  <DT><EM>Compilation Order for Hemlock</EM>
+      <BR><SMALL>CMU CL developers</SMALL>
+      <BR>[<A HREF="impl/hemlock-compilation-order.txt">ASCII</A>]
+  <DD>This document provides an ordered list of the Hemlock subsystems
+      suitable for compiling it from source. Hemlock is the integrated
+      editor included with CMU CL. For more information refer to the <A
+      HREF="#hem-userman">user's manual</A>.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><A NAME="GLIBC2"><EM>Glibc2 support in the Debian Linux port</EM></A>
+      <BR><SMALL>Peter Van Eynde -- February 2001</SMALL>
+      <BR>[<A HREF="impl/GLIBC2.txt">ASCII</A>]
+  <DD>This short note lists the versions of <CODE>glibc</CODE> 2.x
+      supported under Linux.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><A NAME="sbcl-cmucl"><EM>How SBCL Was Derived From CMU CL</EM></A>
+      <BR><SMALL>William Harold Newman -- sbcl-0.5.0 (December
+      1999)</STRONG>
+      <BR>[<A HREF="impl/FOR-CMUCL-DEVELOPERS.txt">ASCII</A>]
+  <DD><A HREF="http://sbcl.sourceforge.net/">SBCL</A> is an experimental
+      system derived from CMU CL which can build itself from scratch,
+      requiring only <A
+      HREF="http://www.xanalys.com/software_tools/reference/HyperSpec/FrontMatter/">ANSI
+      Common Lisp</A> as a cross-compilation host. This document, which is
+      intended for developers who are familiar with the guts of CMU CL, is
+      an overview of the changes made to CMU CL in order to produce SBCL.
+
+      <P><SMALL>Included with permission.</SMALL>
+  <DT><EM>Integration of the Debian port with the CVS tree</EM>
+      <BR><SMALL>Peter Van Eynde -- May 1999</SMALL>
+      <BR>[<A HREF="impl/README.CVS.txt">ASCII</A>]
+  <DD>A note explaining how to update the source tree of the Debian Linux
+      port with files coming from the main CMU CL CVS tree</A>.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+  <DT><A NAME="win32-port"><EM>Outline of the steps for porting CMU CL to
+      Win32</EM></A>
+      <BR><SMALL>Pierre R. Mai -- February 23, 2001</SMALL>
+      <BR>[<A HREF="impl/win32-port.txt">ASCII</A>]
+  <DD>An outline of the steps for porting CMU CL to the Win32 environment,
+      with some comments on the use of the Cygwin Unix emulation
+      libraries. Most of this information may also be useful for planning
+      other ports.
+
+      <P>This message was originally posted to the <CODE>cmucl-help</CODE>
+      mailing list (<CODE>Subject: Re: Bootstrapping</CODE>).
+
+      <P><SMALL>Included with permission.</SMALL>
+</DL>
+
+
+<SMALL>
+<P>[<A HREF="#contents">Contents</A>]
+</SMALL>
+
+
+<H3><A NAME="clos">CLOS and PCL</A></H3>
+
+<P>The documents in this subsection deal with the design and implementation
+of CLOS under CMU CL.
+
+<DL>
+  <DT><EM>PCL release notes</EM>
+      <BR><SMALL>PCL developers</SMALL>
+      <BR>[ASCII]
+  <DD>PCL (Portable Common Loops) is the CLOS implementation which comes
+      with CMU CL. The following notes provide information about specific
+      releases of PCL. They discuss missing or new features, potential
+      problems and bugs, and differences with previous releases. Next to
+      each link is the version code name of PCL, if available, to which the
+      notes apply.
+      <UL>
+        <LI><A HREF="impl/pcl/notes.text">August 5, 1992</A> -- August
+            5 92
+        <LI><A HREF="impl/pcl/march-92-notes.text">March 1992</A> --
+            beta1
+        <LI><A HREF="impl/pcl/may-day-notes.text">May 1, 1990</A> --
+            May Day, REV 2
+        <LI><A HREF="impl/pcl/5-22-89-notes.text">May 22, 1989</A> --
+            Victoria
+        <LI><A HREF="impl/pcl/8-28-88-notes.text">August 24, 1988</A> --
+            beta AAAI
+        <LI><A HREF="impl/pcl/12-7-88-notes.text">December 7, 1988</A> --
+            Can't think of a cute name
+        <LI><A HREF="impl/pcl/3-17-88-notes.text">March 17, 1988</A>
+        <LI><A HREF="impl/pcl/5-22-87-notes.text">May 22, 1987</A>
+        <LI><A HREF="impl/pcl/4-29-87-notes.text">April 29, 1987</A>
+        <LI><A HREF="impl/pcl/4-21-87-notes.text">April 21, 1987</A>
+        <LI><A HREF="impl/pcl/3-19-87-notes.text">March 3, 1987</A>
+      </UL>
+
+      <P><SMALL>The following copyright and license applies to each of the
+      PCL release notes:
+      
+      <P>Copyright (c) 1985, 1986, 1987, 1988, 1989 Xerox Corporation. All
+      rights reserved.
+
+      <P>Use and copying of this document is permitted. Any distribution of
+      this document must comply with all applicable United States export
+      control laws.</SMALL>
+  <DT><A NAME="pcl-lap"><EM>The abstract LAP code of PCL</EM></A>
+      <BR><SMALL>Gregor Kiczales -- October 26, 1989</SMALL>
+      <BR>[<A HREF="impl/pcl/lap.text">ASCII</A>]
+  <DD>The PCL abstract LAP code interface is a mechanism for providing PCL,
+      the CMU CL implementation of CLOS, with a way to create
+      high-performance method-lookup functions. Any port of PCL is required
+      to implement this interface.
+
+      <P>This document discusses the advantages of the LAP code interface
+      and illustrates important meta-types, vector indexing, optimization
+      issues and port specific functions. It finally describes the LAP code
+      itself and includes a few examples.
+      
+      <P><SMALL>Copyright (c) 1985, 1986, 1987, 1988, 1989 Xerox
+      Corporation. All rights reserved.
+
+      <P>Use and copying of this document is permitted. Any distribution of
+      this document must comply with all applicable United States export
+      control laws.</SMALL>
+  <DT><A NAME="mop"><EM>The Art of the Metaobject Protocol
+      <BR>Chapters 5 and 6</EM></A>
+      <BR><SMALL>Gregor Kiczales, Jim des Rivieres, Daniel G. Bobrow --
+      1991</SMALL>
+      <BR>[<A HREF="impl/pcl/spec.ps">PostScript</A>]
+  <DD>The CMU CL implementation of CLOS is based on PCL, a popular portable
+      CLOS implementation developed by <A
+      HREF="http://www.parc.xerox.com/spl/projects/oi/">a group of Xerox
+      PARC</A> researchers led by Gregor Kiczales. They described PCL in
+      the book <EM>The Art of the Metaobject Protocol</EM> (MIT Press, 1991
+      -- ISBN 0-262-61074-4).
+
+      <P>The document included here is the part of the book -- chapters 5
+      and 6 -- dealing with the PCL Metaobject Protocol (MOP). The MOP is
+      an object-oriented programming interface to the implementation and
+      behavior of the PCL object system. Those chapters present the
+      system's metaobject classes and their generic functions and methods.
+
+      <P><SMALL>&copy; Copyright 1991 MIT Press.
+
+      <P>The authors of the book write:
+      <BLOCKQUOTE>To this end, for Part II only (chapters 5 and 6), we
+      grant permission to prepare revisions or other derivative works
+      including any amount of the original text. We ask only that you
+      properly acknowledge the source of the original text and explicitly
+      allow subsequent revisions and derivative works under the same terms.
+      To further facilitate improvements in this work, we have made the
+      electronic source for these chapters publicly available; it can be
+      accessed by anonymous FTP from the /pcl/mop<CODE></CODE> directory on
+      <CODE>arisia.xerox.com</CODE>.</BLOCKQUOTE>
+
+      <P>The address of the FTP site mentioned by the authors is no longer
+      valid. The current one is <A
+      HREF="ftp://parcftp.xerox.com/pub/pcl/mop/"><CODE>ftp://parcftp.xerox.com/pub/pcl/mop/</CODE></A>.</SMALL>
+</DL>
+
+
+<SMALL>
+<P>[<A HREF="#contents">Contents</A>]
+</SMALL>
+
+
+<H3><A NAME="x-impl">X Window Interface</A></H3>
+
+<P>Documents in this subsection discuss the design and implementation of
+the CMU CL interfaces to the X Window system.
+
+<DL>
+  <DT><A NAME="motif-design"><EM>General Design Notes on the Motif Toolkit
+      Interface</EM></A>
+      <BR><SMALL>CMU CL developers</SMALL>
+      <BR>[<A HREF="x/motif-internals.ps">PostScript</A>]
+  <DD>CLM is a Common Lisp interface to the OSF Motif X Window toolkit. CMU
+      CL supports a similar interface, the Motif Toolkit Interface, which
+      is based on a server that provides Lisp clients with access to Motif
+      functions through remote procedure call facilities.
+
+      <P>This document discusses low level issues of the toolkit interface
+      such as packet formats, object representation and server
+      structure. The document also summarizes the
+      <STRONG>differences</STRONG> with CLM. For more information about
+      toolkit programming, see the instructions for <A
+      HREF="#motif-interface">accessing the toolkit</A> and the <A
+      HREF="#clm-man">CLM manual</A>.
+
+      <P><SMALL>This document is in the public domain.</SMALL>
+</DL>
+
+
+<SMALL>
+<P>[<A HREF="#contents">Contents</A>]
+</SMALL>
+
+
+</BODY>
+
+
+</HTML>

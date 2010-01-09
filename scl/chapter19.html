@@ -1,0 +1,340 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 19</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 19 - Streams</h1> 
+
+<p>All of the I/O functions in Lisp accept a stream argument. In
+some cases (e.g. <code>READ</code> and <code>PRINT</code>) the
+stream argument is optional; by default, input comes from the
+<code>*STANDARD-INPUT*</code> stream (normally connected to the
+keyboard) and output goes to the <code>*STANDARD-OUTPUT*</code>
+stream (normally connected to the display). You can redirect I/O by
+either providing optional stream arguments to <code>READ</code> and
+<code>PRINT</code> (as well as other I/O functions), or by binding
+<code>*STANDARD-INPUT*</code> and <code>*STANDARD-OUTPUT*</code> to
+different streams. (We'll see both of these approaches used in the
+following examples.)
+
+<h2>Streams provide a pipe to supply or accept data</h2>
+
+<p>Throughout the preceding chapters of this book, streams have
+been involved whenever we've seen an example that does input or
+output -- and <em>all</em> of the examples do I/O, if you count our
+interactions with the listener. A Lisp stream can provide (source)
+or consume (sink) a sequence of bytes or characters. (Remember the
+Lisp definition of byte: a byte can contain any number of bits.)
+
+<p>Some I/O functions accept <code>T</code> or <code>NIL</code> as a
+stream designator. <code>T</code> is a synonym for
+<code>*TERMINAL-IO*</code>, a bidirectional (input <em>and</em>
+output) stream which conventionally reads from
+<code>*STANDARD-INPUT*</code> and writes to
+<code>*STANDARD-OUTPUT*</code>. <code>NIL</code> is a synonym for
+<code>*STANDARD-INPUT*</code> when used in a context which expects
+an input stream, or for <code>*STANDARD-OUTPUT*</code> when used in
+a context which expects an output stream.
+
+<blockquote>
+<code>FORMAT</code> (which we've already seen in several examples, and
+will examine in depth in <a href="chapter24.html">Chapter 24</a>) expects
+as its first argument a stream, a <code>T</code>, a <code>NIL</code>, or
+a string with a fill pointer.  In this case, however, the <code>NIL</code> 
+designator causes <code>FORMAT</code> to return a string, rather than write
+to <code>*STANDARD-OUTPUT*</code> as is the case for other I/O functions.
+</blockquote> 
+
+<p>The power of streams comes from the ability to associate a stream
+with a file, a device (such as keyboard, display, or network), or a
+memory buffer. Program I/O can be directed at will by simply
+creating the appropriate type of stream for your program to use. The
+I/O implementation is abstracted away by the stream so your program
+won't have to be concerned with low-level details.
+
+<p>Lisp also provides a number of special-purpose streams which
+serve to combine or manipulate other streams in novel ways. A
+<code>TWO-WAY-STREAM</code> combines a separate input stream and
+output stream into an I/O stream. A <code>BROADCAST-STREAM</code>
+sends output to zero or more output streams; think of this as a
+bit-bucket when used with zero streams, and a broadcaster when used
+with multiple streams. A <code>CONCATENATED-STREAM</code> accepts
+input requests on behalf of zero or more input streams; when one
+stream's input is exhausted, the <code>CONCATENATED-STREAM</code>
+begins reading from its next input stream. An
+<code>ECHO-STREAM</code> is like a <code>TWO-WAY-STREAM</code>, with
+the added feature that anything your program reads from the
+<code>TWO-WAY-STREAM</code>'s input stream automatically gets echoed
+to the corresponding output stream. Finally, a
+<code>SYNONYM-STREAM</code> is an alias for another stream; the
+alias can be changed at runtime without creating a new
+<code>SYNONYM-STREAM</code>.
+
+<p>Quite a few I/O functions operate directly on streams:
+
+<p>
+
+<dl>
+<dt><code>READ-BYTE</code> <i>stream &amp;optional eof-error-p eof-value</i> 
+    and <code>READ-CHAR</code> <i>&amp;optional stream eof-error-p eof-value recursive-p</i>  
+<dd>Reads a byte or a character from an input stream.
+
+<dt><code>WRITE-BYTE</code> <i>byte stream</i> 
+    and <code>WRITE-CHAR</code> <i>char &amp;optional stream</i> 
+<dd>Writes a byte or a character to an output stream.
+
+<dt><code>READ-LINE</code> <i>&amp;optional stream eof-error-p eof-value recursive-p</i>
+    and <code>WRITE-LINE</code> <i>string &amp;optional stream &amp;key start end</i> 
+<dd>Read or write a line of text, terminated by a newline.  (The newline
+is consumed and discarded on input, and added to output.) The 
+<code>:START</code> and <code>:END</code> keyword arguments let you 
+limit the portion of the string written by <code>WRITE-LINE</code>.
+
+<dt><code>WRITE-STRING</code> <i>string &amp;optional stream &amp;key start end</i> 
+<dd>Like <code>WRITE-LINE</code>, but does not append a newline to output.
+
+<dt><code>PEEK-CHAR</code> <i>&amp;optional peek-type stream eof-error-p eof-value recursive-p</i>
+<dd>Reads a character from an input stream without consuming the character.
+(The character remains available for the next input operation.) Optional
+argument <i>peek-type</i> alters <code>PEEK-CHAR</code>'s behavior to first
+skip whitespace (<i>peek-type</i> <code>T</code>) or to first skip forward 
+to some specified character (<i>peek-type</i> a character).
+
+<dt><code>UNREAD-CHAR</code> <i>character &amp;optional stream</i> 
+<dd>Pushes a character (which must be the character most recently read)
+back onto the front of an input stream, where it remains until read again.
+
+<dt><code>LISTEN</code> <i>&amp;optional stream</i> 
+<dd>Returns true if data is available (e.g. a yet-to-be-read keystroke or
+unconsumed file data) on an input stream.
+
+<dt><code>READ-CHAR-NO-HANG</code> <i>&amp;optional stream eof-error-p eof-value recursive-p</i>
+<dd>If a character is available on the input stream, return the character.
+Otherwise, return <code>NIL</code>.
+
+<dt><code>TERPRI</code> <i>&amp;optional stream</i> 
+    and <code>FRESH-LINE</code> <i>&amp;optional stream</i> 
+<dd><code>TERPRI</code> unconditionally writes a newline to an output
+stream. <code>FRESH-LINE</code> writes a newline unless it can determine
+that the output stream is already at the beginning of a new line; 
+<code>FRESH-LINE</code> returns <code>T</code> if it actually wrote a 
+newline, and <code>NIL</code> otherwise.
+
+<dt><code>CLEAR-INPUT</code> <i>&amp;optional stream</i>
+<dd>Flushes unread data from an input stream, if it makes sense to do so.
+
+<dt><code>FINISH-OUTPUT</code> <i>&amp;optional stream</i>, 
+    <code>FORCE-OUTPUT</code> <i>&amp;optional stream</i>, and 
+    <code>CLEAR-OUTPUT</code> <i>&amp;optional stream</i>
+<dd>These functions flush output buffers if it makes sense to do so.
+<code>FINISH-OUTPUT</code> tries to make sure that buffered output
+reaches its destination, then returns.  
+<code>FORCE-OUTPUT</code> attempts to initiate output from the buffer,
+but does not wait for completion like <code>FINISH-OUTPUT</code>.
+<code>CLEAR-OUTPUT</code> attempts
+to discard buffered data and abort any output still in progress.
+</dl> 
+
+<p>In the read functions listed above, optional arguments 
+<code>EOF-ERROR-P</code> and <code>EOF-VALUE</code> specify what happens
+when your program makes an attempt to read from an exhausted stream.
+If <code>EOF-ERROR-P</code> is true (the default), then Lisp will signal
+an error upon an attempt to read an exhausted stream. If 
+<code>EOF-ERROR-P</code> is <code>NIL</code>, then Lisp returns
+<code>EOF-VALUE</code> (default <code>NIL</code>) instead of signalling
+an error.
+
+<p>Optional argument <code>RECURSIVE-P</code> is reserved for use by
+functions called by the Lisp reader.
+
+
+<h2>Creating streams on files</h2>
+
+<p>The <code>OPEN</code> function creates a
+<code>FILE-STREAM</code>. Keyword arguments determine attributes of
+the stream (<code>:DIRECTION</code>, <code>:ELEMENT-TYPE</code>, and
+<code>:EXTERNAL-FORMAT</code>) and how to handle exceptional
+conditions (<code>:IF-EXISTS</code> and
+<code>:IF-DOES-NOT-EXIST</code>). If <code>OPEN</code> is successful
+it returns a stream, otherwise it returns <code>NIL</code> or
+signals an error.
+
+<pre>
+Keyword      Value     Stream Direction
+----------   -------   -----------------------------
+:DIRECTION   :INPUT    input (default)
+:DIRECTION   :OUTPUT   output
+:DIRECTION   :IO       input & output
+:DIRECTION   :PROBE    none, returns a closed stream
+
+Keyword      Value                Action if File Exists
+----------   ------------------   ---------------------------------------
+:IF-EXISTS   NIL                  return NIL
+:IF-EXISTS   :ERROR               signal an error
+:IF-EXISTS   :NEW-VERSION         next version (or error)
+:IF-EXISTS   :RENAME              rename existing, create new
+:IF-EXISTS   :SUPERSEDE           replace file upon CLOSE
+:IF-EXISTS   :RENAME-AND-DELETE   rename and delete existing, create new
+:IF-EXISTS   :OVERWRITE           reuse existing file (position at start)
+:IF-EXISTS   :APPEND              reuse existing file (position at end)
+
+Keyword              Value     Action if File Does Not Exist
+------------------   -------   -----------------------------
+:IF-DOES-NOT-EXIST   NIL       return NIL
+:IF-DOES-NOT-EXIST   :ERROR    signal an error
+:IF-DOES-NOT-EXIST   :CREATE   create the file
+
+Keyword         Value               Element Type
+-------------   --------------      ------------------------
+:ELEMENT-TYPE   :DEFAULT            character (default)
+:ELEMENT-TYPE   'CHARACTER          character
+:ELEMENT-TYPE   'SIGNED-BYTE        signed byte
+:ELEMENT-TYPE   'UNSIGNED-BYTE      unsigned byte
+:ELEMENT-TYPE   <i>character subtype</i>   character subtype
+:ELEMENT-TYPE   <i>integer subtype</i>     integer subtype
+:ELEMENT-TYPE   <i>other</i>               implementation-dependent
+
+Keyword            Value      File Format
+----------------   --------   ------------------------
+:EXTERNAL-FORMAT   :DEFAULT   default (default)
+:EXTERNAL-FORMAT   <i>other</i>      implementation-dependent
+</pre> 
+
+<p>Once you've opened a stream, you can use it with appropriate 
+input or output functions, or with queries that return attributes
+of either the stream or the file.  The following queries can be
+applied to all kinds of streams.  All of these accept a stream argument:
+
+<pre>
+Function               Returns
+--------------------   -----------------------------------------------------
+INPUT-STREAM-P         true if stream can provide input
+OUTPUT-STREAM-P        true if stream can accept output
+OPEN-STREAM-P          true if stream is open
+STREAM-ELEMENT-TYPE    the type specifier for stream elements
+INTERACTIVE-STREAM-P   true if stream is interactive (e.g. keyboard/display)
+</pre> 
+
+<p>These queries can be applied to file streams.  These also accept a stream
+argument:
+
+<pre>
+Function                 Returns
+--------------------     -----------------------------------------------------
+STREAM-EXTERNAL-FORMAT   implementation-dependent
+FILE-POSITION            current file offset for read or write, or NIL
+FILE-LENGTH              length of stream, or NIL
+</pre> 
+
+<p><code>FILE-POSITION</code> returns a byte offset within the stream.
+This is an exact count for streams of integer subtypes (see below for
+further description of binary I/O). For streams of character subtypes,
+the position is guaranteed only to increase during reading or writing;
+this allows for variations in text record formats and line terminators.
+
+<p><code>FILE-POSITION</code> can also be called with a second argument to
+change the file offset for the next read or write.  When used for this
+purpose, <code>FILE-POSITION</code> returns true when it succeeds.
+
+<p>You should always close a stream when you're done using it
+(except for the interactive streams provided for you use by Lisp,
+such as <code>*STANDARD-INPUT*</code>,
+<code>*STANDARD-OUTPUT*</code>, and <code>*TERMINAL-IO*</code>). The
+"open, process, close" pattern is very common, so Lisp provides macros
+to make the pattern both easy to code and error-free.
+
+<p><code>WITH-OPEN-FILE</code> is tailored for file streams. Its arguments
+are a variable to be bound to the stream, a pathname, and (optionally)
+keyword arguments suitable for <code>OPEN</code>. The stream is always
+closed when control leaves the <code>WITH-OPEN-FILE</code> form.
+
+<pre>
+(with-open-file (stream "my-file.dat" :direction :input)
+  ... do something using stream ...)
+</pre> 
+
+<p><code>WITH-OPEN-STREAM</code> expects a variable name and a form to
+be evaluated; the form should produce a stream value or <code>NIL</code>.
+This macro is commonly used with constructors for specialty streams,
+such as <code>MAKE-BROADCAST-STREAM</code>, <code>MAKE-ECHO-STREAM</code>, 
+<code>MAKE-TWO-WAY-STREAM</code>, <code>MAKE-CONCATENATED-STREAM</code>, 
+and <code>MAKE-SYNONYM-STREAM</code>.
+
+<h2>Creating streams on strings</h2>
+
+<p>The data read or written by a stream doesn't have to be associated
+with a device -- the data can just as well be in memory. String streams
+let you read and write at memory speeds, but they can't provide either
+file or interactive capabilities.  Lisp provides constructors
+(<code>MAKE-STRING-INPUT-STREAM</code> and 
+<code>MAKE-STRING-OUTPUT-STREAM</code>), plus macros to support the
+"open, process, close" pattern.
+
+<pre>
+? (with-input-from-string (stream "This is my input via stream.")
+    (read stream))
+THIS
+? (with-output-to-string (stream)
+    (princ "I'm writing to memory!" stream))
+"I'm writing to memory!"
+</pre> 
+
+<p>These macros accept keyword and optional arguments.
+<code>WITH-INPUT-FROM-STRING</code> allows <code>:BEGIN</code> and
+<code>:END</code> keyword arguments to establish bounds on the
+portion of the string read via the stream. A <code>:INDEX</code> keyword
+argument lets you name a variable to receive the offset of the next
+string element to be read -- this is set only upon leaving the 
+<code>WITH-INPUT-FROM-STRING</code> form.
+
+<p><code>WITH-OUTPUT-TO-STRING</code> allows an optional form, which is
+evaluated to produce the output string; if this form is missing or
+<code>NIL</code>, the macro creates a string for you using the
+<code>:ELEMENT-TYPE</code> keyword argument.
+
+<h2>Binary I/O</h2>
+
+<p>Lisp supports binary I/O via streams whose element types are
+finite (i.e. bounded) subtypes of <code>INTEGER</code>. Some
+examples of appropriate types are:
+
+<ul>
+<li>Implementation-dependent
+<ul>
+ <li><code>SIGNED-BYTE</code> 
+ <li><code>UNSIGNED-BYTE</code> 
+</ul> 
+<li>Range of values
+<ul>
+ <li><code>(INTEGER 0 31)</code> 
+ <li><code>(INTEGER -16 15)</code> 
+</ul> 
+<li>Specific number of bits
+<ul>
+ <li><code>(SIGNED-BYTE 8)</code> 
+ <li><code>(UNSIGNED-BYTE 6)</code> 
+ <li><code>BIT</code> 
+</ul> 
+</ul> 
+
+<p>ANSI Common Lisp implementations should support any of these
+types for binary I/O.  However, the implementation is not required to 
+directly map the specified <code>:ELEMENT-TYPE</code> onto the 
+underlying file system; an implementation is permitted to alter the
+external format so long as data read from a binary file is the same
+as that written using the same <code>:ELEMENT-TYPE</code>.
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter18.html">Chapter 18</a> | Chapter 19 | <a href="chapter20.html">Chapter 20</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

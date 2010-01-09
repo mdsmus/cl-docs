@@ -1,0 +1,1268 @@
+%!PS
+%%Title: CLHS: Chapter 9</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="f_cp_stu.htm"> <link rel="UP" href="../Front/Contents.htm"> <link rel="NEXT" href="09_a.htm"> <title>CLHS: Section 9.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_.htm"> <link rel="UP" href="09_.htm"> <link rel="NEXT" href="09_aa.htm"> <title>CLHS: Section 9.1.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_a.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_aaa.htm"> <title>CLHS: Section 9.1.1.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_aa.htm"> <link rel="UP" href="09_aa.htm"> <link rel="NEXT" href="09_ab.htm"> <title>CLHS: Section 9.1.2</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_aaa.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_aba.htm"> <title>CLHS: Section 9.1.2.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_ab.htm"> <link rel="UP" href="09_ab.htm"> <link rel="NEXT" href="09_ac.htm"> <title>CLHS: Section 9.1.3</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_aba.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_aca.htm"> <title>CLHS: Section 9.1.3.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_ac.htm"> <link rel="UP" href="09_ac.htm"> <link rel="NEXT" href="09_acaa.htm"> <title>CLHS: Section 9.1.3.1.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_aca.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_acab.htm"> <title>CLHS: Section 9.1.3.1.2</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acaa.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_acac.htm"> <title>CLHS: Section 9.1.3.1.3</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acab.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_acad.htm"> <title>CLHS: Section 9.1.3.1.4</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acac.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_acae.htm"> <title>CLHS: Section 9.1.3.1.5</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acad.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_ad.htm"> <title>CLHS: Section 9.1.4</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acae.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_ada.htm"> <title>CLHS: Section 9.1.4.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_ad.htm"> <link rel="UP" href="09_ad.htm"> <link rel="NEXT" href="09_adaa.htm"> <title>CLHS: Section 9.1.4.1.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_ada.htm"> <link rel="UP" href="09_ada.htm"> <link rel="NEXT" href="09_adb.htm"> <title>CLHS: Section 9.1.4.2</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adaa.htm"> <link rel="UP" href="09_ad.htm"> <link rel="NEXT" href="09_adba.htm"> <title>CLHS: Section 9.1.4.2.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adb.htm"> <link rel="UP" href="09_adb.htm"> <link rel="NEXT" href="09_adbb.htm"> <title>CLHS: Section 9.1.4.2.2</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adba.htm"> <link rel="UP" href="09_adb.htm"> <link rel="NEXT" href="09_adbc.htm"> <title>CLHS: Section 9.1.4.2.3</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adbb.htm"> <link rel="UP" href="09_adb.htm"> <link rel="NEXT" href="09_adbd.htm"> <title>CLHS: Section 9.1.4.2.4</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adbc.htm"> <link rel="UP" href="09_adb.htm"> <link rel="NEXT" href="09_ae.htm"> <title>CLHS: Section 9.1.5</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adbd.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_af.htm"> <title>CLHS: Section 9.1.6
+%%Creator: html2ps version 1.0 beta3
+%%EndComments
+save
+2000 dict begin
+/d {bind def} bind def
+/D {def} d
+/t true D
+/f false D
+/FL [/Times-Roman
+/Times-Italic
+/Times-Bold
+/Times-BoldItalic
+/Courier
+/Courier-Oblique
+/Courier-Bold
+/Courier-BoldOblique
+/Helvetica
+/Helvetica-Oblique
+/Helvetica-Bold
+/Helvetica-BoldOblique] D
+/WF t D
+/WI 0 D
+/F 1 D
+/IW 510 F div D
+/IL 714 F div D
+/PS 842 D
+/EF [0 1 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 0 0 2 2] D
+/EZ [11 9 19 17 15 13 12 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 8 8] D
+/Ey [0 0 2 2 2 2 2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0] D
+/EG [-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1] D
+/Tm [1 1 0.8 0.8 0.8 0.8 0.8 0.8 0 0 0 0 0 0 0.5 1 1 1 1 0 0 1.3 0 0] D
+/Bm [1 1 0.5 0.5 0.5 0.5 0.5 0.5 0 0 0 0 0 0 0.5 1 1 1 1 0 0 1 0 0] D
+/Lm [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 2 2 0 0 2 0 0 0] D
+/Rm [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0] D
+/EU [-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 0 0] D
+/NO t D
+/YY [[{()}1][{()}0][{()}2]] D
+/ZZ [[{()}1][{()}0][{()}2]] D
+/Ts EZ 0 get D
+/TU f D
+/Xp t D
+/AU f D
+/SN 0 D
+/Cf f D
+/Tp f D
+/Fe f D
+/TI 1 Ts mul D
+/Fm 14 D
+/xL 57 D
+/xR 57 D
+/yL 799 D
+/yR 799 D
+/Wl 510 F div D
+/Wr 510 F div D
+/hL 714 F div D
+/hR 714 F div D
+/FE {newpath Fm neg Fm M CP BB IW Fm add Fm L IW Fm add IL Fm add neg L CP BB
+ Fm neg IL Fm add neg L closepath} D
+/LA {PM 0 eq{/IW Wl D /IL hL D}{/IW Wr D /IL hR D}ie /W IW D /LL W D /LS W D
+ /LE IL D TU PM 0 eq and{IW 56 F div add SA{Sf div}if 0 translate}
+ {PM 0 eq{xL yL}{xR yR}ie translate F SA{Sf mul}if dup scale
+ CS CF FS Cf{CA CL get VC}if /Bb f D}ie 0 0 M
+ TF not Tc or {Cf{gsave SA{1 Sf div dup scale}if Cb VC FE fill grestore}if}if}D
+/Pi 0 Ts mul D
+/SG [0.8 1 1] D
+/Ab 15 D
+/J 0 D
+/Tc f D
+/NH 6 D
+/Nf f D
+/Pa f D
+/LH 1.2 D
+/XR f D
+/Xr {/pN E D ( [p ) WB pN WB (] )WB} D
+/Db [16#FF 16#FF 16#FF] D
+/Dt [16#00 16#00 16#00] D
+/eA f D
+/Fi f D
+/bT f D
+/Lc t D
+/Dl [16#00 16#00 16#00] D
+/LX f D
+/Br 0.25 D
+/IA ([IMAGE]) D
+/DS {/PF f D()WB NL NP()pop RC ZF} D
+/Gb f D
+/Mb t D
+/Hc [16#00 16#00 16#00] D
+/Bl 3 D
+/MI -15.2 D
+/DX (DRAFT) D
+/Di 0 D
+/Tt 113.385826771654 D
+/Th {()2 Al()BR (
+      ) 0 1 -1 H()4 FZ Ti ES()EH (
+      ) 0 2 -1 H() ME 0 get join EH()Ea()BR()} D
+/tH {()0 1 -1 H (Table of Contents) EH()} D
+/FD 2 D
+/Dy 2 D
+/cD [16#F0 16#F0 16#F0] D
+/FW 0.6 D
+/FU [16#00 16#00 16#00] D
+/ET {/RM f D /A0 3 D /PN SN D /OU t D /Ou t D /W IW D /LL W D D1
+ Ms not TP and{Ip}if /TF f D} D
+
+%-- End of variable part --
+/MySymbol 10 dict dup begin
+ /FontType 3 D /FontMatrix [.001 0 0 .001 0 0 ] D /FontBBox [25 -10 600 600] D
+ /Encoding 256 array D 0 1 255{Encoding exch /.notdef put}for
+ Encoding (e) 0 get /euro put
+ /Metrics 2 dict D Metrics begin
+  /.notdef 0 D
+  /euro 651 D
+ end
+ /BBox 2 dict D BBox begin
+  /.notdef [0 0 0 0] D
+  /euro [25 -10 600 600] D
+ end
+ /CharacterDefs 2 dict D CharacterDefs begin
+  /.notdef {} D
+  /euro{newpath 114 600 moveto 631 600 lineto 464 200 lineto 573 200 lineto
+   573 0 lineto -94 0 lineto 31 300 lineto -10 300 lineto closepath clip
+   50 setlinewidth newpath 656 300 moveto 381 300 275 0 360 arc stroke
+   -19 350 moveto 600 0 rlineto -19 250 moveto 600 0 rlineto stroke}d
+ end
+ /BuildChar{0 begin
+  /char E D /fontdict E D /charname fontdict /Encoding get char get D
+  fontdict begin
+   Metrics charname get 0 BBox charname get aload pop setcachedevice
+   CharacterDefs charname get exec
+  end
+ end}D
+ /BuildChar load 0 3 dict put /UniqueID 1 D
+end
+definefont pop
+
+/Cd {aload length 2 idiv dup dict begin {D} repeat currentdict end} D
+/EX {EC cvx exec} D
+/DU {} d
+/BB {pop pop}d
+/ie {ifelse} d
+/E {exch} d
+/M {moveto} d
+/R {rmoveto} d
+/L {lineto} d
+/RL {rlineto} d
+/CP {currentpoint} d
+/SW {stringwidth} d
+/GI {getinterval} d
+/PI {putinterval} d
+/Sg {setgray} d
+/LW {setlinewidth} d
+/S {dup () ne OU and{0 Co R AT 3 eq LB and HF not and A1 0 ne A2 0 ne or and
+ {A2 0 32 A1 0 6 -1 roll awidthshow}{show}ie 0 Co neg R}{pop}ie
+ OU PH 3 eq or{/Ms t D}if} D
+/U {OU{gsave CP currentfont /FontInfo get /UnderlinePosition get
+ 0 E currentfont /FontMatrix get dtransform E pop add newpath M dup SW pop
+ CJ 0 RL stroke grestore}if} D
+/B {OU Br 0 gt and{CP Ts neg Ts .33 mul R gsave 0 Sg
+ CP newpath Ts Br mul 0 360 arc closepath UI 2 mod 0 eq{stroke}{fill}ie
+ grestore M CP E Ts Br 1 add mul sub E BB /Ms t D}if}D
+/NP {Ms TP not or PA and OU and{TP{OR}if f1{mF k2 /mF E D /YC 0 D}if
+ TP TU not PM 0 eq or and{showpage}if DU Ip TE not{LA}if 0.6 LW
+ /CI 0 D /TP t D /Hs f D /hl 6 D /Hv 6 D /HI hi D /Ms f D}if Bs XO BO M} D
+/Np {LE sub CP E pop gt PL 0 eq and{NP}if}D
+/Ip {/PN PN 1 add D /Pn RM{1}{4}ie PN Ns D /PM PN SN sub 2 mod D} D
+/GP {E dup 3 -1 roll get PN 1 add 2 mod get dup type /integertype eq
+ {get 0 get}{E pop}ie}d
+/Fc {dup 2 GP exec SW pop /S1 E D dup 1 GP exec SW pop /S2 E D 0 GP exec SW
+ pop /S3 E D S1 0 gt{S2 2 mul S1 add S3 2 mul S1 add 2 copy lt{E}if pop}{0}ie
+ S2 S3 add 2 copy lt{E}if pop IW .9 mul div dup 1 gt{1 E div}{pop 1}ie}D
+/OR {Df{Sd}if tp not{gsave SA{1 Sf div dup scale}if Fe{Cf{FU VC}if FW LW
+ 1 setlinejoin FE stroke}if /YO {60 F div dup 40 gt{pop 40}if}D /cs CS D
+ /cf CF D /CF 0 D /pf PF D /PF f D /Fn FN D /At AT D /AT 0 D /FN EF Hf 1 add
+ get D Fz Fs FS ZZ Fc Fz mul Fs FS EU Hf 1 add get dup type /arraytype eq
+ Cf and{VC}{pop 0 Sg}ie IW IL neg YO sub M ZZ 1 GP exec dup SW pop neg 0 R Sh
+ 0 IL neg YO sub M ZZ 0 GP exec Sh ZZ 2 GP exec dup SW pop IW E sub 2 div
+ IL neg YO sub M Sh Fz Fs FS NO{/AW IW Pn SW pop sub D AW 2 div IL neg YO sub
+ S1 0 gt S2 AW .45 mul gt or S3 AW .45 mul gt or{Fz 2 mul sub}if M Pn Sh}if
+ EU Hf get dup type /arraytype eq Cf and{VC}{pop 0 Sg}ie YY Fc /FN EF Hf get D
+ Hz mul HS FS IW YO M YY 1 GP exec dup SW pop neg 0 R Sh 0 YO M YY 0 GP exec Sh
+ YY 2 GP exec dup SW pop IW E sub 2 div YO M Sh /FN Fn D /AT At D t Pb XO SZ
+ SL get neg R /PF pf D grestore /CF 0 D cs cf FS}if}D
+/Sh {dup () ne{CP Hz 4 div sub BB show CP CS add BB}{pop}ie}D
+/Pb {/OU E D /Ou OU D /PB t D 0 0 M Ba{/Sa save D /BP t D /Fl t D RC /PL 0 D
+ /PH 0 D /W IW D /LE IL .7 mul D /EO 0 D SI ZF /YA 0 D /BO 0 D /C1 () D
+ BA 0 Ts neg R Bb{Xl Yl Xh Yh}if Bb CP Sa restore M
+ {/Yh E D /Xh E D /Yl E D /Xl E D}if /Fl t D}if
+ BL /OU t D /HM f D /Ou t D /PB f D} D
+/Bs {/BP Ba not D}D
+/reencodeISO {
+ dup dup findfont dup length dict begin{1 index /FID ne{D}{pop pop}ie}forall
+ /Encoding ISOLatin1Encoding D currentdict end definefont} D
+/ISOLatin1Encoding [
+/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef
+/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef
+/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef
+/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef
+/space/exclam/quotedbl/numbersign/dollar/percent/ampersand/quoteright
+/parenleft/parenright/asterisk/plus/comma/hyphen/period/slash
+/zero/one/two/three/four/five/six/seven/eight/nine/colon/semicolon
+/less/equal/greater/question/at/A/B/C/D/E/F/G/H/I/J/K/L/M/N
+/O/P/Q/R/S/T/U/V/W/X/Y/Z/bracketleft/backslash/bracketright
+/asciicircum/underscore/quoteleft/a/b/c/d/e/f/g/h/i/j/k/l/m
+/n/o/p/q/r/s/t/u/v/w/x/y/z/braceleft/bar/braceright/asciitilde
+/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef
+/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef
+/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef
+/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef/.notdef
+/.notdef/space/exclamdown/cent/sterling/currency/yen/brokenbar
+/section/dieresis/copyright/ordfeminine/guillemotleft/logicalnot
+/hyphen/registered/macron/degree/plusminus/twosuperior/threesuperior
+/acute/mu/paragraph/periodcentered/cedilla/onesuperior/ordmasculine
+/guillemotright/onequarter/onehalf/threequarters/questiondown
+/Agrave/Aacute/Acircumflex/Atilde/Adieresis/Aring/AE/Ccedilla
+/Egrave/Eacute/Ecircumflex/Edieresis/Igrave/Iacute/Icircumflex
+/Idieresis/Eth/Ntilde/Ograve/Oacute/Ocircumflex/Otilde/Odieresis
+/multiply/Oslash/Ugrave/Uacute/Ucircumflex/Udieresis/Yacute
+/Thorn/germandbls/agrave/aacute/acircumflex/atilde/adieresis
+/aring/ae/ccedilla/egrave/eacute/ecircumflex/edieresis/igrave
+/iacute/icircumflex/idieresis/eth/ntilde/ograve/oacute/ocircumflex
+/otilde/odieresis/divide/oslash/ugrave/uacute/ucircumflex/udieresis
+/yacute/thorn/ydieresis
+] D
+[128/backslash 129/parenleft 130/parenright 141/circumflex 142/tilde
+143/perthousand 144/dagger 145/daggerdbl 146/Ydieresis 147/scaron 148/Scaron
+149/oe 150/OE 151/guilsinglleft 152/guilsinglright 153/quotesinglbase
+154/quotedblbase 155/quotedblleft 156/quotedblright 157/endash 158/emdash
+159/trademark]
+aload length 2 idiv 1 1 3 -1 roll{pop ISOLatin1Encoding 3 1 roll put}for
+/colorimage where{pop}{
+ /colorimage {
+  pop pop /Pr E D {/Cv Pr D /Gr Cv length 3 idiv string D 0 1 Gr length 1 sub
+   {Gr E dup /i E 3 mul D Cv i get 0.299 mul Cv i 1 add get 0.587 mul add
+    Cv i 2 add get 0.114 mul add cvi put}for Gr} image} D
+}ie
+/pdfmark where{pop}{userdict /pdfmark /cleartomark load put}ie
+WF{FL{reencodeISO D}forall}{4 1 FL length 1 sub{FL E get reencodeISO D}for}ie
+/Symbol dup dup findfont dup length dict begin
+ {1 index /FID ne{D}{pop pop}ie}forall /Encoding [Encoding aload pop]
+ dup 128 /therefore put D currentdict end definefont D
+
+/SF {/CS E D SZ SL CS put FO SL FN put /YI CS LH neg mul D dup ST cvs ( ) join
+ CS ST cvs join C1 E join ( NF ) join /C1 E D CS NF /Wf WF FN 0 gt or D
+ /BW Wf{( ) SW pop}{0}ie D}D
+/NF {/cS E D /cF E D cF 0 ge{FL cF get}{cF -1 eq{/Symbol}{/MySymbol}ie}ie
+ findfont cS scalefont setfont} D
+/FS {CF or /CF E D FR SL CF put CF CF 0 ge{FN 4 mul add}if E SF} D
+/PC {SH /BP f D fin not GL not and{NL}if /HM t D /LL LS D} D
+/BS {/TX E D Wf{/fin f D /CW 0 D /LK 0 D /SC 0 D
+ /RT TX D {RT ( ) search{/NW E D pop /RT E D /WH NW SW pop D CW WH add LL gt
+ {TX SC LK SC sub 1 sub NN GI GL{SH cF cS OC
+ 2 copy cS ne E cF ne or{NF}{pop pop}ie}{PC /CW WH BW add D}ie
+ /SC LK D}
+ {GL{JC}if
+ /CW CW WH add BW add D /HM t D}ie /GL f D /Ph f D
+ /LK LK NW length 1 add add D}{pop exit}ie}loop
+ /fin t D TX SC LK SC sub GI SH RT () ne{GL not{CC}if}if
+ /LC TX length D /WH RT SW pop D CW WH add Hy{HC SW pop add}if LL gt
+ {RT GL{SH cF cS OC 2 copy cS ne E cF ne or{NF}{pop pop}ie
+ Hy{/Ph t D}if /LL LS D}{NL /LL LS D SH}ie}
+ {RT PC Hy{CC}if /Ph Ph Hy or D}ie RT () ne{/GL t D /HM t D}if}
+ {TX SW pop LL le{TX SH}{/NW () D 0 2 TX length 1 sub
+ {/CW E D TX 0 CW GI dup SW pop LL gt{pop NW SH /HM t D NL/LL W XO sub MR sub D
+ /CW CW 2 sub NN D /TX TX CW TX length CW sub GI D TX BS exit}
+ {/NW E D}ie}for}ie}ie /HM t D}D
+/CC {C0 length 0 gt{JC}if /C0 [C1 L1 YA YB Mf NS NB TB AF Bw] D
+ /C1 () D /L0 L1 D /YA 0 D /YB 0 D /Mf 0 D /NS 0 D /NB 0 D}D
+/JC {C0 aload length 0 gt{pop pop pop NB add /NB E D NS add /NS E D
+ dup Mf gt{/Mf E D}{pop}ie dup YB gt{/YB E D}{pop}ie
+ dup YA gt{/YA E D}{pop}ie pop C1 join /C1 E D /C0 [] D}if}D
+/OC {C0 length 0 gt{C1 L1 L0 sub YA YB Mf NS NB TB AF Bw GL C0 aload pop
+ /Bw E D /AF E D /TB E D /NB E D /NS E D /Mf E D /YB E D /YA E D /C0 [] D
+ /L1 E D /C1 E D Ph{HC SH}if NL /GL E D /Bw E D /AF E D /TB E D /NB E D /NS E D
+ /Mf E D /YB E D /YA E D /L1 E D /LL W L1 sub XO sub MR sub WH sub D /CW 0 D
+ C1 E join /C1 E D}if}D
+/BT {/LB t D dup length string copy RS dup dup () ne E ( ) ne and
+ {/CI 0 D /LS LL D /LL W L1 sub XO sub MR sub D BS}
+ {dup ( ) eq{/GL f D}if dup () eq L1 0 eq or{pop}{SH /BP f D /Ph f D}ie}ie
+ /LB f D} D
+/BL {CP E pop XO E M} D
+/NL {JC /GL f D /SK W XO sub MR sub L1 sub TB{Bw add}if D
+ /YA LF{Mf HM Fl not and PF or{LH mul}if}{0 /LF t D}ie YA 2 copy lt{E}if pop D
+ C1 () ne{/FB YB Mf SA{Sf mul}if 4 div 2 copy lt{E}if pop D}if Fl{/Ya YA D}if
+ CP E pop YA sub YB sub LE neg lt Fl not and PB not and{NP}if NT TL BL
+ OU PF not and PB or{/RE L1 TB{Bw sub}if
+ W XO sub MR sub div YA YB add LE BO add div 2 copy lt{E}if pop D
+ RE 1 gt{BL 1 RE div dup scale}if}if
+ AT 2 le{SK AT mul 2 div YA neg R}if
+ AT 3 eq{0 YA neg R TB{/NB NB 1 sub D /NS NS 1 sub D}if /NB NB 1 sub NN D
+ /A3 NS 6 mul NB add D NS NB add 0 eq
+  {/A1 0 D /A2 0 D}
+  {NS 0 eq{/A1 SK NB div dup J gt{pop 0}if D /A2 0 D}{J A3 mul SK lt
+   {/A1 J D /A2 SK J NB mul sub NS div dup Ab gt{/A1 0 D pop 0}if D}
+   {/A1 SK A3 div D /A2 A1 6 mul D}ie}ie}ie /A1 A1 NN D /A2 A2 NN D}if
+ AT 4 eq{0 YA neg R PH 2 le{PD 0 lt{/PD L1 D}if PD M1 gt{/M1 PD D}if
+ L1 PD sub M2 gt{/M2 L1 PD sub D}if}{DV ID 1 sub get 0 ge{Lo 0 R}if}ie}if
+ F0 cF ne Cs cS ne or{F0 Cs NF}if
+ /ms Ms D /Ms f D CP FB sub
+ C1 cvx exec XO EO sub L1 add TB{BW sub}if dup LM gt{/LM E D}{pop}ie
+ PH 0 eq PH 4 eq or Ms and{HF not{/PO t D /AH t D}if
+ BB CP YA add E AT 3 eq LB and{A1 sub}if TB{BW sub}if E BB}
+ {pop pop}ie Ms HM PH 3 eq and or{/BP f D /Fl f D}if
+ /Lo 0 D /L1 0 D /F0 cF D /Cs cS D BP not{0 YB NN neg R}if
+ OU f1 and mF not and{k2 /f1 f D}if
+ OU PF not and PB or{RE 1 gt{RE dup scale}if}if /Ms ms Ms or D
+ /C1 AF{(Cp )}{()}ie D /YA 0 D /YB 0 D BL
+ AT 4 eq LB not and PH 3 ge and
+ {ID DV length lt{DV ID get dup 0 ge{DO E sub /Lo E D /L1 Lo D}{pop}ie
+ /ID ID 1 add D}if}if /T t D CD{/LN LN 1 add D PD}if
+ /PD -1 D /NS 0 D /NB 0 D /TB f D /Ph f D /Mf 0 D /HM f D} D
+/RS {/TM E D /CN 0 D TM{10 eq{TM CN ( ) PI}if /CN CN 1 add D}forall
+ /CN 0 D /BK HM EN and{0}{1}ie D TM
+ {dup 32 ne{TM CN 3 2 roll put /CN CN 1 add D /BK 0 D}
+ {pop BK 0 eq{TM CN 32 put /CN CN 1 add D}if /BK 1 D}ie}forall
+ TM 0 CN GI dup dup () ne E ( ) ne and
+ {dup CN 1 sub get 32 eq{/EN f D}{/EN t D}ie}if} D
+/join {2 copy length E length add string dup 4 2 roll 2 index 0 3 index
+ PI E length E PI}d
+/WR {(\n) search{dup () ne BP not or
+ {Li 4 le CP E pop YI Li mul add LE add 0 lt and PL 0 eq and{NP}if
+ SH NL pop /Li Li 1 sub D WR}{pop pop WR}ie}{SH}ie /CI 0 D /BP f D} D
+/SH {dup dup () ne E ( ) ne and PF or CS Mf gt and{/Mf CS D}if
+ T not Wf and{( ) E join /T t D}if dup BP{/MF CS D}if
+ AT 3 eq{2 copy length dup 0 gt{/NB E NB add D
+ {( ) search{/NS NS 1 add D pop pop}{pop exit}ie}loop}{pop pop}ie}if
+ CD PD 0 lt and{dup DC search{SW pop /PD E L1 add D pop pop}{pop}ie}if
+ 0 Np dup SW pop L1 add /L1 E D dup () ne
+ {C1 (\() join E join (\)) join AU AF and UF or Wf and{( U ) join}if
+ sF{( s ) join}if ( S ) join
+ /C1 E D dup length 1 sub get 32 eq /TB E D /Bw BW D}{pop pop}ie} D
+/BG {AI LG BC add add 0 eq} D
+/ON {OU{Ty AR AI NN get dup 1 add Ln Ns Ty 2 mod 0 eq{(.  )}{(\)  )}ie join
+ dup SW pop neg 0 R CP E 0 lt{0 E M}{pop}ie CP BB show /Ms t D}if} D
+/Ln {AR AI 3 -1 roll put}D
+/SP {dup CI lt BP not and{dup CI sub 0 E R /CI E D}{pop}ie} D
+/BN {PF{WR /HM f D}{BT NL}ie} D
+/NN {dup 0 lt{pop 0}if} D
+/h {(h) HI ST cvs join cvx exec dup 1 get E Nf{0 get E join}{pop}ie} D
+/H {/fn FN D /Hi E 1 add D 1 sub /HL E D /H2 HL 2 add D /GS EZ H2 get D
+ E Tm H2 get GS mul BE dup 0 gt{1 sub}{pop EG H2 get dup 0 lt{pop AT}if}ie NA
+ WW Np /SL SL 1 add D /FN EF H2 get D GS Ey H2 get FS
+ EU H2 get Sc Hs not HL Hl lt and Hs HL hl lt and or Hi 0 eq or
+ {/HI Hi D /Hs t D /hl HL D /Hv HL D}if HL Hl lt{/hi Hi D}if
+ Nf HI 0 gt and{(h) Hi ST cvs join cvx exec 0 get WB}if
+ /HF t D /AH f D /PO f D} D
+/EH {Bm H2 get GS mul BE OA /SL SL 1 sub NN D /CF 0 D /FN fn D
+ SZ SL get FR SL get FS /HF f D /GS Ts D ()Ec} D
+/P {E PF{WR}{PO{EP}{BN}ie Ts 4 mul Np AE not{Tm 0 get Ts mul neg SP}if
+ dup 0 ge AH and{Pi Pd}if}ie 1 sub dup 0 lt{pop AV AL get}if /AT E D /PO t D} D
+/EP {PF{WR}{BN Ts 4 mul Np}ie AE not{Bm 0 get Ts mul neg SP}if
+ /AT AV AL get D /PO f D} D
+/BE {E PO{EP}{BN}ie Ts 4 mul Np neg SP} D
+/HR {/Aw W EO sub D /RW E dup 0 gt{Aw mul}{neg}ie dup Aw gt{pop Aw}if D /RZ E D
+ E BN Ts neg SP 1 sub 2 div Aw RW sub mul EO add CP E pop M PF{0 Ps neg R}if
+ 0 Np OU{gsave RZ LW Cf{Hc VC}{0 Sg}ie CP BB RW 0 RL CP BB stroke grestore}if
+ /CI 0 D /BP f D PF not{Ts neg SP}if /Ms t D} D
+/AD {I NL EG 14 get dup 0 lt{pop AT}if NA /AE t D Tm 14 get Ts mul neg SP
+ Cf{EU 14 get dup -1 eq{pop CA CL get}if Sc}if} D
+/DA {BN ()ES OA /AE f D ()Ec Bm 14 get Ts mul neg SP} D
+/PR {/MW E D /Li E D Tm 1 get Ps mul BE 0 NA /FN Fp D /PF t D SI /SL SL 1 add D
+ /CF 0 D Ps CS mul Ts div MW WC mul CS mul Ts div dup LL gt PL 0 eq and
+ {LL div div}{pop}ie Ey 1 get FS CP E pop LE add YI neg div cvi dup Li lt
+ AH and{4 lt YI Li mul 5 mul LE add 0 gt or PL 0 eq and{NP}if}{pop}ie
+ EU 1 get Sc /GS Ps D}D
+/RP {WR NL () /PF f D SI /FN 0 D ES Bm 1 get Ps mul neg SP OA /GS Ts D} D
+/SI {/XO Lm 15 get BC NN mul Lm 16 get AI UI sub NN mul add
+ Lm 17 get UI NN mul add Lm 20 get LG NN mul add Ts mul
+ PF{Lm 1 get Ps mul add}if EO add D
+ /MR Rm 15 get BC NN mul Rm 16 get AI UI sub NN mul add
+ Rm 17 get UI NN mul add Rm 20 get LG NN mul add Ts mul
+ PF{Rm 1 get Ps mul add}if D /LL W XO sub MR sub D} D
+/DT {/cC E D BN /LG LG 1 sub D SI /LG LG 1 add D WW 2 div Np BL} D
+/DD {WB Cc 0 eq cC 0 eq and L1 0 eq or Lm 20 get Ts mul L1 sub TB{BW add}if
+ Ts 2 div lt or NL /LF E D SI BL /cC 0 D} D
+/DL {Dc LG Cc put /Cc E D BG{Tm 18 get Ts mul BE}{BN}ie /LG LG 1 add D BL} D
+/LD {BN LG 0 gt{/LG LG 1 sub D}if /Cc Dc LG get D SI
+ BG{()Bm 18 get Ts mul BE}if BL} D
+/UL {BG{Tm 17 get Ts mul BE}{BN}ie NR AI NN 0 put /UI UI 1 add D
+ /AI AI 1 add D SI BL} D
+/LU {BN /UI UI 1 sub D /AI AI 1 sub D SI BG{()Bm 17 get Ts mul BE}if BL} D
+/OL {E BG{Tm 16 get Ts mul BE}{BN}ie TR AI NN Ty put /Ty E D NR AI NN 1 put
+ /AI AI 1 add D SI BL 1 Ln} D
+/LO {BN /AI AI 1 sub D /Ty TR AI get D SI BG{()Bm 16 get Ts mul BE}if BL} D
+/LI {E BN -1 SP /BP f D /CI 0 D 0 Np NR AI 1 sub NN get 1 eq
+ {dup dup 0 gt E 4 le and{/Ty E D}{pop}ie
+ /L1 L1 Ty AR AI NN get Ns SW pop XO sub dup 0 lt{pop 0}if add D ( ON )}
+ {pop ( B )}ie C1 E join /C1 E D CS Mf gt{/Mf CS D}if BL} D
+/BQ {Tm 15 get Ts mul BE /BC BC 1 add D SI BL} D
+/QB {Bm 15 get Ts mul BE /BC BC 1 sub D SI BL} D
+/Al {E EP 1 sub dup 0 lt{pop AV AL get}if NA} D
+/Ea {EP OA} D
+/WB {PF{WR}{BT}ie} D
+/F1 {WB /FN 0 D CS 0 FS} D
+/F2 {WB /FN WI D CS 0 FS} D
+/HY {/Hy t D WB /Hy f D} D
+/YH {WB} D
+/A {/LT E D LT 1 eq{/RN E D}if /Lh E D WB /C1 C1 ( Cp ) join D
+ Lc AF not and{Cl Sc}if /AF t D} D
+/EA {Lc AF and{Ec}{WB}ie TL Pa AF and Lh 0 ne and
+ {( \() Lh join (\)) join /AF f D WB}if /AF f D} D
+/TL {C1 ( Tl ) apa /C1 E D} d
+/apa {AF OU and Lh 0 ne LT 1 eq or and{LT 1 eq{RN ( /) E ST cvs join}
+ {(\() Lh join (\)) join}ie E join join}{pop}ie} d
+/Cp {/Xc CP /Yc E D D} D
+/SS {Cf{dup 0 ge{EU E get dup -1 eq{pop CA CL get}if}{pop CA CL get}ie Sc}
+ {pop}ie SZ SL get /SL SL 1 add D} D
+/I {WB 8 SS 1 FS} D
+/EM {WB 8 SS /CF CF 1 xor D 0 FS} D
+/BD {WB 9 SS 2 FS} D
+/TT {WB 10 SS /FN Fp D 0 FS} D
+/KB {WB 11 SS /FN Fp D 2 FS} D
+/CT {WB 12 SS 1 FS} D
+/SM {WB 13 SS /FN Fp D 0 FS} D
+/Q {/QL QL 1 add D QO QL 2 mod get La get join WB} D
+/EQ {QC QL 2 mod get La get join WB /QL QL 1 sub D} D
+/RO {WB -1 SS /CF 0 D 0 FS} D
+/SY {WB -1 SS -1 FS} D
+/MY {WB -1 SS -2 FS} D
+/ES {WB /SL SL 1 sub NN D /CF 0 D /FN FO SL get D SZ SL get FR SL get FS ()Ec}D
+/FZ {3 sub 1.2 E exp GS mul E WB TL /C1 C1 ( Cp ) join D /SL SL 1 add D 0 FS} D
+/Ef {WB TL ()ES /C1 C1 ( Cp ) join D} D
+/BZ {dup /Bf E D FZ}D
+/Sc {dup -1 ne Cf and{/CL CL 1 add D dup 0 eq{pop [0 0 0]}if
+ dup CA E CL E put VS ( VC ) join C1 E join /C1 E D}{pop}ie} D
+/Ec {WB Cf{/CL CL 1 sub NN D CA CL get VS ( VC ) join C1 E join /C1 E D}if} D
+/VS {dup type /arraytype eq{([) E {ST cvs join ( ) join}forall (]) join}if} D
+/VC {{255 div}forall setrgbcolor} D
+/Sl {dup type /integertype ne{Ds}if /La E D WB}d
+/UN {WB /UF t D} D
+/NU {WB /UF f D} D
+/SE {WB /sF t D} D
+/XE {WB /sF f D} D
+/sM {/C1 C1 ( k1 ) join D}d
+/eM {/C1 C1 ( k2 ) join D}d
+/k1 {/YC CP E pop Ts add D /mF t D /f1 t D}d
+/k2 {gsave 3 LW -9 CP E pop Ts 0.2 mul sub M -9 YC L stroke grestore /mF f D}d
+/Ac {/AC E D WB}d
+/Ca {eA{( \()join AC join(\) )join}if WB}d
+/s {OU{gsave 0 CS .25 mul R dup SW pop CJ 0 RL stroke grestore}if}D
+/CJ {AT 3 eq LB and{E dup dup length 1 sub A1 mul E
+ {( ) search{pop pop E A2 add E}{pop exit}ie}loop 3 -1 roll add
+ W CP pop sub 2 copy gt{E}if pop}if}D
+/So {/Co E D} D
+/SO {C1 Yo ST cvs join ( So ) join /C1 E D (j) SW pop 2 div Pd} D
+/Se {E WB CS E div Pd}D
+/Pd {dup type /stringtype eq{SW pop}if dup /L1 E L1 add D
+ ST cvs ( 0 R ) join C1 E join /C1 E D} D
+/Sp {0.35 CO} D
+/Sb {-0.2 CO} D
+/CO {OV Io Yo put /Yo E CS mul Yo add D /Io Io 1 add D -1.5 Io mul 3 add FZ SO
+ CS Yo add dup YA gt{/YA E D}{pop}ie
+ Yo neg dup YB gt{/YB E D}{pop}ie} D
+/Es {ES /Io Io 1 sub NN D /Yo OV Io get D SO} D
+/SB {/N2 0 D 0 1 NI{/N E D{IX N2 get 0 lt{/N2 N2 1 add D}{exit}ie}loop
+ /K WS N get FC N get mul D /NY AY N2 get D /BV NY array D
+ 0 1 NY 1 sub{/TM K string D currentfile TM readhexstring pop pop BV E TM put}
+ for BM N BV put /N2 N2 1 add D}for} D
+/IC [{/MA E D /MB 0 D}{2 div /MA E D /MB MA D}{/MB E CS sub D /MA CS D}
+ {pop /MA YS AB mul D /MB 1 AB sub YS mul D}{pop /MA 0 D /MB 0 D}] D
+/IP {BV N get /N N 1 add D} D
+/II {/K E D IX K get 0 lt{/EC E D}if /TY E D
+ TY 4 eq{/Y E D /X E D}if TY 3 eq{/AB E D}if
+ /XW AX K get D /YW AY K get D /IS SG IT K get get D /XS XW IS mul D
+ /YS YW IS mul D YS IC TY get exec /MA MA Fl not{3 add}if D} D
+/IM {II /ty TY D /xs XS D /ys YS D /ya YA D /yb YB D /ma MA D /mb MB D /k K D
+ /ec EC D /BP f D /CI 0 D WB TL L1 xs add dup XO add MR add W gt
+ {pop /ma ma Fl{3 add}if D NL /YA ma D /YB mb D /YS ys D /L1 xs D}
+ {/L1 E D ma YA gt{/YA ma D}if mb YB gt{/YB mb D}if}ie /TB f D
+ OU{CP E pop YS sub LE neg lt Fl not and PB not and{NP /YA ma D /YB mb D}if
+ /BP f D ty ST cvs ( ) join IX k get 0 lt{(\() join ec join (\) ) join}if
+ k ST cvs join ty 3 eq{AB ST cvs ( ) join E join}if
+ ty 4 eq{X ST cvs ( ) join Y ST cvs join ( ) join E join}if C1 E join
+ ( DI ) join FP 2 eq FP 1 eq AF and or{( FM ) join}if
+ ( Il Cp ) apa /C1 E D /EN f D}if /HM t D /T f D} D
+/DI {II /Xc CP /Yc E D D /YN YW neg D /HM t D /CI 0 D /K2 IX K get D gsave
+ TY 4 eq{OX X IS mul add OY FY add YS sub Y IS mul sub}
+ {/FY YS D CP MB sub 2 copy /OY E D /OX E D}ie
+ translate K2 0 ge{/DP AZ K2 get D /BV BM K2 get D XS YS scale /N 0 D XW YW DP
+ [XW 0 0 YN 0 YW] {IP} FC K2 get 1 eq{image}{f 3 colorimage}ie}
+ {EX}ie grestore XS 0 R /Ms t D} D
+/FM {gsave 0 Sg CP MB sub translate XS neg 0 M 0 YS RL XS 0 RL 0 YS neg RL
+ XS neg 0 RL stroke grestore} D
+/NA {/AT E D /AL AL 1 add D AV AL AT put} D
+/OA {AL 0 gt{/AL AL 1 sub D /AT AV AL get D}if} D
+/D1 {/BR {CP E pop E BN Mb{CP E pop eq{0 YI R}if}{pop}ie} D
+ /Sn {OU{C1 E ST cvs join ( Ld ) join /C1 E D}{pop}ie} D} D
+/D1 {/BR {BN} D /Sn {OU {C1 E ST cvs join ( Ld ) join /C1 E D} {pop} ie} D} D
+/TC {/TF t D /ML 0 D HN{SW pop dup ML gt{/ML E D}{pop}ie}forall NP /RM RM not D
+ RC /OU Tc D Ep /PN 0 D Ms not TP and{Ip}if /W IW ML sub Ts sub D
+ /A0 0 D TH{/BR {( ) join BT} D /Sn {pop} D /Au () D}if} D
+/TN {0 eq{E EA PF HF or not XR and{HN E get Xr}{pop}ie}
+ {OU{Tn 0 ge{() BN}if /Tn E D}{pop}ie WB}ie} D
+/NT {OU LB not and Tn 0 ge and{PL 0 eq{Ms not{CS CF FS}if CP dup
+ /y E YA sub D W 9 sub CS -1.8 mul XO L1 add 2 add{y M (.) show}for
+ HN Tn get dup SW pop IW E sub y M show CP BB M}if /Tn -1 D}if} D
+/Ld {/DN E D HN DN Pn put [/View [/XYZ -4 Fl{PS}{CP YA add US E pop}ie null]
+ /Dest DN ST cvs cvn /DEST pdfmark} D
+/C {ND 1 eq{1 sub}if TI mul /XO E D NL Nf not{pop()}if 0 3 -1 roll 1 A} D
+/OP {BP not{NP}if PN 2 mod 0 eq{NP}if}D
+/Ep {Xp PN 2 mod 0 eq and OU and{/Pn (-) D showpage /PM 1 D LA}if}D
+/Dg [73 86 88 76 67 68 77] D
+/Rd [0 [1 1 0][2 1 0][3 1 0][2 1 1][1 1 1][2 2 1][3 3 1][4 4 1][2 1 2]] D
+/Ns {/m E D /c E 32 mul D /j m 1000 idiv D /p j 12 add string D
+ c 96 le m 0 gt and{c 32 le {/i 0 D /d 77 D /l 100 D /m m j 1000 mul sub D
+  j -1 1 {pop p i d c add put /i i 1 add D}for
+  4 -2 0 {/j E D /n m l idiv D /m m n l mul sub D /d Dg j get D
+   n 0 gt {/x Rd n get D x 0 get -1 1 {pop p i d c add put /i i 1 add D}for
+   p i x 1 get sub Dg x 2 get j add get c add put}if /l l 10 idiv D
+  }for p 0 i GI}
+  {/i ST length 1 sub D m {1 sub dup 0 ge{dup 26 mod c add 1 add
+   ST i 3 -1 roll put 26 idiv dup 0 eq{pop exit}if}if /i i 1 sub D}loop
+   ST i ST length i sub GI}ie}
+ {m p cvs}ie} D
+/US {matrix currentmatrix matrix defaultmatrix matrix invertmatrix
+ matrix concatmatrix transform} D
+/GB {Gb{US}if}D
+/Tl {/Rn E D Xc CP pop ne{
+ [/Rect [Xc 1 sub Yc cS 0.25 mul sub GB CP E 1 add E cS 0.85 mul add GB]
+  /Subtype /Link /Border [0 0 Cf Lc and LX and AU or{0}{1}ie] Rn type
+  /nametype eq {/Dest Rn}{/Action [/Subtype /URI /URI Rn] Cd}ie
+  /ANN pdfmark}if} D
+/Il {/Rn E D [/Rect [Xc Yc GB Xc XS add Yc YS add GB] /Subtype /Link
+ /Border [0 0 0] Rn type /nametype eq{/Dest Rn}
+ {/Action [/Subtype /URI /URI Rn] Cd}ie /ANN pdfmark} D
+/XP {[{/Z Bz 2 div D Z 0 R Z Z RL Z neg Z RL Z neg Z neg RL Z Z neg RL
+ Fi cH 1 eq and{fill}if} {Bz 0 RL 0 Bz RL Bz neg 0 RL 0 Bz neg RL
+ Fi cH 1 eq and{fill}if} {0 -5 R Bz 0 RL 0 21 RL Bz neg 0 RL 0 -21 RL}]} D
+/MS {/Sm E D WB}D
+/O {BN()Sm BX} D
+/BX {/Bt E D Bt 2 lt{/Ch E D CS 0.8 mul}{11 mul}ie W XO sub MR sub
+ 2 copy gt{E}if pop /HZ E D Bt 2 eq{Fi not{pop()}if ( )E join /Ft E D TT
+ /PF t D /MW 1 D /Li 1 D /Fw Ft SW pop D Fw HZ gt{/HZ Fw 8 add D}if
+ HZ ST cvs( )join}{WB Ch ST cvs( )join}ie L1 HZ add XO add MR add W gt{NL}if
+ Bt 2 eq{Ft ES Fw neg HM{CS sub}if Pd}if Bt ST cvs join( Bx )join
+ Bt 2 eq HM and{CS Pd}if C1 E join /C1 E D /L1 L1 HZ add D /T f D
+ ( ) Pd /PF f D Bt 2 lt{YA CS .8 mul lt{/YA CS .8 mul D}if}
+ {YB 5 lt{/YB 5 D}if YA 21 lt{/YA 21 D}if}ie /CI 0 D} D
+/Bx {dup 2 eq{E /Bz E D}{E /cH E D /Bz CS .8 mul D}ie
+ OU {gsave 0 Sg XP E get exec stroke grestore}{pop}ie Bz 0 R /Ms t D}D
+/SD {FD 4 mul Dy add DZ NF newpath 0 0 M DX t charpath pathbbox
+ 3 -1 roll sub /DY E D E dup /X1 E D sub WM mul WX DY mul add WM DG mul E div
+ /DF E D /DR WX DF mul DY mul WM div 2 div D} d
+/Sd {gsave 0 IL Di mul neg translate IL IW atan Di 0 eq{neg}if rotate
+ FD 4 mul Dy add DZ NF DR X1 sub DY 2 div neg M cD VC DX show grestore} d
+/Pt {/tp t D Tp{NP /Pn (TP) D 0 Tt neg R Th BN NP Ep ET RC ZF}if /tp f D} D
+/RC {/AI 0 D /LG 0 D /BC 0 D /UI 0 D /PF f D /Cc 0 D /cC 0 D /Dc 10 array D
+ /NR [0 1 9{pop 0}for] D /La Ds D /AR 10 array D /TR 10 array D /AV 30 array D
+ SI /AL -1 D /AT A0 D AT NA /OV 9 array D /Yo 0 D /Co 0 D /Io 0 D /Hy f D
+ /Ph f D /CL -1 D Ct Sc}D
+/ZF {/FR [0 1 30{pop 0}for] D /SZ [0 1 30{pop 0}for] D /FO [0 1 30{pop 0}for] D
+ /SL 0 D /CF 0 D /FN 0 D 0 Ts SF}D
+/QO [[(\234)(\233)(\253\240)(\232)(\273)(\253)][(')(`)(\253\240)(\231)(\273)(\253)]] D
+/QC [[(\234)(\234)(\240\273)(\233)(\253)(\273)][(')(')(\240\273)(`)(\253)(\273)]] D
+/Hf EF length 2 sub D
+/Hz EZ Hf get D
+/HS Ey Hf get D
+/Fz EZ Hf 1 add get D
+/Fs Ey Hf 1 add get D
+/LE IL D
+/Ps EZ 1 get D
+/Fp EF 1 get D
+/XO 0 D
+/YI 0 D
+/CI 0 D
+/FP 0 D
+/WW Ts 7 mul D
+/Mf 0 D
+/YA 0 D
+/YB 0 D
+/Cs Ts D
+/GS Ts D
+/F0 0 D
+/NS 0 D
+/NB 0 D
+/N 0 D
+/C0 [] D
+/C1 () D
+/Lo 0 D
+/L1 0 D
+/LM 0 D
+/PH 0 D
+/EC 0 D
+/Lh 0 D
+/LT 0 D
+/CH 1 string D
+/ST 16 string D
+/CA 9 array D
+/HC (\255) D
+/HM f D
+/PF f D
+/EN f D
+/TB f D
+/UF f D
+/sF f D
+/AE f D
+/AF f D
+/BP t D
+/CD f D
+/PA t D
+/GL f D
+/T t D
+/HF f D
+/AH f D
+/SA f D
+/PB f D
+/f1 f D
+/mF f D
+/OX 0 D
+/OY 0 D
+/FY 0 D
+/EO 0 D
+/FB 0 D
+/PL 0 D
+/Bw 0 D
+/PD -1 D
+/TP f D
+/tp f D
+/TH t D
+/Ty 4 D
+/Tn -1 D
+/Fl t D
+/LB t D
+/PM 1 D
+/Ms f D
+/Ba f D
+/Bb f D
+/Hl 3 D
+/hl 6 D
+/Hv 6 D
+/Hs f D
+/HI 0 D
+/hi 0 D
+/PO t D
+/TE f D
+/LF t D
+/BO 0 D
+/Sm 1 D
+/Bf 3 D
+/A1 0 D
+/A2 0 D
+/Ds 1 D
+/QL -1 D
+/Cb Db D
+/Ct Dt D
+/Cl Dl D
+[/Creator (html2ps version 1.0 beta3) /Author (Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman) /Keywords () /Subject ()
+ /Title (CLHS: Chapter 9</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="f_cp_stu.htm"> <link rel="UP" href="../Front/Contents.htm"> <link rel="NEXT" href="09_a.htm"> <title>CLHS: Section 9.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_.htm"> <link rel="UP" href="09_.htm"> <link rel="NEXT" href="09_aa.htm"> <title>CLHS: Section 9.1.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_a.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_aaa.htm"> <title>CLHS: Section 9.1.1.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_aa.htm"> <link rel="UP" href="09_aa.htm"> <link rel="NEXT" href="09_ab.htm"> <title>CLHS: Section 9.1.2</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_aaa.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_aba.htm"> <title>CLHS: Section 9.1.2.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_ab.htm"> <link rel="UP" href="09_ab.htm"> <link rel="NEXT" href="09_ac.htm"> <title>CLHS: Section 9.1.3</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_aba.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_aca.htm"> <title>CLHS: Section 9.1.3.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_ac.htm"> <link rel="UP" href="09_ac.htm"> <link rel="NEXT" href="09_acaa.htm"> <title>CLHS: Section 9.1.3.1.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_aca.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_acab.htm"> <title>CLHS: Section 9.1.3.1.2</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acaa.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_acac.htm"> <title>CLHS: Section 9.1.3.1.3</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acab.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_acad.htm"> <title>CLHS: Section 9.1.3.1.4</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acac.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_acae.htm"> <title>CLHS: Section 9.1.3.1.5</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acad.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_ad.htm"> <title>CLHS: Section 9.1.4</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acae.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_ada.htm"> <title>CLHS: Section 9.1.4.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_ad.htm"> <link rel="UP" href="09_ad.htm"> <link rel="NEXT" href="09_adaa.htm"> <title>CLHS: Section 9.1.4.1.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_ada.htm"> <link rel="UP" href="09_ada.htm"> <link rel="NEXT" href="09_adb.htm"> <title>CLHS: Section 9.1.4.2</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adaa.htm"> <link rel="UP" href="09_ad.htm"> <link rel="NEXT" href="09_adba.htm"> <title>CLHS: Section 9.1.4.2.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adb.htm"> <link rel="UP" href="09_adb.htm"> <link rel="NEXT" href="09_adbb.htm"> <title>CLHS: Section 9.1.4.2.2</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adba.htm"> <link rel="UP" href="09_adb.htm"> <link rel="NEXT" href="09_adbc.htm"> <title>CLHS: Section 9.1.4.2.3</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adbb.htm"> <link rel="UP" href="09_adb.htm"> <link rel="NEXT" href="09_adbd.htm"> <title>CLHS: Section 9.1.4.2.4</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adbc.htm"> <link rel="UP" href="09_adb.htm"> <link rel="NEXT" href="09_ae.htm"> <title>CLHS: Section 9.1.5</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adbd.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_af.htm"> <title>CLHS: Section 9.1.6) /DOCINFO pdfmark
+/ND 1 D
+/HN [1 1 27{pop (??)}for] D
+/h0 [()(Table of Contents)] D
+/h1 [(0.1\240\240)(9. Conditions)] D
+/h2 [(0.2\240\240)(9.1 Condition System Concepts)] D
+/h3 [(0.3\240\240)(9.1.1 Condition Types)] D
+/h4 [(0.4\240\240)(9.1.1.1 Serious Conditions)] D
+/h5 [(0.5\240\240)(9.1.2 Creating Conditions)] D
+/h6 [(0.6\240\240)(9.1.2.1 Condition Designators)] D
+/h7 [(0.7\240\240)(9.1.3 Printing Conditions)] D
+/h8 [(0.8\240\240)(9.1.3.1 Recommended Style in Condition Reporting)] D
+/h9 [(0.9\240\240)(9.1.3.1.1 Capitalization and Punctuation in Condition Reports)] D
+/h10 [(0.10\240\240)(9.1.3.1.2 Leading and Trailing Newlines in Condition Reports)] D
+/h11 [(0.11\240\240)(9.1.3.1.3 Embedded Newlines in Condition Reports)] D
+/h12 [(0.12\240\240)(9.1.3.1.4 Note about Tabs in Condition Reports)] D
+/h13 [(0.13\240\240)(9.1.3.1.5 Mentioning Containing Function in Condition Reports)] D
+/h14 [(0.14\240\240)(9.1.4 Signaling and Handling Conditions)] D
+/h15 [(0.15\240\240)(9.1.4.1 Signaling)] D
+/h16 [(0.16\240\240)(9.1.4.1.1 Resignaling a Condition)] D
+/h17 [(0.17\240\240)(9.1.4.2 Restarts)] D
+/h18 [(0.18\240\240)(9.1.4.2.1 Interactive Use of Restarts)] D
+/h19 [(0.19\240\240)(9.1.4.2.2 Interfaces to Restarts)] D
+/h20 [(0.20\240\240)(9.1.4.2.3 Restart Tests)] D
+/h21 [(0.21\240\240)(9.1.4.2.4 Associating a Restart with a Condition)] D
+/h22 [(0.22\240\240)(9.1.5 Assertions)] D
+/h23 [(0.23\240\240)(9.1.6 Notes about the Condition System's Background)] D
+/Hr [-4 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26]D
+/HV [1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2]D
+/Cn [23 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0]D
+Hr length 0 gt{[/PageMode /UseOutlines /DOCVIEW pdfmark}if
+/Hn 1 D
+0 1 Hr length 1 sub{
+ /Bn E D [Cn Bn get dup 0 gt{/Count E HV Bn get Bl ge{neg}if}{pop}ie
+ /Dest Hr Bn get dup abs ST cvs cvn E 0 ge{(h)Hn ST cvs join cvx exec
+ dup 1 get E Nf{0 get E join}{pop}ie /Hn Hn 1 add D}{()}ie
+ /Title E dup length 255 gt{0 255 getinterval}if /OUT pdfmark}for
+ZF /FN Fp D Ps 0 FS /WC Wf{( )}{<A1A1>}ie SW pop D
+ET RC ZF
+/Df f D
+/Ba f D /BO 0 D Bs
+/UR (09.html) D
+/Ti (CLHS: Chapter 9</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="f_cp_stu.htm"> <link rel="UP" href="../Front/Contents.htm"> <link rel="NEXT" href="09_a.htm"> <title>CLHS: Section 9.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_.htm"> <link rel="UP" href="09_.htm"> <link rel="NEXT" href="09_aa.htm"> <title>CLHS: Section 9.1.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_a.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_aaa.htm"> <title>CLHS: Section 9.1.1.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_aa.htm"> <link rel="UP" href="09_aa.htm"> <link rel="NEXT" href="09_ab.htm"> <title>CLHS: Section 9.1.2</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_aaa.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_aba.htm"> <title>CLHS: Section 9.1.2.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_ab.htm"> <link rel="UP" href="09_ab.htm"> <link rel="NEXT" href="09_ac.htm"> <title>CLHS: Section 9.1.3</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_aba.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_aca.htm"> <title>CLHS: Section 9.1.3.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_ac.htm"> <link rel="UP" href="09_ac.htm"> <link rel="NEXT" href="09_acaa.htm"> <title>CLHS: Section 9.1.3.1.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_aca.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_acab.htm"> <title>CLHS: Section 9.1.3.1.2</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acaa.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_acac.htm"> <title>CLHS: Section 9.1.3.1.3</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acab.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_acad.htm"> <title>CLHS: Section 9.1.3.1.4</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acac.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_acae.htm"> <title>CLHS: Section 9.1.3.1.5</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acad.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_ad.htm"> <title>CLHS: Section 9.1.4</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acae.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_ada.htm"> <title>CLHS: Section 9.1.4.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_ad.htm"> <link rel="UP" href="09_ad.htm"> <link rel="NEXT" href="09_adaa.htm"> <title>CLHS: Section 9.1.4.1.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_ada.htm"> <link rel="UP" href="09_ada.htm"> <link rel="NEXT" href="09_adb.htm"> <title>CLHS: Section 9.1.4.2</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adaa.htm"> <link rel="UP" href="09_ad.htm"> <link rel="NEXT" href="09_adba.htm"> <title>CLHS: Section 9.1.4.2.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adb.htm"> <link rel="UP" href="09_adb.htm"> <link rel="NEXT" href="09_adbb.htm"> <title>CLHS: Section 9.1.4.2.2</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adba.htm"> <link rel="UP" href="09_adb.htm"> <link rel="NEXT" href="09_adbc.htm"> <title>CLHS: Section 9.1.4.2.3</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adbb.htm"> <link rel="UP" href="09_adb.htm"> <link rel="NEXT" href="09_adbd.htm"> <title>CLHS: Section 9.1.4.2.4</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adbc.htm"> <link rel="UP" href="09_adb.htm"> <link rel="NEXT" href="09_ae.htm"> <title>CLHS: Section 9.1.5</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adbd.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_af.htm"> <title>CLHS: Section 9.1.6) D
+/Au (Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman) D
+/Df f D
+/ME [(Kent M. Pitman)] D
+
+/Cb Db D /Ct [16#00 16#00 16#00] D /Cl [16#00 16#00 16#00] D /CL -1 D Ct Sc
+Pt
+
+/Ba f D /BO 0 D Bs
+/UR (09.html) D
+/Ti (CLHS: Chapter 9</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="f_cp_stu.htm"> <link rel="UP" href="../Front/Contents.htm"> <link rel="NEXT" href="09_a.htm"> <title>CLHS: Section 9.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_.htm"> <link rel="UP" href="09_.htm"> <link rel="NEXT" href="09_aa.htm"> <title>CLHS: Section 9.1.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_a.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_aaa.htm"> <title>CLHS: Section 9.1.1.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_aa.htm"> <link rel="UP" href="09_aa.htm"> <link rel="NEXT" href="09_ab.htm"> <title>CLHS: Section 9.1.2</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_aaa.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_aba.htm"> <title>CLHS: Section 9.1.2.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_ab.htm"> <link rel="UP" href="09_ab.htm"> <link rel="NEXT" href="09_ac.htm"> <title>CLHS: Section 9.1.3</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_aba.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_aca.htm"> <title>CLHS: Section 9.1.3.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_ac.htm"> <link rel="UP" href="09_ac.htm"> <link rel="NEXT" href="09_acaa.htm"> <title>CLHS: Section 9.1.3.1.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_aca.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_acab.htm"> <title>CLHS: Section 9.1.3.1.2</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acaa.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_acac.htm"> <title>CLHS: Section 9.1.3.1.3</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acab.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_acad.htm"> <title>CLHS: Section 9.1.3.1.4</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acac.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_acae.htm"> <title>CLHS: Section 9.1.3.1.5</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acad.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_ad.htm"> <title>CLHS: Section 9.1.4</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acae.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_ada.htm"> <title>CLHS: Section 9.1.4.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_ad.htm"> <link rel="UP" href="09_ad.htm"> <link rel="NEXT" href="09_adaa.htm"> <title>CLHS: Section 9.1.4.1.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_ada.htm"> <link rel="UP" href="09_ada.htm"> <link rel="NEXT" href="09_adb.htm"> <title>CLHS: Section 9.1.4.2</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adaa.htm"> <link rel="UP" href="09_ad.htm"> <link rel="NEXT" href="09_adba.htm"> <title>CLHS: Section 9.1.4.2.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adb.htm"> <link rel="UP" href="09_adb.htm"> <link rel="NEXT" href="09_adbb.htm"> <title>CLHS: Section 9.1.4.2.2</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adba.htm"> <link rel="UP" href="09_adb.htm"> <link rel="NEXT" href="09_adbc.htm"> <title>CLHS: Section 9.1.4.2.3</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adbb.htm"> <link rel="UP" href="09_adb.htm"> <link rel="NEXT" href="09_adbd.htm"> <title>CLHS: Section 9.1.4.2.4</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adbc.htm"> <link rel="UP" href="09_adb.htm"> <link rel="NEXT" href="09_ae.htm"> <title>CLHS: Section 9.1.5</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adbd.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_af.htm"> <title>CLHS: Section 9.1.6) D
+/Au (Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman, Kent M. Pitman) D
+/Df f D
+/ME [(Kent M. Pitman)] D
+
+NP RC ZF
+()1 Sl()WB 0 Sn(
+)0 P()WB 1 Sn()WB 1 Sn()EA()WB 2 Sn()WB 2 Sn()EA()EP(
+)0 2 0 H(9.)WB 4 Sn( Conditions)EH(
+
+)0 2 1 H(9.1)WB 5 Sn( Condition System Concepts)EH(
+)0 P(Common Lisp constructs are described not only in terms of their
+behavior in situations during which they are intended to be used
+\201see the "Description" part of each )0 2 A()I(operator)ES()EA( specification\202, but in
+all other situations \201see the "Exceptional Situations" part of each
+)0 2 A()I(operator)ES()EA( specification\202.)EP(
+)0 P(A situation is the evaluation of an expression in a specific
+context. A )0 2 A()I(condition)ES()EA( is an )0 2 A()I(object)ES()EA( that
+represents a specific situation that has been detected. )0 2 A()I(Conditions)ES()EA(
+are )0 2 A()I(generalized
+instances)ES()EA( of the )0 2 A()I(class)ES()EA( )0 2 A()BD(condition)ES()EA(. A hierarchy of )0 2 A()I(condition)ES()EA(
+classes is defined in Common Lisp. A )0 2 A()I(condition)ES()EA( has )0 2 A()I(slots)ES()EA( that contain
+data relevant to the situation that the )0 2 A()I(condition)ES()EA( represents.)EP(
+)0 P(An error is a situation in which normal program execution cannot
+continue correctly without some form of intervention \201either
+interactively by the user or under program control\202. Not all errors
+are detected. When an error goes undetected, the effects can be
+)0 2 A()I(implementation-dependent)ES()EA(,
+)0 2 A()I(implementation-defined)ES()EA(,
+unspecified, or undefined. See )0 2 A(Section 1.4 \201Definitions\202)EA(. All detected errors can
+be represented by )0 2 A()I(conditions)ES()EA(, but not all )0 2 A()I(conditions)ES()EA(
+represent errors.)EP(
+)0 P(Signaling is the process by which a )0 2 A()I(condition)ES()EA( can alter the flow of
+control in a program by raising the )0 2 A()I(condition)ES()EA( which can then be
+)I(handled)ES(. The functions )0 2 A()BD(error)ES()EA(, )0 2 A()BD(cerror)ES()EA(, )0 2 A()BD(signal)ES()EA(, and )0 2 A()BD(warn)ES()EA( are used to signal )0 2 A()I(conditions)ES()EA(.)EP(
+)0 P(The process of signaling involves the selection and invocation
+of a )0 2 A()I(handler)ES()EA( from a set of )0 2 A()I(active)ES()EA( )0 2 A()I(handlers)ES()EA(. A
+)0 2 A()I(handler)ES()EA(
+is a )0 2 A()I(function)ES()EA( of one argument \201the
+)0 2 A()I(condition)ES()EA(\202 that is invoked to
+handle a )0 2 A()I(condition)ES()EA(. Each )0 2 A()I(handler)ES()EA( is
+associated with a )0 2 A()I(condition)ES()EA( )0 2 A()I(type)ES()EA(, and a )0 2 A()I(handler)ES()EA( will be invoked only
+on a )0 2 A()I(condition)ES()EA( of the )0 2 A()I(handler)ES()EA('s
+associated )0 2 A()I(type)ES()EA(.)EP(
+)0 P()0 2 A()I(Active)ES()EA(
+)0 2 A()I(handlers)ES()EA(
+are )I(established)ES( dynamically \201see )0 2 A()BD(handler-bind)ES()EA( or )0 2 A()BD(handler-case)ES()EA(\202. )0 2 A()I(Handlers)ES()EA( are
+invoked in a )0 2 A()I(dynamic environment)ES()EA(
+equivalent to that of the signaler, except that the set of )0 2 A()I(active)ES()EA( )0 2 A()I(handlers)ES()EA( is
+bound in such a way as to include only those that were )0 2 A()I(active)ES()EA( at the
+time the )0 2 A()I(handler)ES()EA( being invoked was
+)I(established)ES(. Signaling a )0 2 A()I(condition)ES()EA( has no side-effect on
+the )0 2 A()I(condition)ES()EA(, and there is no
+dynamic state contained in a )0 2 A()I(condition)ES()EA(.)EP(
+)0 P(If a )0 2 A()I(handler)ES()EA( is invoked, it can
+address the )0 2 A()I(situation)ES()EA( in one of three
+ways:)EP(
+)0 DL()0 DT()BD(Decline)ES()BR(
+)DD(It can decline to )0 2 A()I(handle)ES()EA( the )0 2 A()I(condition)ES()EA(. It does this by
+simply returning rather than transferring control. When this
+happens, any values returned by the handler are ignored and the
+next most recently established handler is invoked. If there is no
+such handler and the signaling function is )0 2 A()BD(error)ES()EA( or )0 2 A()BD(cerror)ES()EA(, the debugger is
+entered in the )0 2 A()I(dynamic environment)ES()EA(
+of the signaler. If there is no such handler and the signaling
+function is either )0 2 A()BD(signal)ES()EA( or )0 2 A()BD(warn)ES()EA(, the signaling function
+simply returns )0 2 A()BD(nil)ES()EA(.
+)0 DT()BD(Handle)ES()BR(
+)DD(It can )0 2 A()I(handle)ES()EA( the )0 2 A()I(condition)ES()EA( by performing a
+non-local transfer of control. This can be done either primitively
+by using )0 2 A()BD(go)ES()EA(,
+)0 2 A()BD(return)ES()EA(,
+)0 2 A()BD(throw)ES()EA( or
+more abstractly by using a function such as )0 2 A()BD(abort)ES()EA( or )0 2 A()BD(invoke-restart)ES()EA(.
+)0 DT()BD(Defer)ES()BR(
+)DD(It can put off a decision about whether to )0 2 A()I(handle)ES()EA( or )0 2 A()I(decline)ES()EA(, by any of a number
+of actions, but most commonly by signaling another condition,
+resignaling the same condition, or forcing entry into the
+debugger.)LD(
+
+)0 2 2 H(9.1.1)WB 6 Sn( Condition Types)EH(
+)0 P(The next figure lists the )0 2 A()I(standardized)ES()EA( )0 2 A()I(condition)ES()EA(
+)0 2 A()I(types)ES()EA(.
+Additional )0 2 A()I(condition)ES()EA( )0 2 A()I(types)ES()EA( can be defined by using
+)0 2 A()BD(define-condition)ES()EA(.)EP(
+)0 P()WB 3 Sn()WB 3 Sn()EA()EP(
+) 10 78 PR()0 2 A(arithmetic-error)EA(                  )0 2 A(floating-point-overflow)EA(   )0 2 A(simple-type-error)EA(   
+)0 2 A(cell-error)EA(                        )0 2 A(floating-point-underflow)EA(  )0 2 A(simple-warning)EA(      
+)0 2 A(condition)EA(                         )0 2 A(package-error)EA(             )0 2 A(storage-condition)EA(   
+)0 2 A(control-error)EA(                     )0 2 A(parse-error)EA(               )0 2 A(stream-error)EA(        
+)0 2 A(division-by-zero)EA(                  )0 2 A(print-not-readable)EA(        )0 2 A(style-warning)EA(       
+)0 2 A(end-of-file)EA(                       )0 2 A(program-error)EA(             )0 2 A(type-error)EA(          
+)0 2 A(error)EA(                             )0 2 A(reader-error)EA(              )0 2 A(unbound-slot)EA(        
+)0 2 A(file-error)EA(                        )0 2 A(serious-condition)EA(         )0 2 A(unbound-variable)EA(    
+)0 2 A(floating-point-inexact)EA(            )0 2 A(simple-condition)EA(          )0 2 A(undefined-function)EA(  
+)0 2 A(floating-point-invalid-operation)EA(  )0 2 A(simple-error)EA(              )0 2 A(warning)EA()RP(
+)0 P()BD(Figure 9-1. Standardized Condition Types)ES()EP(
+)0 P(All )0 2 A()I(condition)ES()EA( types are )0 2 A()I(subtypes)ES()EA( of
+)0 2 A()I(type)ES()EA(
+)0 2 A()BD(condition)ES()EA(. That is,)EP(
+) 1 30 PR( \201typep c 'condition\202 =>  )0 2 A(true)EA()RP(
+if and only if )I(c)ES( is a )0 2 A()I(condition)ES()EA(.
+)0 P()0 2 A()I(Implementations)ES()EA( must
+define all specified )0 2 A()I(subtype)ES()EA( relationships. Except
+where noted, all )0 2 A()I(subtype)ES()EA( relationships indicated
+in this document are not mutually exclusive. A )0 2 A()I(condition)ES()EA( inherits the
+structure of its )0 2 A()I(supertypes)ES()EA(.)EP(
+)0 P(The metaclass of the )0 2 A()I(class)ES()EA( )0 2 A()BD(condition)ES()EA( is not specified.
+)0 2 A()I(Names)ES()EA( of
+)0 2 A()I(condition)ES()EA( )0 2 A()I(types)ES()EA( may be used to specify
+)0 2 A()I(supertype)ES()EA( relationships in
+)0 2 A()BD(define-condition)ES()EA(, but
+the consequences are not specified if an attempt is made to use a
+)0 2 A()I(condition)ES()EA( )0 2 A()I(type)ES()EA( as a )0 2 A()I(superclass)ES()EA( in a )0 2 A()BD(defclass)ES()EA(
+)0 2 A()I(form)ES()EA(.)EP(
+)0 P(The next figure shows )0 2 A()I(operators)ES()EA( that define )0 2 A()I(condition)ES()EA(
+)0 2 A()I(types)ES()EA( and
+creating )0 2 A()I(conditions)ES()EA(.)EP(
+) 1 32 PR()0 2 A(define-condition)EA(  )0 2 A(make-condition)EA()RP(
+)0 P()BD(Figure 9-2. Operators that define and create
+conditions.)ES()EP(
+)0 P(The next figure shows )0 2 A()I(operators)ES()EA( that )0 2 A()I(read)ES()EA( the )0 2 A()I(value)ES()EA( of )0 2 A()I(condition)ES()EA(
+)0 2 A()I(slots)ES()EA(.)EP(
+) 6 61 PR()0 2 A(arithmetic-error-operands)EA(   )0 2 A(simple-condition-format-arguments)EA(  
+)0 2 A(arithmetic-error-operation)EA(  )0 2 A(simple-condition-format-control)EA(    
+)0 2 A(cell-error-name)EA(             )0 2 A(stream-error-stream)EA(                
+)0 2 A(file-error-pathname)EA(         )0 2 A(type-error-datum)EA(                   
+)0 2 A(package-error-package)EA(       )0 2 A(type-error-expected-type)EA(           
+)0 2 A(print-not-readable-object)EA(   )0 2 A(unbound-slot-instance)EA()RP(
+)0 P()BD(Figure 9-3. Operators that read condition slots.)ES()EP(
+
+)0 2 3 H(9.1.1.1)WB 7 Sn( Serious Conditions)EH(
+)0 P(A )0 2 A()I(serious condition)ES()EA( is a
+)0 2 A()I(condition)ES()EA( serious enough to
+require interactive intervention if not handled. )0 2 A()I(Serious
+conditions)ES()EA( are typically signaled with )0 2 A()BD(error)ES()EA( or )0 2 A()BD(cerror)ES()EA(; non-serious )0 2 A()I(conditions)ES()EA(
+are typically signaled with )0 2 A()BD(signal)ES()EA( or )0 2 A()BD(warn)ES()EA(.)EP(
+
+)0 2 4 H(9.1.2)WB 8 Sn( Creating Conditions)EH(
+)0 P(The function )0 2 A()BD(make-condition)ES()EA( can be used
+to construct a )0 2 A()I(condition)ES()EA( )0 2 A()I(object)ES()EA( explicitly. Functions
+such as )0 2 A()BD(error)ES()EA(, )0 2 A()BD(cerror)ES()EA(, )0 2 A()BD(signal)ES()EA(, and )0 2 A()BD(warn)ES()EA( operate on )0 2 A()I(conditions)ES()EA(
+and might create )0 2 A()I(condition)ES()EA( )0 2 A()I(objects)ES()EA( implicitly. Macros
+such as )0 2 A()BD(ccase)ES()EA(, )0 2 A()BD(ctypecase)ES()EA(, )0 2 A()BD(ecase)ES()EA(, )0 2 A()BD(etypecase)ES()EA(, )0 2 A()BD(check-type)ES()EA(,
+and )0 2 A()BD(assert)ES()EA( might also implicitly
+create \201and )0 2 A()I(signal)ES()EA(\202 )0 2 A()I(conditions)ES()EA(.)EP(
+
+)0 2 5 H(9.1.2.1)WB 9 Sn( Condition Designators)EH(
+)0 P(A number of the functions in the condition system take arguments
+which are identified as )0 2 A()I(condition
+designators)ES()EA(. By convention, those arguments are notated
+as)EP(
+)0 P()I(datum)ES( )TT(&rest)ES( )I(arguments)ES()EP(
+)0 P(Taken together, the )I(datum)ES( and the )I(arguments)ES( are
+")0 2 A()I(designators)ES()EA( for a )0 2 A()I(condition)ES()EA( of
+default type )I(default-type)ES(." How the denoted )0 2 A()I(condition)ES()EA( is
+computed depends on the type of the )I(datum)ES(:)EP(
+)0 DL()0 DT(* If the )I(datum)ES( is a )0 2 A()I(symbol)ES()EA( naming a )0 2 A()I(condition)ES()EA(
+)0 2 A()I(type)ES()EA(
+...)BR(
+)DD(The denoted )0 2 A()I(condition)ES()EA( is the result of
+) 1 41 PR( \201apply #'make-condition datum arguments\202)RP(
+)0 DT(* If the )I(datum)ES( is a )0 2 A()I(format control)ES()EA(
+...)BR(
+)DD(The denoted )0 2 A()I(condition)ES()EA( is the result of
+) 3 45 PR( \201make-condition defaulted-type 
+                 :format-control datum
+                 :format-arguments arguments\202)RP(
+)0 P(where the )I(defaulted-type)ES( is a )0 2 A()I(subtype)ES()EA( of
+)I(default-type)ES(.)EP(
+)0 DT(* If the )I(datum)ES( is a )0 2 A()I(condition)ES()EA( ...)BR(
+)DD(The denoted )0 2 A()I(condition)ES()EA( is the )I(datum)ES(
+itself. In this case, unless otherwise specified by the description
+of the )0 2 A()I(operator)ES()EA( in question, the
+)0 2 A()I(arguments)ES()EA( must be )0 2 A()I(null)ES()EA(; that is, the
+consequences are undefined if any )I(arguments)ES( were
+supplied.)LD(
+)0 P(Note that the )I(default-type)ES( gets used only in the case
+where the )I(datum)ES( )0 2 A()I(string)ES()EA( is supplied. In the other
+situations, the resulting condition is not necessarily of )0 2 A()I(type)ES()EA(
+)I(default-type)ES(.)EP(
+)0 P(Here are some illustrations of how different )0 2 A()I(condition
+designators)ES()EA( can denote equivalent )0 2 A()I(condition)ES()EA( )0 2 A()I(objects)ES()EA(:)EP(
+) 6 75 PR(\201let \201\201c \201make-condition 'arithmetic-error :operator '/ :operands '\2017 0\202\202\202\202
+  \201error c\202\202
+==  \201error 'arithmetic-error :operator '/ :operands '\2017 0\202\202
+
+\201error "Bad luck."\202
+==  \201error 'simple-error :format-control "Bad luck." :format-arguments '\201\202\202)RP(
+
+)0 2 6 H(9.1.3)WB 10 Sn( Printing Conditions)EH(
+)0 P(If the )TT(:report)ES( argument to )0 2 A()BD(define-condition)ES()EA( is
+used, a print function is defined that is called whenever the
+defined )0 2 A()I(condition)ES()EA( is printed while the
+)0 2 A()I(value)ES()EA( of
+)0 2 A()BD(*print-escape*)ES()EA( is
+)0 2 A()I(false)ES()EA(.
+This function is called the )0 2 A()I(condition reporter)ES()EA(;
+the text which it outputs is called a )0 2 A()I(report message)ES()EA(.)EP(
+)0 P(When a )0 2 A()I(condition)ES()EA( is printed and
+)0 2 A()BD(*print-escape*)ES()EA( is
+)0 2 A()I(false)ES()EA(, the
+)0 2 A()I(condition reporter)ES()EA( for
+the )0 2 A()I(condition)ES()EA( is invoked. )0 2 A()I(Conditions)ES()EA(
+are printed automatically by functions such as )0 2 A()BD(invoke-debugger)ES()EA(,
+)0 2 A()BD(break)ES()EA(, and
+)0 2 A()BD(warn)ES()EA(.)EP(
+)0 P(When )0 2 A()BD(*print-escape*)ES()EA( is
+)0 2 A()I(true)ES()EA(, the
+)0 2 A()I(object)ES()EA(
+should print in an abbreviated fashion according to the style of
+the implementation \201e.g., by )0 2 A()BD(print-unreadable-object)ES()EA(\202.
+It is not required that a )0 2 A()I(condition)ES()EA( can be recreated by
+reading its printed representation.)EP(
+)0 P(No )0 2 A()I(function)ES()EA( is provided for
+directly )I(accessing)ES( or invoking )0 2 A()I(condition
+reporters)ES()EA(.)EP(
+
+)0 2 7 H(9.1.3.1)WB 11 Sn( Recommended Style in Condition Reporting)EH(
+)0 P(In order to ensure a properly aesthetic result when presenting
+)0 2 A()I(report
+messages)ES()EA( to the user, certain stylistic conventions are
+recommended.)EP(
+)0 P(There are stylistic recommendations for the content of the
+messages output by )0 2 A()I(condition reporters)ES()EA(,
+but there are no formal requirements on those )0 2 A()I(programs)ES()EA(. If a )0 2 A()I(program)ES()EA(
+violates the recommendations for some message, the display of that
+message might be less aesthetic than if the guideline had been
+observed, but the )0 2 A()I(program)ES()EA( is still considered a
+)0 2 A()I(conforming
+program)ES()EA(.)EP(
+)0 P(The requirements on a )0 2 A()I(program)ES()EA( or )0 2 A()I(implementation)ES()EA( which
+invokes a )0 2 A()I(condition reporter)ES()EA( are
+somewhat stronger. A )0 2 A()I(conforming program)ES()EA(
+must be permitted to assume that if these style guidelines are
+followed, proper aesthetics will be maintained. Where appropriate,
+any specific requirements on such routines are explicitly mentioned
+below.)EP(
+
+)0 2 8 H(9.1.3.1.1)WB 12 Sn( Capitalization and Punctuation in Condition
+Reports)EH(
+)0 P(It is recommended that a )0 2 A()I(report message)ES()EA( be a
+complete sentences, in the proper case and correctly punctuated. In
+English, for example, this means the first letter should be
+uppercase, and there should be a trailing period.)EP(
+) 4 51 PR( \201error "This is a message"\202  ; Not recommended
+ \201error "this is a message."\202 ; Not recommended
+
+ \201error "This is a message."\202 ; Recommended instead)RP(
+
+)0 2 9 H(9.1.3.1.2)WB 13 Sn( Leading and Trailing Newlines in Condition
+Reports)EH(
+)0 P(It is recommended that a )0 2 A()I(report message)ES()EA( not begin
+with any introductory text, such as ")TT(Error:)ES( " or
+")TT(Warning:)ES( " or even just )0 2 A()I(freshline)ES()EA( or )0 2 A()I(newline)ES()EA(. Such
+text is added, if appropriate to the context, by the routine
+invoking the )0 2 A()I(condition
+reporter)ES()EA(.)EP(
+)0 P(It is recommended that a )0 2 A()I(report message)ES()EA( not be
+followed by a trailing )0 2 A()I(freshline)ES()EA( or )0 2 A()I(newline)ES()EA(. Such
+text is added, if appropriate to the context, by the routine
+invoking the )0 2 A()I(condition
+reporter)ES()EA(.)EP(
+) 5 55 PR( \201error "This is a message.~%"\202   ; Not recommended
+ \201error "~&This is a message."\202   ; Not recommended
+ \201error "~&This is a message.~%"\202 ; Not recommended
+
+ \201error "This is a message."\202     ; Recommended instead)RP(
+
+)0 2 10 H(9.1.3.1.3)WB 14 Sn( Embedded Newlines in Condition Reports)EH(
+)0 P(Especially if it is long, it is permissible and appropriate for
+a )0 2 A()I(report
+message)ES()EA( to contain one or more embedded )0 2 A()I(newlines)ES()EA(.)EP(
+)0 P(If the calling routine conventionally inserts some additional
+prefix \201such as ")TT(Error:)ES( " or ")TT(;; Error:)ES( "\202 on the
+first line of the message, it must also assure that an appropriate
+prefix will be added to each subsequent line of the output, so that
+the left edge of the message output by the )0 2 A()I(condition
+reporter)ES()EA( will still be properly aligned.)EP(
+) 17 58 PR( \201defun test \201\202
+   \201error "This is an error message.~%It has two lines."\202\202
+
+ ;; Implementation A
+ \201test\202
+ This is an error message.
+ It has two lines.
+
+ ;; Implementation B
+ \201test\202
+ ;; Error: This is an error message.
+ ;;        It has two lines.
+
+ ;; Implementation C
+ \201test\202
+ >> Error: This is an error message. 
+           It has two lines.)RP(
+
+)0 2 11 H(9.1.3.1.4)WB 15 Sn( Note about Tabs in Condition Reports)EH(
+)0 P(Because the indentation of a )0 2 A()I(report message)ES()EA( might be
+shifted to the right or left by an arbitrary amount, special care
+should be taken with the semi-standard )0 2 A()I(character)ES()EA( <Tab> \201in those
+)0 2 A()I(implementations)ES()EA( that
+support such a )0 2 A()I(character)ES()EA(\202. Unless the )0 2 A()I(implementation)ES()EA(
+specifically defines its behavior in this context, its use should
+be avoided.)EP(
+
+)0 2 12 H(9.1.3.1.5)WB 16 Sn( Mentioning Containing Function in Condition
+Reports)EH(
+)0 P(The name of the containing function should generally not be
+mentioned in )0 2 A()I(report messages)ES()EA(. It is
+assumed that the )0 2 A()I(debugger)ES()EA( will make this
+information accessible in situations where it is necessary and
+appropriate.)EP(
+
+)0 2 13 H(9.1.4)WB 17 Sn( Signaling and Handling Conditions)EH(
+)0 P(The operation of the condition system depends on the ordering of
+active )0 2 A()I(applicable handlers)ES()EA(
+from most recent to least recent.)EP(
+)0 P(Each )0 2 A()I(handler)ES()EA( is associated with a
+)0 2 A()I(type
+specifier)ES()EA( that must designate a )0 2 A()I(subtype)ES()EA( of )0 2 A()I(type)ES()EA( )0 2 A()BD(condition)ES()EA(. A )0 2 A()I(handler)ES()EA( is said to be
+)0 2 A()I(applicable)ES()EA( to a )0 2 A()I(condition)ES()EA( if
+that )0 2 A()I(condition)ES()EA( is of the )0 2 A()I(type)ES()EA( designated by
+the associated )0 2 A()I(type specifier)ES()EA(.)EP(
+)0 P()0 2 A()I(Active)ES()EA(
+)0 2 A()I(handlers)ES()EA(
+are )I(established)ES( by using )0 2 A()BD(handler-bind)ES()EA( \201or an
+abstraction based on )0 2 A()BD(handler-bind)ES()EA(, such as
+)0 2 A()BD(handler-case)ES()EA( or )0 2 A()BD(ignore-errors)ES()EA(\202.)EP(
+)0 P()0 2 A()I(Active)ES()EA(
+)0 2 A()I(handlers)ES()EA(
+can be )I(established)ES( within the dynamic scope of other )0 2 A()I(active)ES()EA( )0 2 A()I(handlers)ES()EA(. At
+any point during program execution, there is a set of )0 2 A()I(active)ES()EA( )0 2 A()I(handlers)ES()EA(. When
+a )0 2 A()I(condition)ES()EA( is signaled, the
+)0 2 A()I(most
+recent)ES()EA( active )0 2 A()I(applicable handler)ES()EA( for
+that )0 2 A()I(condition)ES()EA( is selected from this
+set. Given a )0 2 A()I(condition)ES()EA(, the order of
+recentness of active )0 2 A()I(applicable handlers)ES()EA( is
+defined by the following two rules:)EP(
+)0 DL()0 DT(1. Each handler in a set of active handlers H1 is more recent
+than every handler in a set H2 if the handlers in H2 were active
+when the handlers in H1 were established.)BR(
+)0 DT(2. Let h1 and h2 be two applicable active handlers established
+by the same )0 2 A()I(form)ES()EA(. Then h1 is more recent than h2
+if h1 was defined to the left of h2 in the )0 2 A()I(form)ES()EA( that established
+them.)BR()LD(
+)0 P(Once a handler in a handler binding )0 2 A()I(form)ES()EA( \201such as )0 2 A()BD(handler-bind)ES()EA( or )0 2 A()BD(handler-case)ES()EA(\202 has been
+selected, all handlers in that )0 2 A()I(form)ES()EA( become inactive for the
+remainder of the signaling process. While the selected )0 2 A()I(handler)ES()EA( runs,
+no other )0 2 A()I(handler)ES()EA( established by that
+)0 2 A()I(form)ES()EA( is
+active. That is, if the )0 2 A()I(handler)ES()EA( declines, no other
+handler established by that )0 2 A()I(form)ES()EA( will be considered for possible
+invocation.)EP(
+)0 P(The next figure shows )0 2 A()I(operators)ES()EA( relating to the
+)I(handling)ES( of )0 2 A()I(conditions)ES()EA(.)EP(
+) 1 41 PR()0 2 A(handler-bind)EA(  )0 2 A(handler-case)EA(  )0 2 A(ignore-errors)EA()RP(
+)0 P()BD(Figure 9-4. Operators relating to handling
+conditions.)ES()EP(
+
+)0 2 14 H(9.1.4.1)WB 18 Sn( Signaling)EH(
+)0 P(When a )0 2 A()I(condition)ES()EA( is signaled, the most
+recent applicable )0 2 A()I(active)ES()EA( )0 2 A()I(handler)ES()EA( is invoked. Sometimes a
+handler will decline by simply returning without a transfer of
+control. In such cases, the next most recent applicable active
+handler is invoked.)EP(
+)0 P(If there are no applicable handlers for a )0 2 A()I(condition)ES()EA( that has been
+signaled, or if all applicable handlers decline, the )0 2 A()I(condition)ES()EA( is
+unhandled.)EP(
+)0 P(The functions )0 2 A()BD(cerror)ES()EA( and )0 2 A()BD(error)ES()EA( invoke the interactive
+)0 2 A()I(condition)ES()EA( handler \201the
+debugger\202 rather than return if the )0 2 A()I(condition)ES()EA( being signaled,
+regardless of its )0 2 A()I(type)ES()EA(, is unhandled. In contrast,
+)0 2 A()BD(signal)ES()EA(
+returns )0 2 A()BD(nil)ES()EA( if
+the )0 2 A()I(condition)ES()EA( being signaled,
+regardless of its )0 2 A()I(type)ES()EA(, is unhandled.)EP(
+)0 P(The )0 2 A()I(variable)ES()EA( )0 2 A()BD(*break-on-signals*)ES()EA(
+can be used to cause the debugger to be entered before the
+signaling process begins.)EP(
+)0 P(The next figure shows )0 2 A()I(defined names)ES()EA( relating to
+the )I(signaling)ES( of )0 2 A()I(conditions)ES()EA(.)EP(
+) 2 32 PR()0 2 A(*break-on-signals*)EA(  )0 2 A(error)EA(   )0 2 A(warn)EA(  
+)0 2 A(cerror)EA(              )0 2 A(signal)EA()RP(
+)0 P()BD(Figure 9-5. Defined names relating to signaling
+conditions.)ES()EP(
+
+)0 2 15 H(9.1.4.1.1)WB 19 Sn( Resignaling a Condition)EH(
+)0 P(During the )0 2 A()I(dynamic extent)ES()EA( of the
+)I(signaling)ES( process for a particular )0 2 A()I(condition)ES()EA( )0 2 A()I(object)ES()EA(, )BD(signaling)ES( the
+same )0 2 A()I(condition)ES()EA( )0 2 A()I(object)ES()EA( again is permitted if
+and only if the )0 2 A()I(situation)ES()EA( represented in both
+cases are the same.)EP(
+)0 P(For example, a )0 2 A()I(handler)ES()EA( might legitimately
+)0 2 A()I(signal)ES()EA(
+the )0 2 A()I(condition)ES()EA( )0 2 A()I(object)ES()EA( that is its )0 2 A()I(argument)ES()EA( in
+order to allow outer )0 2 A()I(handlers)ES()EA( first opportunity to
+)0 2 A()I(handle)ES()EA(
+the condition. \201Such a )0 2 A()I(handlers)ES()EA( is sometimes called a
+"default handler."\202 This action is permitted because the )0 2 A()I(situation)ES()EA(
+which the second )I(signaling)ES( process is addressing is really
+the same )0 2 A()I(situation)ES()EA(.)EP(
+)0 P(On the other hand, in an )0 2 A()I(implementation)ES()EA( that
+implemented asynchronous keyboard events by interrupting the user
+process with a call to )0 2 A()BD(signal)ES()EA(, it would not be
+permissible for two distinct asynchronous keyboard events to
+)0 2 A()I(signal)ES()EA(
+)0 2 A()I(identical)ES()EA( )0 2 A()I(condition)ES()EA( )0 2 A()I(objects)ES()EA( at the
+same time for different situations.)EP(
+
+)0 2 16 H(9.1.4.2)WB 20 Sn( Restarts)EH(
+)0 P(The interactive condition handler returns only through non-local
+transfer of control to specially defined )0 2 A()I(restarts)ES()EA( that can be set up
+either by the system or by user code. Transferring control to a
+restart is called "invoking" the restart. Like handlers, active
+)0 2 A()I(restarts)ES()EA(
+are )I(established)ES( dynamically, and only active )0 2 A()I(restarts)ES()EA( can be
+invoked. An active )0 2 A()I(restart)ES()EA( can be invoked by the
+user from the debugger or by a program by using )0 2 A()BD(invoke-restart)ES()EA(.)EP(
+)0 P(A )0 2 A()I(restart)ES()EA( contains a )0 2 A()I(function)ES()EA( to be
+)I(called)ES( when the )0 2 A()I(restart)ES()EA( is invoked, an optional
+name that can be used to find or invoke the )0 2 A()I(restart)ES()EA(, and an optional set
+of interaction information for the debugger to use to enable the
+user to manually invoke a )0 2 A()I(restart)ES()EA(.)EP(
+)0 P(The name of a )0 2 A()I(restart)ES()EA( is used by )0 2 A()BD(invoke-restart)ES()EA(. )0 2 A()I(Restarts)ES()EA( that
+can be invoked only within the debugger do not need names.)EP(
+)0 P()0 2 A()I(Restarts)ES()EA( can be established by
+using )0 2 A()BD(restart-bind)ES()EA(, )0 2 A()BD(restart-case)ES()EA(, and )0 2 A()BD(with-simple-restart)ES()EA(.
+A )0 2 A()I(restart)ES()EA( function can itself
+invoke any other )0 2 A()I(restart)ES()EA( that was active at the
+time of establishment of the )0 2 A()I(restart)ES()EA( of which the )0 2 A()I(function)ES()EA( is
+part.)EP(
+)0 P(The )0 2 A()I(restarts)ES()EA( )I(established)ES( by a
+)0 2 A()BD(restart-bind)ES()EA( )0 2 A()I(form)ES()EA(, a )0 2 A()BD(restart-case)ES()EA( )0 2 A()I(form)ES()EA(, or a )0 2 A()BD(with-simple-restart)ES()EA(
+)0 2 A()I(form)ES()EA( have
+)0 2 A()I(dynamic
+extent)ES()EA( which extends for the duration of that )0 2 A()I(form)ES()EA('s
+execution.)EP(
+)0 P()0 2 A()I(Restarts)ES()EA( of the same name can be
+ordered from least recent to most recent according to the following
+two rules:)EP(
+)0 DL()0 DT(1. Each )0 2 A()I(restart)ES()EA( in a set of active
+restarts R1 is more recent than every )0 2 A()I(restart)ES()EA( in a set R2 if the
+)0 2 A()I(restarts)ES()EA(
+in R2 were active when the )0 2 A()I(restarts)ES()EA( in R1 were
+established.)BR(
+)0 DT(2. Let r1 and r2 be two active )0 2 A()I(restarts)ES()EA( with the same name
+established by the same )0 2 A()I(form)ES()EA(. Then r1 is more recent than r2
+if r1 was defined to the left of r2 in the )0 2 A()I(form)ES()EA( that established
+them.)BR()LD(
+)0 P(If a )0 2 A()I(restart)ES()EA( is invoked but does not
+transfer control, the values resulting from the )0 2 A()I(restart)ES()EA( function are
+returned by the function that invoked the restart, either )0 2 A()BD(invoke-restart)ES()EA( or )0 2 A()BD(invoke-restart-interactively)ES()EA(.)EP(
+
+)0 2 17 H(9.1.4.2.1)WB 21 Sn( Interactive Use of Restarts)EH(
+)0 P(For interactive handling, two pieces of information are needed
+from a )0 2 A()I(restart)ES()EA(: a report function and an
+interactive function.)EP(
+)0 P(The report function is used by a program such as the debugger to
+present a description of the action the )0 2 A()I(restart)ES()EA( will take. The report
+function is specified and established by the
+)TT(:report-function)ES( keyword to )0 2 A()BD(restart-bind)ES()EA( or the
+)TT(:report)ES( keyword to )0 2 A()BD(restart-case)ES()EA(.)EP(
+)0 P(The interactive function, which can be specified using the
+)TT(:interactive-function)ES( keyword to )0 2 A()BD(restart-bind)ES()EA( or
+)TT(:interactive)ES( keyword to )0 2 A()BD(restart-case)ES()EA(, is used when
+the )0 2 A()I(restart)ES()EA( is invoked interactively,
+such as from the debugger, to produce a suitable list of
+arguments.)EP(
+)0 P()0 2 A()BD(invoke-restart)ES()EA( invokes the
+most recently )I(established)ES( )0 2 A()I(restart)ES()EA( whose name is the same as
+the first argument to )0 2 A()BD(invoke-restart)ES()EA(. If a
+)0 2 A()I(restart)ES()EA(
+is invoked interactively by the debugger and does not transfer
+control but rather returns values, the precise action of the
+debugger on those values is )0 2 A()I(implementation-defined)ES()EA(.)EP(
+
+)0 2 18 H(9.1.4.2.2)WB 22 Sn( Interfaces to Restarts)EH(
+)0 P(Some )0 2 A()I(restarts)ES()EA( have functional
+interfaces, such as )0 2 A()BD(abort)ES()EA(, )0 2 A()BD(continue)ES()EA(, )0 2 A()BD(muffle-warning)ES()EA(,
+)0 2 A()BD(store-value)ES()EA(, and )0 2 A()BD(use-value)ES()EA(.
+They are ordinary functions that use )0 2 A()BD(find-restart)ES()EA( and )0 2 A()BD(invoke-restart)ES()EA( internally,
+that have the same name as the )0 2 A()I(restarts)ES()EA( they manipulate, and
+that are provided simply for notational convenience.)EP(
+)0 P(The next figure shows )0 2 A()I(defined names)ES()EA( relating to
+)0 2 A()I(restarts)ES()EA(.)EP(
+) 5 67 PR()0 2 A(abort)EA(             )0 2 A(invoke-restart-interactively)EA(  )0 2 A(store-value)EA(          
+)0 2 A(compute-restarts)EA(  )0 2 A(muffle-warning)EA(                )0 2 A(use-value)EA(            
+)0 2 A(continue)EA(          )0 2 A(restart-bind)EA(                  )0 2 A(with-simple-restart)EA(  
+)0 2 A(find-restart)EA(      )0 2 A(restart-case)EA(                                       
+)0 2 A(invoke-restart)EA(    )0 2 A(restart-name)EA()RP(
+)0 P()BD(Figure 9-6. Defined names relating to restarts.)ES()EP(
+
+)0 2 19 H(9.1.4.2.3)WB 23 Sn( Restart Tests)EH(
+)0 P(Each )0 2 A()I(restart)ES()EA( has an associated test,
+which is a function of one argument \201a )0 2 A()I(condition)ES()EA( or )0 2 A()BD(nil)ES()EA(\202 which returns
+)0 2 A()I(true)ES()EA( if the
+)0 2 A()I(restart)ES()EA(
+should be visible in the current )0 2 A()I(situation)ES()EA(. This test is created
+by the )TT(:test-function)ES( option to )0 2 A()BD(restart-bind)ES()EA( or the
+)TT(:test)ES( option to )0 2 A()BD(restart-case)ES()EA(.)EP(
+
+)0 2 20 H(9.1.4.2.4)WB 24 Sn( Associating a Restart with a Condition)EH(
+)0 P(A )0 2 A()I(restart)ES()EA( can be "associated with"
+a )0 2 A()I(condition)ES()EA( explicitly by )0 2 A()BD(with-condition-restarts)ES()EA(,
+or implicitly by )0 2 A()BD(restart-case)ES()EA(. Such an
+assocation has )0 2 A()I(dynamic extent)ES()EA(.)EP(
+)0 P(A single )0 2 A()I(restart)ES()EA( may be associated with
+several )0 2 A()I(conditions)ES()EA( at the same time. A
+single )0 2 A()I(condition)ES()EA( may have several
+associated )0 2 A()I(restarts)ES()EA( at the same time.)EP(
+)0 P(Active restarts associated with a particular )0 2 A()I(condition)ES()EA( can be detected
+by )I(calling)ES( a )0 2 A()I(function)ES()EA( such as )0 2 A()BD(find-restart)ES()EA(, supplying that
+)0 2 A()I(condition)ES()EA( as the
+)I(condition)ES( )0 2 A()I(argument)ES()EA(. Active restarts can
+also be detected without regard to any associated )0 2 A()I(condition)ES()EA( by
+calling such a function without a )I(condition)ES( )0 2 A()I(argument)ES()EA(, or
+by supplying a value of )0 2 A()BD(nil)ES()EA( for such an )0 2 A()I(argument)ES()EA(.)EP(
+
+)0 2 21 H(9.1.5)WB 25 Sn( Assertions)EH(
+)0 P(Conditional signaling of )0 2 A()I(conditions)ES()EA( based on such things
+as key match, form evaluation, and )0 2 A()I(type)ES()EA( are handled by assertion
+)0 2 A()I(operators)ES()EA(. The next figure shows
+)0 2 A()I(operators)ES()EA( relating to
+assertions.)EP(
+) 2 29 PR()0 2 A(assert)EA(  )0 2 A(check-type)EA(  )0 2 A(ecase)EA(      
+)0 2 A(ccase)EA(   )0 2 A(ctypecase)EA(   )0 2 A(etypecase)EA()RP(
+)0 P()BD(Figure 9-7. Operators relating to assertions.)ES()EP(
+
+)0 2 22 H(9.1.6)WB 26 Sn( Notes about the Condition System's Background)EH(
+)0 P(For a background reference to the abstract concepts detailed in
+this section, see )I(Exceptional Situations in Lisp)ES(. The
+details of that paper are not binding on this document, but may be
+helpful in establishing a conceptual basis for understanding this
+material.)EP(
+)WB NL /BO 0 D TC /Ba f D Bs /AU f D /UR () D RC ZF
+tH WB
+ND 1 gt{Ts 3 mul Np 0()0 C()BD(CLHS: Chapter 9</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="f_cp_stu.htm"> <link rel="UP" href="../Front/Contents.htm"> <link rel="NEXT" href="09_a.htm"> <title>CLHS: Section 9.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_.htm"> <link rel="UP" href="09_.htm"> <link rel="NEXT" href="09_aa.htm"> <title>CLHS: Section 9.1.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_a.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_aaa.htm"> <title>CLHS: Section 9.1.1.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_aa.htm"> <link rel="UP" href="09_aa.htm"> <link rel="NEXT" href="09_ab.htm"> <title>CLHS: Section 9.1.2</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_aaa.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_aba.htm"> <title>CLHS: Section 9.1.2.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_ab.htm"> <link rel="UP" href="09_ab.htm"> <link rel="NEXT" href="09_ac.htm"> <title>CLHS: Section 9.1.3</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_aba.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_aca.htm"> <title>CLHS: Section 9.1.3.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_ac.htm"> <link rel="UP" href="09_ac.htm"> <link rel="NEXT" href="09_acaa.htm"> <title>CLHS: Section 9.1.3.1.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_aca.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_acab.htm"> <title>CLHS: Section 9.1.3.1.2</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acaa.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_acac.htm"> <title>CLHS: Section 9.1.3.1.3</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acab.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_acad.htm"> <title>CLHS: Section 9.1.3.1.4</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acac.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_acae.htm"> <title>CLHS: Section 9.1.3.1.5</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acad.htm"> <link rel="UP" href="09_aca.htm"> <link rel="NEXT" href="09_ad.htm"> <title>CLHS: Section 9.1.4</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_acae.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_ada.htm"> <title>CLHS: Section 9.1.4.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_ad.htm"> <link rel="UP" href="09_ad.htm"> <link rel="NEXT" href="09_adaa.htm"> <title>CLHS: Section 9.1.4.1.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_ada.htm"> <link rel="UP" href="09_ada.htm"> <link rel="NEXT" href="09_adb.htm"> <title>CLHS: Section 9.1.4.2</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adaa.htm"> <link rel="UP" href="09_ad.htm"> <link rel="NEXT" href="09_adba.htm"> <title>CLHS: Section 9.1.4.2.1</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adb.htm"> <link rel="UP" href="09_adb.htm"> <link rel="NEXT" href="09_adbb.htm"> <title>CLHS: Section 9.1.4.2.2</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adba.htm"> <link rel="UP" href="09_adb.htm"> <link rel="NEXT" href="09_adbc.htm"> <title>CLHS: Section 9.1.4.2.3</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adbb.htm"> <link rel="UP" href="09_adb.htm"> <link rel="NEXT" href="09_adbd.htm"> <title>CLHS: Section 9.1.4.2.4</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adbc.htm"> <link rel="UP" href="09_adb.htm"> <link rel="NEXT" href="09_ae.htm"> <title>CLHS: Section 9.1.5</title> <link href="../Data/clhs.css" rel="stylesheet" type="text/css"> <meta http-equiv="Author" content="Kent M. Pitman"> <meta http-equiv="Organization" content="LispWorks Ltd."> <link rel="TOP" href="../Front/index.htm"> <link rel="COPYRIGHT" href="../Front/Help.htm#Legal"> <link rel="DISCLAIMER" href="../Front/Help.htm#Disclaimer"> <link rel="PREV" href="09_adbd.htm"> <link rel="UP" href="09_a.htm"> <link rel="NEXT" href="09_af.htm"> <title>CLHS: Section 9.1.6)ES()0 1 TN()EA()BN}if
+2 NH le{4(0.1\240\240)2 C(9. Conditions)4 1 TN()EA()BN}if
+2 NH le{5(0.2\240\240)2 C(9.1 Condition System Concepts)5 1 TN()EA()BN}if
+2 NH le{6(0.3\240\240)2 C(9.1.1 Condition Types)6 1 TN()EA()BN}if
+2 NH le{7(0.4\240\240)2 C(9.1.1.1 Serious Conditions)7 1 TN()EA()BN}if
+2 NH le{8(0.5\240\240)2 C(9.1.2 Creating Conditions)8 1 TN()EA()BN}if
+2 NH le{9(0.6\240\240)2 C(9.1.2.1 Condition Designators)9 1 TN()EA()BN}if
+2 NH le{10(0.7\240\240)2 C(9.1.3 Printing Conditions)10 1 TN()EA()BN}if
+2 NH le{11(0.8\240\240)2 C(9.1.3.1 Recommended Style in Condition Reporting)11 1 TN()EA()BN}if
+2 NH le{12(0.9\240\240)2 C(9.1.3.1.1 Capitalization and Punctuation in Condition
+Reports)12 1 TN()EA()BN}if
+2 NH le{13(0.10\240\240)2 C(9.1.3.1.2 Leading and Trailing Newlines in Condition
+Reports)13 1 TN()EA()BN}if
+2 NH le{14(0.11\240\240)2 C(9.1.3.1.3 Embedded Newlines in Condition Reports)14 1 TN()EA()BN}if
+2 NH le{15(0.12\240\240)2 C(9.1.3.1.4 Note about Tabs in Condition Reports)15 1 TN()EA()BN}if
+2 NH le{16(0.13\240\240)2 C(9.1.3.1.5 Mentioning Containing Function in Condition
+Reports)16 1 TN()EA()BN}if
+2 NH le{17(0.14\240\240)2 C(9.1.4 Signaling and Handling Conditions)17 1 TN()EA()BN}if
+2 NH le{18(0.15\240\240)2 C(9.1.4.1 Signaling)18 1 TN()EA()BN}if
+2 NH le{19(0.16\240\240)2 C(9.1.4.1.1 Resignaling a Condition)19 1 TN()EA()BN}if
+2 NH le{20(0.17\240\240)2 C(9.1.4.2 Restarts)20 1 TN()EA()BN}if
+2 NH le{21(0.18\240\240)2 C(9.1.4.2.1 Interactive Use of Restarts)21 1 TN()EA()BN}if
+2 NH le{22(0.19\240\240)2 C(9.1.4.2.2 Interfaces to Restarts)22 1 TN()EA()BN}if
+2 NH le{23(0.20\240\240)2 C(9.1.4.2.3 Restart Tests)23 1 TN()EA()BN}if
+2 NH le{24(0.21\240\240)2 C(9.1.4.2.4 Associating a Restart with a Condition)24 1 TN()EA()BN}if
+2 NH le{25(0.22\240\240)2 C(9.1.5 Assertions)25 1 TN()EA()BN}if
+2 NH le{26(0.23\240\240)2 C(9.1.6 Notes about the Condition System's Background)26 1 TN()EA()BN}if
+
+/TE t D NP TU PM 0 eq and{/Pn () D showpage}if end restore

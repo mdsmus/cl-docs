@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 34</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 34 - Lisp History, or: Origins of Misunderstandings</h1> 
+
+<P>I'd like to conclude this book with a short history of Lisp's
+development, providing insights to some lingering
+misconceptions about Lisp.</P>
+
+<h2>John McCarthy's Notation</h2>
+
+<p>In the late 1950s, John McCarthy had proposed a mathematical
+notation to describe recursive functions of symbolic expressions. At
+this point, McCarthy clearly envisioned a notation rather than a
+programming language. 
+
+<h2>Earliest implementations</h2>
+
+<p>A couple years later Steve Russell, one of McCarthy's students at
+MIT, noticed that McCarthy's notation would be easy to interpret on
+a computer, and LISP was born. While working on an international
+standards committee to define Algol-60, McCarthy proposed numerous
+innovations which were not adopted. Perhaps these rejections
+prompted McCarthy to gather his ideas into what would become Lisp.
+By late 1959, the first complete Lisp interpreter was in use at MIT.
+
+<h2>Special hardware</h2>
+
+<p>In the early days, Lisp consistently outstripped the resources of
+its host machines -- mainframes and minicomputers having memory
+spaces measured in tens of kilobytes and instruction cycle times
+measured in microseconds.  This prompted Lisp researchers to develop
+specialized hardware for Lisp program execution.  These machines,
+called "Lisp Machines" (or LispMs) spawned an entire industry that
+rose in the 1970s and fell during the 1980s.  This industry, and not
+the personal computer industry, was the first to sell personal
+interactive computers having windowed user interfaces.
+
+<h2>Diverging dialects</h2>
+
+<p>Concurrent with the rise of the LispM industry, many researchers
+-- put off by the high costs of the specialized hardware -- engaged
+in the development of Lisp implementations for stock hardware.  This
+was a time of great diversity and innovation.  However, the profusion
+of dialects prevented researchers from readily sharing their work.
+
+<h2>The DARPA directive</h2>
+
+<p>DARPA, the Defense Advanced Research Projects Agency, was (and
+still is) the funding source for much of the Lisp and AI research
+community.  Seeing the problems caused by the explosion in the 
+number of distinct Lisp dialects, DARPA sponsored a project to 
+develop a unified Common Lisp specification.
+
+<h2>East vs. West, and European competition</h2>
+
+<p>Despite the large number of competing dialects at this time, two
+were clearly dominant. On the West coast, Interlisp became the
+standard, with its emphasis on programming aids and tools, such as
+the aptly named "Do What I Mean."  On the East coast, MACLISP was
+de rigueur, with its focus on low-level system programming access
+and an efficient compiler.
+
+<p>The Common Lisp effort raised animosities between the two camps,
+causing most of the Interlisp advocates to withdraw. Also, political
+forces in Europe prompted the formation of additional standardization
+efforts, leading to the development of at least one competing (although
+quite unsuccessfully) standard.
+
+<h2>The emergence of compilers for stock hardware</h2>
+
+<p>As work began in earnest on the Common Lisp standard, vendors --
+most of whom had employees on the standardization committee -- were
+quick to implement the recommendations under discussion.  One of the
+biggest benefits was the definition of the interface to and behavior
+of the Lisp compiler; this, together with advances in compiler and
+garbage collector technology, was a first step toward making Lisp
+competitive in the arena of general-purpose programming languages.
+
+<h2>The long road to standardization</h2>
+
+<p>The committee produced the first public edition of the Common
+LISP specification in 1984. In a shining example of computer
+mediated cooperative work, hundreds of LISP users and implementers
+exchanged thousands of email messages to propose, debate, and vote
+upon each feature of the new language. Each topic and issue was
+carefully categorized, indexed, and cross-referenced. Very few areas
+were ambiguous or inadequately specified. Because of the extensive
+electronic record of the committee's discussions, these remaining
+areas were clearly identified and served as a basis for continuing
+work by the committee. An interim report of the committee's work was
+published in late 1990, and a draft proposed ANSI standard was
+published in 1992. The X3.226 ANSI Common Lisp standard was
+finalized in December 1994, and formally published about a year
+later.
+
+<h2>State of the Art?</h2>
+
+<p>Lisp has been around in various forms for over forty years.
+Fortunately, many improvements have been made during that time.
+Unfortunately, quite a few people in education and industry still
+think of Lisp as it was twenty or more years in the past.
+
+<p>Today, commercial Lisp implementations have compilers that
+compete successfully against compilers for lower-level languages
+such as C and C++. At the same time, C++ has failed to increase its
+expressive power in a way that competes successfully with Common
+Lisp.
+
+<p>Java, a newcomer, makes some interesting (yet unfulfilled)
+promises about portability and security. Java has strengths in the
+areas of system integration, but struggles with performance and
+reliability.  I believe that Java will carve out a niche for itself
+only by sacrificing some of its stated goals -- which ones remain
+to be seen.
+
+<p>Garbage collection, long a favorite whipping post for Lisp
+detractors, has advanced to the point where collection delays are
+virtually unnoticeable in a well-written Lisp program.  The increasing
+trend toward server-based applications actually favors Lisp, since
+garbage collection is more efficient and reliable than manual storage
+allocation (as with malloc/free) when run for extended periods.
+
+<p>Lisp is still weak on standardized user interfaces, but then so
+is every other language and platform. Lisp vendors now sell CORBA
+packages for interoperability and a portable (across Lisp
+implementations) user interface environment (CLIM). Furthermore, it
+is easy to write a simple web server in Lisp, allowing the
+development of user interfaces that run in standard web browsers. A
+full-featured web server (CL-HTTP) is under continual development at
+MIT -- the source code is portable to most Lisp platforms and is
+freely available.
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter33.html">Chapter 33</a> | Chapter 34 | <a href="appendix-a.html">Appendix A</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

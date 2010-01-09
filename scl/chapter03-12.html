@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 3, Lesson 12</title> 
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 3 - Essential Lisp in Twelve Lessons</h1> 
+
+<h2><A NAME="lesson-12">Lesson 12 - Essential Reader Macros</A></h2> 
+
+<h3>The reader turns characters into data</h3> 
+
+<P>We saw in <A HREF="chapter03-11.html">Lesson 11</A> that the Lisp 
+reader gathers constituent characters into symbols and numbers, and that macro 
+characters control the reader to handle lists, strings, quoted forms, and 
+comments.  In all of these cases, the reader turns characters into data.  
+(For reasons that will become clear shortly, a comment is just "no data.")</P>
+
+<h3>Standard reader macros handle built-in data types</h3> 
+
+<P>So far, we've seen just the <EM>standard syntax</EM> for Lisp.  This is 
+implemented by the reader, and controlled by the <EM>readtable</EM>.  The 
+reader works by processing characters according to information stored in 
+the readtable.</P>
+
+<h3>User programs can define reader macros</h3> 
+
+<P>Lisp exposes the readtable through the <CODE>*readtable*</CODE> 
+variable, and provides several functions to manipulate entries in 
+readtables.  You can use these to alter the behavior of the Lisp reader.  
+In the following example, we change the syntax so we can write quoted (i.e.  
+unevaluated) lists using <CODE>[</CODE> and <CODE>]</CODE>.</P>
+
+<PRE WIDTH=80><I>;This is wrong:</I><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (1 2 3 4 5 6)<br><IMG SRC="gifs/right-arrow-bar.gif" ALT="-&gt;|" ALIGN="BOTTOM"> Error: 1 is not a function<br><br><I>;Should have done this, instead:</I><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> '(1 2 3 4 5 6)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (1 2 3 4 5 6)<br><br><I>;Define new syntax so we can write something like</I><br><I>; [1 2 3 4 5 6]</I><br><I>;instead of</I><br><I>; '(1 2 3 4 5 6)</I><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (defun open-bracket-macro-character (stream char)<br>     `',(read-delimited-list #\] stream t))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> OPEN-BRACKET-MACRO-CHARACTER<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (set-macro-character #\[ #'open-bracket-macro-character)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> T<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (set-macro-character #\] (get-macro-character #\)))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> T<br><br><I>;Now try it:</I><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> [1 2 3 4 5 6]<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (1 2 3 4 5 6)</PRE>
+
+<P>First we tried to evaluate <CODE>(1 2 3 4 5 6)</CODE> -- this is wrong 
+because <CODE>1</CODE> is not a function.  What we really meant to do was 
+to quote the list.  But if we're going to do this often, we'd like a more 
+convenient syntax.  In particular we'd like <CODE>[...]</CODE> to behave 
+like <CODE>'(...)</CODE>.</P>
+
+<P>To make this work, we have to define a specialized list reader macro 
+function that doesn't evaluate its arguments.  We'll arrange for the 
+function to be called when the reader encounters a <CODE>[</CODE> 
+character; the function will return the list when it encounters a <CODE>]</CODE> 
+character.  Every reader macro function gets called with two arguments: 
+the input stream and the character that caused the macro to be invoked.</P>
+  
+<P>Our reader macro is very simple because Lisp has a function designed to 
+read delimited lists.  <CODE>READ-DELIMITED-LIST</CODE> expects one 
+argument -- the character which will terminate the list being read.  The 
+other two arguments are optional -- the input stream and a flag which is 
+normally set to <CODE>T</CODE> when used in reader macro functions.
+<CODE>READ-DELIMITED-LIST</CODE> reads objects from the input stream until 
+it encounters the terminating character, then returns all of the objects 
+in a list.  By itself, this does everything we need <EM>except</EM> for 
+suppressing evaluation.</P>
+
+<P><CODE>QUOTE</CODE> (or <CODE>'</CODE>) suppresses evaluation, as we saw 
+in <A HREF="chapter03-03.html">Lesson 3</A>.  But we can't use 
+<CODE>'(READ-DELIMITED-LIST ...)</CODE>; that would suppress evaluation of the 
+form we need to evaluate to get the form we need to quote...  Instead, we 
+use <CODE>`</CODE> (see <A HREF="chapter03-08.html">Lesson 8</A>) to 
+selectively require evaluation within a quoted form.</P>
+
+<P>Our definition of <CODE>OPEN-BRACKET-MACRO-CHARACTER</CODE> uses</P>
+
+<PRE WIDTH=80><CODE>`',<I>form</I></CODE></PRE>
+
+<P>to evaluate <I>form</I> and return the result, quoted.</P>
+
+Lisp reserves six characters for the programmer:<p>
+
+<pre>
+ [ ] { } ! ?
+</pre> 
+
+You can define any or all of these as macro characters without
+interfering with Lisp. However, you should watch out for conflicts if
+you share code with other programmers.<p>
+
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter02.html">Chapter 2</a> | <A HREF="chapter03.html">Chapter 3, Introduction</A> | <A HREF="chapter03-11.html">Chapter 3, Lesson 11</A> | Chapter 3, Lesson 12 | <a href="chapter04.html">Chapter 4</a> | 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its 
+author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

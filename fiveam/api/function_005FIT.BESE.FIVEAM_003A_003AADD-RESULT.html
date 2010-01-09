@@ -1,0 +1,43 @@
+<html
+  ><head
+    ><title
+      >Function ADD-RESULT</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Function: ADD-RESULT</h1
+        ><div class="contents"
+          ><h2
+  >Documentation</h2
+><blockquote
+  >Create a TEST-RESULT object of type RESULT-TYPE passing it the
+  initialize args MAKE-INSTANCE-ARGS and adds the resulting
+  object to the list of test results.</blockquote
+><h2
+            >Source</h2
+          ><pre class="code"
+            >(defun add-result (result-type &amp;rest make-instance-args)
+  &quot;Create a TEST-RESULT object of type RESULT-TYPE passing it the
+  initialize args MAKE-INSTANCE-ARGS and adds the resulting
+  object to the list of test results.&quot;
+  (with-run-state (result-list current-test)
+    (let ((result (apply #'make-instance result-type
+                         (append make-instance-args (list :test-case current-test)))))
+      (etypecase result
+	(test-passed  (format *test-dribble* &quot;.&quot;))
+        (unexpected-test-failure (format *test-dribble* &quot;X&quot;))
+	(test-failure (format *test-dribble* &quot;f&quot;))
+	(test-skipped (format *test-dribble* &quot;s&quot;)))
+      (push result result-list))))</pre
+          ><a href="../Checks.html#function_005FIT.BESE.FIVEAM_003A_003AADD-RESULT"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

@@ -1,0 +1,76 @@
+<html lang="en">
+<head>
+<title>Foreign Function Interface - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="prev" href="Beyond-the-ANSI-Standard.html#Beyond-the-ANSI-Standard" title="Beyond the ANSI Standard">
+<link rel="next" href="Pathnames.html#Pathnames" title="Pathnames">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Foreign-Function-Interface"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Pathnames.html#Pathnames">Pathnames</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Beyond-the-ANSI-Standard.html#Beyond-the-ANSI-Standard">Beyond the ANSI Standard</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="index.html#Top">Top</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h2 class="chapter">7 Foreign Function Interface</h2>
+
+<p>This chapter describes SBCL's interface to C programs and
+libraries (and, since C interfaces are a sort of <em>lingua
+franca</em> of the Unix world, to other programs and libraries in
+general.)
+
+   <blockquote>
+Note: In the modern Lisp world, the usual term for this functionality
+is Foreign Function Interface, or <acronym>FFI</acronym>, where despite the
+mention of &ldquo;function&rdquo; in this term, <acronym>FFI</acronym> also
+refers to direct manipulation of C data structures as well as
+functions. The traditional CMUCL terminology is Alien Interface, and
+while that older terminology is no longer used much in the system
+documentation, it still reflected in names in the implementation,
+notably in the name of the <code>SB-ALIEN</code> package. 
+</blockquote>
+
+<ul class="menu">
+<li><a accesskey="1" href="Introduction-to-the-Foreign-Function-Interface.html#Introduction-to-the-Foreign-Function-Interface">Introduction to the Foreign Function Interface</a>
+<li><a accesskey="2" href="Foreign-Types.html#Foreign-Types">Foreign Types</a>
+<li><a accesskey="3" href="Operations-On-Foreign-Values.html#Operations-On-Foreign-Values">Operations On Foreign Values</a>
+<li><a accesskey="4" href="Foreign-Variables.html#Foreign-Variables">Foreign Variables</a>
+<li><a accesskey="5" href="Foreign-Data-Structure-Examples.html#Foreign-Data-Structure-Examples">Foreign Data Structure Examples</a>
+<li><a accesskey="6" href="Loading-Shared-Object-Files.html#Loading-Shared-Object-Files">Loading Shared Object Files</a>
+<li><a accesskey="7" href="Foreign-Function-Calls.html#Foreign-Function-Calls">Foreign Function Calls</a>
+<li><a accesskey="8" href="Step_002dBy_002dStep-Example-of-the-Foreign-Function-Interface.html#Step_002dBy_002dStep-Example-of-the-Foreign-Function-Interface">Step-By-Step Example of the Foreign Function Interface</a>
+</ul>
+
+   </body></html>
+

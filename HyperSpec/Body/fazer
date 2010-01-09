@@ -1,0 +1,13 @@
+files=$(cat da)
+
+for x in $(seq 0 27)
+do
+    if $( test $x -lt 10 )
+    then
+        echo $x
+        cat $(grep 0$x da) >> final/0$x.html
+    else
+        echo $x
+        cat $(grep $x da) >> final/$x.html
+    fi
+done

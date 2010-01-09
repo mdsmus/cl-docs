@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>3.3.6 Unknown Locations and Interrupts</TITLE>
+<META NAME="description" CONTENT="3.3.6 Unknown Locations and Interrupts">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1462" HREF="node69.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1460" HREF="node62.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1456" HREF="node67.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1464" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1465" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1463" HREF="node69.html">3.4 Variable Access</A>
+<B>Up:</B> <A NAME="tex2html1461" HREF="node62.html">3.3 Stack Frames</A>
+<B> Previous:</B> <A NAME="tex2html1457" HREF="node67.html">3.3.5 Debug Tail Recursion</A>
+<BR> <P>
+<H2><A NAME="SECTION00436000000000000000">3.3.6 Unknown Locations and Interrupts</A></H2>
+<P>
+<A NAME="unknownlocations">&#160;</A>
+<A NAME="8776">&#160;</A>
+<A NAME="8777">&#160;</A>
+<A NAME="8778">&#160;</A>
+<A NAME="8779">&#160;</A>
+<P>
+The debugger operates using special debugging information attached to
+the compiled code.  This debug information tells the debugger what it
+needs to know about the locations in the code where the debugger can be
+invoked.  If the debugger somehow encounters a location not described in
+the debug information, then it is said to be <i>unknown</i>.  If the code
+location for a frame is unknown, then some variables may be
+inaccessible, and the source location cannot be precisely displayed.
+<P>
+There are three reasons why a code location could be unknown:
+<UL>
+<LI>
+There is inadequate debug information due to the value of the <tt>debug</tt>
+optimization quality.  See section&nbsp;<A HREF="node75.html#debuggerpolicy">3.6</A>.
+<LI>
+The debugger was entered because of an interrupt such as <tt><IMG WIDTH=14 HEIGHT=11 ALIGN=BOTTOM ALT="tex2html_wrap_inline15951" SRC="img13.gif"></tt>.
+<LI>
+A hardware error such as ``<tt>bus error</tt>'' occurred in code that was
+compiled unsafely due to the value of the <tt>safety</tt> optimization
+quality.  See section&nbsp;<A HREF="node102.html#optimizedeclaration">4.7.1</A>.
+</UL>
+<P>
+In the last two cases, the values of argument variables are accessible,
+but may be incorrect.  See section&nbsp;<A HREF="node70.html#debugvarvalidity">3.4.1</A> for more details on
+when variable values are accessible.
+<P>
+It is possible for an interrupt to happen when a function call or return is in
+progress.  The debugger may then flame out with some obscure error or insist
+that the bottom of the stack has been reached, when the real problem is that
+the current stack frame can't be located.  If this happens, return from the
+interrupt and try again.
+<P>
+When running interpreted code, all locations should be known.  However,
+an interrupt might catch some subfunction of the interpreter at an
+unknown location.  In this case, you should be able to go up the stack a
+frame or two and reach an interpreted frame which can be debugged.
+<P>
+<HR><A NAME="tex2html1462" HREF="node69.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1460" HREF="node62.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1456" HREF="node67.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1464" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1465" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1463" HREF="node69.html">3.4 Variable Access</A>
+<B>Up:</B> <A NAME="tex2html1461" HREF="node62.html">3.3 Stack Frames</A>
+<B> Previous:</B> <A NAME="tex2html1457" HREF="node67.html">3.3.5 Debug Tail Recursion</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

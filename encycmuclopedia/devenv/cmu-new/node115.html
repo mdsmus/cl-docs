@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.2.3 Member Types</TITLE>
+<META NAME="description" CONTENT="5.2.3 Member Types">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2153" HREF="node116.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2151" HREF="node112.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2145" HREF="node114.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2155" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2156" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2154" HREF="node116.html">5.2.4 Union Types</A>
+<B>Up:</B> <A NAME="tex2html2152" HREF="node112.html">5.2 More About Types </A>
+<B> Previous:</B> <A NAME="tex2html2146" HREF="node114.html">5.2.2 Canonicalization</A>
+<BR> <P>
+<H2><A NAME="SECTION00623000000000000000">5.2.3 Member Types</A></H2>
+<P>
+<A NAME="9749">&#160;</A>
+<P>
+The <A NAME="9750">&#160;</A><tt>member</tt> type specifier can be used to represent
+``symbolic'' values, analogous to the enumerated types of Pascal.  For
+example, the second value of <tt>find-symbol</tt> has this type:
+<BLOCKQUOTE> <PRE>(member :internal :external :inherited nil)
+</PRE> </BLOCKQUOTE>
+Member types are very useful for expressing consistency constraints on data
+structures, for example:
+<BLOCKQUOTE> <PRE>(defstruct ice-cream
+  (flavor :vanilla :type (member :vanilla :chocolate :strawberry)))
+</PRE> </BLOCKQUOTE>
+Member types are also useful in type inference, as the number of members can
+sometimes be pared down to one, in which case the value is a known constant.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

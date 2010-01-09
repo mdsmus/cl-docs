@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.4.4 Control Optimization</TITLE>
+<META NAME="description" CONTENT="5.4.4 Control Optimization">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2403" HREF="node136.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2401" HREF="node131.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2395" HREF="node134.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2405" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2406" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2404" HREF="node136.html">5.4.5 Unreachable Code Deletion</A>
+<B>Up:</B> <A NAME="tex2html2402" HREF="node131.html">5.4 Source Optimization</A>
+<B> Previous:</B> <A NAME="tex2html2396" HREF="node134.html">5.4.3 Unused Expression Elimination</A>
+<BR> <P>
+<H2><A NAME="SECTION00644000000000000000">5.4.4 Control Optimization</A></H2>
+<P>
+<A NAME="10026">&#160;</A>
+<A NAME="10027">&#160;</A>
+<P>
+The most important optimization of control is recognizing when an
+<A NAME="10028">&#160;</A><tt>if</tt> test is known at compile time, then deleting the
+<tt>if</tt>, the test expression, and the unreachable branch of the
+<tt>if</tt>.  This can be considered a special case of constant folding,
+although the test doesn't have to be truly constant as long as it is
+definitely not <i>nil</i>.  Note also, that type inference propagates the
+result of an <tt>if</tt> test to the true and false branches,
+see section&nbsp;<A HREF="node129.html#constraintpropagation">5.3.5</A>.
+<P>
+A related <tt>if</tt> optimization is this transformation:<A NAME="tex2html10" HREF="footnode.html#6971"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+<BLOCKQUOTE> <PRE>(if (if a b c) x y)
+</PRE> </BLOCKQUOTE>
+into:
+<BLOCKQUOTE> <PRE>(if a
+    (if b x y)
+    (if c x y))
+</PRE> </BLOCKQUOTE>
+The opportunity for this sort of optimization usually results from a
+conditional macro.  For example:
+<BLOCKQUOTE> <PRE>(if (not a) x y)
+</PRE> </BLOCKQUOTE>
+is actually implemented as this:
+<BLOCKQUOTE> <PRE>(if (if a nil t) x y)
+</PRE> </BLOCKQUOTE>
+which is transformed to this:
+<BLOCKQUOTE> <PRE>(if a
+    (if nil x y)
+    (if t x y))
+</PRE> </BLOCKQUOTE>
+which is then optimized to this:
+<BLOCKQUOTE> <PRE>(if a y x)
+</PRE> </BLOCKQUOTE>
+Note that due to Python's internal representations, the
+<tt>if</tt>--<tt>if</tt> situation will be recognized even if other
+forms are wrapped around the inner <tt>if</tt>, like:
+<BLOCKQUOTE> <PRE>(if (let ((g ...))
+      (loop
+        ...
+        (return (not g))
+        ...))
+    x y)
+</PRE> </BLOCKQUOTE>
+<P>
+In Python, all the Common Lisp macros really are macros, written in
+terms of <tt>if</tt>, <tt>block</tt> and <tt>tagbody</tt>, so user-defined
+control macros can be just as efficient as the standard ones.
+Python emits basic blocks using a heuristic that minimizes the
+number of unconditional branches.  The code in a <tt>tagbody</tt> will
+not be emitted in the order it appeared in the source, so there is no
+point in arranging the code to make control drop through to the
+target.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

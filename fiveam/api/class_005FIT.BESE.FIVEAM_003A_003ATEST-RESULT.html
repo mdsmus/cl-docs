@@ -1,0 +1,69 @@
+<html
+  ><head
+    ><title
+      >Class TEST-RESULT</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Class: TEST-RESULT</h1
+        ><div class="contents"
+          ><h2
+  >Documentation</h2
+><blockquote
+  >All checking macros will generate an object of
+ type TEST-RESULT.</blockquote
+><h2
+  >Slots</h2
+><ul
+  ><li
+  >REASON</li
+><li
+  >TEST-CASE</li
+><li
+  >TEST-EXPR</li
+></ul
+><h2
+  >Hierachy</h2
+><h3
+  >Precedence List</h3
+><ul
+  ><li
+  >STANDARD-OBJECT</li
+></ul
+><h3
+  >Sub Classes</h3
+><ul
+  ><li
+  ><a href="../api/class_005FIT.BESE.FIVEAM_003A_003ATEST-SKIPPED.html"
+  >TEST-SKIPPED</a
+></li
+><li
+  ><a href="../api/class_005FIT.BESE.FIVEAM_003A_003ATEST-FAILURE.html"
+  >TEST-FAILURE</a
+></li
+><li
+  ><a href="../api/class_005FIT.BESE.FIVEAM_003A_003ATEST-PASSED.html"
+  >TEST-PASSED</a
+></li
+></ul
+><h2
+            >Source</h2
+          ><pre class="code"
+            >(defclass test-result ()
+  ((reason :accessor reason :initarg :reason :initform &quot;no reason given&quot;)
+   (test-case :accessor test-case :initarg :test-case)
+   (test-expr :accessor test-expr :initarg :test-expr))
+  (:documentation &quot;All checking macros will generate an object of
+ type TEST-RESULT.&quot;))</pre
+          ><a href="../Checks.html#class_005FIT.BESE.FIVEAM_003A_003ATEST-RESULT"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

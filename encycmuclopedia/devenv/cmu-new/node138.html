@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.4.7 Source to Source Transformation</TITLE>
+<META NAME="description" CONTENT="5.4.7 Source to Source Transformation">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2439" HREF="node139.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2437" HREF="node131.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2431" HREF="node137.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2441" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2442" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2440" HREF="node139.html">5.4.8 Style Recommendations</A>
+<B>Up:</B> <A NAME="tex2html2438" HREF="node131.html">5.4 Source Optimization</A>
+<B> Previous:</B> <A NAME="tex2html2432" HREF="node137.html">5.4.6 Multiple Values Optimization</A>
+<BR> <P>
+<H2><A NAME="SECTION00647000000000000000">5.4.7 Source to Source Transformation</A></H2>
+<P>
+<A NAME="10066">&#160;</A>
+<A NAME="10067">&#160;</A>
+<P>
+The compiler implements a number of operation-specific optimizations as
+source-to-source transformations.  You will often see unfamiliar code in error
+messages, for example:
+<BLOCKQUOTE> <PRE>(defun my-zerop () (zerop x))
+</PRE> </BLOCKQUOTE>
+gives this warning:
+<BLOCKQUOTE> <PRE>In: DEFUN MY-ZEROP
+  (ZEROP X)
+==&gt;
+  (= X 0)
+Warning: Undefined variable: X
+</PRE> </BLOCKQUOTE>
+The original <tt>zerop</tt> has been transformed into a call to
+<tt>=</tt>.  This transformation is indicated with the same <tt>==&gt;</tt>
+used to mark macro and function inline expansion.  Although it can be
+confusing, display of the transformed source is important, since
+warnings are given with respect to the transformed source.  This a
+more obscure example:
+<BLOCKQUOTE> <PRE>(defun foo (x) (logand 1 x))
+</PRE> </BLOCKQUOTE>
+gives this efficiency note:
+<BLOCKQUOTE> <PRE>In: DEFUN FOO
+  (LOGAND 1 X)
+==&gt;
+  (LOGAND C::Y C::X)
+Note: Forced to do static-function Two-arg-and (cost 53).
+      Unable to do inline fixnum arithmetic (cost 1) because:
+      The first argument is a INTEGER, not a FIXNUM.
+      etc.
+</PRE> </BLOCKQUOTE>
+Here, the compiler commuted the call to <tt>logand</tt>, introducing
+temporaries.  The note complains that the <i>first</i> argument is not
+a <tt>fixnum</tt>, when in the original call, it was the second
+argument.  To make things more confusing, the compiler introduced
+temporaries called <tt>c::x</tt> and <tt>c::y</tt> that are bound to
+<tt>y</tt> and <tt>1</tt>, respectively.
+<P>
+You will also notice source-to-source optimizations when efficiency
+notes are enabled (see section&nbsp;<A HREF="node185.html#efficiencynotes">5.13</A>.)  When the compiler is
+unable to do a transformation that might be possible if there was more
+information, then an efficiency note is printed.  For example,
+<tt>my-zerop</tt> above will also give this efficiency note:
+<BLOCKQUOTE> <PRE>In: DEFUN FOO
+  (ZEROP X)
+==&gt;
+  (= X 0)
+Note: Unable to optimize because:
+      Operands might not be the same type, so can't open code.
+</PRE> </BLOCKQUOTE><BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

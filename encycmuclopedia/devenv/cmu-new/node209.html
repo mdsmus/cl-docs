@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>6.9.1 Changing Interrupt Handlers</TITLE>
+<META NAME="description" CONTENT="6.9.1 Changing Interrupt Handlers">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3329" HREF="node210.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3327" HREF="node208.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3321" HREF="node208.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3331" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3332" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3330" HREF="node210.html">6.9.2 Examples of Signal </A>
+<B>Up:</B> <A NAME="tex2html3328" HREF="node208.html">6.9 Unix Interrupts</A>
+<B> Previous:</B> <A NAME="tex2html3322" HREF="node208.html">6.9 Unix Interrupts</A>
+<BR> <P>
+<H2><A NAME="SECTION00791000000000000000">6.9.1 Changing Interrupt Handlers</A></H2>
+<P>
+<A NAME="signalhandlers">&#160;</A>
+<P>
+<b>[Macro]</b><BR> 
+<tt> system:with-enabled-interrupts</tt> <em> 
+    <i>specs</i> <i>&amp;rest</i> <i>body</i></em><BR>
+<P>
+  This macro should be called with a list of signal specifications,
+  <i>specs</i>.  Each element of <i>specs</i> should be a list of
+  two elements: the first should be the Unix signal
+  for which a handler should be established, the second should be a
+  function to be called when the signal is received  One or more signal handlers can be
+  established in this way.  <tt>with-enabled-interrupts</tt> establishes
+  the correct signal handlers and then executes the forms in
+  <i>body</i>.  The forms are executed in an unwind-protect so that the
+  state of the signal handlers will be restored to what it was before
+  the <tt>with-enabled-interrupts</tt> was entered.  A signal handler
+  function specified as NIL will set the Unix signal handler to the
+  default which is normally either to ignore the signal or to cause a
+  core dump depending on the particular signal.
+<P>
+<b>[Macro]</b><BR> 
+<tt> system:without-interrupts</tt> <em> <i>&amp;rest</i> <i>body</i></em><BR>
+<P>
+  It is sometimes necessary to execute a piece a code that can not be
+  interrupted.  This macro the forms in <i>body</i> with interrupts
+  disabled.  Note that the Unix interrupts are not actually disabled,
+  rather they are queued until after <i>body</i> has finished
+  executing.
+<P>
+<b>[Macro]</b><BR> 
+<tt> system:with-interrupts</tt> <em> <i>&amp;rest</i> <i>body</i></em><BR>
+<P>
+  When executing an interrupt handler, the system disables interrupts,
+  as if the handler was wrapped in in a <tt>without-interrupts</tt>.
+  The macro <tt>with-interrupts</tt> can be used to enable interrupts
+  while the forms in <i>body</i> are evaluated.  This is useful if
+  <i>body</i> is going to enter a break loop or do some long
+  computation that might need to be interrupted.
+<P>
+<b>[Macro]</b><BR> 
+<tt> system:without-hemlock</tt> <em> <i>&amp;rest</i> <i>body</i></em><BR>
+<P>
+  For some interrupts, such as SIGTSTP (suspend the Lisp process and
+  return to the Unix shell) it is necessary to leave Hemlock and then
+  return to it.  This macro executes the forms in <i>body</i> after
+  exiting Hemlock.  When <i>body</i> has been executed, control is
+  returned to Hemlock.
+<P>
+<b>[Function]</b><BR> 
+<tt> system:enable-interrupt</tt> <em> <i>signal</i> <i>function</i></em><BR>
+<P>
+  This function establishes <i>function</i> as the handler for
+  <i>signal</i>.
+<P>
+  Unless you want to establish a global signal handler, you should use
+  the macro <tt>with-enabled-interrupts</tt> to temporarily establish a
+  signal handler.  
+  <tt>enable-interrupt</tt> returns the old function associated with the
+  signal.
+<P>
+<b>[Function]</b><BR> 
+<tt> system:ignore-interrupt</tt> <em> <i>signal</i></em><BR>
+<P>
+  Ignore-interrupt sets the Unix signal mechanism to ignore
+  <i>signal</i> which means that the Lisp process will never see the
+  signal.  Ignore-interrupt returns the old function associated with
+  the signal or <i>nil</i> if none is currently defined.
+<P>
+<b>[Function]</b><BR> 
+<tt> system:default-interrupt</tt> <em> <i>signal</i></em><BR>
+<P>
+  Default-interrupt can be used to tell the Unix signal mechanism to
+  perform the default action for <i>signal</i>.  For details on what
+  the default action for a signal is, see section 2 of the &#305;Unix
+    Programmer's Manual.  In general, it is likely to ignore the
+  signal or to cause a core dump.
+<P>
+<HR><A NAME="tex2html3329" HREF="node210.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3327" HREF="node208.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3321" HREF="node208.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3331" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3332" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3330" HREF="node210.html">6.9.2 Examples of Signal </A>
+<B>Up:</B> <A NAME="tex2html3328" HREF="node208.html">6.9 Unix Interrupts</A>
+<B> Previous:</B> <A NAME="tex2html3322" HREF="node208.html">6.9 Unix Interrupts</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

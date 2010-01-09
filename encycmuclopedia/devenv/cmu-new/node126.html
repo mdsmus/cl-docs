@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.3.2 Local Function Type Inference</TITLE>
+<META NAME="description" CONTENT="5.3.2 Local Function Type Inference">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2289" HREF="node127.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2287" HREF="node124.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2281" HREF="node125.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2291" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2292" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2290" HREF="node127.html">5.3.3 Global Function Type </A>
+<B>Up:</B> <A NAME="tex2html2288" HREF="node124.html">5.3 Type Inference</A>
+<B> Previous:</B> <A NAME="tex2html2282" HREF="node125.html">5.3.1 Variable Type Inference</A>
+<BR> <P>
+<H2><A NAME="SECTION00632000000000000000">5.3.2 Local Function Type Inference</A></H2>
+<P>
+<A NAME="9905">&#160;</A>
+<P>
+The types of arguments to local functions are inferred in the same was
+as any other local variable; the type is the union of the argument
+types across all the calls to the function, intersected with the
+declared type.  If there are any assignments to the argument
+variables, the type of the assigned value is unioned in as well.
+<P>
+The result type of a local function is computed in a special way that
+takes tail recursion (see section&nbsp;<A HREF="node140.html#tailrecursion">5.5</A>) into consideration.
+The result type is the union of all possible return values that aren't
+tail-recursive calls.  For example, Python will infer that the
+result type of this function is <tt>integer</tt>:
+<BLOCKQUOTE> <PRE>(defun ! (n res)
+  (declare (integer n res))
+  (if (zerop n)
+      res
+      (! (1- n) (* n res))))
+</PRE> </BLOCKQUOTE>
+Although this is a rather obvious result, it becomes somewhat less
+trivial in the presence of mutual tail recursion of multiple
+functions.  Local function result type inference interacts with the
+mechanisms for ensuring proper tail recursion mentioned in section
+<A HREF="node147.html#localcallreturn">5.6.5</A>.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,199 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 8</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 8 - Lifetime and Visibility</h1> 
+
+<p>In this chapter we'll see how lifetime and visibility affect the
+values of Lisp variables during execution. This is pretty much like
+local and global variables in other languages, but Lisp's special
+variables change things. This chapter also sets the stage for
+understanding that lifetime and visibility aren't just for variables.
+
+<h2>Everything in Lisp has both lifetime and visibility</h2> 
+
+<p>Every object in Lisp has both lifetime and visibility.  We'll see
+why this is important in the following sections.
+
+<h2>Lifetime: Creation, existence, then destruction</h2> 
+
+<p>An object's lifetime is the period between its creation and
+destruction. Some objects have fleeting lifetimes, limited to the
+form in which they appear. Other objects are created as soon as the
+program begins running, and are not destroyed until the program
+finishes. And others enter and leave existence according to still
+other rules.
+
+<h2>Visibility: To see and to be seen by</h2> 
+
+<p>An object is either visible or not visible at a particular point
+in your program. Sometimes visibility is controlled by the execution
+path of the program. But for most objects in Common Lisp, visibility
+is determined by the textual arrangement of your program; this is
+good, because you can reason about visibility just by reading a
+program, without having to first reason about the program's control
+flow.
+
+<h2>The technical names: Extent and Scope</h2> 
+
+<p>When you read language specifications for Common Lisp, you'll 
+see the technical terms extent and scope used in place of lifetime
+and visibility.  I wanted to introduce these concepts first using
+the non-technical terms because I believe them to be more evocative.
+But you should get used to reading about extent and scope.  Remember:
+
+<blockquote>
+<b>lifetime</b> is to <b>extent</b> <br>
+as<br>
+<b>visibility</b> is to <b>scope</b> 
+</blockquote> 
+
+<h2>Really easy cases: top-level defining forms</h2> 
+
+<p>Top-level defining forms are easy. The objects so defined have
+<em>indefinite</em> extent and scope. This is a fancy way of saying
+that objects defined by top level forms "always" exist and are
+visible (or at least potentially accessible, as I'll explain
+shortly) everywhere in the program.
+
+<p>Practically, what this means is that every object defined by a
+top level form exists for as long as the program runs. The object
+comes into existence when the top level form is evaluated. If the
+form was compiled into a file, then the object created by the form
+comes into existence when the compiled file is loaded.
+
+<p>An object having indefinite scope is visible everywhere in your
+program. It doesn't matter whether the object was created in a
+different source file or at a different time -- even if it was
+created <em>after</em> you define a function that references the top
+level object (although some Lisp compilers will issue a warning when
+you do this, the code will always behave properly if you evaluate
+the object's defining form before evaluating the function that
+references the object).
+
+<blockquote>
+If you're familiar with the concept of lexical scope as it
+applies to programming languages, you're probably confused by the
+notion of indefinite scope. If I introduce an object whose name
+<em>shadows</em> the name of an object in an outer scope, then that
+outer object is "not visible" in the inner scope.  And you're right,
+up to a point.
+
+<p>Lisp makes a very clear and explicit distinction between an
+object and its name. We say that an object is bound to a name, or
+that a (named) binding is established for an object. And it is very
+true that a <em>binding</em> in an inner lexical scope may shadow a
+<em>binding</em> in an outer scope. However, the scope of the outer
+object extends into the inner scope, even though it is inaccessible
+via its shadowed binding. This is an important distinction, because
+an object may have more than one binding, and the object must remain
+accessible via any binding which has not been lexically shadowed.
+</blockquote> 
+
+<h2>Scope and extent of parameters and LET variables</h2> 
+
+<p>Objects bound by function parameters and <code>LET</code> forms
+have lexical scope. Their bindings are visible beginning at a
+certain textual location in the defining form and continuing through
+the textual end of the defining form. Any reference to a textually
+identical name from outside of the defining form must refer to a
+different binding. A nested defining form may declare a binding that
+shadows an enclosing binding to a textually identical name.
+
+<blockquote>
+This is a slightly more rigorous restatement of concepts
+introduced in <a href="chapter03-06.html">Chapter 3, Lesson 6</a>.
+If you need to refresh your memory, this would be a good time to <a
+href="chapter03-06.html">go back</a> and review the examples in
+that short passage.
+</blockquote> 
+
+<a name="special"></a> 
+<h2>Slightly trickier: special variables</h2> 
+
+<p>Special variables (also known by the more technically correct
+term <em>dynamic variables</em>) have <em>dynamic</em> scope. This
+means that a binding is created for a special variable as a result
+of executing some form in your program. The scope of the dynamic
+binding extends into any form called (directly or indirectly) by the
+form which established the dynamic binding.
+
+<p>The extent of a special variable lasts indefinitely, until the
+form that created the dynamic binding is no longer a site of active
+program execution -- in other words, until the defining form (and
+all of the forms called by it) finishes executing.  If the dynamic
+binding is created by a top level form, the extent is the same as 
+described previously for top level defining forms.
+
+<pre>
+? (defparameter *my-special-variable* 17)
+*MY-SPECIAL-VARIABLE*
+? (defun show-my-special ()
+    (declare (special *my-special-variable*))
+    (print *my-special-variable*)
+    nil)
+SHOW-MY-SPECIAL
+? (defun do-something-else ()
+    (show-my-special))
+DO-SOMETHING-ELSE
+? (defun dynamically-shadow-my-special ()
+    (let ((*my-special-variable* 8))
+      (do-something-else))
+    (show-my-special))
+DYNAMICALLY-SHADOW-MY-SPECIAL
+? (dynamically-shadow-my-special)
+
+8
+17
+NIL
+</pre> 
+
+<p>When reading the above, pay special attention to
+<code>DO-SOMETHING-ELSE</code> -- this calls
+<code>SHOW-MY-SPECIAL</code>. <code>SHOW-MY-SPECIAL</code> would
+normally see the lexical value of <code>*MY-SPECIAL-VARIABLE*</code>
+-- 17 -- except for the declaration which says that
+<code>*MY-SPECIAL-VARIABLE*</code> is a special variable.
+
+<p><code>DYNAMICALLY-SHADOW-MY-SPECIAL</code> binds
+<code>*MY-SPECIAL-VARIABLE*</code> to the value 8, then calls
+<code>DO-SOMETHING-ELSE</code>, which in turn calls
+<code>SHOW-MY-SPECIAL</code>. At this point, the <code>LET</code>
+binding of <code>*MY-SPECIAL-VARIABLE*</code> is not lexically
+apparent to the code in <code>SHOW-MY-SPECIAL</code>. Yet, because
+the binding is declared special at the point of reference, and
+because the binding <code>LET</code> form is still active when
+<code>DO-SOMETHING-ELSE</code> calls <code>SHOW-MY-SPECIAL</code>,
+the <em>dynamic</em> binding of 8 (rather than the lexical binding
+of 17) is printed.
+
+<p>Later during execution, the second call to
+<code>SHOW-MY-SPECIAL</code> happens outside of the <code>LET</code>
+form, and the top level value of <code>*MY-SPECIAL-VARIABLE*</code>
+-- 17 -- is printed.
+
+<blockquote> Strictly speaking, the <code>(DECLARE (SPECIAL
+...</code> form is not necessary in <code>SHOW-MY-SPECIAL</code> --
+the <code>DEFPARAMETER</code> form has the side effect of
+proclaiming its variable to be special. However, the added
+declaration adds redundant documentation at the point of use of the
+special variable. Furthermore, some Lisp compilers will issue a
+warning (typically: "<samp>Undeclared free variable assumed
+special</samp>") that is easily silenced by adding the declaration.
+</blockquote> 
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter07.html">Chapter 7</a> | Chapter 8 | <a href="chapter09.html">Chapter 9</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

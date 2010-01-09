@@ -1,0 +1,57 @@
+<html
+  ><head
+    ><title
+      >Class UNEXPECTED-TEST-FAILURE</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Class: UNEXPECTED-TEST-FAILURE</h1
+        ><div class="contents"
+          ><h2
+  >Documentation</h2
+><blockquote
+  >Represents the result of a test which neither
+passed nor failed, but signaled an error we couldn't deal
+with.
+
+Note: This is very different than a SIGNALS check which instead
+creates a TEST-PASSED or TEST-FAILURE object.</blockquote
+><h2
+  >Slots</h2
+><ul
+  ><li
+  >ACTUAL-CONDITION</li
+></ul
+><h2
+  >Hierachy</h2
+><h3
+  >Precedence List</h3
+><ul
+  ><li
+  ><a href="../api/class_005FIT.BESE.FIVEAM_003A_003ATEST-FAILURE.html"
+  >TEST-FAILURE</a
+></li
+></ul
+><h2
+            >Source</h2
+          ><pre class="code"
+            >(defclass unexpected-test-failure (test-failure)
+  ((actual-condition :accessor actual-condition :initarg :condition))
+  (:documentation &quot;Represents the result of a test which neither
+passed nor failed, but signaled an error we couldn't deal
+with.
+
+Note: This is very different than a SIGNALS check which instead
+creates a TEST-PASSED or TEST-FAILURE object.&quot;))</pre
+          ><a href="../Checks.html#class_005FIT.BESE.FIVEAM_003A_003AUNEXPECTED-TEST-FAILURE"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

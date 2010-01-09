@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.7.4 Practical Difficulties</TITLE>
+<META NAME="description" CONTENT="5.7.4 Practical Difficulties">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2613" HREF="node153.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2611" HREF="node148.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2605" HREF="node151.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2615" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2616" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2614" HREF="node153.html">5.7.5 Context Declarations</A>
+<B>Up:</B> <A NAME="tex2html2612" HREF="node148.html">5.7 Block Compilation</A>
+<B> Previous:</B> <A NAME="tex2html2606" HREF="node151.html">5.7.3 Compiler Arguments</A>
+<BR> <P>
+<H2><A NAME="SECTION00674000000000000000">5.7.4 Practical Difficulties</A></H2>
+<P>
+The main problem with block compilation is that the compiler uses
+large amounts of memory when it is block compiling.  This places an
+upper limit on the amount of code that can be block compiled as a
+unit.  To make best use of block compilation, it is necessary to
+locate the parts of the program containing many internal calls, and
+then add the appropriate <tt>start-block</tt> declarations.  When writing
+new code, it is a good idea to put in block compilation declarations
+from the very beginning, since writing block declarations correctly
+requires accurate knowledge of the program's function call structure.
+If you want to initially develop code with full incremental
+redefinition, you can compile with <A NAME="10248">&#160;</A><tt>*block-compile-default*</tt> (page&nbsp;<A HREF="node151.html#VRblockcompiledefault"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>) set to
+<i>nil</i>.
+<P>
+Note if a <tt>defun</tt> appears in a non-null lexical environment, then
+calls to it cannot be block compiled.
+<P>
+Unless files are very small, it is probably impractical to block compile
+multiple files as a unit by specifying a list of files to <tt>compile-file</tt>.
+Semi-inline expansion (see section&nbsp;<A HREF="node157.html#semiinline">5.8.2</A>) provides another way to
+extend block compilation across file boundaries.
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

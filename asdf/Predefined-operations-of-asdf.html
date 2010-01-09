@@ -1,0 +1,175 @@
+<html lang="en">
+<head>
+<title>asdf Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name=description content="asdf Manual">
+<meta name=generator content="makeinfo 4.2">
+<link href="http://www.gnu.org/software/texinfo/" rel=generator-home>
+<!--
+This manual describes asdf, a system definition facility for Common
+Lisp programs and libraries.
+
+<p>asdf Copyright &copy; 2001-2004 Daniel Barlow and contributors
+
+<p>This manual Copyright &copy; 2001-2004 Daniel Barlow and
+contributors
+
+<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+-->
+</head>
+<body>
+<p>
+Node:<a name="Predefined%20operations%20of%20asdf">Predefined operations of asdf</a>,
+Next:<a rel=next accesskey=n href="Creating-new-operations.html#Creating%20new%20operations">Creating new operations</a>,
+Previous:<a rel=previous accesskey=p href="Operations.html#Operations">Operations</a>,
+Up:<a rel=up accesskey=u href="Operations.html#Operations">Operations</a>
+<hr><br>
+
+<h4>Predefined operations of asdf</h4>
+
+<p>All the operations described in this section are in the <code>asdf</code>
+package.  They are invoked via the <code>operate</code> generic function.
+
+<br><pre>(asdf:operate 'asdf:<var>operation-name</var> '<var>system-name</var> {<var>operation-options ...</var>})
+</pre>
+
+<p>
+<table width="100%">
+<tr>
+<td align="left"><b>compile-op</b><i> &amp;key proclamations
+</i></td>
+<td align="right">Operation</td>
+</tr>
+</table>
+<table width="95%" align="center">
+<tr><td>
+
+<p>This operation compiles the specified component.  If proclamations are
+supplied, they will be proclaimed.  This is a good place to specify
+optimization settings.
+
+<p>When creating a new component type, you should provide methods for
+<code>compile-op</code>.
+
+<p>When <code>compile-op</code> is invoked, component dependencies often cause
+some parts of the system to be loaded as well as compiled.  Invoking
+<code>compile-op</code> does not necessarily load all the parts of the
+system, though; use <code>load-op</code> to load a system. 
+</td></tr>
+</table>
+
+<p>
+<table width="100%">
+<tr>
+<td align="left"><b>load-op</b><i> &amp;key proclamations
+</i></td>
+<td align="right">Operation</td>
+</tr>
+</table>
+<table width="95%" align="center">
+<tr><td>
+
+<p>This operation loads a system.
+
+<p>The default methods for <code>load-op</code> compile files before loading them. 
+For parity, your own methods on new component types should probably do
+so too. 
+</td></tr>
+</table>
+
+<p>
+<table width="100%">
+<tr>
+<td align="left"><b>load-source-op</b><i>
+</i></td>
+<td align="right">Operation</td>
+</tr>
+</table>
+<table width="95%" align="center">
+<tr><td>
+
+<p>This operation will load the source for the files in a module even if
+the source files have been compiled. Systems sometimes have knotty
+dependencies which require that sources are loaded before they can be
+compiled.  This is how you do that.
+
+<p>If you are creating a component type, you need to implement this
+operation - at least, where meaningful. 
+</td></tr>
+</table>
+
+<p>
+<table width="100%">
+<tr>
+<td align="left"><b>test-system-version</b><i> &amp;key minimum
+</i></td>
+<td align="right">Operation</td>
+</tr>
+</table>
+<table width="95%" align="center">
+<tr><td>
+
+<p>Asks the system whether it satisfies a version requirement.
+
+<p>The default method accepts a string, which is expected to contain of a
+number of integers separated by #\. characters.  The method is not
+recursive.  The component satisfies the version dependency if it has
+the same major number as required and each of its sub-versions is
+greater than or equal to the sub-version number required.
+
+<br><pre>(defun version-satisfies (x y)
+  (labels ((bigger (x y)
+	     (cond ((not y) t)
+		   ((not x) nil)
+		   ((&gt; (car x) (car y)) t)
+		   ((= (car x) (car y))
+		    (bigger (cdr x) (cdr y))))))
+    (and (= (car x) (car y))
+	 (or (not (cdr y)) (bigger (cdr x) (cdr y))))))
+</pre>
+
+<p>If that doesn't work for your system, you can override it.  I hope
+you have as much fun writing the new method as <pre>#lisp</pre> did
+reimplementing this one. 
+</td></tr>
+</table>
+
+<p>
+<table width="100%">
+<tr>
+<td align="left"><b>feature-dependent-op</b><i>
+</i></td>
+<td align="right">Operation</td>
+</tr>
+</table>
+<table width="95%" align="center">
+<tr><td>
+
+<p>An instance of <code>feature-dependent-op</code> will ignore any components
+which have a <code>features</code> attribute, unless the feature combination
+it designates is satisfied by <code>*features*</code>.  This operation is
+not intended to be instantiated directly, but other operations may
+inherit from it.
+
+</td></tr>
+</table>
+
+</body></html>
+

@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>2.13.4 Search Lists</TITLE>
+<META NAME="description" CONTENT="2.13.4 Search Lists">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1174" HREF="node47.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1172" HREF="node42.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1166" HREF="node45.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1176" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1177" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1175" HREF="node47.html">Predefined Search-Lists</A>
+<B>Up:</B> <A NAME="tex2html1173" HREF="node42.html">2.13 Pathnames</A>
+<B> Previous:</B> <A NAME="tex2html1167" HREF="node45.html">2.13.3 Logical Pathnames</A>
+<BR> <P>
+<H2><A NAME="SECTION003134000000000000000">2.13.4 Search Lists</A></H2>
+<P>
+<A NAME="8356">&#160;</A>
+<A NAME="searchlists">&#160;</A>
+<P>
+Search lists are an extension to Common Lisp pathnames.  They serve a function
+somewhat similar to Common Lisp logical pathnames, but work more like Unix PATH
+variables.  Search lists are used for two purposes:
+<UL>
+<LI> They provide a convenient shorthand for commonly used directory names,
+and
+<LI> They allow the abstract (directory structure independent) specification
+of file locations in program pathname constants (similar to logical pathnames.)
+</UL>
+Each search list has an associated list of directories (represented as
+pathnames with no name or type component.)  The namestring for any relative
+pathname may be prefixed with ``<i>slist</i><tt>:</tt>'', indicating that the
+pathname is relative to the search list <i>slist</i> (instead of to the current
+working directory.)  Once qualified with a search list, the pathname is no
+longer considered to be relative.
+<P>
+When a search list qualified pathname is passed to a file-system operation such
+as <tt>open</tt>, <tt>load</tt> or <tt>truename</tt>, each directory in the search
+list is successively used as the root of the pathname until the file is
+located.  When a file is written to a search list directory, the file is always
+written to the first directory in the list.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

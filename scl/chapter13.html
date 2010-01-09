@@ -1,0 +1,416 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 13</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 13 - Still More Things You Can Do with Sequences</h1> 
+
+<p>In this chapter we'll meet the most useful sequence functions, and see 
+how to use them.  We'll also reprise earlier admonitions about proper use
+of destructive functions.
+
+<h2>CONCATENATE: new sequences from old</h2>
+
+<p><code>CONCATENATE</code> always creates a new sequence from (of course)
+the concatenation of zero or more argument sequences. You must specify the
+type of the result, and the argument types must be proper subtypes of the
+sequence type.
+
+<pre>
+? (concatenate 'list) <i>; no argument sequences</i> 
+NIL
+? (concatenate 'vector) <i>; no argument sequences</i> 
+#()
+? (concatenate 'list '(1 2 3) '(4 5))
+(1 2 3 4 5)
+? (concatenate 'vector #(1 2 3) #(4 5))
+#(1 2 3 4 5)
+? (concatenate 'list #(1 2 4) '(4 5))
+(1 2 3 4 5)
+? (concatenate 'vector '(1 2 3) #(4 5))
+#(1 2 3 4 5)
+? (concatenate 'list "hello") <i>; string is a subtype of sequence</i> 
+(#\h #\e #\l #\l #\o)
+</pre> 
+
+<h2>ELT and SUBSEQ get what you want from any sequence (also, COPY-SEQ)</h2>
+
+<p>If you need to pick out one element (or a range of elements) from a 
+sequence, you can use <code>ELT</code> (to pick out one element) or 
+<code>SUBSEQ</code> (to pick out a range of elements). But don't use these
+unless you're really sure you can't narrow down the sequence type to a
+vector or list; there are more specific (hence more efficient) accessors
+for the less general types.
+
+<p><code>SUBSEQ</code> makes a copy of a specified portion of a sequence.
+<code>COPY-SEQ</code> is closely related to <code>SUBSEQ</code>, except
+that it copies <em>all</em> of the elements of a sequence.
+
+<pre>
+? (elt '(1 2 3 4 5) 1) <i>; zero-based indexing</i> 
+2
+? (subseq '(1 2 3 4 5) 2) <i>; 3rd element through end</i> 
+(3 4 5)
+? (let ((l '(1 2 3 4 5)))
+    (subseq l 2 (length l))) <i>; same effect as previous</i> 
+? (subseq '(1 2 3 4 5) 0 3) <i>; element at ending index is not copied</i> 
+(1 2 3)
+? (subseq #(#\a #\b #\c #\d #\e) 2 4)
+#(#\c #\d)
+? (copy-seq '(a b c))
+(A B C)
+</pre> 
+
+<h2>REVERSE turns a sequence end-for-end (also, NREVERSE)</h2>
+
+<p><code>REVERSE</code> makes a copy of a sequence, with the order of
+elements reversed.  <code>NREVERSE</code> is the destructive counterpart
+of <code>REVERSE</code>; it is more efficient, but it modifies its
+input argument.
+
+<p><code>REVERSE</code> is commonly used in code similar to the following.
+
+<pre>
+(defun collect-even-numbers (number-list)
+  (let ((result ()))
+    (dolist (number number-list)
+      (when (evenp number)
+        (push number result)))
+    (nreverse result)))
+</pre> 
+
+<p>The <code>DOLIST</code> and <code>PUSH</code> collect even
+numbers on the result list, but they are in the reverse order of
+their original positions on the input list. The final
+<code>NREVERSE</code> puts them back into their original order. This
+is a safe use of the destructive function <code>NREVERSE</code>
+because the <code>RESULT</code> variable can not be shared; it is
+forgotten as soon as control leaves the <code>LET</code> form.
+
+<h2>LENGTH: size counts after all</h2>
+
+<p>There's not much to say about <code>LENGTH</code>. Just remember
+that for lists, <code>LENGTH</code> counts only the elements of the
+top-level list, and not those of any nested lists.
+
+<pre>
+? (length '((1 2 3) (4 5) (6) 7 () 8 9))
+7
+</pre> 
+
+<h2>COUNT: when it's what's inside that matters</h2>
+
+<p>If you find your program filters a sequence only to get the length
+of the result, use <code>COUNT</code> (and related functions
+<code>COUNT-IF</code> and <code>COUNT-IF-NOT</code>) instead.
+
+<pre>
+? (count 3 '(1 3 3 4 2 5 9 8 3 1 9)) <i>; count occurrences</i> 
+3
+? (count-if #'oddp '(1 3 3 4 2 5 9 8 3 1 9)) <i>; count matches to predicate</i> 
+8
+? (count-if-not #'evenp '(1 3 3 4 2 5 9 8 3 1 9)) <i>; count mismatches using predicate</i> 
+8
+</pre> 
+
+<p>These functions accept keyword arguments:
+
+<pre>
+Keyword      Value                                        Default
+-------      -----                                        -------
+:START       starting index (inclusive)                   0
+:END         ending index (exclusive)                     NIL
+:FROM-END    non-NIL to work backwards from end element   NIL
+:KEY         function to select match data from element   NIL
+</pre> 
+
+<p>A <code>NIL</code> value for the <code>:END</code> keyword designates
+a position just past the end of the sequence; since this is an exclusive
+limit, the last element will be processed.  (If you specified the index
+of the last element, the last element would <em>not</em> be processed.)
+
+<p>The <code>:FROM-END</code> keyword is useful in the case that the
+test function has side-effects, and the order of the side-effects is
+important.
+
+<p>When the <code>:KEY</code> argument is not <code>NIL</code>, it should
+be a function of one argument that extracts data from the sequence element.
+For example:
+
+<pre>
+? (count 3 '((1 2 3) (2 3 1) (3 1 2) (2 1 3) (1 3 2) (3 2 1)) :key #'second)
+2
+</pre> 
+
+<p><code>COUNT</code> accepts the additional keyword arguments
+<code>:TEST</code> and <code>:TEST-NOT</code>.  These give you a compact
+way to write a test that involves a second value.  Compare the following
+equivalent forms:
+
+<pre>
+<i>; Using COUNT-IF and LAMBDA</i> 
+(count-if #'(lambda (n) (< 3 n)) '(1 2 3 4 5 6 7))
+
+<i>; Using COUNT and :TEST</i> 
+(count 3 '(1 2 3 4 5 6 7) :test #'<)
+</pre> 
+
+<p>The keyword arguments for comparison predicates also let you
+define the precise meaning of equality. The default predicate is
+<code>EQL</code>, which is true for identical numbers and symbols.
+See <a href="chapter17.html">Chapter 17</a> for more information on
+comparison predicates.
+
+<h2>REMOVE, SUBSTITUTE, and other sequence changers</h2>
+
+<p><code>REMOVE</code> removes all occurrences of a specified
+element from a sequence. 
+
+<pre>
+? (remove 7 '(1 2 3 a b c t nil 7 0 7 7))
+(1 2 3 A B C T NIL 0)
+</pre> 
+
+<p>Keyword arguments are handled in the same way as for
+<code>COUNT</code>. <code>REMOVE-IF</code> and
+<code>REMOVE-IF-NOT</code> are also available; their keyword
+arguments are handled in the same way as for <code>COUNT-IF</code>
+and <code>COUNT-IF-NOT</code>.
+
+<p>A <code>:COUNT</code> keyword argument lets you limit the number
+of matching elements to remove.
+
+<p><code>SUBSTITUTE</code> changes all occurrences of a specified
+element in a sequence to another value.
+
+<pre>
+? (substitute '(q) 7 '(1 2 3 a b c t nil 7 0 7 7))
+(1 2 3 A B C T NIL (Q) 0 (Q) (Q))
+</pre> 
+
+<p>Keyword arguments are handled in the same way as for
+<code>COUNT</code>. <code>SUBSTITUTE-IF</code> and
+<code>SUBSTITUTE-IF-NOT</code> are also available; their keyword
+arguments are handled in the same way as for <code>COUNT-IF</code>
+and <code>COUNT-IF-NOT</code>.
+
+<p>A <code>:COUNT</code> keyword argument lets you limit the number
+of matching elements to substitute.
+
+<p><code>REMOVE-DUPLICATES</code> returns a copy of a sequence, modified
+so that every element is different.
+
+<pre>
+? (remove-duplicates '(1 2 3 a b c (1 2 3) f c g c h b i a j b a k a))
+(1 2 3 (1 2 3) F G C H I J B K A)
+</pre> 
+
+<p>The last copy of each identical element is retained in the result, unless
+you specify the keyword argument <code>:FROM-END T</code>, which causes the
+first copy of each identical element to be retained.
+
+<p><code>REMOVE-DUPLICATES</code> also accepts the same keyword
+arguments as <code>COUNT</code>. The <code>:TEST</code> and
+<code>:TEST-NOT</code> keyword arguments let you specify the
+comparison predicate used to determine whether elements are
+identical. The default predicate is <code>EQL</code>, which is true
+for identical numbers and symbols. See <a
+href="chapter17.html">Chapter 17</a> for more information on
+comparison predicates.
+
+<h2>DELETE, REMOVE-DUPLICATES, DELETE-DUPLICATES, and NSUBSTITUTE.</h2>
+
+<p>Many of the functions in the preceeding section have destructive
+counterparts.  The result of the destructive functions is identical,
+but the input sequence may be destructively modified.
+
+<pre>
+Nondestructive    Destructive
+--------------    -----------
+REMOVE            DELETE
+REMOVE-IF         DELETE-IF
+REMOVE-IF-NOT     DELETE-IF-NOT
+SUBSTITUTE        NSUBSTITUTE
+SUBSTITUTE-IF     NSUBSTITUTE-IF
+SUBSTITUTE-IF-NOT NSUBSTITUTE-IF-NOT
+REMOVE-DUPLICATES DELETE-DUPLICATES
+</pre> 
+
+<blockquote>
+Remember that you <em>must not</em> depend upon the modification
+of the input sequences. The only result guaranteed to be correct is
+the return value of the function.
+</blockquote> 
+
+<h2>FILL and REPLACE</h2> 
+
+<p><code>FILL</code> destructively modifies a sequence, replacing
+every element with a new value. It accepts keyword arguments for
+<code>:START</code> and <code>:END</code> positions; these have the
+same meaning as described earlier in this chapter.  The modified
+sequence is returned as the value of <code>FILL</code>.
+
+<pre>
+? (fill (list 1 1 2 3 5 8) 7)
+(7 7 7 7 7 7)
+? (fill (list 1 1 2 3 5 8) '(a b))
+((A B) (A B) (A B) (A B) (A B) (A B))
+? (fill (list 1 1 2 3 5 8) 7 :start 2 :end 4)
+(1 1 7 7 5 8)
+</pre> 
+
+<p><code>REPLACE</code> copies elements from one sequence into another,
+destructively modifying the target sequence. You can specify the range
+of elements to use in both sequences; the shorter of the two ranges
+determines the number of elements that is actually copied.
+
+<pre>
+? (let ((a (list 1 2 3 4 5 6 7))
+        (b (list 9 8 7 6 5 4 3)))
+    (replace a b))
+
+(9 8 7 6 5 4 3)
+? (let ((a (list 1 2 3 4 5 6 7))
+        (b (list 9 8 7 6 5 4 3)))
+    (replace a b :start1 2))
+
+(1 2 9 8 7 6 5)
+? (let ((a (list 1 2 3 4 5 6 7))
+        (b (list 9 8 7 6 5 4 3)))
+    (replace a b :start1 2 :end1 5))
+(1 2 9 8 7 6 7)
+? (let ((a (list 1 2 3 4 5 6 7))
+        (b (list 9 8 7 6 5 4 3)))
+    (replace a b :start1 2 :end1 5 :start2 3))
+(1 2 6 5 4 6 7)
+? (let ((a (list 1 2 3 4 5 6 7))
+        (b (list 9 8 7 6 5 4 3)))
+    (replace a b :start1 2 :end1 5 :start2 3 :end2 4))
+(1 2 6 4 5 6 7)
+</pre> 
+
+<h2>Locating things in sequences: POSITION, FIND, SEARCH, and MISMATCH</h2>
+
+<p><code>POSITION</code> searches a sequence for a matching element, and
+returns the index of the first match or <code>NIL</code> if no matching 
+element is in the sequence.
+
+<pre>
+? (position #\a "This is all about you, isn't it?")
+8
+? (position #\! "This is all about you, isn't it?")
+NIL
+</pre> 
+
+<code>POSITION</code> accepts the same keyword arguments as
+<code>COUNT</code> (described earlier in this chapter) and has (the
+by now familar) variants <code>POSITION-IF</code> and
+<code>POSITION-IF-NOT</code>.
+
+<p><code>FIND</code> is similar to <code>POSITION</code> except that
+the matching element -- rather than its index in the sequence -- is
+returned if there is a match. As with <code>POSITION</code>, you'll
+find the usual keyword arguments (<code>:FROM-END</code>,
+<code>:START</code>, <code>:END</code>, <code>:KEY</code> -- and for
+the "base" function, <code>:TEST</code> and <code>:TEST-NOT</code>)
+and function variants (i.e. <code>FIND-IF</code> and
+<code>FIND-IF-NOT</code>).
+
+<pre>
+? (find #\a "This is all about you, isn't it?")
+#\a
+? (find #\! "This is all about you, isn't it?")
+NIL
+</pre> 
+
+<p><code>SEARCH</code> returns the starting position of one sequence
+within another sequence, or <code>NIL</code> if no match is found.
+
+<pre>
+? (search "ab" "This is all about you, isn't it?")
+12
+? (search "not so" "This is all about you, isn't it?")
+NIL
+</pre> 
+
+<p><code>SEARCH</code> accepts <code>:FROM-END</code>, <code>:KEY</code>,
+<code>:TEST</code> and <code>:TEST-NOT</code> keyword arguments with the
+usual interpretations. You can specify a range in the substring (the first
+argument) using <code>:START1</code> and <code>:END1</code> keywords, and
+in the target string using the <code>:START2</code> and <code>:END2</code> 
+keywords.
+
+<p><code>MISMATCH</code> is the functional complement to
+<code>SEARCH</code> -- it returns the first position at which the
+substring <em>fails</em> to match a portion of the target string.
+
+<pre>
+? (mismatch "banana" "bananananono")
+6
+? (mismatch "." "...hello")
+1
+? (mismatch "............." "...hello")
+3
+</pre> 
+
+<h2>SORT and MERGE round out the sequence toolkit</h2>
+
+<p><code>SORT</code> destructively sorts a sequence; the order is
+determined by a predicate which you supply.
+
+<pre>
+? (sort (list 9 3 5 4 8 7 1 2 0 6) #'&gt;)
+(9 8 7 6 5 4 3 2 1 0)
+? (sort (list 9 3 5 4 8 7 1 2 0 6) #'&lt;)
+(0 1 2 3 4 5 6 7 8 9)
+</pre> 
+
+<p>The input sequence is destructively modified -- you must use the
+function result. 
+
+<p><code>STABLE-SORT</code> preserves the original order of
+identical elements; <code>SORT</code> may not.
+
+<p>You can sort structured elements (e.g. lists, structures) by using the
+<code>:KEY</code> keyword argment to specify a key extraction function.
+
+<p><code>MERGE</code> combines <em>two</em> input sequences into a
+single result. Elements are interleaved according to the predicate.
+
+Either input sequence may be destructively modified. You must
+designate the type of the result.
+
+<pre>
+? (merge 'vector (list 1 3 5 9 8) (vector 2 6 4 7 0) #'&gt;)
+#(2 6 4 7 1 3 5 9 8 0)
+? (merge 'list (list 1 3 5 9 8) (vector 2 6 4 7 0) #'&lt;)
+(1 2 3 5 6 4 7 0 9 8)
+? (merge 'vector (list 1 3 5 8 9) (vector 0 2 4 6 7) #'&gt;)
+#(1 3 5 8 9 0 2 4 6 7)
+? (merge 'list (list 1 3 5 8 9) (vector 0 2 4 6 7) #'&lt;)
+(0 1 2 3 4 5 6 7 8 9)
+</pre> 
+
+<p>Note that -- in the general case -- <code>MERGE</code> does
+<em>not</em> sort the catenation of its arguments. The predicate is
+used to select from one or the other of the input sequences; input
+from the selected sequence continues until the sense of the
+predicate changes. Look at the examples until you understand this.
+
+<p><code>MERGE</code> accepts a <code>:KEY</code> keyword argument
+having the conventional meaning.
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter12.html">Chapter 12</a> | Chapter 13 | <a href="chapter14.html">Chapter 14</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>6.5 System Area Pointers</TITLE>
+<META NAME="description" CONTENT="6.5 System Area Pointers">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3269" HREF="node205.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3267" HREF="node199.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3261" HREF="node203.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3271" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3272" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3270" HREF="node205.html">6.6 Unix System Calls</A>
+<B>Up:</B> <A NAME="tex2html3268" HREF="node199.html">6 UNIX Interface</A>
+<B> Previous:</B> <A NAME="tex2html3262" HREF="node203.html">6.4 Type Translations</A>
+<BR> <P>
+<H1><A NAME="SECTION00750000000000000000">6.5 System Area Pointers</A></H1>
+<P>
+<A NAME="systemareapointers">&#160;</A>
+<P>
+<A NAME="10933">&#160;</A><A NAME="10934">&#160;</A><A NAME="10935">&#160;</A>
+Note that in some cases an address is represented by a Lisp integer, and in
+other cases it is represented by a real pointer.  Pointers are usually used
+when an object in the current address space is being referred to.  The MACH
+virtual memory manipulation calls must use integers, since in principle the
+address could be in any process, and Lisp cannot abide random pointers.
+Because these types are represented differently in Lisp, one must explicitly
+coerce between these representations.
+<P>
+System Area Pointers (SAPs) provide a mechanism that bypasses the
+Alien type system and accesses virtual memory directly.  A SAP is a
+raw byte pointer into the <tt>lisp</tt> process address space.  SAPs are
+represented with a pointer descriptor, so SAP creation can cause
+consing.  However, the compiler uses a non-descriptor representation
+for SAPs when possible, so the consing overhead is generally minimal.
+See section&nbsp;<A HREF="node169.html#nondescriptor">5.11.2</A>.
+<P>
+<b>[Function]</b><BR> 
+<tt> system:sap-int</tt> <em> <i>sap</i></em><BR> 
+  <tt>system:int-sap</tt> <EM></EM><i>int</i><BR>
+<P>
+  The function <tt>sap-int</tt> is used to generate an integer
+  corresponding to the system area pointer, suitable for passing to
+  the kernel interfaces (which want all addresses specified as
+  integers).  The function <tt>int-sap</tt> is used to do the opposite
+  conversion.  The integer representation of a SAP is the byte offset
+  of the SAP from the start of the address space.
+<P>
+<b>[Function]</b><BR> 
+<tt> system:sap+</tt> <em> <i>sap</i> <i>offset</i></em><BR>
+<P>
+  This function adds a byte <i>offset</i> to <i>sap</i>, returning a new
+  SAP.
+<P>
+<b>[Function]</b><BR> 
+<tt> system:sap-ref-8</tt> <em> <i>sap</i> <i>offset</i></em><BR> 
+  <tt>system:sap-ref-16</tt> <EM></EM><i>sap</i> </EM><i>offset</i><BR> 
+  <tt>system:sap-ref-32</tt> <EM></EM><i>sap</i> </EM><i>offset</i><BR>
+<P>
+  These functions return the 8, 16 or 32 bit unsigned integer at
+  <i>offset</i> from <i>sap</i>.  The <i>offset</i> is always a byte
+  offset, regardless of the number of bits accessed.  <tt>setf</tt> may
+  be used with the these functions to deposit values into virtual
+  memory.
+<P>
+<b>[Function]</b><BR> 
+<tt> system:signed-sap-ref-8</tt> <em> <i>sap</i> <i>offset</i></em><BR> 
+  <tt>system:signed-sap-ref-16</tt> <EM></EM><i>sap</i> </EM><i>offset</i><BR> 
+  <tt>system:signed-sap-ref-32</tt> <EM></EM><i>sap</i> </EM><i>offset</i><BR>
+<P>
+  These functions are the same as the above unsigned operations,
+  except that they sign-extend, returning a negative number if the
+  high bit is set.
+<P>
+<HR><A NAME="tex2html3269" HREF="node205.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3267" HREF="node199.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3261" HREF="node203.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3271" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3272" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3270" HREF="node205.html">6.6 Unix System Calls</A>
+<B>Up:</B> <A NAME="tex2html3268" HREF="node199.html">6 UNIX Interface</A>
+<B> Previous:</B> <A NAME="tex2html3262" HREF="node203.html">6.4 Type Translations</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

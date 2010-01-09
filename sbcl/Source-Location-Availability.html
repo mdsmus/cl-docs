@@ -1,0 +1,90 @@
+<html lang="en">
+<head>
+<title>Source Location Availability - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Source-Location-Printing.html#Source-Location-Printing" title="Source Location Printing">
+<link rel="prev" href="How-the-Source-is-Found.html#How-the-Source-is-Found" title="How the Source is Found">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Source-Location-Availability"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="How-the-Source-is-Found.html#How-the-Source-is-Found">How the Source is Found</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Source-Location-Printing.html#Source-Location-Printing">Source Location Printing</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">4.5.2 Source Location Availability</h4>
+
+<p><a name="index-Debug-optimization-quality-92"></a><a name="index-Block_002c-basic-93"></a><a name="index-Block_002c-start-location-94"></a>
+Source location information is only available when the <code>debug</code>
+optimization quality is at least <code>2</code>.  If source location
+information is unavailable, the source commands will give an error
+message.
+
+   <p>If source location information is available, but the source location
+is unknown because of an interrupt or unexpected hardware error
+(see <a href="Unknown-Locations-and-Interrupts.html#Unknown-Locations-and-Interrupts">Unknown Locations and Interrupts</a>), then the command will
+print:
+
+<pre class="example">     Unknown location: using block start.
+</pre>
+   <p>and then proceed to print the source location for the start of the
+<em>basic block</em> enclosing the code location.  It's a bit
+complicated to explain exactly what a basic block is, but here are
+some properties of the block start location:
+
+     <ul>
+<li>The block start location may be the same as the true location.
+
+     <li>The block start location will never be later in the
+program's flow of control than the true location.
+
+     <li>No conditional control structures (such as <code>if</code>,
+<code>cond</code>, <code>or</code>) will intervene between the block start and the
+true location (but note that some conditionals present in the original
+source could be optimized away.)  Function calls <em>do not</em> end
+basic blocks.
+
+     <li>The head of a loop will be the start of a block.
+
+     <li>The programming language concept of &ldquo;block structure&rdquo; and the
+Lisp <code>block</code> special form are totally unrelated to the compiler's
+basic block.
+
+   </ul>
+
+   <p>In other words, the true location lies between the printed location and the
+next conditional (but watch out because the compiler may have changed the
+program on you.)
+
+   </body></html>
+

@@ -1,0 +1,180 @@
+<html lang="en">
+<head>
+<title>Step-By-Step Example of the Foreign Function Interface - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Foreign-Function-Interface.html#Foreign-Function-Interface" title="Foreign Function Interface">
+<link rel="prev" href="Foreign-Function-Calls.html#Foreign-Function-Calls" title="Foreign Function Calls">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Step-By-Step-Example-of-the-Foreign-Function-Interface"></a>
+<a name="Step_002dBy_002dStep-Example-of-the-Foreign-Function-Interface"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Foreign-Function-Calls.html#Foreign-Function-Calls">Foreign Function Calls</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Foreign-Function-Interface.html#Foreign-Function-Interface">Foreign Function Interface</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">7.8 Step-By-Step Example of the Foreign Function Interface</h3>
+
+<p>This section presents a complete example of an interface to a somewhat
+complicated C function.
+
+   <p>Suppose you have the following C function which you want to be able to
+call from Lisp in the file <samp><span class="file">test.c</span></samp>
+
+<pre class="example">     struct c_struct
+     {
+       int x;
+       char *s;
+     };
+     
+     struct c_struct *c_function (i, s, r, a)
+         int i;
+         char *s;
+         struct c_struct *r;
+         int a[10];
+     {
+       int j;
+       struct c_struct *r2;
+     
+       printf("i = %d\n", i);
+       printf("s = %s\n", s);
+       printf("r-&gt;x = %d\n", r-&gt;x);
+       printf("r-&gt;s = %s\n", r-&gt;s);
+       for (j = 0; j &lt; 10; j++) printf("a[%d] = %d.\n", j, a[j]);
+       r2 = (struct c_struct *) malloc (sizeof(struct c_struct));
+       r2-&gt;x = i + 5;
+       r2-&gt;s = "a C string";
+       return(r2);
+     };
+</pre>
+   <p>It is possible to call this C function from Lisp using the file
+<samp><span class="file">test.lisp</span></samp> containing
+
+<pre class="lisp">     (cl:defpackage "TEST-C-CALL" (:use "CL" "SB-ALIEN" "SB-C-CALL"))
+     (cl:in-package "TEST-C-CALL")
+     
+     ;;; Define the record C-STRUCT in Lisp.
+     (define-alien-type nil
+         (struct c-struct
+                 (x int)
+                 (s c-string)))
+     
+     ;;; Define the Lisp function interface to the C routine.  It returns a
+     ;;; pointer to a record of type C-STRUCT.  It accepts four parameters:
+     ;;; I, an int; S, a pointer to a string; R, a pointer to a C-STRUCT
+     ;;; record; and A, a pointer to the array of 10 ints.
+     ;;;
+     ;;; The INLINE declaration eliminates some efficiency notes about heap
+     ;;; allocation of alien values.
+     (declaim (inline c-function))
+     (define-alien-routine c-function
+         (* (struct c-struct))
+       (i int)
+       (s c-string)
+       (r (* (struct c-struct)))
+       (a (array int 10)))
+     
+     ;;; a function which sets up the parameters to the C function and
+     ;;; actually calls it
+     (defun call-cfun ()
+       (with-alien ((ar (array int 10))
+                    (c-struct (struct c-struct)))
+         (dotimes (i 10)                     ; Fill array.
+           (setf (deref ar i) i))
+         (setf (slot c-struct 'x) 20)
+         (setf (slot c-struct 's) "a Lisp string")
+     
+         (with-alien ((res (* (struct c-struct))
+                           (c-function 5 "another Lisp string" (addr c-struct) ar)))
+           (format t "~&amp;amp;back from C function~%")
+           (multiple-value-prog1
+               (values (slot res 'x)
+                       (slot res 's))
+     
+             ;; Deallocate result. (after we are done referring to it:
+             ;; "Pillage, *then* burn.")
+             (free-alien res)))))
+</pre>
+   <p>To execute the above example, it is necessary to compile the C
+routine, e.g.: &lsquo;<samp><span class="samp">cc -c test.c &amp;&amp; ld -shared -o test.so test.o</span></samp>&rsquo; (In
+order to enable incremental loading with some linkers, you may need to
+say &lsquo;<samp><span class="samp">cc -G 0 -c test.c</span></samp>&rsquo;)
+
+   <p>Once the C code has been compiled, you can start up Lisp and load it in:
+&lsquo;<samp><span class="samp">sbcl</span></samp>&rsquo;.  Lisp should start up with its normal prompt.
+
+   <p>Within Lisp, compile the Lisp file. (This step can be done
+separately. You don't have to recompile every time.) 
+&lsquo;<samp><span class="samp">(compile-file "test.lisp")</span></samp>&rsquo;
+
+   <p>Within Lisp, load the foreign object file to define the necessary
+symbols: &lsquo;<samp><span class="samp">(load-shared-object "test.so")</span></samp>&rsquo;.
+
+   <p>Now you can load the compiled Lisp (&ldquo;fasl&rdquo;) file into Lisp:
+&lsquo;<samp><span class="samp">(load "test.fasl")</span></samp>&rsquo;
+And once the Lisp file is loaded, you can call the
+Lisp routine that sets up the parameters and calls the C
+function:
+&lsquo;<samp><span class="samp">(test-c-call::call-cfun)</span></samp>&rsquo;
+
+   <p>The C routine should print the following information to standard output:
+
+<pre class="example">     i = 5
+     s = another Lisp string
+     r-&gt;x = 20
+     r-&gt;s = a Lisp string
+     a[0] = 0.
+     a[1] = 1.
+     a[2] = 2.
+     a[3] = 3.
+     a[4] = 4.
+     a[5] = 5.
+     a[6] = 6.
+     a[7] = 7.
+     a[8] = 8.
+     a[9] = 9.
+</pre>
+   <p>After return from the C function,
+the Lisp wrapper function should print the following output:
+
+<pre class="example">     back from C function
+</pre>
+   <p>And upon return from the Lisp wrapper function,
+before the next prompt is printed, the
+Lisp read-eval-print loop should print the following return values:
+
+<pre class="example">     10
+     "a C string"
+</pre>
+   </body></html>
+

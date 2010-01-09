@@ -1,0 +1,73 @@
+<html lang="en">
+<head>
+<title>Errors During Macroexpansion - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Compiler-Errors.html#Compiler-Errors" title="Compiler Errors">
+<link rel="prev" href="Type-Errors-at-Compile-Time.html#Type-Errors-at-Compile-Time" title="Type Errors at Compile Time">
+<link rel="next" href="Read-Errors.html#Read-Errors" title="Read Errors">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Errors-During-Macroexpansion"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Read-Errors.html#Read-Errors">Read Errors</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Type-Errors-at-Compile-Time.html#Type-Errors-at-Compile-Time">Type Errors at Compile Time</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Compiler-Errors.html#Compiler-Errors">Compiler Errors</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">3.4.2 Errors During Macroexpansion</h4>
+
+<p><a name="index-Macroexpansion_002c-errors-during-53"></a>
+The compiler handles errors that happen during macroexpansion, turning
+them into compiler errors. If you want to debug the error (to debug a
+macro), you can set <code>*break-on-signals*</code> to <code>error</code>. For
+example, this definition:
+
+<pre class="lisp">     (defun foo (e l)
+       (do ((current l (cdr current))
+            ((atom current) nil))
+           (when (eq (car current) e) (return current))))
+</pre>
+   <p>gives this error:
+
+<pre class="example">     ; in: DEFUN FOO
+     ;     (DO ((CURRENT L (CDR CURRENT))
+     ;        ((ATOM CURRENT) NIL))
+     ;       (WHEN (EQ (CAR CURRENT) E) (RETURN CURRENT)))
+     ;
+     ; caught ERROR:
+     ;   (in macroexpansion of (DO # #))
+     ;   (hint: For more precise location, try *BREAK-ON-SIGNALS*.)
+     ;   DO step variable is not a symbol: (ATOM CURRENT)
+</pre>
+   </body></html>
+

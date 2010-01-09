@@ -1,0 +1,228 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 15</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 15 - Closures</h1> 
+
+<P>In this chapter we'll expand upon the discussion of closures that
+we started in <a href="chapter11.html#closures">Chapter 11</a>.  We'll
+see again how (and why) closures capture free variables for use in 
+other execution contexts, then we'll see some practical applications.
+We'll close this chapter with a look at functions that return functions.
+
+<h2>Is it a function of the lifetime, or the lifetime of a function?</h2>
+
+<p>Common Lisp does not expose closures per se. Recall from <a
+href="chapter11.html#closures">Chapter 11</a> that a closure is a
+collection of closed-over variables retained by a function. (A
+closed-over variable is a variable found "free" in the function;
+this gets "captured" by the closure. We saw some examples of this in
+<a href="chapter11.html#closures">Chapter 11</a>; we'll review the
+details in the next section, in case you've forgotten.) For this
+reason, Lisp programmers tend to refer to "a function having
+closed-over variables" as simply "a closure." Or maybe they call it
+that because it saves them nine syllables.
+
+<p>A closure has to be associated with a function, so it must have
+the same lifetime -- or extent -- as the function. But all of the
+closed-over variables come along for the ride -- a closed-over
+variable has the same extent as the closure. This means that you can
+close over a lexical variable, which would normally have lexical
+extent, and give that variable indefinite extent. This is a very
+useful technique, as we'll see shortly.
+
+<h2>How to spot a free variable, and what to do about it.</h2>
+
+<p>A variable is <em>free</em> within a function (or within any
+form, for that matter) if there is no binding occurrence of its name
+within the lexical scope -- the textual bounds, more or less -- of
+the function. A binding occurrence is an occurrence of the name
+that (according to the definition of the form that includes the
+name) associates storage with the name.
+
+<p>A free variable must be found in one of two places. Either the
+function is textually wrapped within a form that provides a binding
+occurrence of the variable, or the variable is <code>special</code>
+(review <a href="chapter08.html#special">Chapter 8</a>) and
+contained in the global environment. If a free variable is not found
+in one of these two places, it is <em>unbound</em> (i.e. has no
+storage associated with the name) and will cause an error when
+referenced at runtime.
+
+<h2>Using closures to keep private, secure information.</h2>
+
+<p>If you close over a lexical variable, that variable is accessible
+<em>only</em> from within the closure. You can use this to your
+advantage to store information that is truly private, accessible
+only to functions that have a closure containing your private
+variable(s).
+
+<pre>
+? (let ((password nil)
+        (secret nil))
+    (defun set-password (new-passwd)
+      (if password
+        '|Can't - already set|
+        (setq password new-passwd)))
+    (defun change-password (old-passwd new-passwd)
+      (if (eq old-passwd password)
+        (setq password new-passwd)
+        '|Not changed|))
+    (defun set-secret (passwd new-secret)
+      (if (eq passwd password)
+        (setq secret new-secret)
+        '|Wrong password|))
+    (defun get-secret (passwd)
+      (if (eq passwd password)
+        secret
+        '|Sorry|)))
+GET-SECRET
+? (get-secret 'sesame)
+|Sorry|
+? (set-password 'valentine)
+SECRET
+? (set-secret 'sesame 'my-secret)
+|Wrong password|
+? (set-secret 'valentine 'my-secret)
+MY-SECRET
+? (get-secret 'fubar)
+|Sorry|
+? (get-secret 'valentine)
+MY-SECRET
+? (change-password 'fubar 'new-password)
+|Not changed|
+? (change-password 'valentine 'new-password)
+NEW-PASSWORD
+? (get-secret 'valentine)
+|Sorry|
+<i>; The closed-over lexical variables aren't in the global environment</i> 
+? password
+Error: unbound variable
+? secret
+Error: unbound variable
+<i>; The global environment doesn't affect the closed-over variables</i> 
+? (setq password 'cheat)
+CHEAT
+? (get-secret 'cheat)
+|Sorry|
+</pre> 
+
+<h2>Functions that return functions, and how they differ from macros.</h2>
+
+<p>The preceding example is only good for keeping one secret,
+because every time we evaluate the outer <code>LET</code> form we
+redefine all of the functions that close over our "private"
+variables. If we want to eliminate our dependence upon the global
+namespace for functions to manipulate our closed-over variables,
+we're going to have to find a way to create new closed-over
+variables and return a function that we can save and later use to
+manipulate the variables.  Something like this will work:
+
+<pre>
+? (defun make-secret-keeper ()
+    (let ((password nil)
+          (secret nil))
+      #'(lambda (operation &amp;rest arguments)
+          (ecase operation
+            (set-password
+             (let ((new-passwd (first arguments)))
+               (if password
+                 '|Can't - already set|
+                 (setq password new-passwd))))
+            (change-password
+             (let ((old-passwd (first arguments))
+                   (new-passwd (second arguments)))
+               (if (eq old-passwd password)
+                 (setq password new-passwd)
+                 '|Not changed|)))
+            (set-secret
+             (let ((passwd (first arguments))
+                   (new-secret (second arguments)))
+               (if (eq passwd password)
+                 (setq secret new-secret)
+                 '|Wrong password|)))
+            (get-secret
+             (let ((passwd (first arguments)))
+               (if (eq passwd password)
+                 secret
+                 '|Sorry|)))))))
+MAKE-SECRET-KEEPER
+? (defparameter secret-1 (make-secret-keeper))
+SECRET-1
+? secret-1
+#&lt;LEXICAL-CLOSURE #x36AE056&gt;
+? (funcall secret-1 'set-password 'valentine)
+VALENTINE
+? (funcall secret-1 'set-secret 'valentine 'deep-dark)
+DEEP-DARK
+? (defparameter secret-2 (make-secret-keeper))
+SECRET-2
+? (funcall secret-2 'set-password 'bloody)
+BLOODY
+? (funcall secret-2 'set-secret 'bloody 'mysterious)
+MYSTERIOUS
+? (funcall secret-2 'get-secret 'valentine)
+|Wrong password|
+? (funcall secret-1 'get-secret 'valentine)
+DEEP-DARK
+</pre> 
+
+<p>The <code>ECASE</code> form is an <em>exhaustive case</em>
+statement. In our program, the <code>OPERATION</code> must be found
+in one of the <code>ECASE</code> clauses, or Lisp will signal an
+error.
+
+<p>The <code>#'(LAMBDA ...</code> form creates a closure over the
+free variables <code>PASSWORD</code> and <code>SECRET</code>. Each
+time we evaluate <code>MAKE-SECRET-KEEPER</code>, the outermost
+<code>LET</code> form creates new bindings for these variables; the 
+closure is then created and returned as the result of the 
+<code>MAKE-SECRET-KEEPER</code> function.
+
+<blockquote>
+In pre-ANSI Common Lisp, <code>LAMBDA</code> is merely a symbol
+that is recognized as a marker to define a lambda expression.
+By itself, <code>LAMBDA</code> does not create a closure; that is
+the function of the <code>#'</code> reader macro (which expands
+into a <code>(FUNCTION ...</code> form).
+
+<p>ANSI Common Lisp defines a <code>LAMBDA</code> macro that expands
+into <code>(FUNCTION (LAMBDA ...</code>, which you can use in place
+of <code>#'(LAMBDA</code> wherever it appears in this example. For
+backward compatibility with pre-ANSI Common Lisp implementations,
+you should always write <code>#'(LAMBDA ...</code> -- the redundant
+<code>(FUNCTION ...</code> in the expansion will do no harm.
+</blockquote> 
+
+<p>Within each <code>ECASE</code> clause we extract arguments from
+the <code>&amp;REST</code> variable <code>ARGUMENTS</code> and then do
+exactly the same processing as in our earlier example.
+
+<p>Once we have invoked <code>MAKE-SECRET-KEEPER</code> and saved
+the resultant closure, we can <code>FUNCALL</code> the closure,
+passing the operation symbol and any additional arguments. Note that
+each closure created by <code>MAKE-SECRET-KEEPER</code> is
+completely independent; we've therefore achieved the goal of being
+able to keep multiple secrets.
+
+<p>Functions that return closures are different from macros. A macro
+is a function that produces a form; the form is then evaluated to
+produce a result. A function that returns a closure simply returns
+an object: the closure. The returned closure is <em>not</em>
+automatically evaluated by the Lisp evaluator.
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter14.html">Chapter 14</a> | Chapter 15 | <a href="chapter16.html">Chapter 16</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.7.6 Context Declaration Example</TITLE>
+<META NAME="description" CONTENT="5.7.6 Context Declaration Example">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2635" HREF="node155.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2633" HREF="node148.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2629" HREF="node153.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2637" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2638" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2636" HREF="node155.html">5.8 Inline Expansion</A>
+<B>Up:</B> <A NAME="tex2html2634" HREF="node148.html">5.7 Block Compilation</A>
+<B> Previous:</B> <A NAME="tex2html2630" HREF="node153.html">5.7.5 Context Declarations</A>
+<BR> <P>
+<H2><A NAME="SECTION00676000000000000000">5.7.6 Context Declaration Example</A></H2>
+<P>
+Here is a more complex example of <tt>with-compilation-unit</tt> options:
+<BLOCKQUOTE> <PRE>:optimize '(optimize (speed 2) (space 2) (inhibit-warnings 2)
+                     (debug 1) (safety 0))
+:optimize-interface '(optimize-interface (safety 1) (debug 1))
+:context-declarations
+'(((:or :external (:and (:match &quot;%&quot;) (:match &quot;SET&quot;)))
+   (declare (optimize-interface (safety 2))))
+  ((:or (:and :external :macro)
+        (:match &quot;$PARSE-&quot;))
+   (declare (optimize (safety 2)))))
+</PRE> </BLOCKQUOTE>
+The <tt>optimize</tt> and <tt>extensions:optimize-interface</tt>
+declarations (see section&nbsp;<A HREF="node102.html#optimizedeclaration">4.7.1</A>) set up the global
+compilation policy.  The bodies of functions are to be compiled
+completely unsafe (<tt>safety 0</tt>), but argument count and weakened
+argument type checking is to be done when a function is called
+(<tt>speed 2 safety 1</tt>).
+<P>
+The first declaration specifies that all functions that are external
+or whose names contain both ``<tt>%</tt>'' and ``<tt>SET</tt>'' are to be
+compiled compiled with completely safe interfaces (<tt>safety 2</tt>).
+The reason for this particular <tt>:match</tt> rule is that <tt>setf</tt>
+inverse functions in this system tend to have both strings in their
+name somewhere.  We want <tt>setf</tt> inverses to be safe because they
+are implicitly called by users even though their name is not exported.
+<P>
+The second declaration makes external macros or functions whose names
+start with ``<tt>PARSE-</tt>'' have safe bodies (as well as interfaces).
+This is desirable because a syntax error in a macro may cause a type
+error inside the body.  The <tt>:match</tt> rule is used because macros
+often have auxiliary functions whose names begin with this string.
+<P>
+This particular example is used to build part of the standard CMU Common Lisp
+system.  Note however, that context declarations must be set up
+according to the needs and coding conventions of a particular system;
+different parts of CMU Common Lisp are compiled with different context
+declarations, and your system will probably need its own declarations.
+In particular, any use of the <tt>:match</tt> option depends on naming
+conventions used in coding.
+<P>
+<HR><A NAME="tex2html2635" HREF="node155.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2633" HREF="node148.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2629" HREF="node153.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2637" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2638" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2636" HREF="node155.html">5.8 Inline Expansion</A>
+<B>Up:</B> <A NAME="tex2html2634" HREF="node148.html">5.7 Block Compilation</A>
+<B> Previous:</B> <A NAME="tex2html2630" HREF="node153.html">5.7.5 Context Declarations</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

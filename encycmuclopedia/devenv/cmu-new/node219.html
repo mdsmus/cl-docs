@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>7.5.1 Without Object Sets Example</TITLE>
+<META NAME="description" CONTENT="7.5.1 Without Object Sets Example">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3456" HREF="node220.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3454" HREF="node218.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3448" HREF="node218.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3458" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3459" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3457" HREF="node220.html">7.5.2 With Object Sets </A>
+<B>Up:</B> <A NAME="tex2html3455" HREF="node218.html">A SERVE-EVENT Example</A>
+<B> Previous:</B> <A NAME="tex2html3449" HREF="node218.html">A SERVE-EVENT Example</A>
+<BR> <P>
+<H2><A NAME="SECTION00851000000000000000">7.5.1 Without Object Sets Example</A></H2>
+<P>
+This example defines an input handler for a CLX display connection.  It only
+recognizes <tt>:key-press</tt> events.  The body of the example loops over
+<tt>system:serve-event</tt> to get input.
+<P>
+<BLOCKQUOTE> <PRE>(in-package &quot;SERVER-EXAMPLE&quot;)
+<P>
+(defun my-input-handler (display)
+  (xlib:event-case (display :timeout 0)
+    (:key-press (event-window code state)
+     (format t &quot;KEY-PRESSED (Window = &nbsp;D) = &nbsp;S.&nbsp;(xlib:window-id event-window)
+             ;; See Hemlock Command Implementor's Manual for convenient
+             ;; input mapping function.
+             (ext:translate-character display code state))
+      ;; Make XLIB:EVENT-CASE discard the event.
+      t)))
+</PRE> </BLOCKQUOTE>
+<BLOCKQUOTE> <PRE>(defun server-example ()
+  &quot;An example of using the SYSTEM:SERVE-EVENT function and object sets to
+   handle CLX events.&quot;
+  (let* ((display (ext:open-clx-display))
+         (screen (display-default-screen display))
+         (black (screen-black-pixel screen))
+         (white (screen-white-pixel screen))
+         (window (create-window :parent (screen-root screen)
+                                :x 0 :y 0 :width 200 :height 200
+                                :background white :border black
+                                :border-width 2
+                                :event-mask
+                                (xlib:make-event-mask :key-press))))
+    ;; Wrap code in UNWIND-PROTECT, so we clean up after ourselves.
+    (unwind-protect
+        (progn
+          ;; Enable event handling on the display.
+          (ext:enable-clx-event-handling display #'my-input-handler)
+          ;; Map the windows to the screen.
+          (map-window window)
+          ;; Make sure we send all our requests.
+          (display-force-output display)
+          ;; Call serve-event for 100,000 events or immediate timeouts.
+          (dotimes (i 100000) (system:serve-event)))
+      ;; Disable event handling on this display.
+      (ext:disable-clx-event-handling display)
+      ;; Get rid of the window.
+      (destroy-window window)
+      ;; Pick off any events the X server has already queued for our
+      ;; windows, so we don't choke since SYSTEM:SERVE-EVENT is no longer
+      ;; prepared to handle events for us.
+      (loop
+       (unless (deleting-window-drop-event *display* window)
+        (return)))
+      ;; Close the display.
+      (xlib:close-display display))))
+<P>
+(defun deleting-window-drop-event (display win)
+  &quot;Check for any events on win.  If there is one, remove it from the
+   event queue and return t; otherwise, return nil.&quot;
+  (xlib:display-finish-output display)
+  (let ((result nil))
+    (xlib:process-event
+     display :timeout 0
+     :handler #'(lambda (&amp;key event-window &amp;allow-other-keys)
+                  (if (eq event-window win)
+                      (setf result t)
+                      nil)))
+    result))
+</PRE> </BLOCKQUOTE><BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

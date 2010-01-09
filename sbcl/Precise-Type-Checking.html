@@ -1,0 +1,66 @@
+<html lang="en">
+<head>
+<title>Precise Type Checking - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Handling-of-Types.html#Handling-of-Types" title="Handling of Types">
+<link rel="prev" href="Declarations-as-Assertions.html#Declarations-as-Assertions" title="Declarations as Assertions">
+<link rel="next" href="Getting-Existing-Programs-to-Run.html#Getting-Existing-Programs-to-Run" title="Getting Existing Programs to Run">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Precise-Type-Checking"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Getting-Existing-Programs-to-Run.html#Getting-Existing-Programs-to-Run">Getting Existing Programs to Run</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Declarations-as-Assertions.html#Declarations-as-Assertions">Declarations as Assertions</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Handling-of-Types.html#Handling-of-Types">Handling of Types</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">3.2.2 Precise Type Checking</h4>
+
+<p><a name="index-Precise-type-checking-46"></a><a name="index-Type-checking_002c-precise-47"></a>
+Precise checking means that the check is done as though <code>typep</code>
+had been called with the exact type specifier that appeared in the
+declaration.
+
+   <p>If a variable is declared to be <code>(integer 3 17)</code> then its value
+must always be an integer between <code>3</code> and <code>17</code>. If multiple
+type declarations apply to a single variable, then all the
+declarations must be correct; it is as though all the types were
+intersected producing a single <code>and</code> type specifier.
+
+   <p>To gain maximum benefit from the compiler's type checking, you should
+always declare the types of function arguments and structure slots as
+precisely as possible. This often involves the use of <code>or</code>,
+<code>member</code>, and other list-style type specifiers.
+
+   </body></html>
+

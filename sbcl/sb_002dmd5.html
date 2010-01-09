@@ -1,0 +1,101 @@
+<html lang="en">
+<head>
+<title>sb-md5 - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Contributed-Modules.html#Contributed-Modules" title="Contributed Modules">
+<link rel="prev" href="sb_002dposix.html#sb_002dposix" title="sb-posix">
+<link rel="next" href="sb_002drotate_002dbyte.html#sb_002drotate_002dbyte" title="sb-rotate-byte">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="sb-md5"></a>
+<a name="sb_002dmd5"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="sb_002drotate_002dbyte.html#sb_002drotate_002dbyte">sb-rotate-byte</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="sb_002dposix.html#sb_002dposix">sb-posix</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Contributed-Modules.html#Contributed-Modules">Contributed Modules</a>
+<hr>
+</div>
+
+<h3 class="section">15.4 sb-md5</h3>
+
+<p><a name="index-Hashing_002c-cryptographic-613"></a>
+The <code>sb-md5</code> module implements the RFC1321 MD5 Message Digest
+Algorithm. [FIXME cite]
+
+   <p><a name="Function-sb_002dmd5_003amd5sum_002dfile"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-md5:md5sum-file</b><var> pathname<a name="index-sb_002dmd5_003amd5sum_002dfile-614"></a></var><br>
+<blockquote><p><a name="index-sb_002dmd5_003amd5sum_002dfile-615"></a>Calculate the MD5 message-digest of the file designated by
+pathname. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dmd5_003amd5sum_002dsequence"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-md5:md5sum-sequence</b><var> sequence &amp;key start end<a name="index-sb_002dmd5_003amd5sum_002dsequence-616"></a></var><br>
+<blockquote><p><a name="index-sb_002dmd5_003amd5sum_002dsequence-617"></a>Calculate the MD5 message-digest of data bounded by <code>start</code> and <code>end</code>
+in <code>sequence</code> , which must be a vector with element-type (UNSIGNED-BYTE
+8). 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dmd5_003amd5sum_002dstream"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-md5:md5sum-stream</b><var> stream<a name="index-sb_002dmd5_003amd5sum_002dstream-618"></a></var><br>
+<blockquote><p><a name="index-sb_002dmd5_003amd5sum_002dstream-619"></a>Calculate an MD5 message-digest of the contents of <code>stream</code>, whose
+element-type has to be (UNSIGNED-BYTE 8). 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dmd5_003amd5sum_002dstring"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-md5:md5sum-string</b><var> string &amp;key external-format start end<a name="index-sb_002dmd5_003amd5sum_002dstring-620"></a></var><br>
+<blockquote><p><a name="index-sb_002dmd5_003amd5sum_002dstring-621"></a>Calculate the MD5 message-digest of the binary representation
+of <code>string</code> (as octets) in <code>external-format</code>. The boundaries <code>start</code>
+and <code>end</code> refer to character positions in the string, not to octets
+in the resulting binary representation. 
+</p></blockquote></div>
+
+<h4 class="subsection">15.4.1 Credits</h4>
+
+<p>The implementation for CMUCL was largely done by Pierre Mai, with help
+from members of the <code>cmucl-help</code> mailing list.  Since CMUCL and
+SBCL are similar in many respects, it was not too difficult to extend
+the low-level implementation optimizations for CMUCL to SBCL. 
+Following this, SBCL's compiler was extended to implement efficient
+compilation of modular arithmetic (see <a href="Modular-arithmetic.html#Modular-arithmetic">Modular arithmetic</a>), which
+enabled the implementation to be expressed in portable arithmetical
+terms, apart from the use of <code>rotate-byte</code> for bitwise rotation. 
+<a name="index-rotate_002dbyte-622"></a>
+
+   </body></html>
+

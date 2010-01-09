@@ -1,0 +1,35 @@
+<html
+  ><head
+    ><title
+      >Function GEN-STRING</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Function: GEN-STRING</h1
+        ><div class="contents"
+          ><h2
+            >Source</h2
+          ><pre class="code"
+            >(defun gen-string (&amp;key
+                   (length (gen-integer :min 0 :max 80))
+                   (elements (gen-character))
+                   (element-type 'character))
+  (lambda ()
+    (loop
+       with length = (funcall length)
+       with string = (make-string length :element-type element-type)
+       for index below length
+       do (setf (aref string index) (funcall elements))
+       finally (return string))))</pre
+          ><a href="../Checks.html#function_005FIT.BESE.FIVEAM_003A_003AGEN-STRING"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

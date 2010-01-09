@@ -1,0 +1,31 @@
+<html
+  ><head
+    ><title
+      >Function GEN-LIST</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Function: GEN-LIST</h1
+        ><div class="contents"
+          ><h2
+            >Source</h2
+          ><pre class="code"
+            >(defun gen-list (&amp;key
+                 (length (gen-integer :min 0 :max 10))
+                 (elements (gen-integer :min -10 :max 10)))
+  (lambda ()
+    (loop
+       repeat (funcall length)
+       collect (funcall elements))))</pre
+          ><a href="../Checks.html#function_005FIT.BESE.FIVEAM_003A_003AGEN-LIST"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

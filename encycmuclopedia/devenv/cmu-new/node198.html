@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.14.8 Benchmarking Techniques</TITLE>
+<META NAME="description" CONTENT="5.14.8 Benchmarking Techniques">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3186" HREF="node199.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3184" HREF="node190.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3180" HREF="node197.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3188" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3189" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3187" HREF="node199.html">6 UNIX Interface</A>
+<B>Up:</B> <A NAME="tex2html3185" HREF="node190.html">5.14 Profiling</A>
+<B> Previous:</B> <A NAME="tex2html3181" HREF="node197.html">5.14.7 A Note on </A>
+<BR> <P>
+<H2><A NAME="SECTION006148000000000000000">5.14.8 Benchmarking Techniques</A></H2>
+<P>
+<A NAME="10874">&#160;</A>
+<P>
+Given these imperfect timing tools, how do should you do benchmarking?  The
+answer depends on whether you are trying to measure improvements in the
+performance of a single program on the same hardware, or if you are trying to
+compare the performance of different programs and/or different hardware.
+<P>
+For the first use (measuring the effect of program modifications with
+constant hardware), you should look at <i>both</i> system+user and real time to
+understand what effect the change had on CPU use, and on I/O (including
+paging.)  If you are working on a CPU intensive program, the change in
+system+user time will give you a moderately reproducible measure of
+performance across a fairly wide range of system conditions.  For a CPU
+intensive program, you can think of system+user as ``how long it would have
+taken to run if I had my own machine.''  So in the case of comparing CPU
+intensive programs, system+user time is relatively real, and reasonable to
+use.
+<P>
+For programs that spend a substantial amount of their time paging, you
+really can't predict elapsed time under a given operating condition without
+benchmarking in that condition.  User or system+user time may be fairly
+reproducible, but it is also relatively meaningless, since in a paging or
+I/O intensive program, the program is spending its time waiting, not
+running, and system time and user time are both measures of run time.
+A change that reduces run time might increase real time by increasing
+paging.
+<P>
+Another common use for benchmarking is comparing the performance of
+the same program on different hardware.  You want to know which
+machine to run your program on.  For comparing different machines
+(operating systems, etc.), the only way to compare that makes sense is
+to set up the machines in <i>exactly</i> the way that they will
+<i>normally</i> be run, and then measure <i>real</i> time.  If the
+program will normally be run along with X, then run X.  If the program
+will normally be run on a dedicated workstation, then be sure nobody
+else is on the benchmarking machine.  If the program will normally be
+run on a machine with three other Lisp jobs, then run three other Lisp
+jobs.  If the program will normally be run on a machine with 8meg of
+memory, then run with 8meg.  Here, ``normal'' means ``normal for that
+machine''.  If you the choice of an unloaded RT or a heavily loaded
+PMAX, do your benchmarking on an unloaded RT and a heavily loaded
+PMAX.
+<P>
+If you have a program you believe to be CPU intensive, then you might be
+tempted to compare ``run'' times across systems, hoping to get a meaningful
+result even if the benchmarking isn't done under the expected running
+condition.  Don't to this, for two reasons:
+<UL>
+<LI> The operating systems might not compute run time in the same
+  way.
+<LI> Under the real running condition, the program might not be CPU
+  intensive after all.
+</UL>
+<P>
+In the end, only real time means anything--it is the amount of time you
+have to wait for the result.  The only valid uses for run time are:
+<UL>
+<LI> To develop insight into the program.  For example, if run time
+  is much less than elapsed time, then you are probably spending lots
+  of time paging.
+<LI> To evaluate the relative performance of CPU intensive programs
+  in the same environment.
+</UL><HR><A NAME="tex2html3186" HREF="node199.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3184" HREF="node190.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3180" HREF="node197.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3188" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3189" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3187" HREF="node199.html">6 UNIX Interface</A>
+<B>Up:</B> <A NAME="tex2html3185" HREF="node190.html">5.14 Profiling</A>
+<B> Previous:</B> <A NAME="tex2html3181" HREF="node197.html">5.14.7 A Note on </A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,84 @@
+<html lang="en">
+<head>
+<title>Unknown Locations and Interrupts - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Stack-Frames.html#Stack-Frames" title="Stack Frames">
+<link rel="prev" href="Debug-Tail-Recursion.html#Debug-Tail-Recursion" title="Debug Tail Recursion">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Unknown-Locations-and-Interrupts"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Debug-Tail-Recursion.html#Debug-Tail-Recursion">Debug Tail Recursion</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Stack-Frames.html#Stack-Frames">Stack Frames</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">4.3.5 Unknown Locations and Interrupts</h4>
+
+<p><a name="index-Unknown-code-locations-79"></a><a name="index-Locations_002c-unknown-80"></a><a name="index-Interrupts-81"></a><a name="index-Errors_002c-run_002dtime-82"></a>
+The debugger operates using special debugging information attached to
+the compiled code.  This debug information tells the debugger what it
+needs to know about the locations in the code where the debugger can
+be invoked.  If the debugger somehow encounters a location not
+described in the debug information, then it is said to be
+<dfn>unknown</dfn>.  If the code location for a frame is unknown, then some
+variables may be inaccessible, and the source location cannot be
+precisely displayed.
+
+   <p>There are three reasons why a code location could be unknown:
+
+     <ul>
+<li>There is inadequate debug information due to the value of the <code>debug</code>
+optimization quality.  See <a href="Debugger-Policy-Control.html#Debugger-Policy-Control">Debugger Policy Control</a>.
+
+     <li>The debugger was entered because of an interrupt such as &lt;C-c&gt;.
+
+     <li>A hardware error such as &ldquo;&lsquo;<samp><span class="samp">bus error</span></samp>&rsquo;&rdquo; occurred in code that was
+compiled unsafely due to the value of the <code>safety</code> optimization
+quality. 
+<!-- FIXME: reinstate link when section on optimize qualities exists. -->
+<!-- @xref{optimize-declaration}. -->
+
+   </ul>
+
+   <p>In the last two cases, the values of argument variables are
+accessible, but may be incorrect.  For more details on when variable
+values are accessible, <a href="Variable-Value-Availability.html#Variable-Value-Availability">Variable Value Availability</a>.
+
+   <p>It is possible for an interrupt to happen when a function call or
+return is in progress.  The debugger may then flame out with some
+obscure error or insist that the bottom of the stack has been reached,
+when the real problem is that the current stack frame can't be
+located.  If this happens, return from the interrupt and try again.
+
+   </body></html>
+

@@ -1,0 +1,264 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 10</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 10 - How to Find Your Way Around, Part 1</h1> 
+
+<p>In this chapter, you'll learn how to find your way around Common Lisp
+without resorting so often to the manuals.  (You <em>do</em> read the
+fine manuals, don't you?)
+
+<p>Oh, there's one thing you should keep in mind while you're reading
+this chapter: all of these tools work equally well for the built-in
+functionality of your Lisp system and for all of the Lisp programs 
+that you write.
+
+<h2>APROPOS: I don't remember the name, but I recognize the face</h2>
+
+<p>Common Lisp defines 978 symbols.  Whatever implementation you use
+probably defines hundreds of additional symbols for language extensions,
+additional libraries, a graphical user interface, etc.  Are you going
+to remember the names of all these symbols?  Not likely...
+
+<p>What you <em>can</em> do is to remember part of the name. This is
+pretty easy, because the language and library designers have a
+limited memory (just like you and me) and they tend to name related
+objects with similar names. So, most of the mapping functions (see
+<a href="chapter12.html">Chapter 12</a>) will have <code>MAP</code>
+in their names, the GUI library will probably have
+<code>WINDOW</code> in the names of all the functions, macros, and
+variables having something to do with windows, and so on.
+
+<p>Once you have a good guess at a part of a name, you can find
+<em>all</em> of the matching names by using a very handy tool named
+<code>APROPOS</code>.
+
+<pre>
+? (apropos "MAP" :cl)
+MAP, Def: FUNCTION
+MAP-INTO, Def: FUNCTION
+MAPC, Def: FUNCTION
+MAPCAN, Def: FUNCTION
+MAPCAR, Def: FUNCTION
+MAPCON, Def: FUNCTION
+MAPHASH, Def: FUNCTION
+MAPL, Def: FUNCTION
+MAPLIST, Def: FUNCTION
+</pre> 
+
+<p><code>APROPOS</code> expects a string or a symbol -- this
+provides the fragment of the name that you'd like to find. An
+optional second argument designates a package; use it if you'd like
+to limit your search to the symbols in a particular package. The
+package designator can be a string or symbol matching the name or
+nickname of a package (see <a href="chapter03-10.html">Chapter 3,
+Lesson 10</a>), or it can be the package object itself. If you omit
+the package designator, then <code>APROPOS</code> will search for
+symbols in <em>all</em> packages.
+
+<p>Your Lisp implementation may produce output that looks somewhat
+different from that shown here. Generally, you'll see the symbol
+names listed with a very brief description of the global object
+named by the symbol.
+
+<p>Here's an example of the output from <code>APROPOS</code> on my
+Lisp system when I search without a package designator:
+
+<pre>
+? (apropos "SEQUENCE")
+       TOOLS::BROWSER-SEQUENCE-TABLE
+         CCL::CHECK-SEQUENCE-BOUNDS, Def: FUNCTION
+     ITERATE::CHECK-SEQUENCE-KEYWORDS, Def: FUNCTION
+       TOOLS::CLASS-BROWSER-SEQUENCE-TABLE
+     ITERATE::CLAUSE-FOR-IN-SEQUENCE-0, Def: FUNCTION
+     ITERATE::CLAUSE-FOR-INDEX-OF-SEQUENCE-0, Def: FUNCTION
+         CCL::CONSED-SEQUENCE
+<i>; many lines omitted</i> 
+              STREAM-READ-SEQUENCE, Def: STANDARD-GENERIC-FUNCTION
+              STREAM-WRITE-SEQUENCE, Def: STANDARD-GENERIC-FUNCTION
+   DEFSYSTEM::SYSTEMS-SEQUENCE-DIALOG-ITEM
+              TAB-SEQUENCE-ITEM
+              TABLE-SEQUENCE, Def: STANDARD-GENERIC-FUNCTION
+             :TABLE-SEQUENCE,  Value: :TABLE-SEQUENCE
+  SETF::|CCL::TABLE-SEQUENCE|, Def: STANDARD-GENERIC-FUNCTION
+              WRITE-SEQUENCE, Def: FUNCTION
+</pre> 
+
+<p>Notice that most of the symbols are prefixed with a package name,
+since they are not imported into the current (COMMON-LISP-USER)
+package. Again, your Lisp implementation may produce somewhat
+different results, but it should show you a list of symbols with
+package prefixes, plus whatever other information the designers of
+your implementation thought would be helpful yet concise.
+
+<p>In these examples, I've used uppercase strings as arguments to
+<code>APROPOS</code>. Some implementations perform a case-sensitive
+match, while others ignore case. Symbol names are case sensitive in
+Lisp, but the Lisp reader translates symbols to uppercase by
+default. So if you specify an uppercase name to <code>APROPOS</code>
+you'll find most -- perhaps all -- of the matching names; you'll
+miss only those that were intentionally interned using lower case
+letters. And if your <code>APROPOS</code> ignores case, you'll get
+all of the matches, regardless of case.
+
+<p>You could also supply a symbol to <code>APROPOS</code>. The only
+disadvantage of this is that these partial symbols pollute the
+namespace of the current package. The storage requirement is
+trivial, but you'll have to be aware that <code>APROPOS</code> may
+find these partial symbols in future matches, and you'll have to
+ignore these to find the symbols you'd really like to see.
+
+<h2>DESCRIBE: Tell me more about yourself</h2>
+
+<p>Once you know the name of a symbol, you can get additional information
+by using the <code>DESCRIBE</code> function.  As with <code>APROPOS</code>,
+the output of <code>DESCRIBE</code> varies among Lisp implementations.
+Here's an example generated using my Lisp system:
+
+<pre>
+<i>; Describe a symbol</i> 
+? (describe 'length)
+Symbol: LENGTH
+Function
+EXTERNAL in package: #&lt;Package "COMMON-LISP"&gt;
+Print name: "LENGTH"
+Value: #&lt;Unbound&gt;
+Function: #&lt;Compiled-function LENGTH #x34C39B6&gt;
+Arglist: (SEQUENCE)
+Plist: (:ANSI-CL-URL "fun_length.html")
+<i>; Describe a string</i> 
+? (describe "LENGTH")
+"LENGTH"
+Type: (SIMPLE-BASE-STRING 6)
+Class: #&lt;BUILT-IN-CLASS SIMPLE-BASE-STRING&gt;
+Length: 6
+0: #\L
+1: #\E
+2: #\N
+3: #\G
+4: #\T
+5: #\H
+<i>; Describe a function</i> 
+? (describe #'length)
+#&lt;Compiled-function LENGTH #x34C39B6&gt;
+Name: LENGTH
+Arglist (declaration): (SEQUENCE)
+</pre> 
+
+<p>This example used three different argument types: a symbol, a
+string, and a function. These are all correct, but you get what you
+ask for. These all have their uses, but you will generally want to
+supply a symbol argument to <code>DESCRIBE</code>, because it tends
+to produce the most information.
+
+<h2>INSPECT: Open wide and say "Ah..."</h2>
+
+<p><code>INSPECT</code> is like <code>DESCRIBE</code>, but instead
+of printing the information it presents the information in some kind
+of interactive display; typically either a command loop in the
+current listener or a new window with its own user interface.  You
+should experiment with <code>INSPECT</code> on your own Lisp system
+to learn how it behaves.
+
+<p><code>INSPECT</code> is very handy for exploring complex nested
+data structures, since you can "drill down" to just the information
+that interests you at the moment. Most <code>INSPECT</code>s offer
+specialized viewers for certain types of data, such as functions and
+CLOS objects. Many implementations of <code>INSPECT</code> also
+allow you to edit the data being inspected.
+
+<h2>DOCUMENTATION: I know I wrote that down somewhere</h2>
+
+<p>Sometimes, you need to know more about a variable than you
+can discover with <code>INSPECT</code>. And for functions, you
+really need the programmer's description (unless you're willing to
+read assembly language code, see <a href="chapter16.html">Chapter
+16</a> if you have these urges). The <code>DOCUMENTATION</code>
+function gives you access to the programmer's innermost thoughts (or
+at least what she was willing to write in a documentation string).
+
+<p>The <code>DOCUMENTATION</code> function expects two arguments.
+The first is an object for which you wish to retrieve documentation,
+or a symbol naming that object. The second is a symbol designating
+the kind of documentation (there are several) you wish to retrieve.
+
+<blockquote> The interface described above is the one required by
+the ANSI Common Lisp specification. Some implementations still
+support an interface which predates the ANSI specification -- these
+expect a symbol for both arguments. We'll use that convention in our
+examples, since it works in both ANSI and pre-ANSI implementations.
+</blockquote> 
+
+<p>Several Lisp constructs let you provide an optional documentation
+string. The following table shows the second
+<code>DOCUMENTATION</code> argument (first line of each pair)
+together with the Lisp constructs for which documentation strings
+are retrieved. 
+
+<dl>
+<dt><code>'variable</code> 
+<dd><code>defvar</code>, <code>defparameter</code>, <code>defconstant</code> 
+<dt><code>'function</code> 
+<dd><code>defun</code>, <code>defmacro</code>, special forms
+<dt><code>'structure</code> 
+<dd><code>defstruct</code> 
+<dt><code>'type</code> 
+<dd><code>deftype</code> 
+<dt><code>'setf</code> 
+<dd><code>defsetf</code> 
+</dl> 
+
+<p>The list above works in both ANSI and pre-ANSI Lisp
+implementations. The following list shows the documentation types
+which have been added for ANSI implementations.
+
+<dl>
+<dt><code>'compiler-macro</code> 
+<dd><code>define-compiler-macro</code> 
+<dt><code>'method-combination</code> 
+<dd><code>define-method-combination</code> 
+<dt><code>t</code> 
+<dd>Documentation returned depends upon type of first argument.
+</dl> 
+
+<p>Here are some examples:
+
+<pre>
+? (documentation 'length 'function)
+"returns the number of elements in sequence."
+? (defun a-function-with-docstring ()
+    "This function always returns T."
+    t)
+A-FUNCTION-WITH-DOCSTRING
+? (documentation 'a-function-with-docstring 'function)
+"This function always returns T."
+</pre> 
+
+<p>If you specify a symbol for which there is no documentation, or a
+documentation type which does not select documentation defined for
+the symbol, then <code>DOCUMENTATION</code> will return
+<code>NIL</code>.
+
+<p>A Lisp implementation is permitted to discard documentation
+strings. If documentation strings from your own program are not
+accessible via the <code>DOCUMENTATION</code> function, consult your
+implementation's manual to find out whether there's a way to retain
+documentation strings (there usually is). If documentation strings
+are missing from Common Lisp functions or from vendor supplied
+libraries, consult your vendor.
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter09.html">Chapter 9</a> | Chapter 10 | <a href="chapter11.html">Chapter 11</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

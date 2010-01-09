@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>2.1.3 Floats</TITLE>
+<META NAME="description" CONTENT="2.1.3 Floats">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html793" HREF="node16.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html791" HREF="node12.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html785" HREF="node14.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html795" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html796" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html794" HREF="node16.html">2.1.3.1 IEEE Special Values</A>
+<B>Up:</B> <A NAME="tex2html792" HREF="node12.html">2.1 Data Types</A>
+<B> Previous:</B> <A NAME="tex2html786" HREF="node14.html">2.1.2 Integers</A>
+<BR> <P>
+<H2><A NAME="SECTION00313000000000000000">2.1.3 Floats</A></H2>
+<P>
+<A NAME="ieeefloat">&#160;</A>
+<P>
+CMU Common Lisp supports two floating point formats: <A NAME="7582">&#160;</A><tt>single-float</tt>
+and <A NAME="7584">&#160;</A><tt>double-float</tt>.  These are implemented with IEEE single
+and double float arithmetic, respectively.  <tt>short-float</tt> is a
+synonym for <tt>single-float</tt>, and <tt>long-float</tt> is a synonym
+for <tt>double-float</tt>.  The initial value of
+<A NAME="7590">&#160;</A><tt>*read-default-float-format*</tt> is <tt>single-float</tt>.
+<P>
+Both <tt>single-float</tt> and <tt>double-float</tt> are represented with
+a pointer descriptor, so float operations can cause number consing.
+Number consing is greatly reduced if programs are written to allow the
+use of non-descriptor representations (see section&nbsp;<A HREF="node167.html#numerictypes">5.11</A>.)
+<P>
+<BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html797" HREF="node16.html#SECTION00313100000000000000">2.1.3.1 IEEE Special Values</A>
+<LI> <A NAME="tex2html798" HREF="node17.html#SECTION00313200000000000000">2.1.3.2 Negative Zero</A>
+<LI> <A NAME="tex2html799" HREF="node18.html#SECTION00313300000000000000">2.1.3.3 Denormalized Floats</A>
+<LI> <A NAME="tex2html800" HREF="node19.html#SECTION00313400000000000000">2.1.3.4 Floating Point Exceptions</A>
+<LI> <A NAME="tex2html801" HREF="node20.html#SECTION00313500000000000000">2.1.3.5 Floating Point Rounding Mode</A>
+<UL>
+<LI> <A NAME="tex2html802" HREF="node21.html#SECTION00313510000000000000">Warning:</A>
+</UL> 
+<LI> <A NAME="tex2html803" HREF="node22.html#SECTION00313600000000000000">2.1.3.6 Accessing the Floating Point Modes</A>
+</UL>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

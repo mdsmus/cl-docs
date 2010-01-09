@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 29</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 29 - I Thought it was Your Turn to Take Out the Garbage</h1> 
+
+<P>Chapter objective: Describe the benefits and costs of garbage collection. 
+Show how to improve program performance by reducing the amount of garbage 
+it generates.</P>
+
+<h2>What is garbage?</h2>
+
+<p>In simplest terms, garbage is any storage that your program once
+used, but uses no longer. Here's a simple example:
+
+<pre>
+(let ((x (list 1 2 3 4 5)))
+  (print x))
+</pre> 
+
+<p>When you evaluate this form, the list <code>'(1 2 3 4 5 6)</code> is
+first bound to <code>X</code> and then printed.  Once control leaves the
+<code>LET</code> form, the list bound to <code>X</code> is no longer
+accessible; its storage can be reclaimed by the garbage collector.
+
+<blockquote> Actually, there's a minor complication that you should
+know about. When you evaluate a form in the Lisp listener, the form
+itself is assigned to the symbol <code>+</code>, and the value is
+assigned to the symbol <code>*</code>. The previous form and value
+are assigned to <code>++</code> and <code>**</code>, respectively,
+and the form and value before that are assigned to <code>+++</code>
+and <code>***</code>. Because these three pairs of variables give
+you a way to access the forms and results, a form and its result
+can't really become garbage until you've evaluated additional forms
+to flush these six variables. 
+
+<p>You won't normally have to worry about this unless you've done
+something in the listener to exhaust all available memory in Lisp;
+if you can evaluate a simple expression (like <code>T</code>) three
+times, you'll release any storage held by <code>+</code>,
+<code>*</code>, and friends.</blockquote> 
+
+<h2>Why is garbage collection important?</h2>
+
+<p>Lisp allocates storage as needed for your program's data. You don't
+have direct control over how or when storage is allocated; the
+compiler is free to do the best job it can to satisfy the meaning of
+your program.
+
+<p>Lisp does not provide a way for your program to explicitly
+deallocate storage. This is an important feature, because you can
+never write a program to mistakenly deallocate storage that is still
+needed elsewhere in the program. This eliminates an entire class of
+errors, sometimes referred to as "dead pointer bugs" in languages
+that support explicit storage allocation and deallocation.
+
+<p>On the other hand, your program may eventually run out of memory
+if your program never deallocates storage. So a language (like Lisp)
+that doesn't support explicit deallocation must still provide a
+mechanism to automatically deallocate storage when the storage is no
+longer needed. The garbage collector's job is to figure out which
+storage can no longer be accessed by your program, and then recycle
+those inaccessible storage blocks for later use.
+
+<h2>How does garbage collection work?</h2>
+
+<p>Lisp compiles your program in such a way that all of its allocated
+storage can be found by following pointers from a small number of known
+<em>root</em> pointers. The compiler and runtime system arrange for your
+program to retain type information at runtime; this is combined with 
+compile-time knowledge of storage layouts to encode knowledge of the
+locations of pointers within data structures.
+
+<p>The garbage collector follows every pointer in every reachable
+data structure, starting with the root set. As it does so, it marks
+the reachable data structures. Once every pointer has been followed,
+and its referenced data structure marked, any block of memory that
+is unmarked is unreachable by your program. The garbage collector
+then reclaims these unmarked blocks for future use by the storage
+allocator.
+
+<blockquote> The actual marking algorithm used by the garbage
+collector must account for cycles in the reachable data structures,
+and must perform in limited space and time; these details complicate
+the implementation of a garbage collector. Also, most collectors
+will relocate the marked data (and adjust references accordingly).
+<a href="chapter33.html#jones96">[Jones96]</a> provides an excellent
+survey and analysis of various garbage collection techniques.
+</blockquote> 
+
+<h2>What effect does garbage have on my program?</h2>
+
+<p>Garbage causes your program to run slower.  The more garbage
+your program creates, the more time the garbage collector will need
+to spend recycling the garbage.  Modern garbage collectors are very
+efficient; it's unlikely that you'll see a noticeable pause in your
+program's execution as the garbage collector runs.  However, the 
+cumulative effect of many small pauses will cause a detectable 
+degradation in overall performance.
+
+<p>The good news is that garbage collection ensures that your
+program will <em>never</em> suffer from memory leaks or dead
+pointers. 
+
+<p>Also, because many garbage collector implementations rearrange
+storage as your program runs, heap fragmentation is minimized; thus,
+a large Lisp program's performance will not degrade over time like a
+C or C++ program that performs comparable storage allocation
+(typically 25 to 50 percent degradation for a C or C++ program,
+depending upon heap size, malloc/free implementation, and
+allocation/deallocation patterns).
+
+<blockquote> You should note that explicit storage allocation and
+deallocation has overheads which are not strictly predictable. In
+typical malloc and free implementations, block allocation involves a
+search and deallocation involves extra work to coalesce free blocks;
+both of these activities are of effectively indeterminate duration,
+affected by the size and fragmentation of the heap. </blockquote> 
+
+<h2>How can I reduce garbage collection pauses in my program?</h2>
+
+<p>You can reduce garbage collection overhead by reducing garbage
+generation. Use appropriate data structures; list manipulation is
+the most common cause of garbage creation in poorly-written Lisp
+programs. Pay attention to whether an operation returns a fresh copy
+or a (possibly modified) existing copy of data.
+
+<p>If you have a profiler available in your Lisp system, use it to 
+find your program's hot spots for storage allocation.
+
+<p>Use destructive operations carefully; they can reduce garbage
+generation, but will cause subtle bugs if the destructively-modified
+data is shared by another part of your program.
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter28.html">Chapter 28</a> | Chapter 29 | <a href="chapter30.html">Chapter 30</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

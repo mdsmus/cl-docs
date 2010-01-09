@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The def-alien-routine Macro</TITLE>
+<META NAME="description" CONTENT="The def-alien-routine Macro">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3724" HREF="node240.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3722" HREF="node237.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3716" HREF="node238.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3726" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3727" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3725" HREF="node240.html">def-alien-routine Example</A>
+<B>Up:</B> <A NAME="tex2html3723" HREF="node237.html">8.7 Alien Function Calls</A>
+<B> Previous:</B> <A NAME="tex2html3717" HREF="node238.html">The alien-funcall Primitive</A>
+<BR> <P>
+<H2><A NAME="SECTION00972000000000000000">The def-alien-routine Macro</A></H2>
+<P>
+<b>[Macro]</b><BR> 
+<tt> alien: def-alien-routine</tt> <em> <i>name</i> <i>result-type</i>
+    <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i>(<i>aname</i> <i>atype</i> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i>style</i></i><IMG WIDTH=5 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17168" SRC="img6.gif">)</i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></em><BR>
+<P>
+  This macro is a convenience for automatically generating Lisp
+  interfaces to simple foreign functions.  The primary feature is the
+  parameter style specification, which translates the C
+  pass-by-reference idiom into additional return values.
+<P>
+  <i>name</i> is usually a string external symbol, but may also be a
+  symbol Lisp name or a list of the foreign name and the Lisp name.
+  If only one name is specified, the other is automatically derived,
+  (see section&nbsp;<A HREF="node234.html#externalaliens">8.4.2</A>.)
+<P>
+  <i>result-type</i> is the Alien type of the return value.  Each
+  remaining subform specifies an argument to the foreign function.
+  <i>aname</i> is the symbol name of the argument to the constructed
+  function (for documentation) and <i>atype</i> is the Alien type of
+  corresponding foreign argument.  The semantics of the actual call
+  are the same as for <A NAME="11811">&#160;</A><tt>alien-funcall</tt> (page&nbsp;<A HREF="node238.html#FNalienfuncall"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>).  <i>style</i> should be
+  one of the following:
+  <DL ><DT><STRONG><tt>:in</tt></STRONG>
+<DD> specifies that the argument is passed by value.
+    This is the default.  <tt>:in</tt> arguments have no corresponding
+    return value from the Lisp function.
+<P>
+  <DT><STRONG><tt>:out</tt></STRONG>
+<DD> specifies a pass-by-reference output value.  The
+    type of the argument must be a pointer to a fixed sized object
+    (such as an integer or pointer).  <tt>:out</tt> and <tt>:in-out</tt>
+    cannot be used with pointers to arrays, records or functions.  An
+    object of the correct size is allocated, and its address is passed
+    to the foreign function.  When the function returns, the contents
+    of this location are returned as one of the values of the Lisp
+    function.
+<P>
+  <DT><STRONG><tt>:copy</tt></STRONG>
+<DD> is similar to <tt>:in</tt>, but the argument is copied
+    to a pre-allocated object and a pointer to this object is passed
+    to the foreign routine.
+<P>
+  <DT><STRONG><tt>:in-out</tt></STRONG>
+<DD> is a combination of <tt>:copy</tt> and <tt>:out</tt>.
+    The argument is copied to a pre-allocated object and a pointer to
+    this object is passed to the foreign routine.  On return, the
+    contents of this location is returned as an additional value.
+<P>
+</DL>
+  Any efficiency-critical foreign interface function should be inline
+  expanded by preceding <tt>def-alien-routine</tt> with:
+  <BLOCKQUOTE> <PRE>(declaim (inline <i>lisp-name</i>))
+  </PRE> </BLOCKQUOTE>
+  In addition to avoiding the Lisp call overhead, this allows
+  pointers, word-integers and floats to be passed using non-descriptor
+  representations, avoiding consing (see section&nbsp;<A HREF="node169.html#nondescriptor">5.11.2</A>.)
+<P>
+<HR><A NAME="tex2html3724" HREF="node240.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3722" HREF="node237.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3716" HREF="node238.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3726" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3727" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3725" HREF="node240.html">def-alien-routine Example</A>
+<B>Up:</B> <A NAME="tex2html3723" HREF="node237.html">8.7 Alien Function Calls</A>
+<B> Previous:</B> <A NAME="tex2html3717" HREF="node238.html">The alien-funcall Primitive</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

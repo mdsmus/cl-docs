@@ -1,0 +1,60 @@
+<html lang="en">
+<head>
+<title>Defining Foreign Types - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Foreign-Types.html#Foreign-Types" title="Foreign Types">
+<link rel="next" href="Foreign-Types-and-Lisp-Types.html#Foreign-Types-and-Lisp-Types" title="Foreign Types and Lisp Types">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Defining-Foreign-Types"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Foreign-Types-and-Lisp-Types.html#Foreign-Types-and-Lisp-Types">Foreign Types and Lisp Types</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Foreign-Types.html#Foreign-Types">Foreign Types</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">7.2.1 Defining Foreign Types</h4>
+
+<p>Types may be either named or anonymous.  With structure and union
+types, the name is part of the type specifier, allowing recursively
+defined types such as:
+
+<pre class="lisp">     (struct foo (a (* (struct foo))))
+</pre>
+   <p>An anonymous structure or union type is specified by using the name
+<code>nil</code>.  The <code>with-alien</code> macro defines a local scope which
+&ldquo;captures&rdquo; any named type definitions.  Other types are not
+inherently named, but can be given named abbreviations using the
+<code>define-alien-type</code> macro.
+
+   </body></html>
+

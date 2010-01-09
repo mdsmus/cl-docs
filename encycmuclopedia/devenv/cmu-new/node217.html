@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>7.4.2 With Object Sets</TITLE>
+<META NAME="description" CONTENT="7.4.2 With Object Sets">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3432" HREF="node218.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3430" HREF="node215.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3426" HREF="node216.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3434" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3435" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3433" HREF="node218.html">A SERVE-EVENT Example</A>
+<B>Up:</B> <A NAME="tex2html3431" HREF="node215.html">Using SERVE-EVENT with the </A>
+<B> Previous:</B> <A NAME="tex2html3427" HREF="node216.html">7.4.1 Without Object Sets</A>
+<BR> <P>
+<H2><A NAME="SECTION00842000000000000000">7.4.2 With Object Sets</A></H2>
+<P>
+This section discusses the use of object sets and
+<tt>system:serve-event</tt> to handle CLX events.  This is necessary
+when a single X application has distinct windows that want to handle
+the same events in different ways.  Basically, you need some way of
+asking for a given window which way you want to handle some event
+because this event is handled differently depending on the window.
+Object sets provide this feature.
+<P>
+For each CLX event-key symbol-name &#305;XXX (for example,
+<i>key-press</i>), there is a function <tt>serve-</tt>&#305;XXX of two
+arguments, an object set and a function.  The <tt>serve-</tt>&#305;XXX
+function establishes the function as the handler for the <tt>:XXX</tt>
+event in the object set.  Recall from section <A HREF="node212.html#objectsets">7.1</A>,
+<tt>system:add-xwindow-object</tt> associates some Lisp object with a
+CLX window in an object set.  When <tt>system:serve-event</tt> notices
+activity on a window, it calls the function given to
+<tt>ext:enable-clx-event-handling</tt>.  If this function is
+<tt>ext:object-set-event-handler</tt>, it calls the function given to
+<tt>serve-</tt>&#305;XXX, passing the object given to
+<tt>system:add-xwindow-object</tt> and the event's slots as well as a
+couple other arguments described below.
+<P>
+To use object sets in this way:
+<UL>
+<LI> Create an object set.
+<LI> Define some operations on it using the <tt>serve-</tt>&#305;XXX
+  functions.
+<LI> Add an object for every window on which you receive requests.
+  This can be the CLX window itself or some structure more meaningful
+  to your application.
+<LI> Call <tt>system:serve-event</tt> to service an X event.
+</UL>
+<P>
+<b>[Function]</b><BR> 
+<tt> ext: object-set-event-handler</tt> <em> <i>display</i></em><BR>
+<P>
+  This function is a suitable argument to
+  <tt>ext:enable-clx-event-handling</tt>.  The actual event handlers
+  defined for particular events within a given object set must take an
+  argument for every slot in the appropriate event.  In addition to
+  the event slots, <tt>ext:object-set-event-handler</tt> passes the
+  following arguments:
+  <UL>
+<LI> The object, as established by
+    <tt>system:add-xwindow-object</tt>, on which the event occurred.
+<LI> event-key, see <tt>xlib:event-case</tt>.
+<LI> send-event-p, see <tt>xlib:event-case</tt>.
+  </UL>
+<P>
+  Describing any <tt>ext:serve-</tt><i>event-key-name</i> function, where
+  <i>event-key-name</i> is an event-key symbol-name (for example,
+  <tt>ext:serve-key-press</tt>), indicates exactly what all the
+  arguments are in their correct order.
+<P>
+  When creating an object set for use with
+  <tt>ext:object-set-event-handler</tt>, specify
+  <tt>ext:default-clx-event-handler</tt> as the default handler for
+  events in that object set.  If no default handler is specified, and
+  the system invokes the default default handler, it will cause an
+  error since this function takes arguments suitable for handling port
+  messages.
+<P>
+<HR><A NAME="tex2html3432" HREF="node218.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3430" HREF="node215.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3426" HREF="node216.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3434" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3435" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3433" HREF="node218.html">A SERVE-EVENT Example</A>
+<B>Up:</B> <A NAME="tex2html3431" HREF="node215.html">Using SERVE-EVENT with the </A>
+<B> Previous:</B> <A NAME="tex2html3427" HREF="node216.html">7.4.1 Without Object Sets</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

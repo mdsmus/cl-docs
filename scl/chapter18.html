@@ -1,0 +1,367 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 18</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 18 - Very Logical, Indeed...</h1> 
+
+<P>Now it's time to look at things having to do with boolean (true and
+false) logic. We'll learn about common logical functions, and conditional 
+evaluation. If you're a bit twiddler, this chapter should warm your
+heart: we'll introduce bit manipulation functions, bit vectors, and 
+generalized byte manipulation. 
+
+<h2>AND and OR evaluate only as much as they need</h2>
+
+<p><code>AND</code> and <code>OR</code> are macros in Common Lisp.
+This means that they have control over when (and <em>if</em>) their
+arguments get evaluated. <code>AND</code> and <code>OR</code> take
+advantage of this ability: they stop evaluating their arguments as
+soon as they determine an answer.
+
+<p>Consider <code>AND</code>: it evaluates its arguments, starting
+with the leftmost, only as long as each argument evaluates to a true
+(i.e. not <code>NIL</code>) value. As soon as <code>AND</code>
+evaluates the leftmost false (<code>NIL</code>) argument, its work
+is done -- the result will be <code>NIL</code> no matter how many
+more true arguments it evaluates, so <code>AND</code> just returns
+<code>NIL</code> without evaluating any more of its arguments. (Think
+of this as a "one strike and you're out" policy.)  <code>AND</code> returns
+true only if all of its arguments evaluate to a true value.
+
+<p>In fact, <code>AND</code> returns either <code>NIL</code> (if one of
+its arguments evaluates to <code>NIL</code>) or the non-<code>NIL</code> 
+value of its rightmost argument. Some Lisp programmers take advantage of
+this to treat <code>AND</code> as a simple conditional.
+
+<pre>
+? (defun safe-elt (sequence index)
+    (and (< -1 index (length sequence)) <i>; guard condition</i> 
+         (values (elt sequence index) t)))
+SAFE-ELT
+? (safe-elt #(1 2 3) 3)
+NIL
+? (elt #(1 2 3) 3)
+Error: index out of bounds
+? (safe-elt #(1 2 3) 2)
+3
+T
+</pre> 
+
+<p><code>OR</code> also evaluates only enough arguments to determine
+its result: it evaluates arguments, starting with the leftmost, so
+long as they evaluate to <code>NIL</code>. The first
+non-<code>NIL</code> result is returned as <code>OR</code>'s value;
+arguments further to the right are not evaluated.
+
+<p>One caution is in order about <code>AND</code> and <code>OR</code>.
+Because they are macros, and not functions, they can not be used for
+mapping (see <a href="chapter12.html">Chapter 12</a>). Use the predicate
+mapping functions (<code>SOME</code>, <code>EVERY</code>, etc.) instead.
+
+<h2>Bits, bytes, and Boole</h2>
+
+<p>Machine languages and low-level programming languages always provide
+the ability to perform bitwise boolean operations: groups of bits are
+logically combined on a bit-by-bit basis; adjacent bits have no effect
+on their neighbors in determining the result. The same languages also
+let you treat adjacent groupings of bits as a unit; this is commonly
+called a byte or a bit field. Usually bitwise and bit field operations
+are constrained by the size of hardware registers.
+
+<p>Lisp makes these same facilities available, but removes the constraints
+that might otherwise be imposed by the underlying hardware.
+
+<p>Sixteen bitwise boolean operations are available in Lisp through
+the <code>BOOLE</code> function. <code>BOOLE</code> is a
+three-argument functions expecting an operation designator plus two
+integer arguments and producing an integer result. Remember that
+Lisp has infinite precision integers (bignums), so these bitwise
+boolean operations are exempt from machine limitations (except for
+available memory).
+
+<p>The operation designator is a constant value having a name from the
+following list. The actual values of these constants is specific to
+the Lisp implementation.
+
+<ol>
+<li><code>BOOLE-1</code> <i>; returns arg1</i> 
+<li><code>BOOLE-2</code> <i>; returns arg2</i> 
+<li><code>BOOLE-ANDC1</code> <i>; and complement of arg1 with arg2</i> 
+<li><code>BOOLE-ANDC2</code> <i>; and arg1 with complement of arg2</i> 
+<li><code>BOOLE-AND</code> <i>; and arg1 with arg2</i> 
+<li><code>BOOLE-C1</code> <i>; complement of arg1</i> 
+<li><code>BOOLE-C2</code> <i>; complement of arg2</i> 
+<li><code>BOOLE-CLR</code> <i>; always all zeroes</i> 
+<li><code>BOOLE-EQV</code> <i>; exclusive-nor of arg1 with arg2 (equivalence)</i> 
+<li><code>BOOLE-IOR</code> <i>; inclusive-or of arg1 with arg2</i> 
+<li><code>BOOLE-NAND</code> <i>; not-and of arg1 with arg2</i> 
+<li><code>BOOLE-NOR</code> <i>; not-or of arg1 with arg2</i> 
+<li><code>BOOLE-ORC1</code> <i>; or complement of arg1 with arg2</i> 
+<li><code>BOOLE-ORC2</code> <i>; or arg1 with complement of arg2</i> 
+<li><code>BOOLE-SET</code> <i>; always all ones</i> 
+<li><code>BOOLE-XOR</code> <i>; exclusive-or of arg1 with arg2</i> 
+</ol> 
+
+<pre>
+? (boole boole-and 15 7)
+7
+? (boole boole-ior 2 3)
+3
+? (boole boole-set 99 55)
+-1
+? (boole boole-andc2 7 4)
+3
+</pre> 
+
+<p>There are also eleven bitwise logical functions; these
+are similiar to the <code>BOOLE</code> operations, except that the constant
+and identity operations are not present in this group, and the complement
+function takes only one argument. (Except for <code>LOGNOT</code>, all of
+the following functions expect two arguments.)
+
+<ol>
+<li><code>LOGAND</code> 
+<li><code>LOGANDC1</code> 
+<li><code>LOGANDC2</code> 
+<li><code>LOGEQV</code> 
+<li><code>LOGIOR</code> 
+<li><code>LOGNAND</code> 
+<li><code>LOGNOR</code> 
+<li><code>LOGNOT</code> 
+<li><code>LOGORC1</code> 
+<li><code>LOGORC2</code>
+<li><code>LOGXOR</code>
+</ol> 
+
+<p><code>LOGTEST</code> returns true if any of the corresponding bits in its
+two arguments are both ones.
+
+<pre>
+? (logtest 7 16)
+NIL
+? (logtest 15 5)
+T
+</pre> 
+
+<p><code>LOGBITP</code> tests one bit in the two's complement representation
+of an integer, returning <code>T</code> if the bit is 1 and <code>NIL</code> 
+if the bit is 0.  The least significant (rightmost) bit is bit 0.
+
+<pre>
+? (logbitp 0 16)
+NIL
+? (logbitp 4 16)
+T
+? (logbitp 0 -2)
+NIL
+? (logbitp 77 -2)
+T
+</pre> 
+
+<p><code>LOGCOUNT</code> counts 1 bits in the binary representation
+of a positive integer, and 0 bits in the two's complement binary
+representation of a negative number.
+
+<pre>
+? (logcount 35)
+3
+? (logcount -2)
+1
+</pre> 
+
+<h2>Bit vectors can go on forever</h2>
+
+<p>A vector composed of only 1s and 0s has a compact representation
+as a <em>bit vector</em>, a special representation for printing and
+reading, and a set of logical operations. Like all vectors (and
+arrays) in Common Lisp, the size of a bit vector is limited by the
+constant <code>ARRAY-TOTAL-SIZE-LIMIT</code>; this can be as small
+as 1,024, but is typically large enough that the size of memory sets
+a practical limit on the size of bit-vectors.
+
+<p>The printed representation of a bit vector begins with the
+<code>#*</code> reader macro, followed by 1s and 0s. The bit
+vector's length is determined by the 1s and 0s that make up its
+elements. (The printed representation of an empty bit vector is
+<code>#*</code>.)
+
+<pre>
+? #*0010101
+#*0010101
+? (length #*0010101)
+7
+</pre> 
+
+<p>There are eleven bitwise logical operations available for bit vectors.
+With the exception of <code>BIT-NOT</code>, these are all functions of
+two arguments.  Unlike the corresponding bitwise logical operations on
+integers, the bit vector logical operations expect their arguments to
+be of the same size.
+
+<ol>
+<li><code>BIT-AND</code> 
+<li><code>BIT-ANDC1</code> 
+<li><code>BIT-ANDC2</code> 
+<li><code>BIT-EQV</code> 
+<li><code>BIT-IOR</code> 
+<li><code>BIT-NAND</code> 
+<li><code>BIT-NOR</code> 
+<li><code>BIT-NOT</code> 
+<li><code>BIT-ORC1</code> 
+<li><code>BIT-ORC2</code>
+<li><code>BIT-XOR</code>
+</ol> 
+
+<p>These functions will destructively update a result bit vector if
+you provide an optional third (second in the case of
+<code>BIT-NOT</code>) argument. If the optional argument is
+<code>T</code>, then the first argument will be updated with the
+result bits. If the optional argument is a bit vector, it will be
+updated with the result bits and the input arguments will be
+unchanged. (This in-place update is not available for bitwise
+operations on integers; destructive bit vector operations
+may be more efficient once the number of bits exceeds the size of a
+fixnum.)
+
+<pre>
+? (bit-and #*00110100 #*10101010)
+#*00100000
+? (bit-ior #*00110100 #*10101010)
+#*10111110
+? (bit-not #*00110100)
+#*11001011
+</pre> 
+
+<p>You can access an individual element of a bit vector using
+<code>BIT</code>. This is a vector accessor, and not a boolean test,
+so it returns 0 or 1. <code>BIT</code> can also be used in a
+<code>SETF</code> form to alter an element of a bit vector.
+
+<pre>
+? (bit #*01001 1)
+1
+? (let ((bv (copy-seq #*00000)))
+    (setf (bit bv 3) 1)
+    bv)
+#*00010
+</pre> 
+
+<h2>Chunks of bits make bytes</h2>
+
+<p>Getting back to integer manipulation as we wrap up this chapter, 
+we'll see how to manipulate fields of adjacent bits within an integer
+value.
+
+<p>The first thing we need when manipulating a field of bits (called a
+<em>byte</em> in Common Lisp) is a way of specifying its bounds. 
+The <code>BYTE</code> function constructs a byte specifier from a
+size (number of bits) and a position (the number of the rightmost bit
+of the byte within the containing integer, where the LSB is bit 0).
+The representation of a byte specifier depends upon the Lisp implementation.
+
+<p>The functions <code>BYTE-SIZE</code> and <code>BYTE-POSITION</code> 
+extract the size and position values from a byte specifier.
+
+<pre>
+? (setq bs (byte 5 3)) <code>; 5 bits, rightmost has weight 2^3 in source</code> 
+248 <i>; implementation-dependent</i> 
+? (byte-size bs)
+5
+? (byte-position bs)
+3
+</pre> 
+
+<p>You can extract and replace bytes from an integer using the functions
+<code>LDB</code> (load byte) and <code>DPB</code> (deposit byte).
+
+<pre>
+? (ldb (byte 8 8) 258)
+1
+? (ldb (byte 8 0) 258)
+2
+? (dpb 3 (byte 8 8) 0)
+768
+? (dpb 1 (byte 1 5) 1)
+33
+</pre> 
+
+<p><code>LDB-TEST</code> returns true if any of the bits are 1 in a
+specified byte.
+
+<pre>
+? (ldb-test (byte 3 2) 3)
+NIL
+? (ldb-test (byte 3 2) 9)
+T
+? (ldb-test (byte 3 2) 34)
+NIL
+</pre> 
+
+<p><code>INTEGER-LENGTH</code> tells you how many bits are necessary
+to represent an integer in two's complement form. A positive integer
+will always have an unsigned representation using the number of bits
+determined by <code>INTEGER-LENGTH</code>. A negative integer has a
+signed binary representation that requires one bit more than the
+number of bits determined by <code>INTEGER-LENGTH</code>.
+
+<pre>
+? (integer-length 69) <i>; 1000101</i> 
+7
+? (integer-length 4) <i>; 100</i> 
+3
+? (integer-length -1) <i>; 1</i> 
+0
+? (integer-length 0)
+0
+? (integer-length -5) <i>; 1011</i> 
+3
+</pre> 
+
+<p>You can shift the bits in an integer using the <code>ASH</code> function.
+This is an <em>arithmetic</em> shift; it treats the integer as a two's
+complement binary number and preserves the sign (leftmost) bit as the rest
+of the bits are shifted. A left shift shifts bits to the left, replacing
+them with zeroes (and preserving the sign bit). A right shift shifts bits
+to the right, replacing them with zeroes (and preserving the sign bit).
+
+<p><code>ASH</code> expects two arguments, an integer to be shifted,
+and a shift count. A shift count of 0 returns the integer unchanged.
+A positive count shifts bits to the left by the specified number of
+positions. A negative count shifts bits to the right.
+
+<pre>
+? (ash 75 0)
+75
+? (ash 31 1)
+62
+? (ash -7 1)
+-14
+? (ash 32 8)
+8192
+? (ash -1 8)
+-256
+? (ash 16 -1)
+8
+? (ash 11 -1)
+5
+? (ash 32 -8)
+0 <i>; all one bits shifted out</i> 
+? (ash -99 -2)
+-25
+</pre> 
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter17.html">Chapter 17</a> | Chapter 18 | <a href="chapter19.html">Chapter 19</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

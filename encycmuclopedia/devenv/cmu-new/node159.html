@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.9 Byte Coded Compilation</TITLE>
+<META NAME="description" CONTENT="5.9 Byte Coded Compilation">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2696" HREF="node160.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2694" HREF="node105.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2688" HREF="node158.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2698" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2699" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2697" HREF="node160.html">5.10 Object Representation</A>
+<B>Up:</B> <A NAME="tex2html2695" HREF="node105.html">5 Advanced Compiler Use </A>
+<B> Previous:</B> <A NAME="tex2html2689" HREF="node158.html">The Maybe-Inline Declaration</A>
+<BR> <P>
+<H1><A NAME="SECTION00690000000000000000">5.9 Byte Coded Compilation</A></H1>
+<P>
+<A NAME="bytecompile">&#160;</A>
+<A NAME="10443">&#160;</A>
+<A NAME="10444">&#160;</A>
+<P>
+Python supports byte compilation to reduce the size of Lisp
+programs by allowing functions to be compiled more compactly.  Byte
+compilation provides an extreme speed/space tradeoff: byte code is
+typically six times more compact than native code, but runs fifty
+times (or more) slower.  This is about ten times faster than the
+standard interpreter, which is itself considered fast in comparison to
+other Common Lisp interpreters.
+<P>
+Large Lisp systems (such as CMU Common Lisp itself) often have large amounts
+of user-interface code, compile-time (macro) code, debugging code, or
+rarely executed special-case code.  This code is a good target for
+byte compilation: very little time is spent running in it, but it can
+take up quite a bit of space.  Straight-line code with many function
+calls is much more suitable than inner loops.
+<P>
+When byte-compiling, the compiler compiles about twice as fast, and
+can produce a hardware independent object file (`<tt>.bytef</tt>' type.)
+This file can be loaded like a normal fasl file on any implementation
+of CMU CL with the same byte-ordering (DEC PMAX has `<tt>.lbytef</tt>'
+type.)
+<P>
+The decision to byte compile or native compile can be done on a
+per-file or per-code-object basis.  The <tt>:byte-compile</tt> argument to
+<A NAME="10448">&#160;</A><tt>compile-file</tt> (page&nbsp;<A HREF="node85.html#FNcompilefile"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>) has these possible values:
+<DL ><DT><STRONG><i>nil</i></STRONG>
+<DD> Don't byte compile anything in this file.
+<P>
+<DT><STRONG><i>t</i></STRONG>
+<DD> Byte compile everything in this file and produce a
+  processor-independent `<tt>.bytef</tt>' file.
+<P>
+<DT><STRONG><tt>:maybe</tt></STRONG>
+<DD> Produce a normal fasl file, but byte compile any
+  functions for which the <tt>speed</tt> optimization quality is
+  <tt>0</tt> and the <tt>debug</tt> quality is not greater than <tt>1</tt>.
+<P>
+</DL>
+<P>
+<b>[Variable]</b><BR> 
+<tt> extensions:*byte-compile-top-level*</tt><BR> <BR>
+<P>
+  If this variable is true (the default) and the <tt>:byte-compile</tt>
+  argument to <tt>compile-file</tt> is <tt>:maybe</tt>, then byte compile
+  top-level code (code outside of any <tt>defun</tt>, <tt>defmethod</tt>,
+  etc.)
+<P>
+<b>[Variable]</b><BR> 
+<tt> extensions:*byte-compile-default*</tt><BR> <BR>
+<P>
+  This variable determines the default value for the
+  <tt>:byte-compile</tt> argument to <tt>compile-file</tt>, initially
+  <tt>:maybe</tt>.
+<P>
+<HR><A NAME="tex2html2696" HREF="node160.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2694" HREF="node105.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2688" HREF="node158.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2698" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2699" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2697" HREF="node160.html">5.10 Object Representation</A>
+<B>Up:</B> <A NAME="tex2html2695" HREF="node105.html">5 Advanced Compiler Use </A>
+<B> Previous:</B> <A NAME="tex2html2689" HREF="node158.html">The Maybe-Inline Declaration</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

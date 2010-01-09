@@ -1,0 +1,234 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 3, Lesson 11</title> 
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 3 - Essential Lisp in Twelve Lessons</h1> 
+
+<h2><A NAME="lesson-11">Lesson 11 - Essential Input and Output</A></h2> 
+
+<h3>READ accepts Lisp data</h3> 
+
+<P>As we saw in <A HREF="chapter03-10.html#characters">Lesson 10</A>, 
+<CODE>READ</CODE> turns characters into Lisp data.  So far, you've seen 
+a printed representation of several kinds of Lisp data:</P>
+
+<UL>
+<LI>symbols and numbers,</LI>
+<LI>strings, characters, lists, arrays, vectors, and structures,</LI>
+<LI>and hash tables.</LI>
+</UL>
+
+<P>The Lisp reader does its job according to a classification of 
+characters.  The standard classifications are shown below.  As we'll see in 
+<A HREF="chapter03-12.html">Lesson 12</A>, you can alter these 
+classifications for your own needs.</P>
+
+<PRE WIDTH=80>
+Standard Constituent Characters
+-------------------------------
+ a b c d e f g h i j k l m n o p q r s t u v w x y z
+ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+ 0 1 2 3 4 5 6 7 8 9
+ ! $ % & * + - . / : &lt; = &gt; ? @ [ ] ^ _ { } ~
+ &lt;backspace&gt; &lt;rubout&gt;
+</PRE>
+
+<PRE WIDTH=80>
+Standard Terminating Macro Characters
+-------------------------------------
+ " ' ( ) , ; `
+</PRE>
+
+<PRE WIDTH=80>
+Standard Non-Terminating Macro Characters
+-----------------------------------------
+ #
+</PRE>
+
+<PRE WIDTH=80>
+Standard Single Escape Characters
+---------------------------------
+ \
+</PRE>
+
+<PRE WIDTH=80>
+Standard Multiple Escape Characters
+-----------------------------------
+ |
+</PRE>
+
+<PRE WIDTH=80>
+Standard Whitespace Characters
+------------------------------
+ &lt;tab&gt; &lt;space&gt; &lt;page&gt; &lt;newline&gt; &lt;return&gt; &lt;linefeed&gt;
+</PRE>
+
+<P>If <CODE>READ</CODE> starts with a <EM>constituent</EM> character, it 
+begins accumulating a symbol or number.  When <CODE>READ</CODE> encounters 
+a terminating macro character or a whitespace character, it tries to 
+interpret the collected constituent characters first as a number, then as a 
+symbol.  If a numeric interpretation is possible, <CODE>READ</CODE> 
+returns the number.  Otherwise, <CODE>READ</CODE> changes the alphabetical 
+characters to a standard case (normally upper case), interns the name as a 
+symbol, and returns the symbol.</P>
+
+<P>Escape characters play a special role.  A single escape character 
+forces the following character to be treated exactly as a constituent 
+character.  In this way characters that are normally treated as whitespace 
+or terminating macro characters can be part of a symbol.  If 
+<CODE>READ</CODE> encounters an escape character, it <EM>never</EM> 
+attempts to interpret the resulting constituents as a number, even if only 
+digits were escaped.</P>
+
+<P>If <CODE>READ</CODE> starts with a macro character, the character 
+determines the next step:</P>
+
+<DL>
+<DT>"</DT>	<DD>Read a string.</DD>
+<DT>'</DT>	<DD>Read a form.</DD>
+<DT>(</DT>	<DD>Read a list.</DD>
+<DT>;</DT>	<DD>Ignore everything up to newline.</DD>
+<DT>#</DT>	<DD>Decide what to do based on the next character.</DD>
+</DL>
+
+<P>Finally, some Lisp data is not meant to be read.  For example, the 
+printed representation of a hash table looks something like 
+<CODE>#&lt;HASH-TABLE&gt;</CODE>.  It is an error for <CODE>READ</CODE> to 
+attempt to read anything beginning with the characters <CODE>#&lt;</CODE>.</P>
+
+<h3>PRINT writes Lisp data for you and for READ</h3> 
+
+<P>The <CODE>PRINT</CODE> function changes a Lisp object into the sequence 
+of characters that <CODE>READ</CODE> would need to reconstruct it:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (print 'abc)<br><IMG SRC="gifs/double-right-arrow.gif" ALT="=&gt;" ALIGN="BOTTOM"> <IMG SRC="gifs/return.gif" ALT="CR" ALIGN="BOTTOM">ABC<IMG SRC="gifs/blank.gif" ALT="SPC" ALIGN="BOTTOM"><br><IMG SRC="gifs/right-arrow.gif" ALT="=&gt;" ALIGN="BOTTOM"> ABC<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (print (list 1 2 3))<br><IMG SRC="gifs/double-right-arrow.gif" ALT="=&gt;" ALIGN="BOTTOM"> <IMG SRC="gifs/return.gif" ALT="CR" ALIGN="BOTTOM">(1 2 3)<IMG SRC="gifs/blank.gif" ALT="SPC" ALIGN="BOTTOM"><br><IMG SRC="gifs/right-arrow.gif" ALT="=&gt;" ALIGN="BOTTOM"> (1 2 3)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (print "A String")<br><IMG SRC="gifs/double-right-arrow.gif" ALT="=&gt;" ALIGN="BOTTOM"> <IMG SRC="gifs/return.gif" ALT="CR" ALIGN="BOTTOM">"A string"<IMG SRC="gifs/blank.gif" ALT="SPC" ALIGN="BOTTOM"><br><IMG SRC="gifs/right-arrow.gif" ALT="=&gt;" ALIGN="BOTTOM"> "A string"<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (print 387.9532)<br><IMG SRC="gifs/double-right-arrow.gif" ALT="=&gt;" ALIGN="BOTTOM"> <IMG SRC="gifs/return.gif" ALT="CR" ALIGN="BOTTOM">387.9532<IMG SRC="gifs/blank.gif" ALT="SPC" ALIGN="BOTTOM"><br><IMG SRC="gifs/right-arrow.gif" ALT="=&gt;" ALIGN="BOTTOM"> 387.9532<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (print (make-hash-table))<br><IMG SRC="gifs/double-right-arrow.gif" ALT="=&gt;" ALIGN="BOTTOM"> <IMG SRC="gifs/return.gif" ALT="CR" ALIGN="BOTTOM">#&lt;HASH-TABLE&gt;<IMG SRC="gifs/blank.gif" ALT="SPC" ALIGN="BOTTOM"><br><IMG SRC="gifs/right-arrow.gif" ALT="=&gt;" ALIGN="BOTTOM"> #&lt;HASH-TABLE&gt;</PRE>
+
+<P><CODE>PRINT</CODE> always begins its output with a newline character 
+(<IMG SRC="gifs/return.gif" ALT="CR" ALIGN="BOTTOM">), and follows its 
+output with a space (<IMG SRC="gifs/blank.gif" ALT="SPC" ALIGN="BOTTOM">).  
+This ensures that the <CODE>PRINT</CODE> output stands apart from any 
+surrounding output, since newline and space are both treated as whitespace, 
+and cannot be part of the printed representation of a Lisp object (unless 
+escaped).</P>
+
+<P>Other variations of <CODE>PRINT</CODE> have different uses.  
+<CODE>PRIN1</CODE> behaves as <CODE>PRINT</CODE>, but does not surround 
+its output with whitespace.  This might be useful if you are building up a 
+name from successive pieces, for example.  <CODE>PRINC</CODE> behaves as 
+<CODE>PRIN1</CODE>, but generates output intended for display, rather than 
+<CODE>READ</CODE>; for example, <CODE>PRINC</CODE> omits the quotes around 
+a string, and does not print escape characters.</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (print 'a\ bc)<br><IMG SRC="gifs/double-right-arrow.gif" ALT="=&gt;" ALIGN="BOTTOM"> <IMG SRC="gifs/return.gif" ALT="CR" ALIGN="BOTTOM">|A BC|<IMG SRC="gifs/blank.gif" ALT="SPC" ALIGN="BOTTOM"><br><IMG SRC="gifs/right-arrow.gif" ALT="=&gt;" ALIGN="BOTTOM"> |A BC|<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (prin1 'a\ bc)<br><IMG SRC="gifs/double-right-arrow.gif" ALT="=&gt;" ALIGN="BOTTOM"> |A BC|<br><IMG SRC="gifs/right-arrow.gif" ALT="=&gt;" ALIGN="BOTTOM"> |A BC|<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (princ '|A BC|)<br><IMG SRC="gifs/double-right-arrow.gif" ALT="=&gt;" ALIGN="BOTTOM"> <IMG SRC="gifs/return.gif" ALT="CR" ALIGN="BOTTOM">A BC<IMG SRC="gifs/blank.gif" ALT="SPC" ALIGN="BOTTOM"><br><IMG SRC="gifs/right-arrow.gif" ALT="=&gt;" ALIGN="BOTTOM"> |A BC|</PRE>
+
+<h3>OPEN and CLOSE let you work with files</h3> 
+
+<P>Normally, <CODE>READ</CODE> reads from the keyboard and <CODE>PRINT</CODE> 
+prints to the screen.  Both of these functions take an optional argument; 
+the argument specifies an input stream for <CODE>READ</CODE>, and an output 
+stream for <CODE>PRINT</CODE>.  What's a stream?  A stream is a source or 
+sink of data, typically -- but not necessarily -- characters.  For now, 
+we'll look at how text files can be the source or sink of a character 
+stream.  In <A HREF="chapter19.html">Chapter 19</A> we'll look at some of 
+the other possibilities.</P>
+
+<P>You can attach a stream to a file using the <CODE>OPEN</CODE> function, 
+which takes as parameters a file name and a keyword argument to specify 
+the direction (input or output) of the stream.  To finish operations on the 
+stream and close the associated file, use the <CODE>CLOSE</CODE> function.</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq out-stream (open "my-temp-file" :direction :output))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> #&lt;OUTPUT-STREAM "my-temp-file"&gt;<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (print 'abc out-stream)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> ABC<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (close out-stream)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> T<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq in-stream (open "my-temp-file" :direction :input))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> #&lt;INPUT-STREAM "my-temp-file"&gt;<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (read in-stream)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> ABC<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (close in-stream)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> T</PRE>
+
+<P>In the example, we create an output stream to the file named 
+<CODE>my-temp-file</CODE>, and print the symbol <CODE>ABC</CODE> to that 
+stream.  Notice how <CODE>PRINT</CODE> returns its argument as usual, but 
+doesn't print it -- the printed result has gone to the file, instead.</P>
+
+<P>Next, we close the output stream and open an input stream on the same 
+file.  We then read the symbol that we printed to the file, and finish by 
+closing the input stream.</P>
+
+<h3>Variations on a PRINT theme</h3> 
+
+<P>Lisp also provides a <CODE>WRITE</CODE> function to give you control 
+over more details of printing, using keyword arguments to control these 
+options:</P>
+
+<PRE WIDTH=80>Keyword Argument   Default Value           Action
+----------------   -------------           ------
+ :stream           t                       set output stream
+ :escape           *print-escape*          include escape characters
+ :radix            *print-radix*           include radix (base) prefix
+ :base             *print-base*            set number base (rationals)
+ :circle           *print-circle*          print circular structures
+ :pretty           *print-pretty*          add whitespace for readability
+ :level            *print-level*           limit nesting depth
+ :length           *print-length*          limit items per nesting level
+ :case             *print-case*            :upper, :lower, or :mixed
+ :gensym           *print-gensym*          prefix uninterned symbols
+ :array            *print-array*           print arrays readably
+ :readably         *print-readably*        force printing to be readable
+ :right-margin     *print-right-margin*    controls pretty-printing
+ :miser-width      *print-miser-width*                "
+ :lines            *print-lines*                      "
+ :pprint-dispatch  *print-pprint-dispatch*            "</PRE>
+
+<P>Coincidentally, the variables named above as the default values of the 
+keyword arguments also control the operation of <CODE>PRINT</CODE>.  You 
+can get the effect of <CODE>WRITE</CODE> with non-default keyword arguments 
+by binding these variables in a <CODE>LET</CODE> form around a 
+<CODE>PRIN1</CODE>:</P>
+
+<PRE WIDTH=80>
+(write foo                    (let ((*print-pretty* t)
+   :pretty t                        (*print-right-margin* 60)
+   :right-margin 60                 (*print-case* :downcase))
+   :case :downcase)      <IMG SRC="gifs/equivalent.gif" ALT="EQV" ALIGN="BOTTOM">      (prin1 foo)) 
+</PRE>
+
+<P>We used <CODE>PRIN1</CODE> rather than <CODE>PRINT</CODE> because we 
+don't want the preceding newline and following blank that <CODE>PRINT</CODE> 
+adds.</P>
+
+<P>If your program changes the <CODE>*PRINT-...*</CODE> variables, but you 
+need to ensure the default values at some point in your program, you can 
+wrap that part of the program inside a 
+<CODE>WITH-STANDARD-IO-SYNTAX</CODE> form:</P>
+
+<PRE WIDTH=80>
+<I>;Define printer control for the program.</I>
+(setq *print-circle* t)
+(setq *print-array* nil)
+(setq *print-escape* nil)
+...
+<I>;Print with the settings established above.</I>
+(print ...)
+...
+<I>;Change back to default printer control settings</I>
+(with-standard-io-syntax
+   ...
+   <I>;Print with the standard settings,
+   ;overriding those established above.</I>
+   (print ...)
+   ...)
+<I>;Outside the</I> WITH-STANDARD-IO-SYNTAX <I>form,
+;we once again have the print settings established
+;by the</I> SETQ <I>forms at the top of the example.</I></PRE>
+
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter02.html">Chapter 2</a> | <A HREF="chapter03.html">Chapter 3, Introduction</A> | <A HREF="chapter03-10.html">Chapter 3, Lesson 10</A> | Chapter 3, Lesson 11 | <A HREF="chapter03-12.html">Chapter 3, Lesson 12</A> | <a href="chapter04.html">Chapter 4</a> | 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its 
+author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

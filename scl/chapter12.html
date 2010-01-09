@@ -1,0 +1,347 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 12</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 12 - Mapping Instead of Iteration</h1> 
+
+<p>In this chapter we'll survey of a group of functions collectively
+known as mapping functions. You can think of a mapping function as a
+kind of special purpose iterator. Every mapping function expects you
+to supply a function. A typical mapping function applies your
+function to every element of the supplied list(s). One variation on
+this theme applies your function to successive sublists.
+
+<p>A sequence is a generalization of the list data type. Vectors
+(one-dimensional arrays) and lists are specializations of the
+sequence data type. Some mapping functions work only with lists as
+inputs, while others accept sequences.
+
+<h2>MAPCAR, MAPC, and MAPCAN process successive list elements</h2>
+
+<p>The first group of mapping functions processes successive elements
+of lists. The mapping functions in this group differ in how they
+construct a return value.
+
+<p><code>MAPCAR</code> processes successive elements of one or more
+supplied lists. You must supply a function that accepts as many
+arguments as the number of lists you supply to <code>MAPCAR</code>,
+which applies your function to successive elements and combines the
+function's results into a freshly constructed list. The mapping
+stops upon reaching the end of the shortest list;
+<code>MAPCAR</code>'s result has as many elements as the shortest
+input list.
+
+<p><code>MAPC</code> does not combine the results of applying your
+function to successive elements of the input list(s). Instead, it
+processes the inputs just for effect, and returns the first input
+list as the result of <code>MAPC</code>.
+
+<p><code>MAPCAN</code> combines results using the destructive
+function <code>NCONC</code>. Since <code>NCONC</code> -- like its
+nondestructive counterpart <code>APPEND</code> -- expects its
+arguments to be lists, the function you supply to
+<code>MAPCAN</code> must always return a list.
+
+<pre>
+? (mapcar #'atom (list 1 '(2) "foo" nil))
+(T NIL T T)
+? (mapcar #'+ (list 1 2 3) (list 4 5 6))
+(5 7 9)
+? (mapc #'(lambda (x y) (print (* x y))) (list 1 0 2) (list 3 4 5))
+
+3
+0
+10
+(1 0 2)
+? (mapcan #'list (list 1 2 3) (list 4 5 6))
+(1 4 2 5 3 6)
+? (mapcan #'(lambda (a b) (list (cons a b))) (list 1 2 3) (list 4 5 6))
+((1 . 4) (2 . 5) (3 . 6))
+</pre> 
+
+<h2>MAPLIST, MAPL, and MAPCON process successive sublists</h2>
+
+<p><code>MAPLIST</code> processes successive sublists of one or more
+supplied lists. You must supply a function that accepts as many
+arguments as the number of lists you supply to <code>MAPLIST</code>,
+which applies your function to successive sublists and combines the
+function's results into a freshly constructed list. The mapping
+stops upon reaching the end of the shortest list;
+<code>MAPLIST</code>'s result has as many elements as the shortest
+input list.
+
+<p><code>MAPL</code> does not combine the results of applying your
+function to successive sublists of the input list(s). Instead, it
+processes the inputs just for effect, and returns the first input
+list as the result of <code>MAPL</code>.
+
+<p><code>MAPCON</code> combines results using the destructive
+function <code>NCONC</code>. Since <code>NCONC</code> -- like its
+nondestructive counterpart <code>APPEND</code> -- expects its
+arguments to be lists, the function you supply to
+<code>MAPCON</code> must always return a list.
+
+<pre>
+? (maplist #'list (list 1 2 3) (list 4 5 6))
+(((1 2 3) (4 5 6)) ((2 3) (5 6)) ((3) (6)))
+? (mapl #'(lambda (x y) (print (append x y))) (list 1 0 2) (list 3 4 5))
+
+(1 0 2 3 4 5) 
+(0 2 4 5) 
+(2 5) 
+(1 0 2)
+? (mapcon #'list (list 1 2 3) (list 4 5 6))
+((1 2 3) (4 5 6) (2 3) (5 6) (3) (6))
+</pre> 
+
+<h2>MAP and MAP-INTO work on sequences, not just lists</h2>
+
+<p>A sequence is either a list or a vector (a one-dimensional array).
+The previous group of mapping functions (<code>MAPCAR</code> et al)
+processes successive CARs or CDRs of their input lists. <code>MAP</code> 
+and <code>MAP-INTO</code> process successive elements of their input
+sequences.
+
+<p><code>MAP</code> requires that you specify the type of its result
+using one of the following designators:
+
+<pre>
+Designator   Result
+----------   ------
+NIL          NIL
+'LIST        a list
+'VECTOR      a vector
+</pre> 
+
+<p>Note that you can also specify subtypes of <code>LIST</code> or
+<code>VECTOR</code> -- your Lisp implementation may be able to optimize
+the storage of the result based on the type you specify.
+
+<pre>
+? (map nil #'+ (list 1 2 3) (list 4 5 6))
+NIL
+? (map 'list #'+ (list 1 2 3) (list 4 5 6))
+(5 7 9)
+? (map 'vector #'+ (list 1 2 3) (list 4 5 6))
+#(5 7 9)
+? (map '(vector number 3) #'+ (list 1 2 3) (list 4 5 6))
+#(5 7 9)
+</pre> 
+
+<p><code>MAP-INTO</code> is a destructive version of
+<code>MAP</code>. The first argument is a sequence that receives the
+results of the mapping. Mapping stops upon reaching the end of the
+result sequence or any of the input sequences. (Therefore, if you
+specify <code>NIL</code> as the result sequence, no mapping is
+performed since <code>NIL</code> is a list of length zero.)  The 
+input sequences are not modified.  The modified result sequence is
+returned as the value of <code>MAP-INTO</code>.
+
+<pre>
+? (let ((a (make-sequence 'list 3)))
+    (print a)
+    (map-into a #'+ (list 1 2 3) (list 4 5 6))
+    a)
+
+(NIL NIL NIL)
+(5 7 9)
+? (let ((a (make-sequence 'vector 3)))
+    (print a)
+    (map-into a #'+ (list 1 2 3) (list 4 5 6))
+    a)
+
+#(0 0 0)
+#(5 7 9)
+</pre> 
+
+<p>Your Lisp implementation may print different initial values for
+the unmodified sequences in the above examples.  If you need to specify
+a certain initial value for <code>MAKE-SEQUENCE</code>, use the 
+<code>:INITIAL-ELEMENT</code> keyword argument:
+
+<pre>
+? (let ((a (make-sequence 'list 3 :initial-element 0)))
+    (print a)
+    (map-into a #'+ (list 1 2 3) (list 4 5 6))
+    a)
+
+(0 0 0)
+(5 7 9)
+</pre> 
+
+<h2>Mapping functions are good for filtering</h2>
+
+<p>A filter passes some of its inputs through to its output, and drops
+others.  We can use mapping functions to implement filters by taking note
+of the behavior of <code>APPEND</code>:
+
+<pre>
+? (append '(1) nil '(3) '(4))
+(1 3 4)
+</pre> 
+
+<p>The <code>NIL</code> argument (which is equivalent to the empty list)
+simply "disappears" from the result. This is the key observation that we
+need to construct a filter. We'll use <code>MAPCAN</code> to map over our
+input list(s) and supply a mapping function that:
+
+<ul>
+<li>makes a list of each result we wish to retain in the output, or
+<li>returns <code>NIL</code> in place of each input we wish to 
+    exclude from the output.
+</ul> 
+
+<pre>
+? (defun filter-even-numbers (numbers)
+    (mapcan #'(lambda (n) (when (evenp n) (list n))) numbers))
+FILTER-EVEN-NUMBERS
+? (filter-even-numbers (list 1 2 3 4 5 6 7 8))
+(2 4 6 8)
+</pre> 
+
+<blockquote> <code>WHEN</code> returns <code>NIL</code> if the
+condition is <code>NIL</code>. We could have written <code>(if
+(evenp n) (list n) nil)</code> instead. </blockquote> 
+
+<p>Here's a slightly more complex filter that returns a list of 
+evenly divisible pairs of numerators and denominators:
+
+<pre>
+? (defun filter-evenly-divisible (numerators denominators)
+    (mapcan #'(lambda (n d)
+                (if (zerop (mod n d))
+                  (list (list n d))
+                  nil))
+            numerators denominators))
+? (filter-evenly-divisible (list 7 8 9 10 11 12)
+                           (list 1 4 5  5  2  3))
+((7 1) (8 4) (10 5) (12 3))
+</pre> 
+
+<p>The functions <code>REMOVE-IF</code> and
+<code>REMOVE-IF-NOT</code> (and their destructive counterparts,
+<code>DELETE-IF</code> and <code>DELETE-IF-NOT</code>) filter a
+single sequence, but can't be used for multiple sequences (as in the
+example above). Use <code>REMOVE-IF</code> and the like if it will
+make your code clearer. See <a href="chapter13.html">Chapter 13</a>
+for further details.
+
+<h2>It's better to avoid mapping if you care about efficiency</h2>
+
+<p>Most Lisp systems will generate more efficient code to call
+a function that is known during compilation than a function that can
+change at run time.  Mapping functions accept a functional argument,
+and most compilers will generate code that supports run time function
+binding -- even if you specify a "constant" function, such as <code>#'+</code>.
+Also, the run time call may incur extra overhead to generate a list of
+arguments for the function's application.
+
+<p>Therefore, if you are concerned about efficiency you should write
+map-like functions using iteration instead of mapping functions. But
+do this only when you are sure that efficiency is an issue for the
+portion of the program you intend to rewrite. See <a
+href="chapter28.html">Chapter 28</a> for a discussion of profiling,
+which can help you find your program's performance bottlenecks.
+
+<h2>Predicate mapping functions test sequences</h2>
+
+<p>Sometimes you may need to apply a test to some input sequences
+and return a truth value based upon what the test returned for all
+of the inputs. For example, you might want to know whether any
+number in a sequence is outside of a specified range, or whether
+every word is at least five letters long. You could construct these
+tests from the mapping functions described above, but that would be
+more verbose (and less efficient) than using the predicate mapping
+functions provided by Lisp.
+
+<h2>SOME, EVERY, NOTANY, NOTEVERY</h2>
+
+<p>The built in predicate mapping functions expect you to supply a
+test function (a.k.a. predicate) and one or more input sequences.
+The predicate is applied to successive elements of the input
+sequences until the the result of the mapping function can be
+determined.
+
+<pre>
+Function   Condition
+--------   ---------
+SOME       user-supplied predicate succeeds on at least one input
+EVERY      user-supplied predicate succeeds on every input
+NOTANY     complement of SOME
+NOTEVERY   complement of EVERY
+</pre> 
+
+<p>For example, <code>SOME</code> examines inputs so long as the
+predicate is false; the tests stop -- and <code>SOME</code> returns
+a true value -- as soon as the predicate is true for some input(s).
+If the predicate is false for every input, <code>SOME</code> returns
+a false value.
+
+<p>Similarly, <code>EVERY</code> examines inputs so long as the
+predicate is true; the tests stop -- and <code>EVERY</code> returns
+a false value -- as soon as the predicate is false for some
+input(s). If the predicate is true for every input,
+<code>EVERY</code> returns a true value.
+
+<pre>
+? (some #'(lambda (n) (or (&lt; n 0) (&gt; n 100))) (list 0 1 99 100))
+NIL
+? (some #'(lambda (n) (or (&lt; n 0) (&gt; n 100))) (list -1 0 1 99 100))
+T
+? (every #'(lambda (w) (&gt;= (length w) 5)) (list "bears" "bulls" "racoon"))
+T
+? (every #'(lambda (w) (&gt;= (length w) 5)) (list "bears" "cat" "racoon"))
+NIL
+</pre> 
+
+<p>And of course, the predicate mapping functions handle multiple
+sequences as you'd expect.
+
+<pre>
+? (some #'&gt; (list 0 1 2 3 4 5) (list 0 0 3 2 6))
+T
+</pre> 
+
+<h2>REDUCE combines sequence elements</h2>
+
+<p>While we're on the subject of mapping, wouldn't it be nice to be
+able to combine all of the elements of a sequence using some function?
+<code>REDUCE</code> does just that, accepting a function (of two or zero
+arguments) and a sequence.  If the sequence is longer than one element,
+<code>REDUCE</code> combines the results of applying the function to 
+successive elements of the sequence.  For example:
+
+<pre>
+? (reduce #'* (list 1 2 3 4 5)) <i>(* (* (* (* 1 2) 3) 4) 5)</i> 
+120
+? (reduce #'- (list 10 2 3 1)) <i>; (- (- (- 10 2) 3) 1)</i> 
+4
+</pre> 
+
+<p>If the sequence is of length one, <code>REDUCE</code> returns the
+sequence and the function is not applied. If the sequence is of
+length zero, <code>REDUCE</code> applies the function with no
+arguments and returns the value returned by the function. (In the
+case of arithmetic functions, this is the identity value for the
+operation.)
+
+<p>Various keyword arguments let you specify a subsequence for
+<code>REDUCE</code>, or that <code>REDUCE</code> should combine
+elements in a right-associative manner (i.e. from the end of the
+sequence, rather than from the beginning).
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter11.html">Chapter 11</a> | Chapter 12 | <a href="chapter13.html">Chapter 13</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

@@ -1,0 +1,115 @@
+<html lang="en">
+<head>
+<title>Customization Hooks for Users - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Beyond-the-ANSI-Standard.html#Beyond-the-ANSI-Standard" title="Beyond the ANSI Standard">
+<link rel="prev" href="Support-For-Unix.html#Support-For-Unix" title="Support For Unix">
+<link rel="next" href="Tools-To-Help-Developers.html#Tools-To-Help-Developers" title="Tools To Help Developers">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Customization-Hooks-for-Users"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Tools-To-Help-Developers.html#Tools-To-Help-Developers">Tools To Help Developers</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Support-For-Unix.html#Support-For-Unix">Support For Unix</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Beyond-the-ANSI-Standard.html#Beyond-the-ANSI-Standard">Beyond the ANSI Standard</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">6.4 Customization Hooks for Users</h3>
+
+<p>The toplevel repl prompt may be customized, and the function
+that reads user input may be replaced completely. 
+<!-- <!- FIXME but I don't currently remember how -> -->
+
+   <p>The behaviour of <code>require</code> when called with only one argument is
+implementation-defined.  In SBCL, <code>require</code> behaves in the
+following way:
+
+   <p><a name="Function-common_002dlisp_003arequire"></a>
+
+<div class="defun">
+&mdash; Function: <b>common-lisp:require</b><var> module-name &amp;optional pathnames<a name="index-common_002dlisp_003arequire-233"></a></var><br>
+<blockquote><p><a name="index-common_002dlisp_003arequire-234"></a>Loads a module, unless it already has been loaded. <code>pathnames</code>, if supplied,
+   is a designator for a list of pathnames to be loaded if the module
+   needs to be. If <code>pathnames</code> is not supplied, functions from the list
+   <code>*module-provider-functions*</code> are called in order with <code>module-name</code>
+   as an argument, until one of them returns non-NIL.  User code is
+   responsible for calling <code>provide</code> to indicate a successful load of the
+   module. 
+</p></blockquote></div>
+
+   <p><a name="Variable-sb_002dext_003a_002amodule_002dprovider_002dfunctions_002a"></a>
+
+<div class="defun">
+&mdash; Variable: <b>sb-ext:*module-provider-functions*</b><var><a name="index-sb_002dext_003a_002amodule_002dprovider_002dfunctions_002a-235"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003a_002amodule_002dprovider_002dfunctions_002a-236"></a>See function documentation for <code>require</code>. 
+</p></blockquote></div>
+
+   <p>Although SBCL does not provide a resident editor, the <code>ed</code>
+function can be customized to hook into user-provided editing
+mechanisms as follows:
+
+   <p><a name="Function-common_002dlisp_003aed"></a>
+
+<div class="defun">
+&mdash; Function: <b>common-lisp:ed</b><var> &amp;optional x<a name="index-common_002dlisp_003aed-237"></a></var><br>
+<blockquote><p><a name="index-common_002dlisp_003aed-238"></a>Starts the editor (on a file or a function if named).  Functions
+from the list <code>*ed-functions*</code> are called in order with <code>x</code> as an argument
+until one of them returns non-NIL; these functions are responsible for
+signalling a <code>file-error</code> to indicate failure to perform an operation on
+the file system. 
+</p></blockquote></div>
+
+   <p><a name="Variable-sb_002dext_003a_002aed_002dfunctions_002a"></a>
+
+<div class="defun">
+&mdash; Variable: <b>sb-ext:*ed-functions*</b><var><a name="index-sb_002dext_003a_002aed_002dfunctions_002a-239"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003a_002aed_002dfunctions_002a-240"></a>See function documentation for <code>ed</code>. 
+</p></blockquote></div>
+
+   <p>Conditions of type <code>warning</code> and <code>style-warning</code> are
+sometimes signaled at runtime, especially during execution of Common
+Lisp defining forms such as <code>defun</code>, <code>defmethod</code>, etc.  To
+muffle these warnings at runtime, SBCL provides a variable
+<code>sb-ext:*muffled-warnings*</code>:
+
+   <p><a name="Variable-sb_002dext_003a_002amuffled_002dwarnings_002a"></a>
+
+<div class="defun">
+&mdash; Variable: <b>sb-ext:*muffled-warnings*</b><var><a name="index-sb_002dext_003a_002amuffled_002dwarnings_002a-241"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003a_002amuffled_002dwarnings_002a-242"></a>A type that ought to specify a subtype of <code>warning</code>.  Whenever a
+warning is signaled, if the warning if of this type and is not
+handled by any other handler, it will be muffled. 
+</p></blockquote></div>
+
+   </body></html>
+

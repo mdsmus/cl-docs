@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.2.5 The Empty Type</TITLE>
+<META NAME="description" CONTENT="5.2.5 The Empty Type">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2177" HREF="node118.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2175" HREF="node112.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2169" HREF="node116.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2179" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2180" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2178" HREF="node118.html">5.2.6 Function Types</A>
+<B>Up:</B> <A NAME="tex2html2176" HREF="node112.html">5.2 More About Types </A>
+<B> Previous:</B> <A NAME="tex2html2170" HREF="node116.html">5.2.4 Union Types</A>
+<BR> <P>
+<H2><A NAME="SECTION00625000000000000000">5.2.5 The Empty Type</A></H2>
+<P>
+<A NAME="emptytype">&#160;</A>
+<A NAME="9765">&#160;</A>
+<A NAME="9766">&#160;</A>
+<A NAME="9767">&#160;</A>
+<P>
+The type <i>nil</i> is also called the empty type, since no object is of
+type <i>nil</i>.  The union of no types, <tt>(or)</tt>, is also empty.
+Python's interpretation of an expression whose type is <i>nil</i> is
+that the expression never yields any value, but rather fails to
+terminate, or is thrown out of.  For example, the type of a call to
+<tt>error</tt> or a use of <tt>return</tt> is <i>nil</i>.  When the type of
+an expression is empty, compile-time type warnings about its value are
+suppressed; presumably somebody else is signaling an error.  If a
+function is declared to have return type <i>nil</i>, but does in fact
+return, then (in safe compilation policies) a ``<tt>NIL Function
+  returned</tt>'' error will be signaled.  See also the function
+<A NAME="9777">&#160;</A><tt>required-argument</tt> (page&nbsp;<A HREF="node97.html#FNrequiredargument"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>).
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,72 @@
+<html
+  ><head
+    ><title
+      >Method (EXPLAIN DETAILED-TEXT-EXPLAINER T)</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Method: (EXPLAIN DETAILED-TEXT-EXPLAINER T)</h1
+        ><div class="contents"
+          ><h2
+            >Source</h2
+          ><pre class="code"
+            >(defmethod explain ((exp detailed-text-explainer) results
+                    &amp;optional (stream *test-dribble*) (recursive-depth 0))
+  #| &quot;Given a list of test results report write to stream detailed
+  human readable statistics regarding the results.&quot; |# 
+  (multiple-value-bind (num-checks passed num-passed passed%
+				   skipped num-skipped skipped%
+				   failed num-failed failed%
+				   unknown num-unknown unknown%)
+      (partition-results results)
+    (declare (ignore passed))
+    (flet ((output (&amp;rest format-args)
+             (format stream &quot;~&amp;~vT&quot; recursive-depth)
+             (apply #'format stream format-args)))
+      
+      (when (zerop num-checks)
+        (output &quot;Didn't run anything...huh?&quot;)
+        (return-from explain nil))
+      (output &quot;Did ~D check~P.~%&quot; num-checks num-checks)
+      (output &quot;   Pass: ~D (~2D%)~%&quot; num-passed passed%)
+      (output &quot;   Skip: ~D (~2D%)~%&quot; num-skipped skipped%)
+      (output &quot;   Fail: ~D (~2D%)~%&quot; num-failed failed%)
+      (when unknown
+        (output &quot;   UNKNOWN RESULTS: ~D (~2D)~%&quot; num-unknown unknown%))
+      (terpri stream)
+      (when failed
+        (output &quot;Failure Details:~%&quot;)
+        (dolist (f failed)
+          (output &quot;--------------------------------~%&quot;)
+          (output &quot;~A ~@{[~A]~}: ~%&quot; 
+                  (name (test-case f))
+                  (description (test-case f)))
+          (output &quot;     ~A.~%&quot; (reason f))
+          (when (for-all-test-failed-p f)
+            (output &quot;Results collected with failure data:~%&quot;)
+            (explain exp (slot-value f 'result-list)
+                     stream (+ 4 recursive-depth)))
+          (when (and *verbose-failures* (test-expr f))
+            (output &quot;    ~S~%&quot; (test-expr f)))
+          (output &quot;--------------------------------~%&quot;))
+        (terpri stream))
+      (when skipped
+        (output &quot;Skip Details:~%&quot;)
+        (dolist (f skipped)
+          (output &quot;~A ~@{[~A]~}: ~%&quot; 
+                  (name (test-case f))
+                  (description (test-case f)))
+          (output &quot;    ~A.~%&quot; (reason f)))
+        (terpri *test-dribble*)))))</pre
+          ><a href="../Analyzing_0020the_0020results.html#method_005FIT.BESE.FIVEAM_003A_003A_0028EXPLAIN_0020DETAILED-TEXT-EXPLAINER_0020T_0029"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>4.8 Open Coding and Inline Expansion</TITLE>
+<META NAME="description" CONTENT="4.8 Open Coding and Inline Expansion">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1914" HREF="node105.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1912" HREF="node83.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1908" HREF="node103.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1916" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1917" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1915" HREF="node105.html">5 Advanced Compiler Use </A>
+<B>Up:</B> <A NAME="tex2html1913" HREF="node83.html">4 The Compiler</A>
+<B> Previous:</B> <A NAME="tex2html1909" HREF="node103.html">The Optimize-Interface Declaration</A>
+<BR> <P>
+<H1><A NAME="SECTION00580000000000000000">4.8 Open Coding and Inline Expansion</A></H1>
+<P>
+<A NAME="opencoding">&#160;</A>
+<A NAME="9688">&#160;</A>
+<A NAME="9689">&#160;</A>
+<A NAME="9690">&#160;</A>
+<P>
+Since Common Lisp forbids the redefinition of standard functions<A NAME="tex2html8" HREF="footnode.html#2954"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>, the compiler can have
+special knowledge of these standard functions embedded in it.  This special
+knowledge is used in various ways (open coding, inline expansion, source
+transformation), but the implications to the user are basically the same:
+<UL>
+<LI> Attempts to redefine standard functions may be frustrated, since
+  the function may never be called.  Although it is technically
+  illegal to redefine standard functions, users sometimes want to
+  implicitly redefine these functions when they are debugging using
+  the <tt>trace</tt> macro.  Special-casing of standard functions can be
+  inhibited using the <tt>notinline</tt> declaration.
+<LI> The compiler can have multiple alternate implementations of
+  standard functions that implement different trade-offs of speed,
+  space and safety.  This selection is based on the compiler policy,
+  see section&nbsp;<A HREF="node101.html#compilerpolicy">4.7</A>.
+</UL>
+<P>
+When a function call is &#305;open coded, inline code whose effect is
+equivalent to the function call is substituted for that function call.
+When a function call is &#305;closed coded, it is usually left as is,
+although it might be turned into a call to a different function with
+different arguments.  As an example, if <tt>nthcdr</tt> were to be open
+coded, then
+<BLOCKQUOTE> <PRE>(nthcdr 4 foobar)
+</PRE> </BLOCKQUOTE>
+might turn into
+<BLOCKQUOTE> <PRE>(cdr (cdr (cdr (cdr foobar))))
+</PRE> </BLOCKQUOTE>
+or even 
+<BLOCKQUOTE> <PRE>(do ((i 0 (1+ i))
+     (list foobar (cdr foobar)))
+    ((= i 4) list))
+</PRE> </BLOCKQUOTE>
+<P>
+If <tt>nth</tt> is closed coded, then
+<BLOCKQUOTE> <PRE>(nth x l)
+</PRE> </BLOCKQUOTE>
+might stay the same, or turn into something like:
+<BLOCKQUOTE> <PRE>(car (nthcdr x l))
+</PRE> </BLOCKQUOTE>
+<P>
+In general, open coding sacrifices space for speed, but some functions (such as
+<tt>car</tt>) are so simple that they are always open-coded.  Even when not
+open-coded, a call to a standard function may be transformed into a different
+function call (as in the last example) or compiled as &#305;static call.  Static
+function call uses a more efficient calling convention that forbids
+redefinition.
+<P>
+<HR><A NAME="tex2html1914" HREF="node105.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1912" HREF="node83.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1908" HREF="node103.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1916" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1917" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1915" HREF="node105.html">5 Advanced Compiler Use </A>
+<B>Up:</B> <A NAME="tex2html1913" HREF="node83.html">4 The Compiler</A>
+<B> Previous:</B> <A NAME="tex2html1909" HREF="node103.html">The Optimize-Interface Declaration</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

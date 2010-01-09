@@ -1,0 +1,260 @@
+<html lang="en">
+<head>
+<title>sb-grovel - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Contributed-Modules.html#Contributed-Modules" title="Contributed Modules">
+<link rel="prev" href="sb_002daclrepl.html#sb_002daclrepl" title="sb-aclrepl">
+<link rel="next" href="sb_002dposix.html#sb_002dposix" title="sb-posix">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="sb-grovel"></a>
+<a name="sb_002dgrovel"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="sb_002dposix.html#sb_002dposix">sb-posix</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="sb_002daclrepl.html#sb_002daclrepl">sb-aclrepl</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Contributed-Modules.html#Contributed-Modules">Contributed Modules</a>
+<hr>
+</div>
+
+<h3 class="section">15.2 sb-grovel</h3>
+
+<p><a name="index-Foreign-Function-Interface_002c-generation-593"></a>
+The <code>sb-grovel</code> module helps in generation of foreign function
+interfaces. It aids in extracting constants' values from the C
+compiler and in generating SB-ALIEN structure and union types,
+see <a href="Defining-Foreign-Types.html#Defining-Foreign-Types">Defining Foreign Types</a>.
+
+   <p>The ASDF(<a href="http://www.cliki.net/ASDF">http://www.cliki.net/ASDF</a>) component type
+GROVEL-CONSTANTS-FILE has its PERFORM
+<!-- @xref for PERFORM when asdf manual is included? -->
+operation defined to write out a C source file, compile it, and run
+it.  The output from this program is Lisp, which is then itself
+compiled and loaded.
+
+   <p>sb-grovel is used in a few contributed modules, and it is currently
+compatible only to SBCL. However, if you want to use it, here are a
+few directions.
+
+<h4 class="subsection">15.2.1 Using sb-grovel in your own ASDF system</h4>
+
+     <ol type=1 start=1>
+
+     <li>Create a Lisp package for the foreign constants/functions to go into.
+
+     <li>Make your system depend on the 'sb-grovel system.
+
+     <li>Create a grovel-constants data file - for an example, see
+example-constants.lisp in the contrib/sb-grovel/ directory in the SBCL
+source distribution.
+
+     <li>Add it as a component in your system. e.g.
+
+     <pre class="lisp">          (eval-when (:compile-toplevel :load-toplevel :execute)
+            (require :sb-grovel))
+          
+          (defpackage :example-package.system
+                      (:use :cl :asdf :sb-grovel :sb-alien))
+          
+          (in-package :example-package.system)
+          
+          (defsystem example-system
+              :depends-on (sb-grovel)
+              :components
+              ((:module "sbcl"
+                        :components
+                        ((:file "defpackage")
+                         (grovel-constants-file "example-constants"
+                                                :package :example-package)))))
+</pre>
+     <p>Make sure to specify the package you chose in step 1
+
+     <li>Build stuff.
+
+     </ol>
+
+<h4 class="subsection">15.2.2 Contents of a grovel-constants-file</h4>
+
+<p>The grovel-constants-file, typically named <code>constants.lisp</code>,
+comprises lisp expressions describing the foreign things that you want
+to grovel for. A <code>constants.lisp</code> file contains two sections:
+
+     <ul>
+<li>a list of headers to include in the C program, for example:
+     <pre class="lisp">          ("sys/types.h" "sys/socket.h" "sys/stat.h" "unistd.h" "sys/un.h"
+           "netinet/in.h" "netinet/in_systm.h" "netinet/ip.h" "net/if.h"
+           "netdb.h" "errno.h" "netinet/tcp.h" "fcntl.h" "signal.h" )
+</pre>
+     <li>A list of sb-grovel clauses describing the things you want to grovel
+from the C compiler, for example:
+     <pre class="lisp">          ((:integer af-local
+                     #+(or sunos solaris) "AF_UNIX"
+                     #-(or sunos solaris) "AF_LOCAL"
+                     "Local to host (pipes and file-domain).")
+           (:structure stat ("struct stat"
+                             (integer dev "dev_t" "st_dev")
+                             (integer atime "time_t" "st_atime")))
+           (:function getpid ("getpid" int )))
+</pre>
+     </ul>
+
+   <p>There are two types of things that sb-grovel can sensibly extract from
+the C compiler: constant integers and structure layouts. It is also
+possible to define foreign functions in the constants.lisp file, but
+these definitions don't use any information from the C program; they
+expand directly to <code>sb-alien:define-alien-routine</code>
+(see <a href="The-define_002dalien_002droutine-Macro.html#The-define_002dalien_002droutine-Macro">The define-alien-routine Macro</a>) forms.
+
+   <p>Here's how to use the grovel clauses:
+
+     <ul>
+<li><code>:integer</code> - constant expressions in C. Used in this form:
+     <pre class="lisp">           (:integer lisp-variable-name "C expression" &amp;optional doc export)
+</pre>
+     <p><code>"C expression"</code> will be typically be the name of a constant. But
+other forms are possible.
+
+     <li><code>:enum</code>
+     <pre class="lisp">           (:enum lisp-type-name ((lisp-enumerated-name c-enumerated-name) ...)))
+</pre>
+     <p>An <code>sb-alien:enum</code> type with name <code>lisp-type-name</code> will be defined. 
+The symbols are the <code>lisp-enumerated-name</code>s, and the values
+are grovelled from the <code>c-enumerated-name</code>s.
+
+     <li><code>:structure</code> - alien structure definitions look like this:
+     <pre class="lisp">           (:structure lisp-struct-name ("struct c_structure"
+                                         (type-designator lisp-element-name
+                                          "c_element_type" "c_element_name"
+                                          :distrust-length nil)
+                                         ; ...
+                                         ))
+</pre>
+     <p><code>type-designator</code> is a reference to a type whose size (and type
+constraints) will be groveled for. sb-grovel accepts a form of type
+designator that doesn't quite conform to either lisp nor sb-alien's
+type specifiers. Here's a list of type designators that sb-grovel
+currently accepts:
+          <ul>
+<li><code>integer</code> - a C integral type; sb-grovel will infer the exact
+type from size information extracted from the C program. All common C
+integer types can be grovelled for with this type designator, but it
+is not possible to grovel for bit fields yet.
+
+          <li><code>(unsigned n)</code> - an unsigned integer variable that is <code>n</code>
+bytes long. No size information from the C program will be used. 
+<li><code>(signed n)</code> - an signed integer variable that is <code>n</code> bytes
+long. No size information from the C program will be used.
+
+          <li><code>c-string</code> - an array of <code>char</code> in the structure. sb-grovel
+will use the array's length from the C program, unless you pass it the
+<code>:distrust-length</code> keyword argument with non-<code>nil</code> value
+(this might be required for structures such as solaris's <code>struct
+dirent</code>).
+
+          <li><code>c-string-pointer</code> - a pointer to a C string, corresponding to
+the <code>sb-alien:c-string</code> type (see <a href="Foreign-Type-Specifiers.html#Foreign-Type-Specifiers">Foreign Type Specifiers</a>). 
+<li><code>(array alien-type)</code> - An array of the previously-declared alien
+type. The array's size will be determined from the output of the C
+program and the alien type's size. 
+<li><code>(array alien-type n)</code> - An array of the previously-declared alien
+type. The array's size will be assumed as being <code>n</code>. 
+</ul>
+
+     <p>Note that <code>c-string</code> and <code>c-string-pointer</code> do not have the
+same meaning. If you declare that an element is of type
+<code>c-string</code>, it will be treated as if the string is a part of the
+structure, whereas if you declare that the element is of type
+<code>c-string-pointer</code>, a <em>pointer to a string</em> will be the
+structure member.
+
+     <li><code>:function</code> - alien function definitions are similar to
+<code>define-alien-routine</code> definitions, because they expand to such
+forms when the lisp program is loaded. See <a href="Foreign-Function-Calls.html#Foreign-Function-Calls">Foreign Function Calls</a>.
+
+     <pre class="lisp">          (:function lisp-function-name ("alien_function_name" alien-return-type
+                                                               (argument alien-type)
+                                                               (argument2 alien-type)))
+</pre>
+     </ul>
+
+<h4 class="subsection">15.2.3 Programming with sb-grovel's structure types</h4>
+
+<p>Let us assume that you have a grovelled structure definition:
+<pre class="lisp">      (:structure mystruct ("struct my_structure"
+                            (integer myint "int" "st_int")
+                            (c-string mystring "char[]" "st_str")))
+</pre>
+   <p>What can you do with it? Here's a short interface document:
+
+     <ul>
+<li>Creating and destroying objects:
+          <ul>
+<li>Function <code>(allocate-mystruct)</code> - allocates an object of type <code>mystruct</code>and
+returns a system area pointer to it. 
+<li>Function <code>(free-mystruct var)</code> - frees the alien object pointed to by
+<var>var</var>. 
+<li>Macro <code>(with-mystruct var ((member init) [...]) &amp;body body)</code> -
+allocates an object of type <code>mystruct</code> that is valid in
+<var>body</var>. If <var>body</var> terminates or control unwinds out of
+<var>body</var>, the object pointed to by <var>var</var> will be deallocated. 
+</ul>
+
+     <li>Accessing structure members:
+          <ul>
+<li><code>(mystruct-myint var)</code> and <code>(mystruct-mystring var)</code> return
+the value of the respective fields in <code>mystruct</code>. 
+<li><code>(setf (mystruct-myint var) new-val)</code> and
+<code>(setf (mystruct-mystring var) new-val)</code> sets the value of the respective
+structure member to the value of <var>new-val</var>. Notice that in
+<code>(setf (mystruct-mystring var) new-val)</code>'s case, new-val is a lisp
+string. 
+</ul>
+     </ul>
+
+<h5 class="subsubsection">15.2.3.1 Traps and Pitfalls</h5>
+
+<p>Basically, you can treat functions and data structure definitions that
+sb-grovel spits out as if they were alien routines and types. This has
+a few implications that might not be immediately obvious (especially
+if you have programmed in a previous version of sb-grovel that didn't
+use alien types):
+
+     <ul>
+<li>You must take care of grovel-allocated structures yourself. They are
+alien types, so the garbage collector will not collect them when you
+drop the last reference.
+
+     <li>If you use the <code>with-mystruct</code> macro, be sure that no references
+to the variable thus allocated leaks out. It will be deallocated when
+the block exits. 
+</ul>
+
+   </body></html>
+

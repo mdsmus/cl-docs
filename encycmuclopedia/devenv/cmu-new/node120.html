@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.2.8 Structure Types</TITLE>
+<META NAME="description" CONTENT="5.2.8 Structure Types">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2213" HREF="node121.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2211" HREF="node112.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2205" HREF="node119.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2215" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2216" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2214" HREF="node121.html">The Freeze-Type Declaration</A>
+<B>Up:</B> <A NAME="tex2html2212" HREF="node112.html">5.2 More About Types </A>
+<B> Previous:</B> <A NAME="tex2html2206" HREF="node119.html">5.2.7 The Values Declaration</A>
+<BR> <P>
+<H2><A NAME="SECTION00628000000000000000">5.2.8 Structure Types</A></H2>
+<P>
+<A NAME="structuretypes">&#160;</A>
+<A NAME="9827">&#160;</A>
+<A NAME="9828">&#160;</A>
+<A NAME="9829">&#160;</A>
+<P>
+Because of precise type checking, structure types are much better supported by
+Python than by conventional compilers:
+<UL>
+<LI> The structure argument to structure accessors is precisely
+  checked--if you call <tt>foo-a</tt> on a <tt>bar</tt>, an error
+  will be signaled.
+<LI> The types of slot values are precisely checked--if you pass
+  the wrong type argument to a constructor or a slot setter, then an
+  error will be signaled.
+</UL>
+This error checking is tremendously useful for detecting bugs in
+programs that manipulate complex data structures.
+<P>
+An additional advantage of checking structure types and enforcing slot
+types is that the compiler can safely believe slot type declarations.
+Python effectively moves the type checking from the slot access to
+the slot setter or constructor call.  This is more efficient since
+caller of the setter or constructor often knows the type of the value,
+entirely eliminating the need to check the value's type.  Consider
+this example:
+<BLOCKQUOTE> <PRE>(defstruct coordinate
+  (x nil :type single-float)
+  (y nil :type single-float))
+<P>
+(defun make-it ()
+  (make-coordinate :x 1.0 :y 1.0))
+<P>
+(defun use-it (it)
+  (declare (type coordinate it))
+  (sqrt (expt (coordinate-x it) 2) (expt (coordinate-y it) 2)))
+</PRE> </BLOCKQUOTE>
+<tt>make-it</tt> and <tt>use-it</tt> are compiled with no checking on the
+types of the float slots, yet <tt>use-it</tt> can use
+<tt>single-float</tt> arithmetic with perfect safety.  Note that
+<tt>make-coordinate</tt> must still check the values of <tt>x</tt> and
+<tt>y</tt> unless the call is block compiled or inline expanded
+(see section&nbsp;<A HREF="node142.html#localcall">5.6</A>.)  But even without this advantage, it is almost
+always more efficient to check slot values on structure
+initialization, since slots are usually written once and read many
+times.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

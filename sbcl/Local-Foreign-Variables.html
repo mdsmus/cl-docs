@@ -1,0 +1,75 @@
+<html lang="en">
+<head>
+<title>Local Foreign Variables - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Foreign-Variables.html#Foreign-Variables" title="Foreign Variables">
+<link rel="next" href="External-Foreign-Variables.html#External-Foreign-Variables" title="External Foreign Variables">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Local-Foreign-Variables"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="External-Foreign-Variables.html#External-Foreign-Variables">External Foreign Variables</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Foreign-Variables.html#Foreign-Variables">Foreign Variables</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">7.4.1 Local Foreign Variables</h4>
+
+<div class="defun">
+&mdash; Macro: <b>sb-alien:with-alien</b><var> var-definitions &amp;body body<a name="index-sb_002dalien_003awith_002dalien-274"></a></var><br>
+<blockquote><p><a name="index-with_002dalien-275"></a>
+The <code>with-alien</code> macro establishes local foreign variables with
+the specified alien types and names.  This form is analogous to
+defining a local variable in C: additional storage is allocated, and
+the initial value is copied.  This form is less analogous to
+<code>LET</code>-allocated Lisp variables, since the variables can't be
+captured in closures: they live only for the dynamic extent of the
+body, and referring to them outside is a gruesome error.
+
+        <p>The <var>var-definitions</var> argument is a list of
+variable definitions, each of the form
+     <pre class="lisp">          (<var>name</var> <var>type</var> &amp;optional <var>initial-value</var>)
+</pre>
+        <p>The names of the variables are established as symbol-macros; the
+bindings have lexical scope, and may be assigned with <code>setq</code> or
+<code>setf</code>.
+
+        <p>The <code>with-alien</code> macro also establishes a new scope for named
+structures and unions.  Any <var>type</var> specified for a variable may
+contain named structure or union types with the slots specified. 
+Within the lexical scope of the binding specifiers and body, a locally
+defined foreign structure type <var>foo</var> can be referenced by its name
+using <code>(struct </code><var>foo</var><code>)</code>. 
+</p></blockquote></div>
+
+   </body></html>
+

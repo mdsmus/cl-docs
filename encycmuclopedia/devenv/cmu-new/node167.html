@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.11 Numbers</TITLE>
+<META NAME="description" CONTENT="5.11 Numbers">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2796" HREF="node168.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2794" HREF="node105.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2788" HREF="node166.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2798" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2799" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2797" HREF="node168.html">5.11.1 Descriptors</A>
+<B>Up:</B> <A NAME="tex2html2795" HREF="node105.html">5 Advanced Compiler Use </A>
+<B> Previous:</B> <A NAME="tex2html2789" HREF="node166.html">5.10.6 Hashtables</A>
+<BR> <P>
+<H1><A NAME="SECTION006110000000000000000">5.11 Numbers</A></H1>
+<P>
+<A NAME="numerictypes">&#160;</A>
+<A NAME="10506">&#160;</A>
+<A NAME="10507">&#160;</A>
+<P>
+Numbers are interesting because numbers are one of the few Common Lisp data types
+that have direct support in conventional hardware.  If a number can be
+represented in the way that the hardware expects it, then there is a big
+efficiency advantage.
+<P>
+Using hardware representations is problematical in Common Lisp due to
+dynamic typing (where the type of a value may be unknown at compile
+time.)  It is possible to compile code for statically typed portions
+of a Common Lisp program with efficiency comparable to that obtained in
+statically typed languages such as C, but not all Common Lisp
+implementations succeed.  There are two main barriers to efficient
+numerical code in Common Lisp:
+<UL>
+<LI> The compiler must prove that the numerical expression is in fact
+  statically typed, and
+<LI> The compiler must be able to somehow reconcile the conflicting
+  demands of the hardware mandated number representation with the
+  Common Lisp requirements of dynamic typing and garbage-collecting
+  dynamic storage allocation.
+</UL>
+<P>
+Because of its type inference (see section&nbsp;<A HREF="node124.html#typeinference">5.3</A>) and efficiency
+notes (see section&nbsp;<A HREF="node185.html#efficiencynotes">5.13</A>), Python is better than
+conventional Common Lisp compilers at ensuring that numerical expressions
+are statically typed.  Python also goes somewhat farther than existing
+compilers in the area of allowing native machine number
+representations in the presence of garbage collection.
+<P>
+<BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html2800" HREF="node168.html#SECTION006111000000000000000">5.11.1 Descriptors</A>
+<LI> <A NAME="tex2html2801" HREF="node169.html#SECTION006112000000000000000">Non-Descriptor Representations</A>
+<LI> <A NAME="tex2html2802" HREF="node170.html#SECTION006113000000000000000">5.11.3 Variables</A>
+<LI> <A NAME="tex2html2803" HREF="node171.html#SECTION006114000000000000000">5.11.4 Generic Arithmetic</A>
+<LI> <A NAME="tex2html2804" HREF="node172.html#SECTION006115000000000000000">5.11.5 Fixnums</A>
+<LI> <A NAME="tex2html2805" HREF="node173.html#SECTION006116000000000000000">5.11.6 Word Integers</A>
+<LI> <A NAME="tex2html2806" HREF="node174.html#SECTION006117000000000000000">5.11.7 Floating Point Efficiency</A>
+<LI> <A NAME="tex2html2807" HREF="node175.html#SECTION006118000000000000000">5.11.8 Specialized Arrays</A>
+<LI> <A NAME="tex2html2808" HREF="node176.html#SECTION006119000000000000000">5.11.9 Specialized Structure Slots</A>
+<LI> <A NAME="tex2html2809" HREF="node177.html#SECTION0061110000000000000000">5.11.10 Interactions With Local Call</A>
+<LI> <A NAME="tex2html2810" HREF="node178.html#SECTION0061111000000000000000">5.11.11 Representation of Characters</A>
+</UL>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

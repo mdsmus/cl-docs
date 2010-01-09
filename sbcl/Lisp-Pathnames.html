@@ -1,0 +1,102 @@
+<html lang="en">
+<head>
+<title>Lisp Pathnames - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Pathnames.html#Pathnames" title="Pathnames">
+<link rel="next" href="Native-Filenames.html#Native-Filenames" title="Native Filenames">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Lisp-Pathnames"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Native-Filenames.html#Native-Filenames">Native Filenames</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Pathnames.html#Pathnames">Pathnames</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">8.1 Lisp Pathnames</h3>
+
+<p>There are many aspects of ANSI Common Lisp's pathname support which are
+implementation-defined and so need documentation.
+
+<!-- FIXME: as a matter of ANSI conformance, we are required to document -->
+<!-- implementation-defined stuff, which for pathnames (chapter 19 of CLtS) -->
+<!-- includes: -->
+<!-- * Otherwise, the parsing of thing is implementation-defined. -->
+<!-- (PARSE-NAMESTRING) -->
+<!-- * If thing contains an explicit host name and no explicit device name, -->
+<!-- then it is implementation-defined whether parse-namestring will supply -->
+<!-- the standard default device for that host as the device component of -->
+<!-- the resulting pathname.  (PARSE-NAMESTRING) -->
+<!-- * The specific nature of the search is implementation-defined. -->
+<!-- (LOAD-LOGICAL-PATHNAME-TRANSLATIONS) -->
+<!-- * Any additional elements are implementation-defined. -->
+<!-- (LOGICAL-PATHNAME-TRANSLATIONS) -->
+<!-- * The matching rules are implementation-defined but should be consistent -->
+<!-- with directory.  (PATHNAME-MATCH-P) -->
+<!-- * Any such additional translations are implementation-defined. -->
+<!-- (TRANSLATE-LOGICAL-PATHNAMES) -->
+<!-- * ...or an implementation-defined portion of a component... -->
+<!-- (TRANSLATE-PATHNAME) -->
+<!-- * The portion of source that is copied into the resulting pathname is -->
+<!-- implementation-defined.  (TRANSLATE-PATHNAME) -->
+<!-- * During the copying of a portion of source into the resulting -->
+<!-- pathname, additional implementation-defined translations of case or -->
+<!-- file naming conventions might occur.  (TRANSLATE-PATHNAME) -->
+<!-- * In general, the syntax of namestrings involves the use of -->
+<!-- implementation-defined conventions.  (19.1.1) -->
+<!-- * The nature of the mapping between structure imposed by pathnames and -->
+<!-- the structure, if any, that is used by the underlying file system is -->
+<!-- implementation-defined.  (19.1.2) -->
+<!-- * The mapping of the pathname components into the concepts peculiar to -->
+<!-- each file system is implementation-defined.  (19.1.2) -->
+<!-- * Whether separator characters are permitted as part of a string in a -->
+<!-- pathname component is implementation-defined;  (19.2.2.1.1) -->
+<!-- * Whether a value of :unspecific is permitted for any component on any -->
+<!-- given file system accessible to the implementation is -->
+<!-- implementation-defined.  (19.2.2.2.3) -->
+<!-- * Other symbols and integers have implementation-defined meaning. -->
+<!-- (19.2.2.4.6) -->
+<h4 class="subsection">8.1.1 The SYS Logical Pathname Host</h4>
+
+<p><a name="index-Logical-pathnames-289"></a><a name="index-Pathnames_002c-logical-290"></a><a name="index-logical_002dpathname_002dtranslations-291"></a><a name="index-g_t_0028setf-logical_002dpathname_002dtranslations_0029-292"></a>
+<!-- * The existence and meaning of SYS: logical pathnames is -->
+<!-- implementation-defined.  (19.3.1.1.1) -->
+
+   <p>The logical pathname host named by <code>"SYS"</code> exists in SBCL.  Its
+<code>logical-pathname-translations</code> may be set by the site or the user
+applicable to point to the locations of the system's sources; in
+particular, the core system's source files match the logical pathname
+<code>"SYS:SRC;**;*.*.*"</code>, and the contributed modules' source files
+match <code>"SYS:CONTRIB;**;*.*.*"</code>.
+
+   </body></html>
+

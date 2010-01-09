@@ -1,0 +1,240 @@
+<html lang="en">
+<head>
+<title>Running external programs - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Support-For-Unix.html#Support-For-Unix" title="Support For Unix">
+<link rel="prev" href="Querying-the-process-environment.html#Querying-the-process-environment" title="Querying the process environment">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Running-external-programs"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Querying-the-process-environment.html#Querying-the-process-environment">Querying the process environment</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Support-For-Unix.html#Support-For-Unix">Support For Unix</a>
+<hr>
+</div>
+
+<h4 class="subsection">6.3.3 Running external programs</h4>
+
+<p>External programs can be run with <code>sb-ext:run-program</code>. 
+<a rel="footnote" href="#fn-1" name="fnd-1"><sup>1</sup></a>
+
+   <p><a name="Function-sb_002dext_003arun_002dprogram"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:run-program</b><var> program args &amp;key env environment wait search pty input if-input-does-not-exist output if-output-exists error if-error-exists status-hook<a name="index-sb_002dext_003arun_002dprogram-209"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003arun_002dprogram-210"></a><code>run-program</code> creates a new process specified by the <code>program</code>
+argument. <code>args</code> are the standard arguments that can be passed to a
+program. For no arguments, use <code>nil</code> (which means that just the
+name of the program is passed as arg 0).
+
+        <p>The program arguments and the environment are encoded using the
+default external format for streams.
+
+        <p><code>run-program</code> will return a <code>process</code> structure. See the <code>cmu</code> Common Lisp
+Users Manual for details about the <code>process</code> structure.
+
+        <p>Notes about Unix environments (as in the <code>:environment</code> and <code>:env</code> args):
+
+          <ul>
+<li>The <code>sbcl</code> implementation of <code>run-program</code>, like Perl and many other
+     programs, but unlike the original <code>cmu</code> <code>cl</code> implementation, copies
+     the Unix environment by default.
+
+          <li>Running Unix programs from a setuid process, or in any other
+     situation where the Unix environment is under the control of someone
+     else, is a mother lode of security problems. If you are contemplating
+     doing this, read about it first. (The Perl community has a lot of good
+     documentation about this and other security issues in script-like
+     programs.)
+
+        </ul>
+           The <code>&amp;key</code> arguments have the following meanings:
+
+          <dl>
+<dt><code>:environment</code><dd>      a list of STRINGs describing the new Unix environment
+      (as in "man environ"). The default is to copy the environment of
+      the current process.
+
+          <br><dt><code>:env</code><dd>      an alternative lossy representation of the new Unix environment,
+      for compatibility with <code>cmu</code> <code>cl</code>
+
+          <br><dt><code>:search</code><dd>      Look for <code>program</code> in each of the directories in the child's $PATH
+      environment variable.  Otherwise an absolute pathname is required.
+
+          <br><dt><code>:wait</code><dd>      If non-NIL (default), wait until the created process finishes.  If
+      <code>nil</code>, continue running Lisp until the program finishes.
+
+          <br><dt><code>:pty</code><dd>      Either <code>t</code>, <code>nil</code>, or a stream.  Unless <code>nil</code>, the subprocess is established
+      under a <code>pty</code>.  If :pty is a stream, all output to this pty is sent to
+      this stream, otherwise the <code>process-pty</code> slot is filled in with a stream
+      connected to pty that can read output and write input.
+
+          <br><dt><code>:input</code><dd>      Either <code>t</code>, <code>nil</code>, a pathname, a stream, or <code>:stream</code>.  If <code>t</code>, the standard
+      input for the current process is inherited.  If <code>nil</code>, /dev/null
+      is used.  If a pathname, the file so specified is used.  If a stream,
+      all the input is read from that stream and sent to the subprocess.  If
+      <code>:stream</code>, the <code>process-input</code> slot is filled in with a stream that sends
+      its output to the process. Defaults to <code>nil</code>.
+
+          <br><dt><code>:if-input-does-not-exist</code><em> (when </em><code>:input</code><em> is the name of a file)</em><dd>      can be one of:
+         <code>:error</code> to generate an error
+         <code>:create</code> to create an empty file
+         <code>nil</code> (the default) to return <code>nil</code> from <code>run-program</code>
+
+          <br><dt><code>:output</code><dd>      Either <code>t</code>, <code>nil</code>, a pathname, a stream, or <code>:stream</code>.  If <code>t</code>, the standard
+      output for the current process is inherited.  If <code>nil</code>, /dev/null
+      is used.  If a pathname, the file so specified is used.  If a stream,
+      all the output from the process is written to this stream. If
+      <code>:stream</code>, the <code>process-output</code> slot is filled in with a stream that can
+      be read to get the output. Defaults to <code>nil</code>.
+
+          <br><dt><code>:if-output-exists</code><em> (when </em><code>:output</code><em> is the name of a file)</em><dd>      can be one of:
+         <code>:error</code> (the default) to generate an error
+         <code>:supersede</code> to supersede the file with output from the program
+         <code>:append</code> to append output from the program to the file
+         <code>nil</code> to return <code>nil</code> from <code>run-program</code>, without doing anything
+
+          <br><dt><code>:error</code><em> and </em><code>:if-error-exists</code><dd>      Same as <code>:output</code> and <code>:if-output-exists</code>, except that <code>:error</code> can also be
+      specified as <code>:output</code> in which case all error output is routed to the
+      same place as normal output.
+
+          <br><dt><code>:status-hook</code><dd>      This is a function the system calls whenever the status of the
+      process changes.  The function takes the process as an argument. 
+</dl>
+
+        </blockquote></div>
+
+   <p>When <code>sb-ext:run-program</code> is called with <code>wait</code> equal to
+NIL, an instance of class <var>sb-ext:process</var> is returned.  The
+following functions are available for use with processes:
+
+   <p><a name="Function-sb_002dext_003aprocess_002dp"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:process-p</b><var> object<a name="index-sb_002dext_003aprocess_002dp-211"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003aprocess_002dp-212"></a><code>t</code> if <code>object</code> is a <code>process</code>, <code>nil</code> otherwise. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003aprocess_002dinput"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:process-input</b><var> instance<a name="index-sb_002dext_003aprocess_002dinput-213"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003aprocess_002dinput-214"></a>The input stream of the process or <code>nil</code>. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003aprocess_002doutput"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:process-output</b><var> instance<a name="index-sb_002dext_003aprocess_002doutput-215"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003aprocess_002doutput-216"></a>The output stream of the process or <code>nil</code>. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003aprocess_002derror"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:process-error</b><var> instance<a name="index-sb_002dext_003aprocess_002derror-217"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003aprocess_002derror-218"></a>The error stream of the process or <code>nil</code>. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003aprocess_002dalive_002dp"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:process-alive-p</b><var> process<a name="index-sb_002dext_003aprocess_002dalive_002dp-219"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003aprocess_002dalive_002dp-220"></a>Return <code>t</code> if <code>process</code> is still alive, <code>nil</code> otherwise. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003aprocess_002dstatus"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:process-status</b><var> process<a name="index-sb_002dext_003aprocess_002dstatus-221"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003aprocess_002dstatus-222"></a>Return the current status of <code>process</code>.  The result is one of <code>:running</code>,
+   <code>:stopped</code>, <code>:exited</code>, or <code>:signaled</code>. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003aprocess_002dwait"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:process-wait</b><var> process &amp;optional check-for-stopped<a name="index-sb_002dext_003aprocess_002dwait-223"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003aprocess_002dwait-224"></a>Wait for <code>process</code> to quit running for some reason. When
+<code>check-for-stopped</code> is <code>t</code>, also returns when <code>process</code> is stopped. Returns
+<code>process</code>. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003aprocess_002dexit_002dcode"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:process-exit-code</b><var> instance<a name="index-sb_002dext_003aprocess_002dexit_002dcode-225"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003aprocess_002dexit_002dcode-226"></a>The exit code or the signal of a stopped process. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003aprocess_002dcore_002ddumped"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:process-core-dumped</b><var> instance<a name="index-sb_002dext_003aprocess_002dcore_002ddumped-227"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003aprocess_002dcore_002ddumped-228"></a><code>t</code> if a core image was dumped by the process. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003aprocess_002dclose"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:process-close</b><var> process<a name="index-sb_002dext_003aprocess_002dclose-229"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003aprocess_002dclose-230"></a>Close all streams connected to <code>process</code> and stop maintaining the
+status slot. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dext_003aprocess_002dkill"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:process-kill</b><var> process signal &amp;optional whom<a name="index-sb_002dext_003aprocess_002dkill-231"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003aprocess_002dkill-232"></a>Hand <code>signal</code> to <code>process</code>. If <code>whom</code> is <code>:pid</code>, use the kill Unix system call. If
+   <code>whom</code> is <code>:process-group</code>, use the killpg Unix system call. If <code>whom</code> is
+   <code>:pty-process-group</code> deliver the signal to whichever process group is
+   currently in the foreground. 
+</p></blockquote></div>
+
+   <div class="footnote">
+<hr>
+<h4>Footnotes</h4><p class="footnote"><small>[<a name="fn-1" href="#fnd-1">1</a>]</small> In SBCL versions prior to 1.0.13, <code>sb-ext:run-program</code>
+searched for executables in a manner somewhat incompatible with other
+languages.  As of this version, SBCL uses the system library routine
+<code>execvp(3)</code>, and no longer contains the function,
+<code>find-executable-in-search-path</code>, which implemented the old
+search.  Users who need this function may find it
+in <samp><span class="file">run-program.lisp</span></samp> versions 1.67 and earlier in SBCL's CVS
+repository here
+<a href="http://sbcl.cvs.sourceforge.net/sbcl/sbcl/src/code/run-program.lisp?view=log">http://sbcl.cvs.sourceforge.net/sbcl/sbcl/src/code/run-program.lisp?view=log</a>. However,
+we caution such users that this search routine finds executables that
+system library routines do not.</p>
+
+   <hr></div>
+
+   </body></html>
+

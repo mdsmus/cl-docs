@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>3.2 The Command Loop</TITLE>
+<META NAME="description" CONTENT="3.2 The Command Loop">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1374" HREF="node62.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1372" HREF="node59.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1366" HREF="node60.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1376" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1377" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1375" HREF="node62.html">3.3 Stack Frames</A>
+<B>Up:</B> <A NAME="tex2html1373" HREF="node59.html">3 The Debugger</A>
+<B> Previous:</B> <A NAME="tex2html1367" HREF="node60.html">3.1 Debugger Introduction</A>
+<BR> <P>
+<H1><A NAME="SECTION00420000000000000000">3.2 The Command Loop</A></H1>
+<P>
+The debugger is an interactive read-eval-print loop much like the normal
+top-level, but some symbols are interpreted as debugger commands instead
+of being evaluated.  A debugger command starts with the symbol name of
+the command, possibly followed by some arguments on the same line.  Some
+commands prompt for additional input.  Debugger commands can be
+abbreviated by any unambiguous prefix: <tt>help</tt> can be typed as
+<tt>h</tt>, <tt>he</tt>, etc.  For convenience, some commands have
+ambiguous one-letter abbreviations: <tt>f</tt> for <tt>frame</tt>.
+<P>
+The package is not significant in debugger commands; any symbol with the
+name of a debugger command will work.  If you want to show the value of
+a variable that happens also to be the name of a debugger command, you
+can use the <tt>list-locals</tt> command or the <tt>debug:var</tt>
+function, or you can wrap the variable in a <tt>progn</tt> to hide it from
+the command loop.
+<P>
+The debugger prompt is ``<i>frame</i><tt>]</tt>'', where <i>frame</i> is the number
+of the current frame.  Frames are numbered starting from zero at the top (most
+recent call), increasing down to the bottom.  The current frame is the frame
+that commands refer to.  The current frame also provides the lexical
+environment for evaluation of non-command forms.
+<P>
+<A NAME="8715">&#160;</A> The debugger evaluates forms in the lexical
+environment of the functions being debugged.  The debugger can only
+access variables.  You can't <tt>go</tt> or <tt>return-from</tt> into a
+function, and you can't call local functions.  Special variable
+references are evaluated with their current value (the innermost binding
+around the debugger invocation)--you don't get the value that the
+special had in the current frame.  See section&nbsp;<A HREF="node69.html#debugvars">3.4</A> for more
+information on debugger variable access.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

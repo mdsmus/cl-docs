@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>33.9. Oracle Interface</title><link rel="stylesheet" href="impnotes.css" type="text/css" /><link rev="made" href="mailto:clisp-list@lists.sourceforge.net" /><meta name="generator" content="DocBook XSL Stylesheets Vsnapshot_7566" /><link rel="start" href="index.html" title="Implementation Notes for GNU CLISP" /><link rel="up" href="ext-modules.html" title="Chapter 33. Extensions Implemented as Modules" /><link rel="prev" href="postgresql.html" title="33.8. PostgreSQL Database Access" /><link rel="next" href="libsvm.html" title="33.10. LibSVM Interface" /><link rel="copyright" href="legalese.html" title="Legal Status of the CLISP Implementation Notes" /><meta name="date" content="'generated: 2008-07-02 11:52:30-04:00'" /><link rel="author" title="Authors" href="index.html#authors" /><link rel="contents" title="Table of Contents" href="index.html" /><link rel="glossary" href="glossary.html" /><link rel="help" href="faq.html#faq-help" title="How do I ask for help?" /><link rel="home" title="Home" href="http://clisp.cons.org" /><link rel="index" href="idx.html" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">33.9. Oracle Interface</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="postgresql.html">Prev</a> </td><th width="60%" align="center">Chapter 33. Extensions Implemented as Modules</th><td width="20%" align="right"> <a accesskey="n" href="libsvm.html">Next</a></td></tr></table><hr /></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="oracle"></a>33.9. <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> Interface</h2></div></div></div><div class="toc"><dl><dt><span class="section"><a href="oracle.html#ora-functionality">33.9.1. Functions and Macros in
+  package ORACLE</a></span></dt><dt><span class="section"><a href="oracle.html#ora-example">33.9.2. Oracle Example</a></span></dt><dt><span class="section"><a href="oracle.html#ora-config">33.9.3. Oracle Configuration</a></span></dt><dt><span class="section"><a href="oracle.html#ora-build">33.9.4. Building the Oracle Interface</a></span></dt></dl></div><p>
+The <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> module allows a <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> program to act as client to an
+<a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> database server.  The module includes full
+SQL support, transactions (including auto-commit), support for most
+<a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> data types (<span class="type">LONG</span>, <span class="type">BLOB</span>,
+<span class="type">CLOB</span>, <span class="type">RAW</span>, etc.), automatic conversion
+between <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> and <a class="ulink" href="http://www.lisp.org" target="_top"><span class="command"><strong>Common Lisp</strong></span></a> data types, database connection caching and
+retry, concurrent connections to multiple databases, proper handling
+of <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> errors, and more.</p><p>The module can be used to build sophisticated <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> database
+applications in <a class="ulink" href="http://www.lisp.org" target="_top"><span class="command"><strong>Common Lisp</strong></span></a>.</p><p>When this module is present, <a href="features.html" class="olink"><code class="varname">*FEATURES*</code></a> contains the
+ symbol <code class="constant">:ORACLE</code>.</p><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="ora-functionality"></a>33.9.1. Functions and Macros in
+  package <strong class="package">“<span class="quote">ORACLE</span>”</strong></h3></div></div></div><p>Access to <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> is via these functions and macros in
+package <strong class="package">“<span class="quote">ORACLE</span>”</strong>.
+When any <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> function fails, the general Lisp function
+<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_error.html" target="_top"><code class="function">ERROR</code></a> is called, with the condition string set to
+include the <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> error number, the <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> message text,
+and other context of the error (e.g., the text and parse location of a
+SQL query).</p>
+<!--List of functions an macros-->
+<div class="variablelist">
+<!--CONNECT-->
+<dl><dt><a id="ora-connect"></a><span class="term"><code class="code">(ORACLE:CONNECT
+<em class="replaceable"><code>user</code></em> <em class="replaceable"><code>password</code></em>
+<em class="replaceable"><code>server</code></em>
+<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/sec_3-4-1.html" target="_top"><code class="literal">&amp;OPTIONAL</code></a>
+<em class="replaceable"><code>schema</code></em>
+<em class="replaceable"><code>auto-commit</code></em>
+<em class="replaceable"><code>prefetch-buffer-bytes</code></em>
+<em class="replaceable"><code>long-len</code></em>
+<em class="replaceable"><code>truncate-ok</code></em>)</code></span></dt><dd><p>
+
+Connect to an <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> database.  All subsequent operations will affect
+this database until the next call to <a class="link" href="oracle.html#ora-connect"><code class="function">ORACLE:CONNECT</code></a>.  A
+single program can access different <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> schemas concurrently by
+repeated calls to <a class="link" href="oracle.html#ora-connect"><code class="function">ORACLE:CONNECT</code></a>.  Database connections
+are cached and re-used: if you call <a class="link" href="oracle.html#ora-connect"><code class="function">ORACLE:CONNECT</code></a> again
+with the same <em class="replaceable"><code>user</code></em>,
+<em class="replaceable"><code>schema</code></em>, and
+<em class="replaceable"><code>server</code></em>, the previous <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> connection will
+be re-used.  <a class="link" href="oracle.html#ora-connect"><code class="function">ORACLE:CONNECT</code></a> may not be called inside
+<code class="function">WITH-TRANSACTION</code>.
+
+Returns: <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_t.html" target="_top"><code class="constant">T</code></a> if a cached connection was re-used, <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_nil.html" target="_top"><code class="constant">NIL</code></a> if a new
+connection was created (and cached).
+
+The meaning of the arguments is as follows:
+</p><div class="variablelist"><p class="title"><b>Arguments for <a class="link" href="oracle.html#ora-connect"><code class="function">ORACLE:CONNECT</code></a></b></p><dl><dt><span class="term"><em class="replaceable"><code>user</code></em></span></dt><dd><a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> user ID</dd><dt><span class="term"><em class="replaceable"><code>password</code></em></span></dt><dd>Password for user, or <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_nil.html" target="_top"><code class="constant">NIL</code></a> if
+   <em class="replaceable"><code>user</code></em> has no password (!).
+</dd><dt><span class="term"><em class="replaceable"><code>server</code></em></span></dt><dd><a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> server ID (SID).
+</dd><dt><span class="term"><em class="replaceable"><code>schema</code></em></span></dt><dd><a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> default schema (default: <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_nil.html" target="_top"><code class="constant">NIL</code></a>).
+   If <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_nil.html" target="_top"><code class="constant">NIL</code></a>, same as user.  This allows you to log on with one user's
+   id/password but see the database as if you were some other user.
+</dd><dt><span class="term"><em class="replaceable"><code>auto-commit</code></em></span></dt><dd>Flag: whether to commit after every operation
+   (default: <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_t.html" target="_top"><code class="constant">T</code></a>). Set this to <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_nil.html" target="_top"><code class="constant">NIL</code></a> if you intend to do transactions
+   and call <code class="function">COMMIT</code> explicitly.  However,
+   <code class="function">WITH-TRANSACTION</code> is probably easier.
+</dd><dt><span class="term"><em class="replaceable"><code>prefetch-buffer-bytes</code></em></span></dt><dd>Number of bytes to cache from SQL SELECT fetches
+   (default: 64 Kbytes) If you are very short of memory, or have a slow
+   connection to <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a>, you can reduce this to 10k or so.
+   Alternatively, if you have a fast connection to <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> and
+   regularly do large queries, you can increase throughput by increasing
+   this value.</dd><dt><span class="term"><em class="replaceable"><code>long-len</code></em></span></dt><dd>Number of bytes to fetch for "long" (LONG, [BC]LOB)
+   types.  Long data that exceeds this size will raise an error, or be
+   truncated depending on the value of <em class="replaceable"><code>truncate-ok</code></em>
+   (below).  Setting <em class="replaceable"><code>long-len</code></em> to zero and
+   <em class="replaceable"><code>truncate-ok</code></em> to <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_nil.html" target="_top"><code class="constant">NIL</code></a> will disable long
+   fetching entirely.  If <em class="replaceable"><code>long-len</code></em> is <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_nil.html" target="_top"><code class="constant">NIL</code></a>
+   or negative, defaults to 500k bytes.</dd><dt><span class="term"><em class="replaceable"><code>truncate-ok</code></em></span></dt><dd>Flag: if set, allow truncation of LONG columns to
+   <em class="replaceable"><code>long-len</code></em> bytes on fetch; otherwise, fetches
+   of LONG columns exceeding <em class="replaceable"><code>long-len</code></em> bytes
+   will raise an error.  Default: <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_nil.html" target="_top"><code class="constant">NIL</code></a>.</dd></dl></div></dd>
+<!--DISCONNECT-->
+<dt><a id="ora-disconnect"></a><span class="term"><code class="code">(ORACLE:DISCONNECT)</code></span></dt><dd>
+Disconnect from the database currently connected.  No more calls can
+be made until <a class="link" href="oracle.html#ora-connect"><code class="function">ORACLE:CONNECT</code></a> is called again.  The
+connection is closed and removed from the connection cache.  Does
+nothing if there is no connection.  <code class="function">DISCONNECT</code>
+may not be called inside <code class="function">WITH-TRANSACTION</code>.
+Returns <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_nil.html" target="_top"><code class="constant">NIL</code></a>.
+</dd>
+<!--RUN-SQL-->
+<dt><a id="ora-run-sql"></a><span class="term"><code class="code">(ORACLE:RUN-SQL
+<em class="replaceable"><code>sql</code></em>
+<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/sec_3-4-1.html" target="_top"><code class="literal">&amp;OPTIONAL</code></a>
+<em class="replaceable"><code>params</code></em>
+<em class="replaceable"><code>is-select</code></em>)</code></span></dt><dd><p>Execute a SQL statement.  Must be <a class="link" href="oracle.html#ora-connect"><code class="function">ORACLE:CONNECT</code></a>ed
+to a database.  Returns the number of rows affected by the SQL operation,
+for non-SELECT statements, zero for SELECT statements.  For
+destructive database operations (INSERT, UPDATE, DELETE), the results
+are committed to the database immediately if
+<em class="replaceable"><code>auto-commit</code></em> when establishing the current
+connection; see <a class="link" href="oracle.html#ora-connect"><code class="function">ORACLE:CONNECT</code></a>.  The meaning of the
+arguments is as follows: </p><div class="variablelist"><p class="title"><b>Arguments for <code class="function">RUN-SQL</code></b></p><dl><dt><span class="term"><em class="replaceable"><code>sql</code></em></span></dt><dd>Text of SQL statement, as a string.
+   The <em class="replaceable"><code>sql</code></em> statement may contain
+   <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> "named parameters," e.g. ":myparam" whose values will
+   be substituted from the parameters given
+   in <em class="replaceable"><code>params</code></em>.
+</dd><dt><span class="term"><em class="replaceable"><code>params</code></em></span></dt><dd>A mapping of the names of the bind-parameters in the
+   query to their values.  The set of named parameters in the query must
+   match exactly the keys mapped by <em class="replaceable"><code>params</code></em>.
+   The mapping may be passed as either (1) a hash table whose keys are
+   the named parameters or (2) a list of pairs, ((name value) (name
+   value) ...).  Parameter values passed from Lisp are converted to the
+   appropriate <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> data types (see <code class="function">FETCH</code>).
+</dd><dt><span class="term"><em class="replaceable"><code>is-select</code></em></span></dt><dd>Flag: whether the statement is a SELECT query.  You
+   usually do not need to set this as it is detected by default based on
+   the SQL text.  However, there are situations, such as when a SELECT
+   query begins with comment, that you need to specify it explicitly.
+</dd></dl></div></dd>
+<!--DO-ROWS-->
+<dt><a id="ora-do-rows"></a><span class="term"><code class="code">(ORACLE:DO-ROWS
+<em class="replaceable"><code>vars</code></em> <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/sec_3-4-4.html" target="_top"><code class="literal">&amp;BODY</code></a> <em class="replaceable"><code>body</code></em>)</code></span></dt><dd><p> Macro which loops over a SQL SELECT result,
+   evaluating, for each row in the result, the forms in <em class="replaceable"><code>body</code></em>,
+   binding symbols given in <em class="replaceable"><code>vars</code></em> to
+   corresponding database columns in the SELECT result.  The
+   argument <em class="replaceable"><code>vars</code></em> must be a non-empty list of
+   symbols matching a subset of the columns of an active SELECT query.
+   If a SELECT column is an <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> expression such as
+   <code class="literal">SUBSTR(mycol, 1, 10)</code>, it is recommended to use a
+   column alias, e.g., <code class="literal">SELECT SUBSTR(mycol, 1, 10) AS
+    myvar</code>, in which case the column alias will be used as the
+   symbol bound to the column value.</p><p>As <code class="function">DO-ROWS</code> expands into a <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/mac_docm_dost.html" target="_top"><code class="function">DO*</code></a>
+   loop, it may be terminated prematurely, before all rows are fetched,
+   by using <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/mac_return.html" target="_top"><code class="function">RETURN</code></a> anywhere in <em class="replaceable"><code>body</code></em>.</p><p>It is allowed to call <a class="link" href="oracle.html#ora-connect"><code class="function">ORACLE:CONNECT</code></a> in the
+   <em class="replaceable"><code>body</code></em> of the loop, but only to switch the connection to a database
+   other than the one that was used to do the SELECT.  This is useful
+   for reading from one database while writing to another.
+  </p><p>In <em class="replaceable"><code>vars</code></em>, instead of a single
+   symbol, a pair (<em class="replaceable"><code>bound-var</code></em>
+   <em class="replaceable"><code>"column-name"</code></em>) may be specified, which
+   will cause values from the SELECTed column or alias ,
+   <em class="replaceable"><code>column-name</code></em>, to be bound to Lisp variable,
+   <em class="replaceable"><code>bound-var</code></em>.  This is for unusual cases
+   where a Lisp variable cannot be created with the same name as the
+   column (e.g., a column named "T"), or when it is inconvenient or
+   impossible to alias the column with <code class="literal">SELECT ... AS</code>.
+</p></dd>
+<!--FETCH-->
+<dt><a id="ora-fetch"></a><span class="term"><code class="code">(ORACLE:FETCH
+   <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/sec_3-4-1.html" target="_top"><code class="literal">&amp;OPTIONAL</code></a> <em class="replaceable"><code>result-type</code></em>)</code></span></dt><dd><p>Fetch a single row of data.  Returns a row of values
+   corresponding to the columns of an active SELECT statment.  The row
+   data is returned in one of three different forms, depending on the
+   value of the symbol <em class="replaceable"><code>result-type</code></em>:
+</p><div class="variablelist"><p class="title"><b>Return values for <code class="function">FETCH</code></b></p><dl><dt><span class="term"><code class="classname">ARRAY</code></span></dt><dd>Values will be returned in an <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_array.html" target="_top"><code class="classname">ARRAY</code></a> with the
+    same number of columns as in the SELECT statement, in the same
+    order.  This is the default.</dd><dt><span class="term"><code class="classname">PAIRS</code></span></dt><dd>A list of pairs, <code class="literal">((column, value)
+     ...)</code> is be returned.  The number and order of pairs is
+    the same as the columns in the SELECT statement.
+ </dd><dt><span class="term"><code class="classname">HASH</code></span></dt><dd>A <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_hash-table.html" target="_top"><code class="classname">HASH-TABLE</code></a> whose keys are the column names
+    and whose values are the column values in the row.  The SELECT
+    columns <span class="emphasis"><em>must be unique</em></span> and be valid Lisp
+    symbols to use this option. If you are SELECTing an expression, you
+    probably want to use a column alias: <code class="literal">SELECT &lt;expr&gt; AS
+    some_alias ...</code></dd></dl></div><p>The following data type conversions are done between <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a>
+ datatypes and <a class="ulink" href="http://www.lisp.org" target="_top"><span class="command"><strong>Common Lisp</strong></span></a> data types:
+ </p><div class="informaltable"><a id="ora-fetch-data-types-tab"></a><table border="1"><colgroup><col /><col /></colgroup><thead><tr><th><a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> type</th><th>Converts to/from <a class="ulink" href="http://www.lisp.org" target="_top"><span class="command"><strong>Common Lisp</strong></span></a> type</th></tr></thead><tbody><tr><td>Numeric (NUMBER, INTEGER, FLOAT)</td><td>The appropriate <a class="ulink" href="http://www.lisp.org" target="_top"><span class="command"><strong>Common Lisp</strong></span></a> numeric type (<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/typ_fixnum.html" target="_top"><code class="classname">FIXNUM</code></a>, <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/typ_bignum.html" target="_top"><code class="classname">BIGNUM</code></a>,
+      <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_float.html" target="_top"><code class="classname">FLOAT</code></a>)</td></tr><tr><td>String (CHAR, VARCHAR, VARCHAR2)</td><td>A <a class="ulink" href="http://www.lisp.org" target="_top"><span class="command"><strong>Common Lisp</strong></span></a> <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_string.html" target="_top"><code class="classname">STRING</code></a>.  Note that CHAR will be padded out to its
+      full, fixed length as defined in <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a>; VARCHAR will be a
+      string of variable length.  Also note that <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> has no
+      "zero-length string" value - it returns the SQL special value
+      <code class="constant">NULL</code> which is converted to <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_nil.html" target="_top"><code class="constant">NIL</code></a> (see below).</td></tr><tr><td>DATE</td><td>A string of the form "YYYY-MM-DD HH:MM:SS" where HH is
+      24-hour form.  If you want dates formatted differently, convert
+      them to strings in <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> using <code class="literal">SELECT
+       TO_CHAR(mydate, '<em class="replaceable"><code>template</code></em>') AS
+       mydate</code>; the result will then be returned as a string,
+      formatted as per <em class="replaceable"><code>template</code></em>.</td></tr><tr><td>RAW, LONG RAW</td><td>A hexadecimal string, with two hex digits for each byte of
+      <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> data.  Note that this means the Lisp string will be
+      twice the size, in bytes, as the <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> data.</td></tr><tr><td>"Large" types (LONG, BLOB, CLOB)</td><td>A Lisp string of (arbitrary, possibly binary) data.  Note
+      that truncation may occur; see the <a class="link" href="oracle.html#ora-connect"><code class="function">ORACLE:CONNECT</code></a>
+      parameters <em class="replaceable"><code>long-len</code></em>
+      and <em class="replaceable"><code>truncate-ok</code></em>.</td></tr><tr><td><code class="constant">NULL</code></td><td>The <a class="ulink" href="http://www.lisp.org" target="_top"><span class="command"><strong>Common Lisp</strong></span></a> value <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_nil.html" target="_top"><code class="constant">NIL</code></a></td></tr></tbody></table></div><p>
+</p></dd>
+<!--FETCH-ALL-->
+<dt><a id="ora-fetch-all"></a><span class="term"><code class="code">(ORACLE:FETCH-ALL
+<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/sec_3-4-1.html" target="_top"><code class="literal">&amp;OPTIONAL</code></a>
+<em class="replaceable"><code>max-rows</code></em>
+<em class="replaceable"><code>result-type</code></em>
+<em class="replaceable"><code>item-type</code></em>)</code></span></dt><dd><p>Fetch some or all the rows from a query and return
+result as a sequence of sequences.  Arguments are all optional:
+<em class="replaceable"><code>max-rows</code></em> limits the result to
+that numbers of rows;
+<em class="replaceable"><code>result-type</code></em> is the type of
+sequence of the rows, either
+'<code class="classname">ARRAY</code> (the default) or
+'<code class="classname">LIST</code>;
+<em class="replaceable"><code>item-type</code></em> is the type of
+sequence of the column values for each row, either
+'<code class="classname">ARRAY</code> (the default) or
+'<code class="classname">LIST</code>.
+Each row fetched always contains the full set of column values SELECTed.
+</p><p>
+<code class="function">FETCH-ALL</code> is often useful in conjunction with
+<code class="function">MAP</code> or <code class="function">REDUCE</code> to iterate
+over an entire SELECT result to construct a single Lisp value.
+
+</p></dd>
+<!--PEEK-->
+<dt><a id="ora-peek"></a><span class="term"><code class="code">(ORACLE:PEEK <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/sec_3-4-1.html" target="_top"><code class="literal">&amp;OPTIONAL</code></a>
+   <em class="replaceable"><code>result-type</code></em>)</code></span></dt><dd>
+
+Peek at next row of data (without fetching it).  Returns a row a la
+<code class="function">FETCH</code>, except does not advance to the next row.
+Repeated calls to <code class="function">PEEK</code> will thus return the same
+row of data.  Returns <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_nil.html" target="_top"><code class="constant">NIL</code></a> if at EOF.  If data is available, returns
+row data just as <code class="function">FETCH</code> (see
+<code class="function">FETCH</code> for data format and conversions done).
+Optional argument <em class="replaceable"><code>result-type</code></em> is the type
+of sequence of the column values for the returned row, either
+<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_array.html" target="_top"><code class="classname">ARRAY</code></a> (the default) or <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_list.html" target="_top"><code class="classname">LIST</code></a>.
+<code class="function">PEEK</code> is a useful look-ahead
+for database reporting functions that may need to "break" on changes in
+data to print headers, summaries, etc.
+</dd>
+<!--COLUMNS-->
+<dt><a id="ora-columns"></a><span class="term"><code class="code">(ORACLE:COLUMNS)</code></span></dt><dd><p>Returns information on the columns of a SELECT
+  result, in the form of an array of SQLCOL structures, one for each
+  result column in the most recent SELECT statement.  It is not
+  necessary to have called <code class="function">FETCH</code> before requesting
+  column information on the query, however the query must have been
+  compiled and executed with <code class="function">RUN-SQL</code>.  Each SQLCOL
+  structure has these slots:
+</p><div class="variablelist"><p class="title"><b>Slots of <code class="classname">SQLCOL</code></b></p><dl><dt><span class="term">NAME</span></dt><dd>The <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> column name or the expression
+    selected.  If the query used a column alias, <code class="literal">SELECT
+     <em class="replaceable"><code>expr</code></em> AS
+     <em class="replaceable"><code>alias</code></em></code>, then
+    <em class="replaceable"><code>alias</code></em> will be returned as the column name.
+ </dd><dt><span class="term">TYPE</span></dt><dd><a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> data type (VARCHAR, NUMBER, DATE, ...)
+ </dd><dt><span class="term">SIZE</span></dt><dd><a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> data length (useful mostly for
+    character types)</dd><dt><span class="term">SCALE</span></dt><dd>For numeric (NUMBER) types, number of digits to right of
+    decimal; NIL for FLOAT</dd><dt><span class="term">PRECISION</span></dt><dd>For numeric types, total number of significant
+    digits (decimal digits for NUMBER, bits for FLOAT)</dd><dt><span class="term">NULL_OK</span></dt><dd><a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_t.html" target="_top"><code class="constant">T</code></a> if <code class="constant">NULL</code>s allowed, <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_nil.html" target="_top"><code class="constant">NIL</code></a> if <code class="constant">NULL</code>s are
+    not allowed.</dd></dl></div><p>To access the values of the SQLCOL structures, use the standard
+ accessor functions, e.g., <code class="literal">(ORACLE:SQLCOL-NAME (elt
+  (ORACLE:COLUMNS) 0))</code></p></dd>
+<!--EOF-->
+<dt><a id="ora-eof"></a><span class="term"><code class="code">(ORACLE:EOF)</code></span></dt><dd>
+Returns EOF status.  A SELECT query cursor is considered at EOF if the next
+FETCH would return no data.  Must be connected to a database, and have
+an active SELECT statement.
+</dd>
+<!--INSERT-ROW-->
+<dt><a id="ora-insert-row"></a><span class="term"><code class="code">(ORACLE:INSERT-ROW
+<em class="replaceable"><code>table</code></em>
+<em class="replaceable"><code>values</code></em>)</code></span></dt><dd>
+Inserts a single row into <em class="replaceable"><code>table</code></em>.
+Second argument <em class="replaceable"><code>values</code></em> is a map of
+column names to values: either a hash table whose keys are the column
+names, or a list of (name, value) pairs.  Columns missing from the map
+will be given the default <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> value, or <code class="constant">NULL</code>.
+Returns the number of rows inserted (i.e., always 1).
+</dd>
+<!--UPDATE-ROW-->
+<dt><a id="ora-update-row"></a><span class="term"><code class="code">(ORACLE:UPDATE-ROW
+<em class="replaceable"><code>table</code></em>
+<em class="replaceable"><code>condition</code></em>
+<em class="replaceable"><code>vals</code></em>
+<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/sec_3-4-1.html" target="_top"><code class="literal">&amp;OPTIONAL</code></a>
+<em class="replaceable"><code>params</code></em>)</code></span></dt><dd>
+Updates rows in <em class="replaceable"><code>table</code></em>.  Second argument
+<em class="replaceable"><code>condition</code></em> is a string expression for a WHERE
+clause (without the "WHERE") which determines which rows are updated.
+Third argument <em class="replaceable"><code>vals</code></em> is a map of columns to
+be updated to their new values: a hash table whose keys are column
+names, or list of (name, value) pairs.  Optional
+<em class="replaceable"><code>params</code></em> specifies values for named
+parameters that may occur in <em class="replaceable"><code>condition</code></em>,
+e.g., when the condition is a match on a primary key, e.g.: <code class="literal">"pk_column
+= :pk_val"</code>.  Returns the number of rows updated.
+</dd>
+<!--ROW-COUNT-->
+<dt><a id="ora-row-count"></a><span class="term"><code class="code">(ORACLE:ROW-COUNT)</code></span></dt><dd>
+For SELECT statements, returns the number of rows
+<code class="function">FETCH</code>ed (<span class="strong"><strong>not</strong></span>
+<code class="function">PEEK</code>ed) so far.  For other statements (e.g.,
+INSERT, UPDATE, DELETE), returns the number of rows affected by the
+last operation (e.g., inserted, updated, deleted).  Must be connected
+to a database and have an active SQL statement.
+</dd>
+<!--WITH-TRANSACTION-->
+<dt><a id="ora-with-transaction"></a><span class="term"><code class="code">(ORACLE:WITH-TRANSACTION
+<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/sec_3-4-4.html" target="_top"><code class="literal">&amp;BODY</code></a>
+<em class="replaceable"><code>body</code></em>)</code></span></dt><dd>
+
+Evaluates the forms in <em class="replaceable"><code>body</code></em> atomically as a
+database transaction, ensuring that either all the database operations
+done in <em class="replaceable"><code>body</code></em> complete successfully, or none
+of them do.  If pending (un-committed) changes exist when this macro
+is entered, they are <span class="emphasis"><em>rolled back</em></span> (undone), so
+that the database is affected only by the subsequent updates inside
+<em class="replaceable"><code>body</code></em>.  Nesting of
+<code class="function">WITH-TRANSACTION</code> blocks is not allowed and will
+raise an error.  There is no effect on the status of
+<em class="replaceable"><code>auto-commit</code></em> given in
+<a class="link" href="oracle.html#ora-connect"><code class="function">ORACLE:CONNECT</code></a>; it resumes its previous state when the
+macro exits.  The value of the <code class="function">WITH-TRANSACTION</code>
+expression is that of the last form in <em class="replaceable"><code>body</code></em>.
+</dd>
+<!--COMMIT-->
+<dt><a id="ora-commit"></a><span class="term"><code class="code">(ORACLE:COMMIT)</code></span></dt><dd>
+Commits (makes permanent) any pending changes to the database.  The
+<em class="replaceable"><code>auto-commit</code></em> parameter to
+<a class="link" href="oracle.html#ora-connect"><code class="function">ORACLE:CONNECT</code></a> must not have been set to use this
+function, nor can it be called inside a
+<code class="function">WITH-TRANSACTION</code> block. Always returns NIL.
+</dd>
+<!--ROLLBACK-->
+<dt><a id="ora-rollback"></a><span class="term"><code class="code">(ORACLE:ROLLBACK)</code></span></dt><dd>
+Rolls back (undoes and abandons) any pending changes to the database.
+The <em class="replaceable"><code>auto-commit</code></em> parameter to
+<a class="link" href="oracle.html#ora-connect"><code class="function">ORACLE:CONNECT</code></a> must not have been set to use this
+function, nor can it be called inside a
+<code class="function">WITH-TRANSACTION</code> block. Always returns NIL.
+</dd>
+<!--AUTO-COMMIT-->
+<dt><a id="ora-auto-commit"></a><span class="term"><code class="code">(ORACLE:AUTO-COMMIT)</code></span></dt><dd>
+Toggles the state of <em class="replaceable"><code>auto-commit</code></em> initially
+given to <a class="link" href="oracle.html#ora-connect"><code class="function">ORACLE:CONNECT</code></a> for the current connection.
+With <em class="replaceable"><code>auto-commit</code></em> enabled, modifications to
+the database are committed (made permanent) after each destructive SQL
+operation made with calls to <code class="function">RUN-SQL</code>,
+<code class="function">INSERT-ROW</code>, <code class="function">UPDATE_ROW</code>, etc.
+With <em class="replaceable"><code>auto-commit</code></em> disabled, transactional
+integrity is under the programmer's control and is managed either by
+(1) explicitly calling <code class="function">COMMIT</code> or
+<code class="function">ROLLBACK</code> to commit or undo the pending
+operations, or (2) wrapping code blocks with database operations
+inside the <code class="function">WITH-TRANSACTION</code> macro.
+<code class="function">AUTO-COMMIT</code> returns the previous status of
+<em class="replaceable"><code>auto-commit</code></em>.
+<code class="function">AUTO-COMMIT</code> may not be called inside
+<code class="function">WITH-TRANSACTION</code>.
+</dd>
+<!--=-=-==-=-==-=-==-=-==-=-==-=-= End of functions section-->
+</dl></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="ora-example"></a>33.9.2. <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> Example</h3></div></div></div><p>
+Below is a simple example script which uses <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a>'s demo database
+schema, <code class="literal">SCOTT</code>.
+
+</p><pre class="programlisting">
+(setf server "orcl") <strong>	; </strong><em class="lineannotation"><span class="lineannotation">; Change this to your server's SID</span></em>
+(oracle:connect "scott" "tiger" server)
+
+(oracle:run-sql "SELECT deptno, dname, loc FROM dept ORDER BY DNAME")
+(oracle:do-rows (deptno dname loc)
+  (format t "Dept. no is '~A', " deptno)
+  (format t "Dept. name is '~A', " dname)
+  (format t "Dept. loc is '~A'~%" loc))
+
+(oracle:update-row "dept" "dname = :acctval" '(("dname" "NEWACCT")) '(("acctval" "ACCOUNTING")))
+
+(oracle:run-sql "SELECT deptno, dname, loc FROM dept ORDER BY DNAME")
+(oracle:do-rows (deptno dname loc)
+  (format t "Dept. no is '~A', " deptno)
+  (format t "Dept. name is '~A', " dname)
+  (format t "Dept. loc is '~A'~%" loc))
+
+(oracle:update-row "dept" "dname = :acctval" '(("dname" "ACCOUNTING")) '(("acctval" "NEWACCT")))
+</pre><p>
+</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="ora-config"></a>33.9.3. <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> Configuration</h3></div></div></div><p>Obviously, a working <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> environment is required.  It is
+recommended that you first be able to log on and use the <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a>
+SQL*Plus application to test your environment
+<span class="strong"><strong>before</strong></span> attempting <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> access via the <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> module.
+At a minimum you will need to set environment variables
+<code class="envar">ORACLE_HOME</code> to the <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> base directory and
+<code class="envar">LD_LIBRARY_PATH</code> to include
+<code class="literal">$<code class="envar">ORACLE_HOME</code>/lib</code> and possibly other
+directories.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="ora-build"></a>33.9.4. Building the <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> Interface</h3></div></div></div><p>The module uses the <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a> Call Interface (<a class="ulink" href="http://www.vivtek.com/oracle.html" target="_top">OCI</a>)
+<a class="ulink" href="http://c-faq.com/" target="_top"><span class="command"><strong>C</strong></span></a> library.  To build the module you will need the <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a>
+<a class="ulink" href="http://www.vivtek.com/oracle.html" target="_top">OCI</a> headers and link libraries; as a quick check, make sure
+you have the file <code class="filename">oci.h</code> somewhere
+under <code class="envar">ORACLE_HOME</code>, probably
+in <code class="filename">$<code class="envar">ORACLE_HOME</code>/rdbms/demo/oci.h</code>.</p><p>To build the module into <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>, configure with
+<span class="command"><strong>./configure ... --with-module=oracle ...</strong></span>.
+The <a href="modules.html#base-modules" class="olink"><span class="command"><strong>full</strong></span></a> <a href="modules.html#linkset" class="olink">linking set</a> will contain the module,
+so you will need to use the <code class="option"><a href="clisp.html#opt-link-set" class="olink">-K</a></code> option to use it.
+You can test that you really have the <a class="ulink" href="http://www.oracle.com" target="_top">Oracle</a>-enabled <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> by
+evaluating <code class="code">(<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_describe.html" target="_top"><code class="function">DESCRIBE</code></a> 'oracle:connect)</code>.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>It may be necessary to edit file
+<a class="clisp-cvs" href="http://clisp.cvs.sourceforge.net/*checkout*/clisp/clisp/modules/oracle/Makefile"><code class="filename">modules/oracle/Makefile</code></a>
+prior to running <span class="command"><strong>./configure</strong></span>.</p></div></div></div><div class="bookinfo"><hr /><table width="100%" summary="impnotes meta info"><th><td align="left">These notes document <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> version 2.46</td><td align="right">Last modified: 2008-07-02</td></th></table></div><div class="custom-footer"><hr /><table width="100%"><tr><td align="left"><a href="http://clisp.cons.org"><img src="clisp.png" width="48" height="48" alt="[CLISP home]" /></a></td><td align="center"><a href="http://sourceforge.net/donate/index.php?group_id=1355"><img src="http://images.sourceforge.net/images/project-support.jpg" width="88" height="32" alt="[Support CLISP]" /></a></td><td align="right"><a href="http://sourceforge.net"><img width="125" height="37" alt="[SourceForge]" src="http://sflogo.sourceforge.net/sflogo.php?group_id=1355&amp;type=2&amp;page=oracle" /></a></td></tr></table></div><hr /><form method="get" action="http://www.google.com/custom" target="_top"><table width="100%" border="0"><tr><td nowrap="nowrap" align="center"><input type="hidden" name="domains" value="clisp.cons.org;clisp.podval.org;www.lisp.org" /><label for="sbi" style="display: none">Enter your search terms</label><input type="text" name="q" size="50" maxlength="255" id="sbi" value="33.9. Oracle Interface" /><label for="sbb" style="display: none">Submit search form</label><input type="submit" name="sa" value="Google Search" id="sbb" /></td></tr><tr><td nowrap="nowrap" align="center"><input type="radio" name="sitesearch" value="" checked="1" id="ss0" /><label for="ss0" title="Search the Web"><small>Web</small></label><input type="radio" name="sitesearch" value="clisp.cons.org" id="ss1" /><label for="ss1" title="Search clisp.cons.org"><small>clisp.cons.org</small></label><input type="radio" name="sitesearch" value="clisp.podval.org" id="ss2" /><label for="ss2" title="Search clisp.podval.org"><small>clisp.podval.org</small></label><input type="radio" name="sitesearch" value="www.lisp.org" id="ss3" /><label for="ss3" title="Search www.lisp.org"><small>www.lisp.org</small></label><input type="hidden" name="client" value="pub-4445255502750357" /><input type="hidden" name="forid" value="1" /><input type="hidden" name="ie" value="UTF-8" /><input type="hidden" name="oe" value="UTF-8" /><input type="hidden" name="cof" value="GALT:#008000;GL:1;DIV:#336699;VLC:663399;AH:center;BGC:FFFFFF;LBGC:000000;ALC:0000FF;LC:0000FF;T:000000;GFNT:0000FF;GIMP:0000FF;LH:48;LW:48;L:http://clisp.cons.org/clisp.png;S:http://clisp.cons.org;FORID:1" /><input type="hidden" name="hl" value="en" /></td></tr></table></form><hr /><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="postgresql.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="ext-modules.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="libsvm.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">33.8. PostgreSQL Database Access </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 33.10. LibSVM Interface</td></tr></table></div></body></html>

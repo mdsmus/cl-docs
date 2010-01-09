@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.12.5 Trace Files and Disassembly</TITLE>
+<META NAME="description" CONTENT="5.12.5 Trace Files and Disassembly">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3012" HREF="node185.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3010" HREF="node179.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3006" HREF="node183.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3014" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3015" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3013" HREF="node185.html">5.13 Efficiency Notes</A>
+<B>Up:</B> <A NAME="tex2html3011" HREF="node179.html">5.12 General Efficiency Hints</A>
+<B> Previous:</B> <A NAME="tex2html3007" HREF="node183.html">5.12.4 Mapping and Iteration</A>
+<BR> <P>
+<H2><A NAME="SECTION006125000000000000000">5.12.5 Trace Files and Disassembly</A></H2>
+<P>
+<A NAME="tracefiles">&#160;</A>
+<A NAME="10717">&#160;</A>
+<A NAME="10718">&#160;</A>
+<A NAME="10719">&#160;</A>
+<A NAME="10720">&#160;</A>
+<A NAME="10721">&#160;</A>
+<A NAME="10722">&#160;</A>
+<P>
+In order to write efficient code, you need to know the relative costs
+of different operations.  The main reason why writing efficient
+Common Lisp code is difficult is that there are so many operations, and
+the costs of these operations vary in obscure context-dependent ways.
+Although efficiency notes point out some problem areas, the only way
+to ensure generation of the best code is to look at the assembly code
+output.
+<P>
+The <tt>disassemble</tt> function is a convenient way to get the assembly code for a
+function, but it can be very difficult to interpret, since the correspondence
+with the original source code is weak.  A better (but more awkward) option is
+to use the <tt>:trace-file</tt> argument to <tt>compile-file</tt> to generate a trace
+file.
+<P>
+A trace file is a dump of the compiler's internal representations,
+including annotated assembly code.  Each component in the program gets
+four pages in the trace file (separated by ``<tt><IMG WIDTH=12 HEIGHT=11 ALIGN=BOTTOM ALT="tex2html_wrap_inline16069" SRC="img17.gif"></tt>''):
+<UL>
+<LI> The implicit-continuation (or IR1) representation of the
+  optimized source.  This is a dump of the flow graph representation
+  used for ``source level'' optimizations.  As you will quickly
+  notice, it is not really very close to the source.  This
+  representation is not very useful to even sophisticated users.
+<LI> The Virtual Machine (VM, or IR2) representation of the program.
+  This dump represents the generated code as sequences of ``Virtual
+  OPerations'' (VOPs.)  This representation is intermediate between
+  the source and the assembly code--each VOP corresponds fairly
+  directly to some primitive function or construct, but a given VOP
+  also has a fairly predictable instruction sequence.  An operation
+  (such as <tt>+</tt>) may have multiple implementations with different
+  cost and applicability.  The choice of a particular VOP such as
+  <tt>+/fixnum</tt> or <tt>+/single-float</tt> represents this choice of
+  implementation.  Once you are familiar with it, the VM
+  representation is probably the most useful for determining what
+  implementation has been used.
+<LI> An assembly listing, annotated with the VOP responsible for
+  generating the instructions.  This listing is useful for figuring
+  out what a VOP does and how it is implemented in a particular
+  context, but its large size makes it more difficult to read.
+<LI> A disassembly of the generated code, which has all
+  pseudo-operations expanded out, but is not annotated with VOPs.
+</UL>
+<P>
+Note that trace file generation takes much space and time, since the trace file
+is tens of times larger than the source file.  To avoid huge confusing trace
+files and much wasted time, it is best to separate the critical program portion
+into its own file and then generate the trace file from this small file.
+<P>
+<HR><A NAME="tex2html3012" HREF="node185.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3010" HREF="node179.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3006" HREF="node183.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3014" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3015" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3013" HREF="node185.html">5.13 Efficiency Notes</A>
+<B>Up:</B> <A NAME="tex2html3011" HREF="node179.html">5.12 General Efficiency Hints</A>
+<B> Previous:</B> <A NAME="tex2html3007" HREF="node183.html">5.12.4 Mapping and Iteration</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,159 @@
+<html>
+  <head>
+    <title>Practical Common Lisp</title>
+    <link rel='stylesheet' type='text/css' href='style.css'>
+    <style type='text/css'>
+<!-- 
+BODY
+{
+font-family: sans-serif;
+margin: .5in;
+}
+.INTRO
+{
+font-size: 11pt;
+}
+TD.NEWS
+{
+vertical-align: top;
+width: 22em;
+}
+P.BOX-HEADER
+{
+font-weight: bold;
+margin-bottom: -1ex;
+}
+DIV.NEWS
+{
+float: right;
+width: 20em;
+text-align: center;
+background-color: #ffc426;
+margin: 1em;
+padding: 1em;
+border-style: solid;
+border-width: thin;
+}
+LI
+{
+padding: 0pt 2pt;
+}
+H1
+{
+text-align: center;
+margin-bottom: 0pt;
+}
+P.BLURB
+{
+text-align: center;
+font-size: 12pt;
+font-style: italic;
+}
+P.MORE-BLURBS
+{
+margin-top: -12pt;
+text-align: center;
+font-size: 10pt;
+font-family: sans-serif;
+}
+#jolt-logo {
+  float: right;
+  border: none;
+}
+ -->
+    </style>
+  </head>
+  <body>
+    <h1><img class='floater' src='small-cover.gif'>Practical Common Lisp<a href="http://www.sdmagazine.com/jolts/2006index.html"><img id='jolt-logo' src="jolt_logo16_sm.gif"></a></h1>
+    <p class='blurb'>that book is dead sexy &mdash;Xach on #lisp</p>
+    <p class='more-blurbs'>(<a href='blurbs.html'>more blurbs</a>)</p>
+    <p class='intro'>This page, and the pages it links to, contain text
+               of the Common Lisp book <i>Practical Common
+               Lisp</i> published by <a href='http://www.apress.com/book/bookDisplay.html?bID=237'>Apress</a> These pages now contain the final text as it
+               appears in the book. If you find errors in these
+               pages, please send email
+               to <a href='mailto:book@gigamonkeys.com'>book@gigamonkeys.com</a>.
+               These pages will remain online in perpetuity&mdash;I hope
+               they will serve as a useful introduction to Common
+               Lisp for folks who are curious about Lisp but maybe
+               not yet curious enough to shell out big bucks for a
+               dead-tree book. However, don't let that stop you from
+               buying the printed version available from Apress at
+               your favorite local or online bookseller. For the
+               complete bookstore browsing experience, you can read
+               the <a href='letter-to-reader.html'>letter to the
+               reader</a> that appears on the back cover of the
+               treeware edition of the book.</p>
+    <div class='NEWS'>
+    <p class='box-header'><i>Practical Common Lisp</i> wins <a href="http://www.sdmagazine.com/jolts/2006index.html">Productivity Award at the 16th Annual Jolt Product Excellence Awards!</a></p>
+    <p><a href='http://www.powells.com/cgi-bin/biblio?inkey=62-1590592395-3'>Powells</a> | <a href='http://search.barnesandnoble.com/booksearch/isbnInquiry.asp?isbn=1590592395'>Barnes &amp; Noble</a> | <a href='http://www.amazon.com/exec/obidos/ASIN/1590592395'>Amazon</a></p>
+    <p style='font-size: 80%'>While things have
+               settled down a bit lately, the pent-up demand for this
+               book rocketed it up the charts at Amazon. Almost as
+               soon as it started shipping, <i>Practical Common
+               Lisp</i> became the #1 top selling Lisp book on
+               Amazon. It also made it as high as #2 in the Languages &amp; Tools category, #4
+               in Programming, #11 in
+               Computers &amp; Internet, and #543 in all books.
+               Thanks for all your orders! <b>Update 25 May
+               2005:</b> Thanks to the high demand Apress has decided
+               to do a 2nd printing. We'll have a chance to correct
+               typos and other small errors that crept into the 1st
+               printing so if you've found any, please send them
+               to <a href='mailto:book@gigamonkeys.com'>book@gigamonkeys.com</a>.
+               You can check the <a href='errata.txt'>errata
+               page</a> to see if they've already been reported.</p>
+    <hr width='50%'>
+    <p><b>Download source code: </b><a href='practicals-1.0.3.tar.gz'>tar.gz</a> | <a href='practicals-1.0.3.zip'>zip</a></p>
+    <hr width='50%'>
+    <p><b>Now available: </b><a href='lispbox/'>Lispbox v0.7 distributions</a></p>
+    <hr width='50%'>
+    <p class='box-header'>Spread the word</p>
+    <p style='font-size: 80%'>Like what you've read?
+    Then help spread the word. Recommend this book to your friends.
+    Write
+    a <a href='http://www.amazon.com/gp/customer-reviews/write-a-review.html/104-2515398-4782364?%5Fencoding=UTF8&amp;asin=1590592395&amp;store=books'>review</a>
+    on Amazon. Blog about it. Link to this page from your web site.
+    Whatever. Apress took a chance, publishing this book when other
+    publishers thought there was no market for a Lisp book. While
+    it's unlikely that I'll <a href='http://meme.b9.com/cview.html?channel=lisp&amp;start=3322050600&amp;end=3322050700'>get rich</a> off my royalties, we don't have
+    to sell all that many copies for Apress to turn a profit and show
+    the naysayers that Lisp has legs yet.</p>
+    </div>
+    <ol>
+      <li><a href='introduction-why-lisp.html'>Introduction: Why Lisp?</a></li>
+      <li><a href='lather-rinse-repeat-a-tour-of-the-repl.html'>Lather, Rinse, Repeat: A Tour of the REPL</a></li>
+      <li><a href='practical-a-simple-database.html'>Practical: A Simple Database</a></li>
+      <li><a href='syntax-and-semantics.html'>Syntax and Semantics</a></li>
+      <li><a href='functions.html'>Functions</a></li>
+      <li><a href='variables.html'>Variables</a></li>
+      <li><a href='macros-standard-control-constructs.html'>Macros: Standard Control Constructs</a></li>
+      <li><a href='macros-defining-your-own.html'>Macros: Defining Your Own</a></li>
+      <li><a href='practical-building-a-unit-test-framework.html'>Practical: Building a Unit Test Framework</a></li>
+      <li><a href='numbers-characters-and-strings.html'>Numbers, Characters, and Strings</a></li>
+      <li><a href='collections.html'>Collections</a></li>
+      <li><a href='they-called-it-lisp-for-a-reason-list-processing.html'>They Called It LISP for a Reason: List Processing</a></li>
+      <li><a href='beyond-lists-other-uses-for-cons-cells.html'>Beyond Lists: Other Uses for Cons Cells</a></li>
+      <li><a href='files-and-file-io.html'>Files and File I/O</a></li>
+      <li><a href='practical-a-portable-pathname-library.html'>Practical: A Portable Pathname Library</a></li>
+      <li><a href='object-reorientation-generic-functions.html'>Object Reorientation: Generic Functions</a></li>
+      <li><a href='object-reorientation-classes.html'>Object Reorientation: Classes</a></li>
+      <li><a href='a-few-format-recipes.html'>A Few FORMAT Recipes</a></li>
+      <li><a href='beyond-exception-handling-conditions-and-restarts.html'>Beyond Exception Handling: Conditions and Restarts</a></li>
+      <li><a href='the-special-operators.html'>The Special Operators</a></li>
+      <li><a href='programming-in-the-large-packages-and-symbols.html'>Programming in the Large: Packages and Symbols</a></li>
+      <li><a href='loop-for-black-belts.html'>LOOP for Black Belts</a></li>
+      <li><a href='practical-a-spam-filter.html'>Practical: A Spam Filter</a></li>
+      <li><a href='practical-parsing-binary-files.html'>Practical: Parsing Binary Files</a></li>
+      <li><a href='practical-an-id3-parser.html'>Practical: An ID3 Parser</a></li>
+      <li><a href='practical-web-programming-with-allegroserve.html'>Practical: Web Programming with AllegroServe</a></li>
+      <li><a href='practical-an-mp3-database.html'>Practical: An MP3 Database</a></li>
+      <li><a href='practical-a-shoutcast-server.html'>Practical: A Shoutcast Server</a></li>
+      <li><a href='practical-an-mp3-browser.html'>Practical: An MP3 Browser</a></li>
+      <li><a href='practical-an-html-generation-library-the-interpreter.html'>Practical: An HTML Generation Library, the Interpreter</a></li>
+      <li><a href='practical-an-html-generation-library-the-compiler.html'>Practical: An HTML Generation Library, the Compiler</a></li>
+      <li><a href='conclusion-whats-next.html'>Conclusion: What's Next?</a></li>
+    </ol>
+    <div class='copyright'>Copyright &copy; 2003-2005, Peter Seibel</div>
+  </body>
+</html>

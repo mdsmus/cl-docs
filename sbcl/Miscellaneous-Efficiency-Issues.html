@@ -1,0 +1,146 @@
+<html lang="en">
+<head>
+<title>Miscellaneous Efficiency Issues - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Efficiency.html#Efficiency" title="Efficiency">
+<link rel="prev" href="Modular-arithmetic.html#Modular-arithmetic" title="Modular arithmetic">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Miscellaneous-Efficiency-Issues"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Modular-arithmetic.html#Modular-arithmetic">Modular arithmetic</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Efficiency.html#Efficiency">Efficiency</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">5.4 Miscellaneous Efficiency Issues</h3>
+
+<p>FIXME: The material in the CMUCL manual about getting good
+performance from the compiler should be reviewed, reformatted in
+Texinfo, lightly edited for SBCL, and substituted into this
+manual. In the meantime, the original CMUCL manual is still 95+%
+correct for the SBCL version of the Python compiler. See the
+sections
+
+     <ul>
+<li>Advanced Compiler Use and Efficiency Hints
+<li>Advanced Compiler Introduction
+<li>More About Types in Python
+<li>Type Inference
+<li>Source Optimization
+<li>Tail Recursion
+<li>Local Call
+<li>Block Compilation
+<li>Inline Expansion
+<li>Object Representation
+<li>Numbers
+<li>General Efficiency Hints
+<li>Efficiency Notes
+</ul>
+
+   <p>Besides this information from the CMUCL manual, there are a few other
+points to keep in mind.
+
+     <ul>
+<li>The CMUCL manual doesn't seem to state it explicitly, but Python has a
+mental block about type inference when assignment is involved. Python
+is very aggressive and clever about inferring the types of values
+bound with <code>let</code>, <code>let*</code>, inline function call, and so
+forth. However, it's much more passive and dumb about inferring the
+types of values assigned with <code>setq</code>, <code>setf</code>, and
+friends. It would be nice to fix this, but in the meantime don't
+expect that just because it's very smart about types in most respects
+it will be smart about types involved in assignments.  (This doesn't
+affect its ability to benefit from explicit type declarations
+involving the assigned variables, only its ability to get by without
+explicit type declarations.)
+
+     <!-- <!- FIXME: Python dislikes assignments, but not in type -->
+     <!-- inference. The real problems are loop induction, closed over -->
+     <!-- variables and aliases. -> -->
+     <li>Since the time the CMUCL manual was written, CMUCL (and thus SBCL) has
+gotten a generational garbage collector. This means that there are
+some efficiency implications of various patterns of memory usage which
+aren't discussed in the CMUCL manual. (Some new material should be
+written about this.)
+
+     <li>SBCL has some important known efficiency problems.  Perhaps the most
+important are
+
+          <ul>
+<li>The garbage collector is not particularly efficient, at least on
+platforms without the generational collector (as of SBCL 0.8.9, all
+except x86).
+
+          <li>Various aspects of the PCL implementation of CLOS are more inefficient
+than necessary.
+
+     </ul>
+
+   </ul>
+
+   <p>Finally, note that Common Lisp defines many constructs which, in
+the infamous phrase, &ldquo;could be compiled efficiently by a
+sufficiently smart compiler&rdquo;. The phrase is infamous because
+making a compiler which actually is sufficiently smart to find all
+these optimizations systematically is well beyond the state of the art
+of current compiler technology. Instead, they're optimized on a
+case-by-case basis by hand-written code, or not optimized at all if
+the appropriate case hasn't been hand-coded. Some cases where no such
+hand-coding has been done as of SBCL version 0.6.3 include
+
+     <ul>
+<li><code>(reduce #'f x)</code> where the type of <code>x</code> is known at compile
+time
+
+     <li>various bit vector operations, e.g.  <code>(position 0
+some-bit-vector)</code>
+
+     <li>specialized sequence idioms, e.g.  <code>(remove item list :count 1)</code>
+
+     <li>cases where local compilation policy does not require excessive type
+checking, e.g.  <code>(locally (declare (safety 1)) (assoc item
+list))</code> (which currently performs safe <code>endp</code> checking internal
+to assoc).
+
+   </ul>
+
+   <p>If your system's performance is suffering because of some construct
+which could in principle be compiled efficiently, but which the SBCL
+compiler can't in practice compile efficiently, consider writing a
+patch to the compiler and submitting it for inclusion in the main
+sources. Such code is often reasonably straightforward to write;
+search the sources for the string &ldquo;<code>deftransform</code>&rdquo; to find many
+examples (some straightforward, some less so).
+
+   </body></html>
+

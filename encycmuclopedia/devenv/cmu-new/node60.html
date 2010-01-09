@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>3.1 Debugger Introduction</TITLE>
+<META NAME="description" CONTENT="3.1 Debugger Introduction">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1362" HREF="node61.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1360" HREF="node59.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1354" HREF="node59.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1364" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1365" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1363" HREF="node61.html">3.2 The Command Loop</A>
+<B>Up:</B> <A NAME="tex2html1361" HREF="node59.html">3 The Debugger</A>
+<B> Previous:</B> <A NAME="tex2html1355" HREF="node59.html">3 The Debugger</A>
+<BR> <P>
+<H1><A NAME="SECTION00410000000000000000">3.1 Debugger Introduction</A></H1>
+<P>
+The CMU Common Lisp debugger is unique in its level of support for source-level
+debugging of compiled code.  Although some other debuggers allow access of
+variables by name, this seems to be the first Common Lisp debugger that:
+<UL>
+<LI>
+Tells you when a variable doesn't have a value because it hasn't been
+initialized yet or has already been deallocated, or
+<LI>
+Can display the precise source location corresponding to a code
+location in the debugged program.
+</UL>
+These features allow the debugging of compiled code to be made almost
+indistinguishable from interpreted code debugging.
+<P>
+The debugger is an interactive command loop that allows a user to examine
+the function call stack.  The debugger is invoked when:
+<UL>
+<LI>
+A <A NAME="8692">&#160;</A><tt>serious-condition</tt> is signaled, and it is not handled, or
+<LI>
+<A NAME="8694">&#160;</A><tt>error</tt> is called, and the condition it signals is not handled, or
+<LI>
+The debugger is explicitly invoked with the Common Lisp <A NAME="8696">&#160;</A><tt>break</tt>
+or <A NAME="8698">&#160;</A><tt>debug</tt> functions.
+</UL>
+<P>
+<I>Note: there are two debugger interfaces in CMU CL: the TTY debugger
+(described below) and the Motif debugger.  Since the difference is only in the
+user interface, much of this chapter also applies to the Motif version.  
+See section&nbsp;<A HREF="node34.html#motifinterface">2.7.1</A> for a very brief discussion of the graphical
+interface.</I>
+<P>
+When you enter the TTY debugger, it looks something like this:
+<BLOCKQUOTE> <PRE>Error in function CAR.
+Wrong type argument, 3, should have been of type LIST.
+<P>
+Restarts:
+  0: Return to Top-Level.
+<P>
+Debug  (type H for help)
+<P>
+(CAR 3)
+0]
+</PRE> </BLOCKQUOTE>
+The first group of lines describe what the error was that put us in the
+debugger.  In this case <tt>car</tt> was called on <tt>3</tt>.  After <tt>Restarts:</tt>
+is a list of all the ways that we can restart execution after this error.  In
+this case, the only option is to return to top-level.  After printing its
+banner, the debugger prints the current frame and the debugger prompt.
+<P>
+<HR><A NAME="tex2html1362" HREF="node61.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1360" HREF="node59.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1354" HREF="node59.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1364" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1365" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1363" HREF="node61.html">3.2 The Command Loop</A>
+<B>Up:</B> <A NAME="tex2html1361" HREF="node59.html">3 The Debugger</A>
+<B> Previous:</B> <A NAME="tex2html1355" HREF="node59.html">3 The Debugger</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

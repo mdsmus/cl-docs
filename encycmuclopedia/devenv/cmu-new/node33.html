@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>2.7 The Inspector</TITLE>
+<META NAME="description" CONTENT="2.7 The Inspector">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1012" HREF="node34.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1010" HREF="node11.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1004" HREF="node32.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1014" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1015" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1013" HREF="node34.html">2.7.1 The Graphical Interface</A>
+<B>Up:</B> <A NAME="tex2html1011" HREF="node11.html">2 Design Choices and </A>
+<B> Previous:</B> <A NAME="tex2html1005" HREF="node32.html">2.6 Describe</A>
+<BR> <P>
+<H1><A NAME="SECTION00370000000000000000">2.7 The Inspector</A></H1>
+<P>
+CMU Common Lisp has both a graphical inspector that uses X windows and a simple
+terminal-based inspector.
+<P>
+<b>[Function]</b><BR> 
+<tt>  inspect</tt> <em>  <i>&amp;optional</i> <i>object</i></em><BR>
+<P>
+  <tt>inspect</tt> calls the inspector on the optional argument
+  <i>object</i>.  If <i>object</i> is unsupplied, <tt>inspect</tt>
+  immediately returns <i>nil</i>.  Otherwise, the behavior of inspect
+  depends on whether Lisp is running under X.  When <tt>inspect</tt> is
+  eventually exited, it returns some selected Lisp object.
+<P>
+<BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html1016" HREF="node34.html#SECTION00371000000000000000">2.7.1 The Graphical Interface</A>
+<LI> <A NAME="tex2html1017" HREF="node35.html#SECTION00372000000000000000">2.7.2 The TTY Inspector</A>
+</UL>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>2.15 Time Parsing and Formatting</TITLE>
+<META NAME="description" CONTENT="2.15 Time Parsing and Formatting">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1269" HREF="node55.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1267" HREF="node11.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1261" HREF="node53.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1271" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1272" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1270" HREF="node55.html">2.16 Random Number Generation</A>
+<B>Up:</B> <A NAME="tex2html1268" HREF="node11.html">2 Design Choices and </A>
+<B> Previous:</B> <A NAME="tex2html1262" HREF="node53.html">2.14.3 Miscellaneous Filesystem Operations</A>
+<BR> <P>
+<H1><A NAME="SECTION003150000000000000000">2.15 Time Parsing and Formatting</A></H1>
+<P>
+<A NAME="8502">&#160;</A> <A NAME="8503">&#160;</A>
+Functions are provided to allow parsing strings containing time information
+and printing time in various formats are available.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:parse-time</tt> <em> <i>time-string</i>
+      <tt>&amp;key</tt> <tt>:error-on-mismatch</tt> <tt>:default-seconds</tt>
+      <tt>:default-minutes</tt> <tt>:default-hours</tt>
+      <tt>:default-day</tt> <tt>:default-month</tt>
+      <tt>:default-year</tt> <tt>:default-zone</tt>
+      <tt>:default-weekday</tt></em><BR>
+<P>
+  <tt>parse-time</tt> accepts a string containing a time (e.g.,
+  &quot;<tt>Jan 12, 1952</tt>&quot;) and returns the universal time if it is
+  successful.  If it is unsuccessful and the keyword argument
+  <tt>:error-on-mismatch</tt> is non-<i>nil</i>, it signals an error.
+  Otherwise it returns <i>nil</i>.  The other keyword arguments have the
+  following meaning:
+  <DL ><DT><STRONG><tt>:default-seconds</tt></STRONG>
+<DD> specifies the default value for the
+    seconds value if one is not provided by <i>time-string</i>.  The
+    default value is 0.
+<P>
+  <DT><STRONG><tt>:default-minutes</tt></STRONG>
+<DD> specifies the default value for the
+    minutes value if one is not provided by <i>time-string</i>.  The
+    default value is 0.
+<P>
+  <DT><STRONG><tt>:default-hours</tt></STRONG>
+<DD> specifies the default value for the hours
+    value if one is not provided by <i>time-string</i>.  The default
+    value is 0.
+<P>
+  <DT><STRONG><tt>:default-day</tt></STRONG>
+<DD> specifies the default value for the day
+    value if one is not provided by <i>time-string</i>.  The default
+    value is the current day.
+<P>
+  <DT><STRONG><tt>:default-month</tt></STRONG>
+<DD> specifies the default value for the month
+    value if one is not provided by <i>time-string</i>.  The default
+    value is the current month.
+<P>
+  <DT><STRONG><tt>:default-year</tt></STRONG>
+<DD> specifies the default value for the year
+    value if one is not provided by <i>time-string</i>.  The default
+    value is the current year.
+<P>
+  <DT><STRONG><tt>:default-zone</tt></STRONG>
+<DD> specifies the default value for the time
+    zone value if one is not provided by <i>time-string</i>.  The
+    default value is the current time zone.
+<P>
+  <DT><STRONG><tt>:default-weekday</tt></STRONG>
+<DD> specifies the default value for the day
+    of the week if one is not provided by <i>time-string</i>.  The
+    default value is the current day of the week.
+<P>
+</DL>
+  Any of the above keywords can be given the value <tt>:current</tt> which
+  means to use the current value as determined by a call to the
+  operating system.
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:format-universal-time</tt> <em> 
+    <i>dest</i> <i>universal-time</i>
+       <BR> 
+       <tt>&amp;key</tt> <tt>:timezone</tt>
+       <tt>:style</tt> <tt>:date-first</tt>
+       <tt>:print-seconds</tt> <tt>:print-meridian</tt>
+       <tt>:print-timezone</tt> <tt>:print-weekday</tt></em><BR> 
+   <tt>extensions:format-decoded-time</tt> <EM>
+     </EM><i>dest</i> </EM><i>seconds</i> </EM><i>minutes</i> </EM><i>hours</i> </EM><i>day</i> </EM><i>month</i> </EM><i>year</i>
+       <BR> 
+       <tt>&amp;key</tt> </EM><tt>:timezone</tt>
+       </EM><tt>:style</tt> </EM><tt>:date-first</tt>
+       </EM><tt>:print-seconds</tt> </EM><tt>:print-meridian</tt>
+       </EM><tt>:print-timezone</tt> </EM><tt>:print-weekday</tt><BR>
+<P>
+   <tt>format-universal-time</tt> formats the time specified by
+   <i>universal-time</i>.  <tt>format-decoded-time</tt> formats the time
+   specified by <i>seconds</i>, <i>minutes</i>, <i>hours</i>, <i>day</i>,
+   <i>month</i>, and <i>year</i>.  <i>Dest</i> is any destination
+   accepted by the <tt>format</tt> function.  The keyword arguments have
+   the following meaning:
+   <DL ><DT><STRONG><tt>:timezone</tt></STRONG>
+<DD> is an integer specifying the hours west of
+     Greenwich.  <tt>:timezone</tt> defaults to the current time zone.
+<P>
+   <DT><STRONG><tt>:style</tt></STRONG>
+<DD> specifies the style to use in formatting the
+     time.  The legal values are:
+     <DL ><DT><STRONG><tt>:short</tt></STRONG>
+<DD> specifies to use a numeric date.
+<P>
+     <DT><STRONG><tt>:long</tt></STRONG>
+<DD> specifies to format months and weekdays as
+       words instead of numbers.
+<P>
+     <DT><STRONG><tt>:abbreviated</tt></STRONG>
+<DD> is similar to long except the words are
+       abbreviated.
+<P>
+     <DT><STRONG><tt>:government</tt></STRONG>
+<DD> is similar to abbreviated, except the
+       date is of the form ``day month year'' instead of ``month day,
+       year''.
+<P>
+</DL>
+<P>
+   <DT><STRONG><tt>:date-first</tt></STRONG>
+<DD> if non-<i>nil</i> (default) will place the
+     date first.  Otherwise, the time is placed first.
+<P>
+   <DT><STRONG><tt>:print-seconds</tt></STRONG>
+<DD> if non-<i>nil</i> (default) will format
+     the seconds as part of the time.  Otherwise, the seconds will be
+     omitted.
+<P>
+   <DT><STRONG><tt>:print-meridian</tt></STRONG>
+<DD> if non-<i>nil</i> (default) will format
+     ``AM'' or ``PM'' as part of the time.  Otherwise, the ``AM'' or
+     ``PM'' will be omitted.
+<P>
+   <DT><STRONG><tt>:print-timezone</tt></STRONG>
+<DD> if non-<i>nil</i> (default) will format
+     the time zone as part of the time.  Otherwise, the time zone will
+     be omitted.
+<P>
+   <DT><STRONG><tt>:print-weekday</tt></STRONG>
+<DD> if non-<i>nil</i> (default) will format
+     the weekday as part of date.  Otherwise, the weekday will be
+     omitted.
+<P>
+</DL>
+<P>
+<BR><IMG WIDTH=104 HEIGHT=24 ALIGN=BOTTOM ALT="change_begin" SRC="change_begin.gif"><BR>
+<P>
+<BR><IMG WIDTH=104 HEIGHT=24 ALIGN=BOTTOM ALT="change_end" SRC="change_end.gif"><BR>
+<HR><A NAME="tex2html1269" HREF="node55.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1267" HREF="node11.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1261" HREF="node53.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1271" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1272" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1270" HREF="node55.html">2.16 Random Number Generation</A>
+<B>Up:</B> <A NAME="tex2html1268" HREF="node11.html">2 Design Choices and </A>
+<B> Previous:</B> <A NAME="tex2html1262" HREF="node53.html">2.14.3 Miscellaneous Filesystem Operations</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

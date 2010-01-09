@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Appendix A. Frequently Asked Questions (With Answers) about CLISP</title><link rel="stylesheet" href="impnotes.css" type="text/css" /><link rev="made" href="mailto:clisp-list@lists.sourceforge.net" /><meta name="generator" content="DocBook XSL Stylesheets Vsnapshot_7566" /><link rel="start" href="index.html" title="Implementation Notes for GNU CLISP" /><link rel="up" href="appendices.html" title="Part V. Appendices" /><link rel="prev" href="appendices.html" title="Part V. Appendices" /><link rel="next" href="gfdl.html" title="Appendix B. GNU Free Documentation License" /><link rel="copyright" href="legalese.html" title="Legal Status of the CLISP Implementation Notes" /><meta name="date" content="'generated: 2008-07-02 11:52:30-04:00'" /><link rel="author" title="Authors" href="index.html#authors" /><link rel="contents" title="Table of Contents" href="index.html" /><link rel="glossary" href="glossary.html" /><link rel="help" href="faq.html#faq-help" title="How do I ask for help?" /><link rel="home" title="Home" href="http://clisp.cons.org" /><link rel="index" href="idx.html" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Appendix A. Frequently Asked Questions (With Answers)
+  about <span class="command"><strong>CLISP</strong></span></th></tr><tr><td width="20%" align="left"><a accesskey="p" href="appendices.html">Prev</a> </td><th width="60%" align="center">Part V. Appendices</th><td width="20%" align="right"> <a accesskey="n" href="gfdl.html">Next</a></td></tr></table><hr /></div><div class="appendix" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="faq"></a>Appendix A. Frequently Asked Questions (With Answers)
+  about <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a></h2></div></div></div><div class="abstract"><a id="faq-abstract"></a><p class="title"><b>Abstract</b></p><p>This is a list of frequently asked questions about <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> on the
+<a class="link" href="faq.html#faq-mailing-lists" title="Question">CLISP mailing lists</a>
+and the USENET newsgroup
+<a class="ulink" href="http://groups.google.com/groups?as_ugroup=comp.lang.lisp" target="_top">comp.lang.lisp</a>.
+<span class="emphasis"><em>All</em></span> the legitimate technical question are addressed
+in the <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> documentation (<a href="index.html" class="olink"><span class="command"><strong>CLISP</strong></span> impnotes</a>,
+<a href="clisp.html#clisp" class="olink"><span class="refentrytitle">clisp</span>(1)</a>), and for such questions this
+list provides a link into the docs.
+The frequently asked <a class="link" href="faq.html#faq-meta" title="Meta Information">political</a> questions are
+answered here in <span class="emphasis"><em>full</em></span> detail (meaning that no
+further explanations of the issues could be provided).</p><p>Please submit more questions (and answers!)
+ to <a class="" href="https://lists.sourceforge.net/lists/listinfo/clisp-list">clisp-list</a>.</p></div><div class="qandaset"><h2 class="title"><a id="faq-set"></a>FAQ</h2><dl><dt>A.1.  <a href="faq.html#faq-meta">Meta Information</a></dt><dd><dl><dt>A.1.1.  <a href="faq.html#faq-meta-misc">Miscellaneous</a></dt><dd><dl><dt>A.1.1.1. <a href="faq.html#faq-fine">What is
+   “FAQ fine”?</a></dt><dt>A.1.1.2. <a href="faq.html#faq-doc">The official CLISP
+   documentation sucks - is anything better available?</a></dt><dt>A.1.1.3. <a href="faq.html#faq-gpl">License
+   - why GNU GPL?</a></dt><dt>A.1.1.4. <a href="faq.html#faq-ansi">What about
+   [ANSI CL standard] compliance?</a></dt><dt>A.1.1.5. <a href="faq.html#faq-help">How do I
+   ask for help?</a></dt><dt>A.1.1.6. <a href="faq.html#faq-mailing-lists">Which mailing lists should I subscribe to?</a></dt><dt>A.1.1.7. <a href="faq.html#faq-rejected">Why
+   is my mail to a mailing list rejected?</a></dt><dt>A.1.1.8. <a href="faq.html#faq-bugs">How do I
+   report bugs?</a></dt><dt>A.1.1.9. <a href="faq.html#faq-contrib">How
+   do I help?</a></dt><dt>A.1.1.10. <a href="faq.html#faq-debug">How do I
+   debug CLISP?</a></dt></dl></dd><dt>A.1.2.  <a href="faq.html#faq-menorah">Logo</a></dt><dd><dl><dt>A.1.2.1. <a href="faq.html#faq-menorah-why">Why
+   is CLISP using menorah as the logo?</a></dt><dt>A.1.2.2. <a href="faq.html#faq-menorah-current">Shouldn't the logo be changed now due to the current
+   political developments in the Middle East?</a></dt><dt>A.1.2.3. <a href="faq.html#faq-menorah-other">Aren't there other political issues of concern?</a></dt><dt>A.1.2.4. <a href="faq.html#faq-menorah-users">Aren't you afraid of losing some users who are offended by
+   the logo?</a></dt><dt>A.1.2.5. <a href="faq.html#faq-menorah-unprofessional">Using software to
+   promote a political agenda is unprofessional!</a></dt></dl></dd></dl></dd><dt>A.2.  <a href="faq.html#faq-run">Running <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a></a></dt><dd><dl><dt>A.2.1. <a href="faq.html#faq-defun">Where is
+   DEFUN?</a></dt><dt>A.2.2. <a href="faq.html#faq-ide">Where is the IDE?</a></dt><dt>A.2.3. <a href="faq.html#faq-opt">What are the
+   command line arguments?</a></dt><dt>A.2.4. <a href="faq.html#faq-debugger">How
+   do I get out of the debugger?</a></dt><dt>A.2.5. <a href="faq.html#faq-ext">What CLISP
+   extensions are available?</a></dt><dt>A.2.6. <a href="faq.html#faq-rc">Where is the
+   init (“RC”) file on my platform?</a></dt><dt>A.2.7. <a href="faq.html#faq-modules">Where
+   are the modules with which I built CLISP?</a></dt><dt>A.2.8. <a href="faq.html#faq-gui">How do I create
+   a GUI
+   for my CLISP program?</a></dt></dl></dd><dt>A.3.  <a href="faq.html#faq-delivery">Application Delivery</a></dt><dd><dl><dt>A.3.1. <a href="faq.html#faq-exec">How do I
+   create an executable file with all my code in it?</a></dt><dt>A.3.2. <a href="faq.html#faq-licensing">When
+ I deliver my application with CLISP does it have to be covered by
+   GNU GPL?</a></dt></dl></dd><dt>A.4.  <a href="faq.html#faq-trouble">Troubles</a></dt><dd><dl><dt>A.4.1. <a href="faq.html#faq-bin-distrib">Where
+   is the binary distribution for my platform?</a></dt><dt>A.4.2. <a href="faq.html#faq-bin-distrib-prev">But a previous release had a binary
+   distribution for my platform, why does not the current one?</a></dt><dt>A.4.3. <a href="faq.html#faq-build">Why does not
+   CLISP build on my platform?</a></dt><dt>A.4.4. <a href="faq.html#faq-enc-err">What do
+   these messages mean: “invalid byte #x94 in
+    CHARSET:ASCII conversion” and
+   “character #\u00B3 cannot be represented in the
+    character set CHARSET:ASCII”?</a></dt><dt>A.4.5. <a href="faq.html#faq-rl-tab">What does
+   this message mean: “Display all 1259
+     possibilities? (y or n)”</a></dt><dt>A.4.6. <a href="faq.html#faq-no-rl">Why does
+   not command line editing work?</a></dt><dt>A.4.7. <a href="faq.html#faq-stack">How do I
+   avoid stack overflow?</a></dt><dt>A.4.8. <a href="faq.html#faq-self-mod">Why does my program return different values on each
+   invocation?</a></dt><dt>A.4.9. <a href="faq.html#faq-autoconf">Why
+   is GNU autoconf invoked during build?</a></dt><dt>A.4.10. <a href="faq.html#faq-fp">Why don't floating point arithmetic
+   return what I want?</a></dt><dt>A.4.11. <a href="faq.html#faq-random">Why does
+   $ clisp -x '(RANDOM 1s0)'
+   always print the same number?</a></dt><dt>A.4.12. <a href="faq.html#faq-pp-newline">Why is an extra line break
+   inserted by the pretty printer?</a></dt><dt>A.4.13. <a href="faq.html#faq-warning">How do I disable this annoying
+   warning?</a></dt><dt>A.4.14. <a href="faq.html#faq-scope">Why does DEFVAR affect previously defined lexical closures?</a></dt><dt>A.4.15. <a href="faq.html#faq-bad-error">The error message is not helpful!</a></dt><dt>A.4.16. <a href="faq.html#faq-other-problem">Why is the function FOO
+   broken?!</a></dt></dl></dd></dl><table border="0" summary="Q and A Set"><col align="left" width="1%" /><tbody><tr class="qandadiv"><td align="left" valign="top" colspan="2"><h3 class="title"><a id="faq-meta"></a>A.1. Meta Information</h3></td></tr><tr class="toc"><td align="left" valign="top" colspan="2"><dl><dt>A.1.1.  <a href="faq.html#faq-meta-misc">Miscellaneous</a></dt><dd><dl><dt>A.1.1.1. <a href="faq.html#faq-fine">What is
+   “FAQ fine”?</a></dt><dt>A.1.1.2. <a href="faq.html#faq-doc">The official CLISP
+   documentation sucks - is anything better available?</a></dt><dt>A.1.1.3. <a href="faq.html#faq-gpl">License
+   - why GNU GPL?</a></dt><dt>A.1.1.4. <a href="faq.html#faq-ansi">What about
+   [ANSI CL standard] compliance?</a></dt><dt>A.1.1.5. <a href="faq.html#faq-help">How do I
+   ask for help?</a></dt><dt>A.1.1.6. <a href="faq.html#faq-mailing-lists">Which mailing lists should I subscribe to?</a></dt><dt>A.1.1.7. <a href="faq.html#faq-rejected">Why
+   is my mail to a mailing list rejected?</a></dt><dt>A.1.1.8. <a href="faq.html#faq-bugs">How do I
+   report bugs?</a></dt><dt>A.1.1.9. <a href="faq.html#faq-contrib">How
+   do I help?</a></dt><dt>A.1.1.10. <a href="faq.html#faq-debug">How do I
+   debug CLISP?</a></dt></dl></dd><dt>A.1.2.  <a href="faq.html#faq-menorah">Logo</a></dt><dd><dl><dt>A.1.2.1. <a href="faq.html#faq-menorah-why">Why
+   is CLISP using menorah as the logo?</a></dt><dt>A.1.2.2. <a href="faq.html#faq-menorah-current">Shouldn't the logo be changed now due to the current
+   political developments in the Middle East?</a></dt><dt>A.1.2.3. <a href="faq.html#faq-menorah-other">Aren't there other political issues of concern?</a></dt><dt>A.1.2.4. <a href="faq.html#faq-menorah-users">Aren't you afraid of losing some users who are offended by
+   the logo?</a></dt><dt>A.1.2.5. <a href="faq.html#faq-menorah-unprofessional">Using software to
+   promote a political agenda is unprofessional!</a></dt></dl></dd></dl></td></tr><tr class="qandadiv"><td align="left" valign="top" colspan="2"><h4 class="title"><a id="faq-meta-misc"></a>A.1.1. Miscellaneous</h4></td></tr><tr class="toc"><td align="left" valign="top" colspan="2"><dl><dt>A.1.1.1. <a href="faq.html#faq-fine">What is
+   “FAQ fine”?</a></dt><dt>A.1.1.2. <a href="faq.html#faq-doc">The official CLISP
+   documentation sucks - is anything better available?</a></dt><dt>A.1.1.3. <a href="faq.html#faq-gpl">License
+   - why GNU GPL?</a></dt><dt>A.1.1.4. <a href="faq.html#faq-ansi">What about
+   [ANSI CL standard] compliance?</a></dt><dt>A.1.1.5. <a href="faq.html#faq-help">How do I
+   ask for help?</a></dt><dt>A.1.1.6. <a href="faq.html#faq-mailing-lists">Which mailing lists should I subscribe to?</a></dt><dt>A.1.1.7. <a href="faq.html#faq-rejected">Why
+   is my mail to a mailing list rejected?</a></dt><dt>A.1.1.8. <a href="faq.html#faq-bugs">How do I
+   report bugs?</a></dt><dt>A.1.1.9. <a href="faq.html#faq-contrib">How
+   do I help?</a></dt><dt>A.1.1.10. <a href="faq.html#faq-debug">How do I
+   debug CLISP?</a></dt></dl></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-fine"></a><a id="faq-fine-q"></a><p><b>A.1.1.1.</b></p></td><td align="left" valign="top"><p>What is
+   “<span class="quote">FAQ fine</span>”?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>We assess a nominal fine of $10 for
+   <a class="link" href="faq.html#faq-help" title="Question">asking a question</a> that is answered
+   with a link to this <a class="link" href="faq.html" title="Appendix A. Frequently Asked Questions (With Answers) about CLISP">FAQ</a> document.
+   We further assess a fine of $1 for asking a question that is answered
+   with a link to the <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> <a class="link" href="index.html" title="Implementation Notes for GNU CLISP">manual</a>.
+   The fines are payable to the person who answered your questions.
+   If you consider these amounts to be exorbitant, please feel free to ignore
+   this blatant extortion and do not pay.</p><p>This should <span class="strong"><strong>not</strong></span> discourage you from asking questions, but
+   rather <span class="emphasis"><em>encourage</em></span> you to read the manual and
+   answer questions from other users.</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-doc"></a><a id="faq-doc-q"></a><p><b>A.1.1.2.</b></p></td><td align="left" valign="top"><p>The official <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>
+   documentation sucks - is anything better available?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>As with all generic complaints, the answer to this one is
+   <a class="ulink" href="http://www.cygwin.com/acronyms/#PTC" target="_top"><acronym class="acronym" title="Patches Thoughtfully Considered">PTC</acronym></a>.</p><p>Additionally, the nightly builds of the <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> implementation
+   notes documenting the current <a class="ulink" href="http://www.cvshome.org" target="_top">CVS</a> HEAD are available at
+   <a class="ulink" href="http://clisp.podval.org/impnotes/" target="_top">http://clisp.podval.org/impnotes/</a>.
+   It contains both the documentation for the new features and the
+   general improvements in the documentation.</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-gpl"></a><a id="faq-gpl-q"></a><p><b>A.1.1.3.</b></p></td><td align="left" valign="top"><p>License
+   - why <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/copyleft/gpl.html" target="_top">GPL</a>?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p><a class="clisp-cvs" href="http://clisp.cvs.sourceforge.net/*checkout*/clisp/clisp/doc/Why-CLISP-is-under-GPL">Because
+   <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> uses <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://tiswww.case.edu/php/chet/readline/readline.html" target="_top">readline</a></a>.</p><p>Note that this does not necessarily prevent you from distributing
+ your proprietary products based on <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>. See <span class="emphasis"><em>Note</em></span>
+ in <a class="clisp-cvs" href="http://clisp.cvs.sourceforge.net/*checkout*/clisp/clisp/COPYRIGHT"><code class="filename">COPYRIGHT</code></a>.
+</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-ansi"></a><a id="faq-ansi-q"></a><p><b>A.1.1.4.</b></p></td><td align="left" valign="top"><p>What about
+   [<span class="citation"><a class="link" href="references.html#ansi-cl" title="ANSI INCITS 226-1994 (R1999) Information Technology - Programming Language - Common Lisp [formerly ANSI X3.226-1994 (R1999)]">ANSI CL standard</a></span>] compliance?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p><a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>
+  <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/glo_p.html#purports_to_conform" target="_top"><span class="emphasis"><em>purports
+    to conform</em></span></a> to the [<span class="citation"><a class="link" href="references.html#ansi-cl" title="ANSI INCITS 226-1994 (R1999) Information Technology - Programming Language - Common Lisp [formerly ANSI X3.226-1994 (R1999)]">ANSI CL standard</a></span>] specification,
+  so all deviations in </p><pre class="screen"><strong><code class="prompt">$</code></strong> clisp <code class="option"><a href="clisp.html#opt-ansi" class="olink">-ansi</a></code></pre><p>
+  from the [<span class="citation"><a class="link" href="references.html#ansi-cl" title="ANSI INCITS 226-1994 (R1999) Information Technology - Programming Language - Common Lisp [formerly ANSI X3.226-1994 (R1999)]">ANSI CL standard</a></span>] are bugs and are not (yet) fixed only due
+  to lack of resources.</p><p>On the other hand, some decisions made by the ANSI X3J13 committee
+  were not as justified from the <span class="emphasis"><em>technical</em></span> point of
+  view as were most of them, and some of those questionable decisions
+  were made <span class="strong"><strong>after</strong></span> the alternative behavior has
+  already been implemented in <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>.  The <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> developers took
+  pains to modify <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> to unconditionally comply with the [<span class="citation"><a class="link" href="references.html#ansi-cl" title="ANSI INCITS 226-1994 (R1999) Information Technology - Programming Language - Common Lisp [formerly ANSI X3.226-1994 (R1999)]">ANSI CL standard</a></span>]
+  specification in all cases <a class="link" href="ansi.html" title="31.10. Maximum ANSI CL compliance">except for a handful
+  of situations where they believed that the committee had made a
+  mistake</a>, in which cases the committee behavior
+  is <span class="emphasis"><em>still</em></span> optionally available.</p><p><a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> does not start in the ansi mode by default for
+  historical reasons and this is not about to change.
+  <a class="link" href="image.html" title="31.2. Saving an Image">Dumping an image</a> or
+  <a href="clisp.html#opt-ansi" class="olink">passing a command line
+   argument</a> are easy enough.</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-help"></a><a id="faq-help-q"></a><p><b>A.1.1.5.</b></p></td><td align="left" valign="top"><p>How do I
+   ask for help?</p></td></tr><tr class="answer"><td align="left" valign="top"><p><b><a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a></b></p></td><td align="left" valign="top"><p>Type <a href="repl.html#debugger-main-deb-step" class="olink"><span class="command"><strong>help</strong></span></a> and hit <span class="keycap"><strong>Enter</strong></span>.</p></td></tr><tr class="answer"><td align="left" valign="top"><p><b>Human</b></p></td><td align="left" valign="top"><p>Politely - please refer to <a class="rfc" href="http://rfc.net/rfc1855.html"><code>Netiquette</code></a>.</p><p>If you have a question about <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>, you have the following options
+  (listed in the order of decreasing audience size):</p><div class="variablelist"><dl><dt><span class="term">USENET group <a class="ulink" href="http://groups.google.com/groups?as_ugroup=comp.lang.lisp" target="_top">comp.lang.lisp</a></span></dt><dd>This is the right place to ask all general Lisp
+      questions, such as <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/acc_charcm_schar.html" target="_top">"how
+       do I access a character in a string?"</a></dd><dt><span class="term"><a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> User Mailing
+     List <a class="" href="https://lists.sourceforge.net/lists/listinfo/clisp-list">clisp-list</a><br /></span><span class="term">AKA <a class="ulink" href="http://news.gmane.org/gmane.lisp.clisp.general" target="_top">http://news.gmane.org/gmane.lisp.clisp.general</a>
+    </span></dt><dd>This is the right place to ask user-level
+      <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>-specific questions, such as
+      <a class="link" href="image.html" title="31.2. Saving an Image">"how do I save my <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> image?"</a>
+   </dd><dt><span class="term"><a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> Developer Mailing
+     List <a class="" href="https://lists.sourceforge.net/lists/listinfo/clisp-devel">clisp-devel</a><br /></span><span class="term">AKA <a class="ulink" href="http://news.gmane.org/gmane.lisp.clisp.devel" target="_top">http://news.gmane.org/gmane.lisp.clisp.devel</a></span></dt><dd>This is the right place to discuss <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> internals,
+      submit patches, offer help.</dd><dt><span class="term"><a class="ulink" href="http://sourceforge.net/project/memberlist.php?group_id=1355" target="_top">Individual <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> developers</a></span></dt><dd><p>This is <span class="emphasis"><em>never</em></span> the right thing to
+      do, unless you want to <span class="emphasis"><em>hire</em></span> this developer to do
+      <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> consulting (commercial support, custom enhancements etc).
+      This is actually for your own benefit: the <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> developers are very
+      busy, they might get weeks to answer your question,
+      and some other user may be able to help you in the meantine;
+      as well as for the benefit of the other <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> users,
+      since the mailing lists are publicly archived (you are encouraged
+      to <a class="ulink" href="http://clisp.cons.org/#search" target="_top">search</a> them
+      before asking).</p><p>Please do <span class="strong"><strong>not</strong></span> copy your messages to the individual
+      developers.</p></dd></dl></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Mailing lists are member-only</h3><p>To avoid spam, we require that you subscribe before you can
+  post to a mailing list.
+  Alternatively, you can post to the <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>
+  <a class="ulink" href="http://sourceforge.net/forum/forum.php?forum_id=3816" target="_top">web
+   forum</a> and your message will be forwarded to
+  the <a class="" href="https://lists.sourceforge.net/lists/listinfo/clisp-list">clisp-list</a> mailing list.
+  If you read a list on <a class="ulink" href="http://gmane.org" target="_top">Gmane</a>
+  and do not want to receive it also by e-mail, you can subscribe to
+  it using the aforementioned web interface and then disable mail
+  delivery.</p></div></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-mailing-lists"></a><a id="faq-mailing-lists-q"></a><p><b>A.1.1.6.</b></p></td><td align="left" valign="top"><p>Which mailing lists should I subscribe to?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>Cross-posting in the <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>
+  <a class="ulink" href="http://sourceforge.net/mail/?group_id=1355" target="_top">mailing lists</a>
+  is very actively discouraged and is virtually non-existent,
+  thus you can subscribe to all mailing lists that are relevant to you
+  without getting duplicate messages:</p><div class="variablelist"><dl><dt><span class="term"><a class="" href="https://lists.sourceforge.net/lists/listinfo/clisp-announce">clisp-announce</a></span></dt><dd>Extremely low-level moderated list, you should
+    definitely subscribe to this list if you have any interest in <a class="ulink" href="http://www.lisp.org" target="_top"><span class="command"><strong>Common Lisp</strong></span></a>
+    or <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> whatsoever.</dd><dt><span class="term"><a class="" href="https://lists.sourceforge.net/lists/listinfo/clisp-list">clisp-list</a></span></dt><dd>Subscribe to this list of you use <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> and want
+    to ask (and answer!) questions. If you subscribe to this list, you
+    probably want to subscribe to <a class="" href="https://lists.sourceforge.net/lists/listinfo/clisp-announce">clisp-announce</a> too.
+ </dd><dt><span class="term"><a class="" href="https://lists.sourceforge.net/lists/listinfo/clisp-devel">clisp-devel</a></span></dt><dd>Subscribe to this list if you want to influence
+    <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> developments; <a class="ulink" href="http://www.cvshome.org" target="_top">CVS</a> commit notes go here (as a daily digest).
+    If you subscribe to this list, you probably want to subscribe
+    to <a class="" href="https://lists.sourceforge.net/lists/listinfo/clisp-list">clisp-list</a>
+    <span class="strong"><strong>and</strong></span> <a class="" href="https://lists.sourceforge.net/lists/listinfo/clisp-announce">clisp-announce</a> too.</dd></dl></div></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-rejected"></a><a id="faq-rejected-q"></a><p><b>A.1.1.7.</b></p></td><td align="left" valign="top"><p>Why
+   is my mail to a mailing list rejected?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p><a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> mailing lists get a lot of spam, so the
+  maintainers have to take care to protect the users.  If you get a note
+  that “<span class="quote">your message is held for moderator's approval</span>”, you
+  can safely <span class="strong"><strong>assume that it went
+   to <code class="filename">/dev/null</code></strong></span>
+  and try again, noting the following:</p><div class="variablelist"><dl><dt><span class="term"><a class="" href="https://lists.sourceforge.net/lists/listinfo/clisp-announce">clisp-announce</a></span></dt><dd>do not mail here without a prior discussion
+    on <a class="" href="https://lists.sourceforge.net/lists/listinfo/clisp-devel">clisp-devel</a>
+    or <a class="" href="https://lists.sourceforge.net/lists/listinfo/clisp-list">clisp-list</a></dd><dt><span class="term"><a class="" href="https://lists.sourceforge.net/lists/listinfo/clisp-devel">clisp-devel</a></span></dt><dd>subscriber-only, you <span class="strong"><strong>must</strong></span> post
+    from a <span class="strong"><strong>subscribed address</strong></span>,
+    no exceptions (see <a class="link" href="faq.html#faq-help" title="Question">above</a>)
+ </dd><dt><span class="term"><a class="" href="https://lists.sourceforge.net/lists/listinfo/clisp-list">clisp-list</a></span></dt><dd><p>used to be the only open list (it is closed now), so
+    it is filtered especially aggressively:</p><div class="itemizedlist"><ul type="disc"><li>no <a class="rfc" href="http://rfc.net/rfc2045.html"><code>MIME</code></a> mail (no <a class="ulink" href="http://www.w3.org/MarkUp/" target="_top">HTML</a> formatting, no
+       attachments - send the URL instead)</li><li>the list address must be in <code class="literal">CC</code>
+       or <code class="literal">TO</code>, not <code class="literal">BCC</code>.
+     </li><li>do not mention “<span class="quote">virgin</span>”,
+       “<span class="quote">penis</span>” or “<span class="quote">viagra</span>” in
+       the <code class="literal">Subject</code> line.</li></ul></div></dd></dl></div><p>If you do not like this policy, please volunteer to maintain the
+  mailing lists - you will be required to go through all the
+  “<span class="quote">held for moderator's approval</span>” mail and approve/discard
+  as appropriate at least twice a day.</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-bugs"></a><a id="faq-bugs-q"></a><p><b>A.1.1.8.</b></p></td><td align="left" valign="top"><p>How do I
+   report bugs?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p><a href="clisp.html#bugs" class="olink">Patiently</a>!
+</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-contrib"></a><a id="faq-contrib-q"></a><p><b>A.1.1.9.</b></p></td><td align="left" valign="top"><p>How
+   do I help?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>Please read <a class="xref" href="extend.html" title="Chapter 36. Extending CLISP">Chapter 36, <i>Extending <span class="command"><strong>CLISP</strong></span></i></a> and submit your patch,
+  together with a <a class="clisp-cvs" href="http://clisp.cvs.sourceforge.net/*checkout*/clisp/clisp/src/ChangeLog"><code class="filename">src/ChangeLog</code></a>
+  entry (see other entries there for inspiration),
+  to <a class="" href="https://lists.sourceforge.net/lists/listinfo/clisp-devel">clisp-devel</a>.</p><p>See <a class="clisp-cvs" href="http://clisp.cvs.sourceforge.net/*checkout*/clisp/clisp/src/CodingStyle"><code class="filename">src/CodingStyle</code></a> for the
+  style one should follow.</p><p>If your patch is more than just a few lines, it is
+  <span class="emphasis"><em>much</em></span> preferred that you make your patch available
+  on the web and send the link to the list.</p><p>The patch must be against the <a class="ulink" href="http://www.cvshome.org" target="_top">CVS</a> head
+  (reasonably recent).</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-debug"></a><a id="faq-debug-q"></a><p><b>A.1.1.10.</b></p></td><td align="left" valign="top"><p>How do I
+   debug <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p><a id="faq-debug-core"></a><b>Debugging the core. </b></p><pre class="screen">
+<strong><code class="prompt">$</code></strong> ./configure --with-debug --cbc build-g
+<strong><code class="prompt">$</code></strong> cd build-g
+<strong><code class="prompt">$</code></strong> gdb lisp.run <em class="lineannotation"><span class="lineannotation">;; or lisp.exe on windows and cygwin</span></em>
+<strong><code class="prompt">(gdb)</code></strong> boot
+<strong><code class="prompt">(gdb)</code></strong> run
+</pre><p><a id="faq-debug-module"></a><b>Debugging
+  module <code class="literal">foo</code>. </b></p><pre class="screen">
+<strong><code class="prompt">$</code></strong> ./configure --with-debug --with-module=foo --cbc build-g
+<strong><code class="prompt">$</code></strong> cd build-g
+<strong><code class="prompt">$</code></strong> gdb full/lisp.run <em class="lineannotation"><span class="lineannotation">;; or lisp.exe on windows and cygwin</span></em>
+<strong><code class="prompt">(gdb)</code></strong> full
+<strong><code class="prompt">(gdb)</code></strong> run</pre><p>
+When debugging a <a href="modules.html#base-modules" class="olink"><span class="command"><strong>base</strong></span></a> module, use <span class="command"><strong>base</strong></span>
+ instead of <span class="command"><strong>full</strong></span> and <span class="command"><strong>boot</strong></span> above.
+</p><p><a id="faq-debug-gengc"></a><b>The impact of generational <a href="gc.html" class="olink">garbage-collect</a>or. </b>If your <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> was built with generational <a href="gc.html" class="olink">garbage-collect</a>or, you will see
+ plenty of spurious segfaults (that's how the generational <a href="gc.html" class="olink">garbage-collect</a>or
+ works).  At the end of <a class="clisp-cvs" href="http://clisp.cvs.sourceforge.net/*checkout*/clisp/clisp/src/.gdbinit"><code class="filename">src/.gdbinit</code></a>
+ you will find the following suggested <a class="ulink" href="http://sources.redhat.com/gdb/" target="_top"><span class="command"><strong>gdb</strong></span></a> commands:
+</p><pre class="programlisting">handle SIGSEGV noprint nostop
+break sigsegv_handler_failed</pre><p>
+which will stop execution on a <span class="emphasis"><em>dangerous</em></span> segfault.
+You can find out whether this is needed by examining the output of the
+following command:
+</p><pre class="screen"><strong><code class="prompt">$</code></strong> clisp --version | grep GENERATIONAL_GC</pre><p>
+</p><p><a id="faq-debug-gdbinit"></a><b>Useful commands. </b>You are encouraged to make use of commands defined in
+ <a class="clisp-cvs" href="http://clisp.cvs.sourceforge.net/*checkout*/clisp/clisp/src/.gdbinit"><code class="filename">src/.gdbinit</code></a>,
+ such as</p><table class="simplelist" border="0" summary="Simple list"><tr><td><span class="command"><strong>boot</strong></span></td><td><span class="command"><strong>run_test</strong></span></td><td><span class="command"><strong>xout</strong></span></td></tr><tr><td><span class="command"><strong>base</strong></span></td><td><span class="command"><strong>run_all_tests</strong></span></td><td><span class="command"><strong>zout</strong></span></td></tr><tr><td><span class="command"><strong>full</strong></span></td><td><span class="command"><strong>ansi_tests</strong></span></td><td> </td></tr></table><p>and others.</p><p><a id="faq-debug-macros"></a><b>Macros. </b><a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> makes heavy use of <a class="ulink" href="http://gcc.gnu.org/onlinedocs/cpp/" target="_top"><span class="command"><strong>cpp</strong></span></a> macros
+  (e.g., <code class="function">pushSTACK</code>), which can complicate debugging
+  in <a class="ulink" href="http://sources.redhat.com/gdb/" target="_top"><span class="command"><strong>gdb</strong></span></a>.  The macros are defined
+  in <a class="clisp-cvs" href="http://clisp.cvs.sourceforge.net/*checkout*/clisp/clisp/src/lispbibl.d"><code class="filename">src/lispbibl.d</code></a>, but the maze
+  of conditionals may be hard to navigate. If you are using <a class="ulink" href="http://gcc.gnu.org/" target="_top"><span class="command"><strong>gcc</strong></span></a>, you
+  can do <a class="unix" href="http://www.opengroup.org/onlinepubs/009695399/utilities/make.html"><span class="command"><strong>make lispbibl.h</strong></span></a> and then
+  examine the definitions in the generated <code class="filename">lispbibl.h</code>.
+  See also bottom of <a class="clisp-cvs" href="http://clisp.cvs.sourceforge.net/*checkout*/clisp/clisp/src/spvw_debug.d"><code class="filename">src/spvw_debug.d</code></a>.
+</p></td></tr><tr class="qandadiv"><td align="left" valign="top" colspan="2"><h4 class="title"><a id="faq-menorah"></a>A.1.2. Logo</h4></td></tr><tr class="toc"><td align="left" valign="top" colspan="2"><dl><dt>A.1.2.1. <a href="faq.html#faq-menorah-why">Why
+   is CLISP using menorah as the logo?</a></dt><dt>A.1.2.2. <a href="faq.html#faq-menorah-current">Shouldn't the logo be changed now due to the current
+   political developments in the Middle East?</a></dt><dt>A.1.2.3. <a href="faq.html#faq-menorah-other">Aren't there other political issues of concern?</a></dt><dt>A.1.2.4. <a href="faq.html#faq-menorah-users">Aren't you afraid of losing some users who are offended by
+   the logo?</a></dt><dt>A.1.2.5. <a href="faq.html#faq-menorah-unprofessional">Using software to
+   promote a political agenda is unprofessional!</a></dt></dl></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-menorah-why"></a><a id="faq-menorah-why-q"></a><p><b>A.1.2.1.</b></p></td><td align="left" valign="top"><p>Why
+   is <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> using menorah as the logo?</p></td></tr><tr class="answer"><td align="left" valign="top"><p><b>Whimsical</b></p></td><td align="left" valign="top"><p>If you must have some answer and you do not care whether it is
+  correct or not, you may simply think that <a class="ulink" href="http://www.lisp.org" target="_top"><span class="command"><strong>Common Lisp</strong></span></a> brings
+  the <span class="emphasis"><em>Light</em></span> to a programmer, and <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> is a
+  vehicle that carries the <span class="emphasis"><em>Light</em></span>.</p><p>Accordingly, <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> enables you to <span class="emphasis"><em>see</em></span> the
+  truth, thus you can pronounce it as <span class="emphasis"><em>see-lisp</em></span>.
+  Alternatively, if you are a <span class="emphasis"><em>seasoned</em></span> expert,
+  you might pronounce it as <span class="emphasis"><em>sea-lisp</em></span>.</p></td></tr><tr class="answer"><td align="left" valign="top"><p><b>Historical</b></p></td><td align="left" valign="top"><p><a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> has been using the menorah for the logo since the project was
+   first started in the late 1980-ies by Bruno Haible and Michael Stoll.
+   This <span class="emphasis"><em>probably</em></span> reflects the authors' affection
+   toward the Jewish people, Judaism or the State of Israel
+   (neither of the two original authors is Jewish by birth).
+   You may ask the original authors for details yourself.
+   Both of them are very busy though, so do not expect a prompt reply.
+ </p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-menorah-current"></a><a id="faq-menorah-current-q"></a><p><b>A.1.2.2.</b></p></td><td align="left" valign="top"><p>Shouldn't the logo be changed now due to the current
+   political developments in the Middle East?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>The <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> developers, both the original creators and the
+  current maintainers, do not subscribe to the mainstream view that
+  blames the Jews for everything from high oil prices and Islamic
+  extremism to El Niño and Sun spots.</p><p>Moreover, today, when Jews are being pushed out of the American
+  and European academic institutions with various obscene
+  <a class="ulink" href="http://how_to_help_israel.tripod.com/Petition.htm" target="_top">boycott</a>
+  and <a class="ulink" href="http://www.divestmentwatch.com/" target="_top">divestment</a>
+  campaigns, it is crucial for all of us to stand together against
+  the resurgence of Nazism.</p><p>For more information, please see:
+ </p><div class="itemizedlist"><ul type="disc"><li><a class="ulink" href="http://www.camera.org/" target="_top">Committee for
+     Accuracy in Middle East Reporting in America</a></li><li><a class="ulink" href="http://www.iris.org.il/" target="_top">Information
+     Regarding Israel's Security</a></li><li><a class="ulink" href="http://www.memri.org/" target="_top">Middle East
+     Media Research Institute</a></li><li><a class="ulink" href="http://www.mideasttruth.com/" target="_top">YES to
+     peace, NO to terror</a></li><li><a class="ulink" href="http://www.mideasttruth.com/links.html" target="_top">More
+     links</a></li></ul></div></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-menorah-other"></a><a id="faq-menorah-other-q"></a><p><b>A.1.2.3.</b></p></td><td align="left" valign="top"><p>Aren't there other political issues of concern?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>Yes, there are!  For example, in 1989 the
+  <a class="ulink" href="http://sds.podval.org/commies.html" target="_top">communist</a>
+  government of the <a class="ulink" href="http://www.chinasupport.net/" target="_top">People's
+   Republic of China</a> murdered some 3000+
+  student human rights protesters at the Tienanmen square in Beijing,
+  and people appear to have already forgotten this crime.
+  A note to that effect was kept in the file
+  <a class="clisp-cvs" href="http://clisp.cvs.sourceforge.net/*checkout*/clisp/clisp/src/timezone.lisp"><code class="filename">src/timezone.lisp</code></a>
+  until 2002, when it was decided that is was not visible enough there
+  and it was moved here.</p><p>We also oppose <a class="ulink" href="http://swpat.ffii.org/" target="_top">software
+   patents</a> and support other liberal (i.e., pro-liberty) causes.</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-menorah-users"></a><a id="faq-menorah-users-q"></a><p><b>A.1.2.4.</b></p></td><td align="left" valign="top"><p>Aren't you afraid of losing some users who are offended by
+   the logo?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>Do you have in mind people like
+  <a class="ulink" href="http://groups.google.com/groups?selm=989898671967295%40amnet.net.ae" target="_top">this</a> one?
+  Good riddance!</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-menorah-unprofessional"></a><a id="faq-menorah-unprofessional-q"></a><p><b>A.1.2.5.</b></p></td><td align="left" valign="top"><p>Using software to
+   promote a political agenda is unprofessional!</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>Expressing their opinion is a perfectly natural thing for the
+  authors, be it artistic preferences, political views or religious beliefs.
+  The use of the menorah has its roots somewhere between these areas,
+  and the authors are proud to display it.
+  If you are unlucky enough to have lost the freedom to express your
+  opinion, due to the constraints of a government, society, religion,
+  or expectations of “<span class="quote">professional relationships</span>”,
+  the Free World condoles with you.
+  The authors of <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> are not operating under such constraints.
+  If you are unhappy about their artistic preferences, political views or
+  religious beliefs, you are free to ignore them.</p><p>Many scientists have been doing art, politics and religion.
+  René Descartes and Isaak Newton combined mathematics and Christianity.
+  Albert Einstein helped the U.S. to counter the danger of an atomic bomb
+  in the hands of the Nazis.
+  Bram Moolenaar, the author of <a class="ulink" href="http://www.vim.org/" target="_top">VIM</a>,
+  promotes charitable donations to Uganda.</p></td></tr><tr class="qandadiv"><td align="left" valign="top" colspan="2"><h3 class="title"><a id="faq-run"></a>A.2. Running <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a></h3></td></tr><tr class="toc"><td align="left" valign="top" colspan="2"><dl><dt>A.2.1. <a href="faq.html#faq-defun">Where is
+   DEFUN?</a></dt><dt>A.2.2. <a href="faq.html#faq-ide">Where is the IDE?</a></dt><dt>A.2.3. <a href="faq.html#faq-opt">What are the
+   command line arguments?</a></dt><dt>A.2.4. <a href="faq.html#faq-debugger">How
+   do I get out of the debugger?</a></dt><dt>A.2.5. <a href="faq.html#faq-ext">What CLISP
+   extensions are available?</a></dt><dt>A.2.6. <a href="faq.html#faq-rc">Where is the
+   init (“RC”) file on my platform?</a></dt><dt>A.2.7. <a href="faq.html#faq-modules">Where
+   are the modules with which I built CLISP?</a></dt><dt>A.2.8. <a href="faq.html#faq-gui">How do I create
+   a GUI
+   for my CLISP program?</a></dt></dl></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-defun"></a><a id="faq-defun-q"></a><p><b>A.2.1.</b></p></td><td align="left" valign="top"><p>Where is
+   <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/mac_defun.html" target="_top"><code class="function">DEFUN</code></a>?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>Pass <code class="option"><a href="clisp.html#opt-memfile" class="olink">-M</a></code> to the runtime (<code class="filename">lisp.run</code>
+  or <code class="filename">lisp.exe</code>).
+  Or, better yet, use the driver <code class="filename">clisp</code> (or
+  <code class="filename">clisp.exe</code>) instead of invoking the runtime
+  directly.</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-ide"></a><a id="faq-ide-q"></a><p><b>A.2.2.</b></p></td><td align="left" valign="top"><p>Where is the <acronym class="acronym" title="Integrated Development Environment">IDE</acronym>?</p></td></tr><tr class="answer"><td align="left" valign="top"><p><b><a class="ulink" href="http://www.gnu.org/software/emacs/" target="_top">Emacs</a>-based</b></p></td><td align="left" valign="top"><div class="itemizedlist"><ul type="disc"><li><a class="ulink" href="http://www.gnu.org/software/emacs/manual/html_node/emacs/External-Lisp.html" target="_top"><code class="function">run-lisp</code></a></li><li><a class="ulink" href="http://common-lisp.net/project/slime/" target="_top">SLIME</a></li><li><a class="ulink" href="http://sourceforge.net/projects/ilisp/" target="_top">ILISP</a></li><li><a class="ulink" href="http://cl-cookbook.sourceforge.net/windows.html" target="_top">The Common Lisp Cookbook</a></li></ul></div></td></tr><tr class="answer"><td align="left" valign="top"><p><b>non-<a class="ulink" href="http://www.gnu.org/software/emacs/" target="_top">Emacs</a>-based</b></p></td><td align="left" valign="top"><div class="itemizedlist"><ul type="disc"><li><a class="" href="http://www.google.com/search?q=VisualCLisp">VisualCLisp</a></li><li><a class="ulink" href="http://jabberwocky.sourceforge.net/" target="_top">Jabberwocky</a></li><li><a class="ulink" href="http://gclisp.sourceforge.net/" target="_top">GClisp</a></li><li><a class="ulink" href="http://common-lisp.net/project/phemlock/" target="_top">Portable Hemlock</a></li></ul></div></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-opt"></a><a id="faq-opt-q"></a><p><b>A.2.3.</b></p></td><td align="left" valign="top"><p>What are the
+   command line arguments?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>See <a href="clisp.html#clisp" class="olink"><span class="refentrytitle">clisp</span>(1)</a>.</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-debugger"></a><a id="faq-debugger-q"></a><p><b>A.2.4.</b></p></td><td align="left" valign="top"><p>How
+   do I get out of the debugger?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>See <a class="xref" href="debugger.html" title="25.2. Debugging Utilities">Section 25.2, “Debugging Utilities
+  ”</a>.</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-ext"></a><a id="faq-ext-q"></a><p><b>A.2.5.</b></p></td><td align="left" valign="top"><p>What <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>
+   extensions are available?</p></td></tr><tr class="answer"><td align="left" valign="top"><p><b>bindled</b></p></td><td align="left" valign="top"><p>Quite a few modules are
+  <a class="link" href="modules.html#included-modules" title="32.2.9. Modules included in the source distribution">included</a> with <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>,
+  pass <code class="option">--with-module=...</code> to <code class="filename">configure</code>
+  to build them and use the <a href="modules.html#base-modules" class="olink"><span class="command"><strong>full</strong></span></a> <a href="modules.html#linkset" class="olink">linking set</a>.</p></td></tr><tr class="answer"><td align="left" valign="top"><p><b>3rd party</b></p></td><td align="left" valign="top"><p>See the <span class="emphasis"><em>incomplete</em></span> list of
+  <a class="ulink" href="http://clisp.cons.org/resources.html#software" target="_top">“<span class="quote">Common
+    Lisp software running in <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a></span>”</a>.</p></td></tr><tr class="answer"><td align="left" valign="top"><p><b><acronym class="acronym" title="Do It Yourself">DIY</acronym></b></p></td><td align="left" valign="top"><p>See <a class="xref" href="modules.html" title="32.2. External Modules">Section 32.2, “External Modules”</a> and <a class="xref" href="dffi.html" title="32.3. The Foreign Function Call Facility">Section 32.3, “The Foreign Function Call Facility”</a>
+  for information on how to interface with external <a class="ulink" href="http://c-faq.com/" target="_top"><span class="command"><strong>C</strong></span></a> libraries.
+</p></td></tr><tr class="answer"><td align="left" valign="top"><p><b><a class="ulink" href="http://www.w3.org/Protocols/" target="_top"><span class="command"><strong>HTTP</strong></span></a></b></p></td><td align="left" valign="top"><div class="itemizedlist"><p class="title"><b>Very Frequently Asked!</b></p><ul type="disc"><li><a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> comes with
+    <a class="clisp-cvs" href="http://clisp.cvs.sourceforge.net/*checkout*/clisp/clisp/src/inspect.lisp"><code class="filename">src/inspect.lisp</code></a>
+    which implements a rudimentary <a class="ulink" href="http://www.w3.org/Protocols/" target="_top"><span class="command"><strong>HTTP</strong></span></a> server</li><li><a class="ulink" href="http://clocc.sourceforge.net/clocc/src/donc/http.lisp" target="_top">CLOCC/src/donc/</a> has an <a class="ulink" href="http://www.w3.org/Protocols/" target="_top"><span class="command"><strong>HTTP</strong></span></a> server</li><li><a class="ulink" href="http://clocc.sourceforge.net/clocc/src/cllib/url.lisp" target="_top">CLOCC/src/cllib/</a> handles URLs</li><li><a class="ulink" href="http://www.cliki.net/mod_lisp" target="_top">mod_lisp</a>
+    hooks lisp into <a class="ulink" href="http://www.apache.org/" target="_top">Apache</a></li><li><a class="ulink" href="http://www.cliki.net/HTTP%20dot%20LSP" target="_top">Object-Oriented HTTP server for <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a></a></li></ul></div><p>Both <a class="ulink" href="http://allegroserve.sourceforge.net/" target="_top">AllegroServe</a>
+  and <a class="ulink" href="http://www.cl-http.org:8001/cl-http/" target="_top">CL-HTTP</a>
+  require multithreading and do not work with <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> yet.
+</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-rc"></a><a id="faq-rc-q"></a><p><b>A.2.6.</b></p></td><td align="left" valign="top"><p>Where is the
+   init (“<span class="quote">RC</span>”) file on my platform?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>Read the file <code class="filename">&lt;clisp.html#opt-norc&gt;</code>
+  in your build directory or binary distribution (this is the version of
+  the user manual <a href="clisp.html#clisp" class="olink"><span class="refentrytitle">clisp</span>(1)</a> for your platform).</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-modules"></a><a id="faq-modules-q"></a><p><b>A.2.7.</b></p></td><td align="left" valign="top"><p>Where
+   are the modules with which I built <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>In the <a href="modules.html#base-modules" class="olink"><span class="command"><strong>full</strong></span></a> <a href="modules.html#linkset" class="olink">linking set</a>. Run <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> like this:
+  </p><pre class="screen"><strong><code class="prompt">$</code></strong> clisp <code class="option"><a href="clisp.html#opt-link-set" class="olink">-K</a></code> full</pre><p>If your <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> was configured with option <code class="option"><a class="link" href="modules.html#mod-dynload" title="32.2.5. Function SYS::DYNLOAD-MODULES">--with-dynamic-modules</a></code>, you
+  can instead use <code class="code">(<a href="require.html" class="olink"><code class="function">REQUIRE</code></a> <em class="replaceable"><code>name</code></em>)</code> where <em class="replaceable"><code>name</code></em> is
+  a <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_string.html" target="_top"><code class="classname">STRING</code></a>, e.g., “<span class="quote"><span class="module"><a class="filename" href="rawsock.html" title="33.17. Raw Socket Access"><code class="filename">rawsock</code></a></span></span>”.</p><p>Making <a href="modules.html#base-modules" class="olink"><span class="command"><strong>base</strong></span></a> the default <a href="modules.html#linkset" class="olink">linking set</a> has some advantages:</p><div class="variablelist"><dl><dt><span class="term">Shared Library Hell</span></dt><dd>Avoid problems when a module requires a shared
+      library, and that shared library is not present (or is present but
+      with wrong version) on your system.</dd><dt><span class="term">Smaller Images Are Faster</span></dt><dd>Adding things to the heap increases working
+      set size causing a slowdown, which is especially important for
+      small to medium applications.</dd><dt><span class="term">Uniform User Experience</span></dt><dd>Composition of the <a href="modules.html#base-modules" class="olink"><span class="command"><strong>full</strong></span></a> <a href="modules.html#linkset" class="olink">linking set</a> is up to the
+      packager, while <a href="modules.html#base-modules" class="olink"><span class="command"><strong>base</strong></span></a> is the same on all platforms.
+ </dd></dl></div><p>See <a class="" href="https://lists.sourceforge.net/lists/listinfo/clisp-list">clisp-list</a> for more information
+  (<a class="sfmail" href="http://sourceforge.net/mailarchive/message.php?msg_name=200407212204.44395.bruno%40clisp.org"><code>SFmail/200407212204.44395.bruno%40clisp.org</code></a>/<a class="gmane" href="http://article.gmane.org/gmane.lisp.clisp.general/8691"><code>Gmane/general/8691</code></a>).</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-gui"></a><a id="faq-gui-q"></a><p><b>A.2.8.</b></p></td><td align="left" valign="top"><p>How do I create
+   a <acronym class="acronym" title="Graphical User Interface">GUI</acronym>
+   for my <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> program?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>Use module <span class="module"><a class="filename" href="gtk.html" title="33.19. GTK Interface"><code class="filename">gtk2</code></a></span>: create <code class="filename">ui.glade</code>
+   with <a class="ulink" href="http://glade.gnome.org/" target="_top">Glade</a>, then do</p><pre class="screen">
+<strong><code class="prompt">$</code></strong> ./configure --with-module=gtk2 --cbc build-gtk
+<strong><code class="prompt">$</code></strong> ./build-gtk/clisp -K full -x '(gtk:run-glade-file "ui.glade")'</pre><p>There are many other options,
+  see <a class="ulink" href="http://clisp.cons.org/resources.html#software" target="_top">"Common
+    Lisp software running in <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>"</a>.</p></td></tr><tr class="qandadiv"><td align="left" valign="top" colspan="2"><h3 class="title"><a id="faq-delivery"></a>A.3. Application Delivery</h3></td></tr><tr class="toc"><td align="left" valign="top" colspan="2"><dl><dt>A.3.1. <a href="faq.html#faq-exec">How do I
+   create an executable file with all my code in it?</a></dt><dt>A.3.2. <a href="faq.html#faq-licensing">When
+ I deliver my application with CLISP does it have to be covered by
+   GNU GPL?</a></dt></dl></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-exec"></a><a id="faq-exec-q"></a><p><b>A.3.1.</b></p></td><td align="left" valign="top"><p>How do I
+   create an executable file with all my code in it?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>Use <a href="image.html" class="olink"><code class="function">EXT:SAVEINITMEM</code></a>, see also <a class="xref" href="quickstart.html" title="32.5. Quickstarting delivery with CLISP">Section 32.5, “Quickstarting delivery with <span class="command"><strong>CLISP</strong></span>”</a>.
+</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-licensing"></a><a id="faq-licensing-q"></a><p><b>A.3.2.</b></p></td><td align="left" valign="top"><p>When
+ I deliver my application with <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> does it have to be covered by
+   <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/copyleft/gpl.html" target="_top">GPL</a>?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>Not necessarily.</p><p><a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> is <a class="ulink" href="http://www.gnu.org/philosophy/free-sw.html" target="_top">Free
+  Software</a>, covered by the <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/copyleft/gpl.html" target="_top">GPL</a>, with special
+ terms governing the distribution of applications that run in <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>.
+ The precise terms can be found in the
+ <a class="clisp-cvs" href="http://clisp.cvs.sourceforge.net/*checkout*/clisp/clisp/COPYRIGHT"><code class="filename">COPYRIGHT</code></a>
+ file contained in the source and binary distributions of <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>.
+ Here is an informal clarification of what these terms mean in practice.
+ Please refer to the said <a class="clisp-cvs" href="http://clisp.cvs.sourceforge.net/*checkout*/clisp/clisp/COPYRIGHT"><code class="filename">COPYRIGHT</code></a>
+ file when in doubt.</p><p>In many cases, <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> does not force an application to be covered
+ by the <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/copyleft/gpl.html" target="_top">GPL</a>. Nevertheless, we encourage you to release your software
+ under an open source license. The benefits of such a license for
+ your users are numerous, in particular they are free to modify the
+ application when their needs/requirements change, and they are free to
+ recompile the application when they upgrade their machine or operating
+ system.</p><p><a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> <span class="emphasis"><em>extensions</em></span>, i.e. programs which need
+ to access non-portable <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> internal symbols (in the packages
+ <a class="link" href="imppack.html#sys-pac"><strong class="package">“<span class="quote">SYSTEM</span>”</strong></a>, <a class="link" href="classes.html" title="4.2. Classes"><strong class="package">“<span class="quote">CLOS</span>”</strong></a>, <a class="link" href="dffi.html" title="32.3. The Foreign Function Call Facility"><strong class="package">“<span class="quote">FFI</span>”</strong></a>, etc), must be covered by <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/copyleft/gpl.html" target="_top">GPL</a>
+ as well.</p><p>Other programs running in <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> have to or need not to be placed
+ under <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/copyleft/gpl.html" target="_top">GPL</a>, depending on their distribution form:
+
+</p><div class="itemizedlist"><ul type="disc"><li>Programs distributed as Lisp source or <code class="filename">#P".fas"</code>
+   files can be distributed without restrictions coming from <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>.
+ </li><li>Programs distributed as <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> <a href="image.html" class="olink">memory image</a>s can be
+  distributed only if accompanied with the non-<a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> <code class="filename">#P".fas"</code> files
+  which make up the <a href="image.html" class="olink">memory image</a>, and a <code class="filename">Makefile</code> (or clear textual
+  instructions) for rebuilding the <a href="image.html" class="olink">memory image</a>.</li><li>If you need to distribute a modified <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>
+  executable (for example, incorporating additional <a class="link" href="modules.html" title="32.2. External Modules">module</a>s written
+  in <a class="ulink" href="http://c-faq.com/" target="_top"><span class="command"><strong>C</strong></span></a>), you must distribute its full source under <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/copyleft/gpl.html" target="_top">GPL</a>.
+  If you are not satisfied with this, you can instead put the additional
+  <a class="link" href="modules.html" title="32.2. External Modules">module</a>s into a separate (non-<a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>) program, with which your Lisp
+  program will communicate via <a class="link" href="socket.html" title="32.4. Socket Streams"><code class="classname">SOCKET:SOCKET-STREAM</code></a>s.</li></ul></div></td></tr><tr class="qandadiv"><td align="left" valign="top" colspan="2"><h3 class="title"><a id="faq-trouble"></a>A.4. Troubles</h3></td></tr><tr class="toc"><td align="left" valign="top" colspan="2"><dl><dt>A.4.1. <a href="faq.html#faq-bin-distrib">Where
+   is the binary distribution for my platform?</a></dt><dt>A.4.2. <a href="faq.html#faq-bin-distrib-prev">But a previous release had a binary
+   distribution for my platform, why does not the current one?</a></dt><dt>A.4.3. <a href="faq.html#faq-build">Why does not
+   CLISP build on my platform?</a></dt><dt>A.4.4. <a href="faq.html#faq-enc-err">What do
+   these messages mean: “invalid byte #x94 in
+    CHARSET:ASCII conversion” and
+   “character #\u00B3 cannot be represented in the
+    character set CHARSET:ASCII”?</a></dt><dt>A.4.5. <a href="faq.html#faq-rl-tab">What does
+   this message mean: “Display all 1259
+     possibilities? (y or n)”</a></dt><dt>A.4.6. <a href="faq.html#faq-no-rl">Why does
+   not command line editing work?</a></dt><dt>A.4.7. <a href="faq.html#faq-stack">How do I
+   avoid stack overflow?</a></dt><dt>A.4.8. <a href="faq.html#faq-self-mod">Why does my program return different values on each
+   invocation?</a></dt><dt>A.4.9. <a href="faq.html#faq-autoconf">Why
+   is GNU autoconf invoked during build?</a></dt><dt>A.4.10. <a href="faq.html#faq-fp">Why don't floating point arithmetic
+   return what I want?</a></dt><dt>A.4.11. <a href="faq.html#faq-random">Why does
+   $ clisp -x '(RANDOM 1s0)'
+   always print the same number?</a></dt><dt>A.4.12. <a href="faq.html#faq-pp-newline">Why is an extra line break
+   inserted by the pretty printer?</a></dt><dt>A.4.13. <a href="faq.html#faq-warning">How do I disable this annoying
+   warning?</a></dt><dt>A.4.14. <a href="faq.html#faq-scope">Why does DEFVAR affect previously defined lexical closures?</a></dt><dt>A.4.15. <a href="faq.html#faq-bad-error">The error message is not helpful!</a></dt><dt>A.4.16. <a href="faq.html#faq-other-problem">Why is the function FOO
+   broken?!</a></dt></dl></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-bin-distrib"></a><a id="faq-bin-distrib-q"></a><p><b>A.4.1.</b></p></td><td align="left" valign="top"><p>Where
+   is the binary distribution for my platform?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>The <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> maintainers do not offer <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> binary
+  distributions, we believe that software packagers specializing on a
+  particular platform are in a better position to provide quality binaries.
+  Indeed, the section “<span class="quote">Get CLISP</span>” on the <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>'s home
+  page points to <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> packages for all major <a class="ulink" href="http://www.linux.org/" target="_top"><span class="platform">Linux</span></a> and <a class="ulink" href="http://www.bsd.org/" target="_top"><span class="platform">*BSD</span></a>
+  variants.</p><p>The only exception is <a class="ulink" href="http://winehq.org/" target="_top"><span class="platform">Win32</span></a> for which there is no centralized
+  packager: <span class="emphasis"><em>usually</em></span>, after each <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> release,
+  a <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> user <span class="emphasis"><em>volunteers</em></span> to build a <a class="ulink" href="http://winehq.org/" target="_top"><span class="platform">Win32</span></a>
+  binary package, which we then distribute at
+  <a class="ulink" href="http://sourceforge.net/project/showfiles.php?group_id=1355" target="_top">http://sourceforge.net/project/showfiles.php?group_id=1355</a>.
+</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-bin-distrib-prev"></a><a id="faq-bin-distrib-prev-q"></a><p><b>A.4.2.</b></p></td><td align="left" valign="top"><p>But a previous release <span class="emphasis"><em>had</em></span> a binary
+   distribution for my platform, why does not the current one?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>It was probably contributed by a user who did not (yet?)
+  contribute a binary distribution for the current release. You can
+  find out who contributed a specific binary distribution by looking at
+  the release notes in the <a class="ulink" href="http://sourceforge.net" target="_top">SourceForge</a>
+  <a class="ulink" href="http://sourceforge.net/project/showfiles.php?group_id=1355" target="_top">Files</a> section.</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-build"></a><a id="faq-build-q"></a><p><b>A.4.3.</b></p></td><td align="left" valign="top"><p>Why does not
+   <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> build on my platform?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>Please see file
+  <a class="clisp-cvs" href="http://clisp.cvs.sourceforge.net/*checkout*/clisp/clisp/unix/PLATFORMS"><code class="filename">unix/PLATFORMS</code></a> in your source
+  distribution for information about some known troublesome platforms
+  as well as instructions on porting <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> to new platforms.</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-enc-err"></a><a id="faq-enc-err-q"></a><p><b>A.4.4.</b></p></td><td align="left" valign="top"><p>What do
+   these messages mean: “<span class="quote"><code class="computeroutput">invalid byte #x94 in
+    CHARSET:ASCII conversion</code></span>” and
+   “<span class="quote"><code class="computeroutput">character #\u00B3 cannot be represented in the
+    character set CHARSET:ASCII</code></span>”?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>This means that you are trying to read (“<span class="quote">invalid
+ byte</span>”) or write (“<span class="quote">character cannot be represented</span>”)
+ a non-<a class="ulink" href="http://en.wikipedia.org/wiki/ASCII" target="_top"><span class="platform">ASCII</span></a> character from (or to) a character stream which has
+ <a class="ulink" href="http://en.wikipedia.org/wiki/ASCII" target="_top"><span class="platform">ASCII</span></a> <a class="link" href="open.html#extfmt"><code class="constant">:EXTERNAL-FORMAT</code></a>. The default is described in
+  <a href="clisp.html#opt-enc" class="olink"><code class="option">-E<em class="replaceable"><code>domain</code></em> <em class="replaceable"><code>encoding</code></em></code></a>.</p><p>This may also be caused by filesystem access.
+ If your <a href="encoding.html#path-enc" class="olink"><code class="varname">CUSTOM:*PATHNAME-ENCODING*</code></a> is set incorrectly, many filesystem accesses (like
+ <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_load.html" target="_top"><code class="function">LOAD</code></a>, <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_directory.html" target="_top"><code class="function">DIRECTORY</code></a> etc) will raise this error.
+ Note that <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_load.html" target="_top"><code class="function">LOAD</code></a> will traverse the directories mentioned in <a href="loadfile.html#load-paths" class="olink"><code class="varname">CUSTOM:*LOAD-PATHS*</code></a>
+ - this applies to the <a class="link" href="faq.html#faq-rc" title="Question">init (RC) file</a> too.
+ You will need to set <a href="encoding.html#path-enc" class="olink"><code class="varname">CUSTOM:*PATHNAME-ENCODING*</code></a> or pass <code class="option"><a href="clisp.html#opt-enc" class="olink"><code class="option">-E<em class="replaceable"><code>domain</code></em> <em class="replaceable"><code>encoding</code></em></code></a></code> to <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>.
+ Using a “<span class="quote">1:1</span>” encoding, such as <a class="link" href="encoding.html#charset-UTF-16"><code class="constant">CHARSET:ISO-8859-1</code></a>,
+ should help you avoid this error.</p><p>Note that this error may be signaled by the Print part of the
+ <a class="clhs" href="http://www.lisp.org/HyperSpec/Body/sec_25-1-1.html">read-eval-print loop</a> and <span class="strong"><strong>not</strong></span> by the function you call.
+ E.g., if file <code class="filename">"foo"</code> contains non-<a class="ulink" href="http://en.wikipedia.org/wiki/ASCII" target="_top"><span class="platform">ASCII</span></a> characters,
+ you will see such an error when you type</p><pre class="programlisting">
+(<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/mac_with-open-file.html" target="_top"><code class="function">WITH-OPEN-FILE</code></a> (s "foo" :direction :input <a class="link" href="open.html#extfmt"><code class="constant">:EXTERNAL-FORMAT</code></a> <a class="link" href="encoding.html#charset-UTF-16"><code class="constant">CHARSET:ISO-8859-1</code></a>)
+  (<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_read-line.html" target="_top"><code class="function">READ-LINE</code></a> s))
+</pre><p> If instead you type </p><pre class="programlisting">
+(<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/mac_with-open-file.html" target="_top"><code class="function">WITH-OPEN-FILE</code></a> (s "foo" :direction :input <a class="link" href="open.html#extfmt"><code class="constant">:EXTERNAL-FORMAT</code></a> <a class="link" href="encoding.html#charset-UTF-16"><code class="constant">CHARSET:ISO-8859-1</code></a>)
+  (<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/spefor_setq.html" target="_top"><code class="function">SETQ</code></a> l (<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_read-line.html" target="_top"><code class="function">READ-LINE</code></a> s))
+  <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_nil.html" target="_top"><code class="constant">NIL</code></a> )
+</pre><p> <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> will just print <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_nil.html" target="_top"><code class="constant">NIL</code></a> and signal the error
+ when you type <code class="literal">l</code>.</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-rl-tab"></a><a id="faq-rl-tab-q"></a><p><b>A.4.5.</b></p></td><td align="left" valign="top"><p>What does
+   this message mean: “<span class="quote"><code class="computeroutput">Display all 1259
+     possibilities? (y or n)</code></span>”</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p><a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> uses <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://tiswww.case.edu/php/chet/readline/readline.html" target="_top">readline</a> for command line editing and
+   <a href="clisp.html#completion" class="olink">completion</a>.
+   You get this “<span class="quote">Display all 1259 possibilities</span>” message
+   (and sometimes many screens of symbols) when you
+   hit <span class="keycode">TAB</span> too many times in an inappropriate place.
+ <a href="clisp.html#opt-ilisp" class="olink">You can turn this feature
+  off</a> if you are using <a class="ulink" href="http://www.gnu.org/software/emacs/" target="_top">Emacs</a>.  It is a good idea
+ <a class="ulink" href="http://www.w3.org/MarkUp/html3/literal.html" target="_top">not</a> to
+ use <span class="keycode">TAB</span>s in your code.</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-no-rl"></a><a id="faq-no-rl-q"></a><p><b>A.4.6.</b></p></td><td align="left" valign="top"><p>Why does
+   not command line editing work?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>See <a class="xref" href="terminal.html#readline" title="21.2.1. Command line editing with GNU readline">Section 21.2.1, “Command line editing with GNU readline”</a>.</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-stack"></a><a id="faq-stack-q"></a><p><b>A.4.7.</b></p></td><td align="left" valign="top"><p>How do I
+   avoid stack overflow?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p><a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> has <a class="link" href="vm.html" title="37.2. The virtual machine"><span class="emphasis"><em>two</em></span>
+   stacks</a>, the “<span class="quote">program stack</span>” and the “<span class="quote">lisp
+   stack</span>”, and both may occasionally overflow.</p></td></tr><tr class="answer"><td align="left" valign="top"><p><b>Generic</b></p></td><td align="left" valign="top"><div class="itemizedlist"><ul type="disc"><li>You will always get a stack overflow when you try
+    to print a <a class="" href="http://www.lisp.org/HyperSpec/Body/glo_c.html#circular">circular</a> object (<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_list.html" target="_top"><code class="classname">LIST</code></a>,
+    <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/cla_structure-object.html" target="_top"><code class="classname">STRUCTURE-OBJECT</code></a>, <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_vector.html" target="_top"><code class="classname">VECTOR</code></a> etc) and <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/var_stprint-circlest.html" target="_top"><code class="varname">*PRINT-CIRCLE*</code></a> is <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_nil.html" target="_top"><code class="constant">NIL</code></a>.
+    Just set <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/var_stprint-circlest.html" target="_top"><code class="varname">*PRINT-CIRCLE*</code></a> to <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_t.html" target="_top"><code class="constant">T</code></a>.</li><li>You will always get a stack overflow on infinite
+    recursion.</li><li>Some simple functions (like
+    <a class="ulink" href="http://en.wikipedia.org/wiki/Ackermann_function" target="_top">Ackermann's</a>)
+    recurse more than you might expect and can run out of stack on
+    relatively small inputs.</li><li>Compiled code uses less stack (and memory) and is
+    faster.</li><li>If you really do need more Lisp stack, you can
+    increase it by telling <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> to
+    <a href="clisp.html#opt-memsize" class="olink">pre-allocate more
+     memory</a>.</li><li>If you get a segmentation fault after (or instead
+    of) a “<span class="quote">program stack overflow</span>” message, please make
+    sure that you had <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://libsigsegv.sourceforge.net/" target="_top">libsigsegv</a> installed when you configured and
+    built <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>.</li></ul></div></td></tr><tr class="answer"><td align="left" valign="top"><p><b>Specific</b></p></td><td align="left" valign="top"><div class="variablelist"><dl><dt><span class="term"><span class="plat-dep">Platform Dependent: <span class="plat-dep"><a class="ulink" href="http://winehq.org/" target="_top"><span class="platform">Win32</span></a> platform only.</span></span></span></dt><dd><p>You have several option, use whichever is applicable
+    to your situation:</p><div class="itemizedlist"><ul type="disc"><li>modify the
+       global <code class="filename">SYSTEM.INI</code></li><li>modify the <code class="filename">PIF</code>
+       that you use to invoke <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>
+       (<a class="sfmail" href="http://sourceforge.net/mailarchive/message.php?msg_name=3D2600BB.1CDBE9D0%40freenet.de"><code>SFmail/3D2600BB.1CDBE9D0%40freenet.de</code></a>/<a class="gmane" href="http://article.gmane.org/gmane.lisp.clisp.general/4656"><code>Gmane/general/4656</code></a>)</li><li>or set the program stack (of the run
+       times <span class="command"><strong>base/lisp.exe</strong></span> or
+       <span class="command"><strong>full/lisp.exe</strong></span>, <span class="strong"><strong>not</strong></span> the driver
+       <span class="command"><strong>clisp.exe</strong></span>) using <span class="command"><strong>editbin</strong></span>
+       (<a class="sfmail" href="http://sourceforge.net/mailarchive/message.php?msg_name=sa0ptz4o4e3.fsf%40glip.premonitia.com"><code>SFmail/sa0ptz4o4e3.fsf%40glip.premonitia.com</code></a>/<a class="gmane" href="http://article.gmane.org/gmane.lisp.clisp.general/5523"><code>Gmane/general/5523</code></a>); you can find the
+       current stack size using <span class="command"><strong>dumpbin</strong></span>.
+ </li></ul></div></dd><dt><span class="term"><span class="plat-dep">Platform Dependent: <span class="plat-dep"><a class="ulink" href="http://www.unix.org/online.html" target="_top"><span class="strong"><strong>UNIX</strong></span></a> platform only.</span></span></span></dt><dd>Increase program stack with <span class="command"><strong>ulimit
+     -s</strong></span> (or <span class="command"><strong>limit stacksize</strong></span> if you are using
+    <a class="ulink" href="http://www.faqs.org/faqs/unix-faq/shell/csh-whynot/" target="_top"><code class="literal">csh</code></a>) to at least 8 MB.
+</dd></dl></div></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-self-mod"></a><a id="faq-self-mod-q"></a><p><b>A.4.8.</b></p></td><td align="left" valign="top"><p>Why does my program return different values on each
+   invocation?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>The following code modifies itself:
+</p><pre class="programlisting">(let ((var '(a b c)))
+  (nconc var '(1 2 3)))</pre><p>
+and will not work as one would naively expect.
+(on the first invocation, it will return
+<span class="returnvalue">(a b c 1 2 3)</span>,
+the second invocation will produce a <a class="" href="http://www.lisp.org/HyperSpec/Body/glo_c.html#circular_list">circular
+ list</a>, the third will hang trying to <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_nconc.html" target="_top"><code class="function">NCONC</code></a> a circular list).</p><p>Instead you must do
+</p><pre class="programlisting">(let ((var (copy-list '(a b c))))
+  (nconc var (copy-list '(1 2 3))))</pre><p><a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_disassemble.html" target="_top"><code class="function">DISASSEMBLE</code></a> will show the constants in your compiled
+ functions.  See <a class="xref" href="bytecode.html" title="Chapter 37. The CLISP bytecode specification">Chapter 37, <i>The <span class="command"><strong>CLISP</strong></span> bytecode specification</i></a> for the explanation of the
+ <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_disassemble.html" target="_top"><code class="function">DISASSEMBLE</code></a> output.</p><p>See <a class="ulink" href="http://www.lisp.org/table/style.htm" target="_top">Lisp Programming
+  Style</a> for more useful information.</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-autoconf"></a><a id="faq-autoconf-q"></a><p><b>A.4.9.</b></p></td><td align="left" valign="top"><p>Why
+   is <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/autoconf/" target="_top">autoconf</a> invoked during build?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>When building from the <a class="ulink" href="http://www.cvshome.org" target="_top">CVS</a> HEAD development sources, you
+  will sometimes get errors when <a class="unix" href="http://www.opengroup.org/onlinepubs/009695399/utilities/make.html"><span class="command"><strong>make</strong></span></a>
+  tries to regenerate some <code class="filename">configure</code> scripts for you.
+ <span class="strong"><strong>This is never necessary!</strong></span>
+ (and will not happen in an officially released source distribution).
+ Please just <a class="unix" href="http://www.opengroup.org/onlinepubs/009695399/utilities/touch.html"><span class="command"><strong>touch</strong></span></a> the target, e.g.:
+ </p><pre class="screen"><strong><code class="prompt">$</code></strong> touch src/configure</pre><p>
+ and re-run <a class="unix" href="http://www.opengroup.org/onlinepubs/009695399/utilities/make.html"><span class="command"><strong>make</strong></span></a>.</p><p>You can also pass <code class="option">--disable-maintainer-mode</code>
+ to the top-level <a class="clisp-cvs" href="http://clisp.cvs.sourceforge.net/*checkout*/clisp/clisp/configure"><code class="filename">configure</code></a> script
+ (this is the default when you are <span class="strong"><strong>not</strong></span> working from the <a class="ulink" href="http://www.cvshome.org" target="_top">CVS</a>).</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-fp"></a><a id="faq-fp-q"></a><p><b>A.4.10.</b></p></td><td align="left" valign="top"><p>Why don't floating point arithmetic
+   return what I want?</p><pre class="programlisting">
+(- 1.1 0.9)
+⇒ <code class="computeroutput">0.20000005</code>
+</pre></td></tr><tr class="answer"><td align="left" valign="top"><p><b>inexact</b></p></td><td align="left" valign="top"><p>Floating point arithmetic is
+  inherently <span class="emphasis"><em>inexact</em></span>, so this not a bug,
+  at least not a bug in <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>.
+  You may argue that this is a bug in <a class="ulink" href="http://grouper.ieee.org/groups/754/" target="_top">IEEE 754</a>,
+  but first please make sure that you do know
+  <a class="ulink" href="http://docs.sun.com/source/806-3568/ncg_goldberg.html" target="_top">What
+   Every Computer Scientist Should Know About Floating-Point Arithmetic</a>.
+ </p><p>See also <a class="" href="https://lists.sourceforge.net/lists/listinfo/clisp-list">clisp-list</a>
+  (<a class="sfmail" href="http://sourceforge.net/mailarchive/message.php?msg_name=17121.26476.75643.47774%40thalassa.informatimago.com"><code>SFmail/17121.26476.75643.47774%40thalassa.informatimago.com</code></a>/<a class="gmane" href="http://article.gmane.org/gmane.lisp.clisp.general/9850"><code>Gmane/general/9850</code></a>).</p></td></tr><tr class="answer"><td align="left" valign="top"><p><b>exact</b></p></td><td align="left" valign="top"><p>If you want <span class="emphasis"><em>exact</em></span>
+ calculations, use <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_rational.html" target="_top"><code class="classname">RATIONAL</code></a>s:</p><pre class="programlisting">
+(- 11/10 9/10)
+⇒ <code class="computeroutput">1/5</code></pre><p>
+</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-random"></a><a id="faq-random-q"></a><p><b>A.4.11.</b></p></td><td align="left" valign="top"><p>Why does
+   </p><pre class="screen"><strong><code class="prompt">$</code></strong> clisp <code class="option"><a href="clisp.html#opt-exec-expr" class="olink">-x</a></code> '(<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_random.html" target="_top"><code class="function">RANDOM</code></a> 1s0)'</pre><p>
+   always print the same number?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>Reproducibility is important.
+  See <a class="xref" href="num-concepts.html#random-state" title="12.2.7. Random-State Operations">Section 12.2.7, “Random-State Operations
+  ”</a>.</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-pp-newline"></a><a id="faq-pp-newline-q"></a><p><b>A.4.12.</b></p></td><td align="left" valign="top"><p>Why is an extra line break
+   inserted by the pretty printer?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>See <a class="xref" href="multi-rep.html#ppr-first-newline" title="Variable CUSTOM:*PPRINT-FIRST-NEWLINE*">Variable <code class="varname">CUSTOM:*PPRINT-FIRST-NEWLINE*</code></a>.</p><p>For example, here you are pretty-printing two objects: a
+  one-liner <span class="keysym">#\Q</span> and a two-liner <code class="literal">CRLF</code>,
+  and a line break is inserted between them so that they are printed on
+  separate lines: </p><pre class="programlisting">
+(defparameter crlf (coerce '(#\Return #\Linefeed) 'string))
+⇒ <code class="computeroutput">CRLF</code>
+(map 'list #'char-code (format nil "Q~a" crlf))
+⇒ <code class="computeroutput">(81 10 13 10)</code><strong>	; </strong><em class="lineannotation"><span class="lineannotation">not (81 13 10) !</span></em>
+</pre><p>When you want <span class="keycode">CR</span>+<span class="keycode">LF</span>-terminated lines, use <a class="link" href="open.html#extfmt"><code class="constant">:EXTERNAL-FORMAT</code></a> <code class="constant">:DOS</code>
+  argument when opening your <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_stream.html" target="_top"><code class="classname">STREAM</code></a>s.</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-warning"></a><a id="faq-warning-q"></a><p><b>A.4.13.</b></p></td><td align="left" valign="top"><p>How do I disable this annoying
+   warning?</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p><a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> often issues <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/contyp_warning.html" target="_top"><code class="classname">WARNING</code></a>s when it encounters
+  suspicious behavior.  It is best to fix your code rather than to
+  suppress them.  To figure out where the warning is coming from, do
+</p><pre class="programlisting">
+ (<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/spefor_setq.html" target="_top"><code class="function">SETQ</code></a> <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/var_stbreak-on-signalsst.html" target="_top"><code class="varname">*BREAK-ON-SIGNALS*</code></a> '<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/contyp_warning.html" target="_top"><code class="classname">WARNING</code></a>)
+</pre><p> and examine the stack (see <a class="xref" href="debugger.html" title="25.2. Debugging Utilities">Section 25.2, “Debugging Utilities
+  ”</a>)
+to see where the warning is coming from.</p><p>If everything else fails, read the
+ <a class="link" href="index.html" title="Implementation Notes for GNU CLISP">manual</a>.</p></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-scope"></a><a id="faq-scope-q"></a><p><b>A.4.14.</b></p></td><td align="left" valign="top"><p>Why does <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/mac_defparametercm_defvar.html" target="_top"><code class="function">DEFVAR</code></a> affect previously defined lexical closures?</p><pre class="programlisting">
+(defun adder (val) (lambda (x) (+ x val)))
+⇒ <code class="computeroutput">ADDER</code>
+(setq add-10 (adder 10))
+⇒ <code class="computeroutput">ADD-10</code>
+(funcall add-10 32)
+⇒ <code class="computeroutput">42</code><strong>	; </strong><em class="lineannotation"><span class="lineannotation">as expected</span></em>
+(defvar val 12)
+⇒ <code class="computeroutput">VAL</code>
+(funcall add-10 0)
+⇒ <code class="computeroutput">12</code><strong>	; </strong><em class="lineannotation"><span class="lineannotation">why not 10?!</span></em>
+</pre></td></tr><tr class="answer"><td align="left" valign="top"><p><b>Explanation</b></p></td><td align="left" valign="top"><p>The above code does not conform to [<span class="citation"><a class="link" href="references.html#ansi-cl" title="ANSI INCITS 226-1994 (R1999) Information Technology - Programming Language - Common Lisp [formerly ANSI X3.226-1994 (R1999)]">ANSI CL standard</a></span>], therefore <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a>
+  can produce arbitrary results.
+  See <a class="xref" href="compilation.html#semantic-constraints" title="3.2.2.3. Semantic Constraints">Section 3.2.2.3, “Semantic Constraints
+  ”</a>.</p></td></tr><tr class="answer"><td align="left" valign="top"><p><b>Remedy</b></p></td><td align="left" valign="top"><p>Always follow the naming convention for global special variables
+  defined by <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/mac_defparametercm_defvar.html" target="_top"><code class="function">DEFVAR</code></a> and <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/mac_defparametercm_defvar.html" target="_top"><code class="function">DEFPARAMETER</code></a> (e.g., <code class="varname">*FOO*</code>)
+  and <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/mac_defconstant.html" target="_top"><code class="function">DEFCONSTANT</code></a> (e.g., <code class="varname">+BAR+</code>).</p></td></tr><tr class="answer"><td align="left" valign="top"><p><b>More</b></p></td><td align="left" valign="top"><table class="simplelist" border="0" summary="Simple list"><tr><td><a class="sfmail" href="http://sourceforge.net/mailarchive/message.php?msg_name=470A4B2A.30306%40gnu.org"><code>SFmail/470A4B2A.30306%40gnu.org</code></a>/<a class="gmane" href="http://article.gmane.org/gmane.lisp.clisp.general/11945"><code>Gmane/general/11945</code></a></td></tr><tr><td><a class="sfmail" href="http://sourceforge.net/mailarchive/message.php?msg_name=200710090043.01871.bruno%40clisp.org"><code>SFmail/200710090043.01871.bruno%40clisp.org</code></a>/<a class="gmane" href="http://article.gmane.org/gmane.lisp.clisp.general/11949"><code>Gmane/general/11949</code></a></td></tr></table></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-bad-error"></a><a id="faq-bad-error-q"></a><p><b>A.4.15.</b></p></td><td align="left" valign="top"><p>The error message is not helpful!</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>Sometimes an error message contains a compound object
+  whose content you want to examine. Often this object will be available
+  for <a class="link" href="debugger.html#inspect" title="25.2.6. Function INSPECT"><code class="function">INSPECT</code></a>ion via the <span class="command"><strong>Inspect</strong></span> command (see
+  <a class="xref" href="repl.html#debugger-deb-step-1" title="Table 25.3. Commands common to the debugger and the stepper">Table 25.3, “Commands common to the debugger and the stepper”</a>). E.g., </p><pre class="screen">
+*** - READ: input stream #&lt;INPUT STRING-INPUT-STREAM&gt; ends within an object
+The following restarts are available:
+ABORT          :R1      ABORT
+<strong><code class="prompt">Break 4 [1]&gt;</code></strong> <big><strong><strong class="userinput"><code>:i</code></strong></strong></big>
+#&lt;SYSTEM::SIMPLE-END-OF-FILE #x000333CB82F8&gt;:  standard object
+ type: SYSTEM::SIMPLE-END-OF-FILE
+0 [$STREAM]:  #&lt;INPUT STRING-INPUT-STREAM&gt;
+1 [$FORMAT-CONTROL]:
+"~S: input stream ~S ends within an object
+"
+2 [$FORMAT-ARGUMENTS]:  (READ #&lt;INPUT STRING-INPUT-STREAM&gt;)
+<strong><code class="prompt">INSPECT-- type :h for help; :q to return to the REPL ---&gt;</code></strong> <big><strong><strong class="userinput"><code>0</code></strong></strong></big>
+#&lt;INPUT STRING-INPUT-STREAM&gt;:  atom
+ type: STRING-STREAM
+ class: #1=#&lt;BUILT-IN-CLASS STRING-STREAM&gt;
+<strong><code class="prompt">INSPECT-- type :h for help; :q to return to the REPL ---&gt;</code></strong> <big><strong><strong class="userinput"><code>:d</code></strong></strong></big>
+
+#&lt;INPUT STRING-INPUT-STREAM&gt; is an input-stream. It reads from "(foo" from 0 to 4 at 4.
+</pre></td></tr><tr class="question"><td align="left" valign="top"><a id="faq-other-problem"></a><a id="faq-other-problem-q"></a><p><b>A.4.16.</b></p></td><td align="left" valign="top"><p>Why is the function <code class="function">FOO</code>
+   broken?!</p></td></tr><tr class="answer"><td align="left" valign="top"></td><td align="left" valign="top"><p>When confronted with unexpected behavior,
+  try looking in the <a class="xref" href="index.html" title="Implementation Notes for GNU CLISP"><span class="command"><strong>CLISP</strong></span> impnotes</a>.</p><p>E.g., <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_directory.html" target="_top"><code class="function">DIRECTORY</code></a> is different from the <a class="ulink" href="http://www.cons.org/cmucl/" target="_top"><span class="command"><strong>CMU CL</strong></span></a>
+ implementation, so, to find out how to get the results you want,
+ you should search the <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> implementation notes for "DIRECTORY".</p><p>Alternatively, since the implementation notes are organized in
+ parallel to the [<span class="citation"><a class="link" href="references.html#ansi-cl" title="ANSI INCITS 226-1994 (R1999) Information Technology - Programming Language - Common Lisp [formerly ANSI X3.226-1994 (R1999)]">ANSI CL standard</a></span>], and <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_directory.html" target="_top"><code class="function">DIRECTORY</code></a> belongs to the
+ <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/chap-20.html" target="_top">Chapter 20</a> in [<span class="citation"><a class="link" href="references.html#ansi-cl" title="ANSI INCITS 226-1994 (R1999) Information Technology - Programming Language - Common Lisp [formerly ANSI X3.226-1994 (R1999)]">ANSI CL standard</a></span>],
+ you can just go to <a class="xref" href="files.html" title="Chapter 20. Files">Chapter 20, <i>Files </i></a> in impnotes and look
+ for "DIRECTORY" <a class="link" href="files.html#directory" title="Function DIRECTORY">there</a>.
+</p></td></tr></tbody></table></div></div><div class="bookinfo"><hr /><table width="100%" summary="impnotes meta info"><th><td align="left">These notes document <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> version 2.46</td><td align="right">Last modified: 2008-07-02</td></th></table></div><div class="custom-footer"><hr /><table width="100%"><tr><td align="left"><a href="http://clisp.cons.org"><img src="clisp.png" width="48" height="48" alt="[CLISP home]" /></a></td><td align="center"><a href="http://sourceforge.net/donate/index.php?group_id=1355"><img src="http://images.sourceforge.net/images/project-support.jpg" width="88" height="32" alt="[Support CLISP]" /></a></td><td align="right"><a href="http://sourceforge.net"><img width="125" height="37" alt="[SourceForge]" src="http://sflogo.sourceforge.net/sflogo.php?group_id=1355&amp;type=2&amp;page=faq" /></a></td></tr></table></div><hr /><form method="get" action="http://www.google.com/custom" target="_top"><table width="100%" border="0"><tr><td nowrap="nowrap" align="center"><input type="hidden" name="domains" value="clisp.cons.org;clisp.podval.org;www.lisp.org" /><label for="sbi" style="display: none">Enter your search terms</label><input type="text" name="q" size="50" maxlength="255" id="sbi" value="Appendix A. Frequently Asked Questions (With Answers) about CLISP" /><label for="sbb" style="display: none">Submit search form</label><input type="submit" name="sa" value="Google Search" id="sbb" /></td></tr><tr><td nowrap="nowrap" align="center"><input type="radio" name="sitesearch" value="" checked="1" id="ss0" /><label for="ss0" title="Search the Web"><small>Web</small></label><input type="radio" name="sitesearch" value="clisp.cons.org" id="ss1" /><label for="ss1" title="Search clisp.cons.org"><small>clisp.cons.org</small></label><input type="radio" name="sitesearch" value="clisp.podval.org" id="ss2" /><label for="ss2" title="Search clisp.podval.org"><small>clisp.podval.org</small></label><input type="radio" name="sitesearch" value="www.lisp.org" id="ss3" /><label for="ss3" title="Search www.lisp.org"><small>www.lisp.org</small></label><input type="hidden" name="client" value="pub-4445255502750357" /><input type="hidden" name="forid" value="1" /><input type="hidden" name="ie" value="UTF-8" /><input type="hidden" name="oe" value="UTF-8" /><input type="hidden" name="cof" value="GALT:#008000;GL:1;DIV:#336699;VLC:663399;AH:center;BGC:FFFFFF;LBGC:000000;ALC:0000FF;LC:0000FF;T:000000;GFNT:0000FF;GIMP:0000FF;LH:48;LW:48;L:http://clisp.cons.org/clisp.png;S:http://clisp.cons.org;FORID:1" /><input type="hidden" name="hl" value="en" /></td></tr></table></form><hr /><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="appendices.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="appendices.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="gfdl.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Part V. Appendices </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Appendix B. GNU Free Documentation License</td></tr></table></div></body></html>

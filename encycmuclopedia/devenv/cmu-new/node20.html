@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>2.1.3.5 Floating Point Rounding Mode</TITLE>
+<META NAME="description" CONTENT="2.1.3.5 Floating Point Rounding Mode">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html860" HREF="node21.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html858" HREF="node15.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html852" HREF="node19.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html862" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html863" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html861" HREF="node21.html">Warning:</A>
+<B>Up:</B> <A NAME="tex2html859" HREF="node15.html">2.1.3 Floats</A>
+<B> Previous:</B> <A NAME="tex2html853" HREF="node19.html">2.1.3.4 Floating Point Exceptions</A>
+<BR> <P>
+<H3><A NAME="SECTION00313500000000000000">2.1.3.5 Floating Point Rounding Mode</A></H3>
+<P>
+<A NAME="floatroundingmodes">&#160;</A>
+<P>
+IEEE floating point specifies four possible rounding modes:
+<DL ><DT><STRONG><tt>:nearest</tt></STRONG>
+<DD> In this mode, the inexact results are rounded to
+  the nearer of the two possible result values.  If the neither
+  possibility is nearer, then the even alternative is chosen.  This
+  form of rounding is also called ``round to even'', and is the form
+  of rounding specified for the Common Lisp <A NAME="7658">&#160;</A><tt>round</tt> function.
+<P>
+<DT><STRONG><tt>:positive-infinity</tt></STRONG>
+<DD> This mode rounds inexact results to the
+  possible value closer to positive infinity.  This is analogous to
+  the Common Lisp <A NAME="7661">&#160;</A><tt>ceiling</tt> function.
+<P>
+<DT><STRONG><tt>:negative-infinity</tt></STRONG>
+<DD> This mode rounds inexact results to the
+  possible value closer to negative infinity.  This is analogous to
+  the Common Lisp <A NAME="7664">&#160;</A><tt>floor</tt> function.
+<P>
+<DT><STRONG><tt>:zero</tt></STRONG>
+<DD> This mode rounds inexact results to the possible
+  value closer to zero.  This is analogous to the Common Lisp
+  <A NAME="7667">&#160;</A><tt>truncate</tt> function.
+<P>
+</DL><BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html864" HREF="node21.html#SECTION00313510000000000000">Warning:</A>
+</UL>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

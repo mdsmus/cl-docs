@@ -1,0 +1,60 @@
+<html lang="en">
+<head>
+<title>Querying the process environment - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Support-For-Unix.html#Support-For-Unix" title="Support For Unix">
+<link rel="prev" href="Command_002dline-arguments.html#Command_002dline-arguments" title="Command-line arguments">
+<link rel="next" href="Running-external-programs.html#Running-external-programs" title="Running external programs">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Querying-the-process-environment"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Running-external-programs.html#Running-external-programs">Running external programs</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Command_002dline-arguments.html#Command_002dline-arguments">Command-line arguments</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Support-For-Unix.html#Support-For-Unix">Support For Unix</a>
+<hr>
+</div>
+
+<h4 class="subsection">6.3.2 Querying the process environment</h4>
+
+<p>The UNIX environment can be queried with the
+<code>sb-ext:posix-getenv</code> function.
+
+   <p><a name="Function-sb_002dext_003aposix_002dgetenv"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:posix-getenv</b><var> name<a name="index-sb_002dext_003aposix_002dgetenv-207"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003aposix_002dgetenv-208"></a>Return the "value" part of the environment string "name=value" which
+corresponds to <code>name</code>, or <code>nil</code> if there is none. 
+</p></blockquote></div>
+
+   </body></html>
+

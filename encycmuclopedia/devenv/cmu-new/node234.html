@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>8.4.2 External Alien Variables</TITLE>
+<META NAME="description" CONTENT="8.4.2 External Alien Variables">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3659" HREF="node235.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3657" HREF="node232.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3653" HREF="node233.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3661" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3662" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3660" HREF="node235.html">8.5 Alien Data Structure </A>
+<B>Up:</B> <A NAME="tex2html3658" HREF="node232.html">8.4 Alien Variables</A>
+<B> Previous:</B> <A NAME="tex2html3654" HREF="node233.html">8.4.1 Local Alien Variables</A>
+<BR> <P>
+<H2><A NAME="SECTION00942000000000000000">8.4.2 External Alien Variables</A></H2>
+<P>
+<A NAME="externalaliens">&#160;</A>
+<P>
+External Alien names are strings, and Lisp names are symbols.  When an
+external Alien is represented using a Lisp variable, there must be a
+way to convert from one name syntax into the other.  The macros
+<tt>extern-alien</tt>, <tt>def-alien-variable</tt> and
+<A NAME="11716">&#160;</A><tt>def-alien-routine</tt> (page&nbsp;<A HREF="node239.html#FNdefalienroutine"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>) use this conversion heuristic:
+<UL>
+<LI> Alien names are converted to Lisp names by uppercasing and
+  replacing underscores with hyphens.
+<LI> Conversely, Lisp names are converted to Alien names by
+  lowercasing and replacing hyphens with underscores.
+<LI> Both the Lisp symbol and Alien string names may be separately
+  specified by using a list of the form:
+<BLOCKQUOTE> <PRE>(<i>alien-string</i> <i>lisp-symbol</i>)
+</PRE> </BLOCKQUOTE></UL>
+<P>
+<b>[Macro]</b><BR> 
+<tt> alien: def-alien-variable</tt> <em> <i>name</i> <i>type</i></em><BR>
+<P>
+  This macro defines <i>name</i> as an external Alien variable of the
+  specified Alien <i>type</i>.  <i>name</i> and <i>type</i> are not
+  evaluated.  The Lisp name of the variable (see above) becomes a
+  global Alien variable in the Lisp namespace.  Global Alien variables
+  are effectively ``global symbol macros''; a reference to the
+  variable fetches the contents of the external variable.  Similarly,
+  setting the variable stores new contents--the new contents must be
+  of the declared <i>type</i>.
+<P>
+  For example, it is often necessary to read the global C variable
+  <tt>errno</tt> to determine why a particular function call failed.  It
+  is possible to define errno and make it accessible from Lisp by the
+  following:
+<BLOCKQUOTE> <PRE>(def-alien-variable &quot;errno&quot; int)
+<P>
+;; Now it is possible to get the value of the C variable errno simply by
+;; referencing that Lisp variable:
+;;
+(print errno)
+</PRE> </BLOCKQUOTE>
+<P>
+<b>[Macro]</b><BR> 
+<tt> alien: extern-alien</tt> <em> <i>name</i> <i>type</i></em><BR>
+<P>
+  This macro returns an Alien with the specified <i>type</i> which
+  points to an externally defined value.  <i>name</i> is not evaluated,
+  and may be specified either as a string or a symbol.  <i>type</i> is
+  an unevaluated Alien type specifier.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

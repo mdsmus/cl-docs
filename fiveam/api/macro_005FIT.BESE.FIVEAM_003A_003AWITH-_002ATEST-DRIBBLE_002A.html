@@ -1,0 +1,28 @@
+<html
+  ><head
+    ><title
+      >Macro WITH-*TEST-DRIBBLE*</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Macro: WITH-*TEST-DRIBBLE*</h1
+        ><div class="contents"
+          ><h2
+            >Source</h2
+          ><pre class="code"
+            >(defmacro with-*test-dribble* (stream &amp;body body)
+  `(let ((*test-dribble* ,stream))
+     (declare (special *test-dribble*))
+     ,@body))</pre
+          ><a href="../Checks.html#macro_005FIT.BESE.FIVEAM_003A_003AWITH-_002ATEST-DRIBBLE_002A"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

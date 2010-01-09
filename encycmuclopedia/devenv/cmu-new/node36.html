@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>2.8 Load</TITLE>
+<META NAME="description" CONTENT="2.8 Load">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1048" HREF="node37.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1046" HREF="node11.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1040" HREF="node35.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1050" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1051" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1049" HREF="node37.html">2.9 The Reader</A>
+<B>Up:</B> <A NAME="tex2html1047" HREF="node11.html">2 Design Choices and </A>
+<B> Previous:</B> <A NAME="tex2html1041" HREF="node35.html">2.7.2 The TTY Inspector</A>
+<BR> <P>
+<H1><A NAME="SECTION00380000000000000000">2.8 Load</A></H1>
+<P>
+<b>[Function]</b><BR> 
+<tt>  load</tt> <em> <i>filename</i>
+      <tt>&amp;key</tt> <tt>:verbose</tt> <tt>:print</tt> <tt>:if-does-not-exist</tt>
+      <tt>:if-source-newer</tt> <tt>:contents</tt></em><BR>
+<P>
+  As in standard Common Lisp, this function loads a file containing
+  source or object code into the running Lisp.  Several CMU extensions
+  have been made to <tt>load</tt> to conveniently support a variety of
+  program file organizations.  <i>filename</i> may be a wildcard
+  pathname such as `<tt>*.lisp</tt>', in which case all matching files are
+  loaded.
+<P>
+  If <i>filename</i> has a <tt>pathname-type</tt> (or extension), then
+  that exact file is loaded.  If the file has no extension, then this
+  tells <tt>load</tt> to use a heuristic to load the ``right'' file.
+  The <tt>*load-source-types*</tt> and <tt>*load-object-types*</tt>
+  variables below are used to determine the default source and object
+  file types.  If only the source or the object file exists (but not
+  both), then that file is quietly loaded.  Similarly, if both the
+  source and object file exist, and the object file is newer than the
+  source file, then the object file is loaded.  The value of the
+  <i>if-source-newer</i> argument is used to determine what action to
+  take when both the source and object files exist, but the object
+  file is out of date:
+  <DL ><DT><STRONG><tt>:load-object</tt></STRONG>
+<DD> The object file is loaded even though the
+    source file is newer.
+<P>
+  <DT><STRONG><tt>:load-source</tt></STRONG>
+<DD> The source file is loaded instead of the
+    older object file.
+<P>
+  <DT><STRONG><tt>:compile</tt></STRONG>
+<DD> The source file is compiled and then the new
+    object file is loaded.
+<P>
+  <DT><STRONG><tt>:query</tt></STRONG>
+<DD> The user is asked a yes or no question to
+    determine whether the source or object file is loaded.
+<P>
+</DL>
+  This argument defaults to the value of
+  <tt>ext:*load-if-source-newer*</tt> (initially <tt>:load-object</tt>.)
+<P>
+  The <i>contents</i> argument can be used to override the heuristic
+  (based on the file extension) that normally determines whether to
+  load the file as a source file or an object file.  If non-null, this
+  argument must be either <tt>:source</tt> or <tt>:binary</tt>, which forces
+  loading in source and binary mode, respectively. You really
+  shouldn't ever need to use this argument.
+<P>
+<b>[Variable]</b><BR> 
+<tt> extensions:*load-source-types*</tt><BR> <BR> 
+  <tt>extensions:*load-object-types*</tt><BR>
+<P>
+  These variables are lists of possible <tt>pathname-type</tt> values
+  for source and object files to be passed to <tt>load</tt>.  These
+  variables are only used when the file passed to <tt>load</tt> has no
+  type; in this case, the possible source and object types are used to
+  default the type in order to determine the names of the source and
+  object files.
+<P>
+<b>[Variable]</b><BR> 
+<tt> extensions:*load-if-source-newer*</tt><BR> <BR>
+<P>
+  This variable determines the default value of the
+  <i>if-source-newer</i> argument to <tt>load</tt>.  Its initial value is
+  <tt>:load-object</tt>.
+<P>
+<HR><A NAME="tex2html1048" HREF="node37.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1046" HREF="node11.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1040" HREF="node35.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1050" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1051" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1049" HREF="node37.html">2.9 The Reader</A>
+<B>Up:</B> <A NAME="tex2html1047" HREF="node11.html">2 Design Choices and </A>
+<B> Previous:</B> <A NAME="tex2html1041" HREF="node35.html">2.7.2 The TTY Inspector</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

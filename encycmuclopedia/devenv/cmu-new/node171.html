@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.11.4 Generic Arithmetic</TITLE>
+<META NAME="description" CONTENT="5.11.4 Generic Arithmetic">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2855" HREF="node172.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2853" HREF="node167.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2847" HREF="node170.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2857" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2858" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2856" HREF="node172.html">5.11.5 Fixnums</A>
+<B>Up:</B> <A NAME="tex2html2854" HREF="node167.html">5.11 Numbers</A>
+<B> Previous:</B> <A NAME="tex2html2848" HREF="node170.html">5.11.3 Variables</A>
+<BR> <P>
+<H2><A NAME="SECTION006114000000000000000">5.11.4 Generic Arithmetic</A></H2>
+<P>
+<A NAME="genericarithmetic">&#160;</A>
+<A NAME="10543">&#160;</A>
+<A NAME="10544">&#160;</A>
+<A NAME="10545">&#160;</A>
+<P>
+In Common Lisp, arithmetic operations are <i>generic</i>.<A NAME="tex2html11" HREF="footnode.html#4187"><IMG  ALIGN=BOTTOM ALT="gif" SRC="foot_motif.gif"></A>
+The <tt>+</tt> function can be passed <tt>fixnum</tt>s, <tt>bignum</tt>s,
+<tt>ratio</tt>s, and various kinds of <tt>float</tt>s and
+<tt>complex</tt>es, in any combination.  In addition to the inherent
+complexity of <tt>bignum</tt> and <tt>ratio</tt> operations, there is also
+a lot of overhead in just figuring out which operation to do and what
+contagion and canonicalization rules apply.  The complexity of generic
+arithmetic is so great that it is inconceivable to open code it.
+Instead, the compiler does a function call to a generic arithmetic
+routine, consuming many instructions before the actual computation
+even starts.
+<P>
+This is ridiculous, since even Common Lisp programs do a lot of
+arithmetic, and the hardware is capable of doing operations on small
+integers and floats with a single instruction.  To get acceptable
+efficiency, the compiler special-cases uses of generic arithmetic that
+are directly implemented in the hardware.  In order to open code
+arithmetic, several constraints must be met:
+<UL>
+<LI> All the arguments must be known to be a good type of number.
+<LI> The result must be known to be a good type of number.
+<LI> Any intermediate values such as the result of <tt>(+ a b)</tt>
+  in the call <tt>(+ a b c)</tt> must be known to be a good type of
+  number.
+<LI> All the above numbers with good types must be of the <i>same</i>
+  good type.  Don't try to mix integers and floats or different float
+  formats.
+</UL>
+<P>
+The ``good types'' are <tt>(signed-byte 32)</tt>,
+<tt>(unsigned-byte 32)</tt>, <tt>single-float</tt> and
+<tt>double-float</tt>.  See sections <A HREF="node172.html#fixnums">5.11.5</A>, <A HREF="node173.html#wordintegers">5.11.6</A>
+and <A HREF="node174.html#floatefficiency">5.11.7</A> for more discussion of good numeric types.
+<P>
+<tt>float</tt> is not a good type, since it might mean either
+<tt>single-float</tt> or <tt>double-float</tt>.  <tt>integer</tt> is not a
+good type, since it might mean <tt>bignum</tt>.  <tt>rational</tt> is not
+a good type, since it might mean <tt>ratio</tt>.  Note however that
+these types are still useful in declarations, since type inference may
+be able to strengthen a weak declaration into a good one, when it
+would be at a loss if there was no declaration at all
+(see section&nbsp;<A HREF="node124.html#typeinference">5.3</A>).  The <tt>integer</tt> and
+<tt>unsigned-byte</tt> (or non-negative integer) types are especially
+useful in this regard, since they can often be strengthened to a good
+integer type.
+<P>
+Arithmetic with <tt>complex</tt> numbers is inefficient in comparison to
+float and integer arithmetic.  Complex numbers are always represented
+with a pointer descriptor (causing consing overhead), and complex
+arithmetic is always closed coded using the general generic arithmetic
+functions.  But arithmetic with complex types such as:
+<BLOCKQUOTE> <PRE>(complex float)
+(complex fixnum)
+</PRE> </BLOCKQUOTE>
+is still faster than <tt>bignum</tt> or <tt>ratio</tt> arithmetic, since the
+implementation is much simpler.
+<P>
+Note: don't use <tt>/</tt> to divide integers unless you want the
+overhead of rational arithmetic.  Use <tt>truncate</tt> even when you
+know that the arguments divide evenly.
+<P>
+You don't need to remember all the rules for how to get open-coded
+arithmetic, since efficiency notes will tell you when and where there
+is a problem--see section&nbsp;<A HREF="node185.html#efficiencynotes">5.13</A>.
+<P>
+<HR><A NAME="tex2html2855" HREF="node172.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2853" HREF="node167.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2847" HREF="node170.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2857" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2858" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2856" HREF="node172.html">5.11.5 Fixnums</A>
+<B>Up:</B> <A NAME="tex2html2854" HREF="node167.html">5.11 Numbers</A>
+<B> Previous:</B> <A NAME="tex2html2848" HREF="node170.html">5.11.3 Variables</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,59 @@
+<html lang="en">
+<head>
+<title>Function Names - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Stack-Frames.html#Stack-Frames" title="Stack Frames">
+<link rel="prev" href="How-Arguments-are-Printed.html#How-Arguments-are-Printed" title="How Arguments are Printed">
+<link rel="next" href="Debug-Tail-Recursion.html#Debug-Tail-Recursion" title="Debug Tail Recursion">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Function-Names"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Debug-Tail-Recursion.html#Debug-Tail-Recursion">Debug Tail Recursion</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="How-Arguments-are-Printed.html#How-Arguments-are-Printed">How Arguments are Printed</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Stack-Frames.html#Stack-Frames">Stack Frames</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">4.3.3 Function Names</h4>
+
+<p>If a function is defined by <code>defun</code> it will appear in backtrace
+by that name. Functions defined by <code>labels</code> and <code>flet</code> will
+appear as <code>(FLET &lt;name&gt;)</code> and <code>(LABELS &lt;name&gt;)</code> respectively. 
+Anonymous lambdas will appear as <code>(LAMDBA &lt;lambda-list&gt;)</code>.
+
+<ul class="menu">
+<li><a accesskey="1" href="Entry-Point-Details.html#Entry-Point-Details">Entry Point Details</a>
+</ul>
+
+   </body></html>
+

@@ -1,0 +1,93 @@
+<html
+  ><head
+    ><title
+      >Macro IS</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Macro: IS</h1
+        ><div class="contents"
+          ><h2
+  >Documentation</h2
+><blockquote
+  >The DWIM checking operator.
+
+If TEST returns a true value a test-passed result is generated,
+otherwise a test-failure result is generated and the reason,
+unless REASON-ARGS is provided, is generated based on the form of
+TEST:
+
+ (predicate expected actual) - Means that we want to check
+ whether, according to PREDICATE, the ACTUAL value is
+ in fact what we EXPECTED.
+
+ (predicate value) - Means that we want to ensure that VALUE
+ satisfies PREDICATE.
+
+Wrapping the TEST form in a NOT simply preducse a negated reason string.</blockquote
+><h2
+            >Source</h2
+          ><pre class="code"
+            >(defmacro is (test &amp;rest reason-args)
+  &quot;The DWIM checking operator.
+
+If TEST returns a true value a test-passed result is generated,
+otherwise a test-failure result is generated and the reason,
+unless REASON-ARGS is provided, is generated based on the form of
+TEST:
+
+ (predicate expected actual) - Means that we want to check
+ whether, according to PREDICATE, the ACTUAL value is
+ in fact what we EXPECTED.
+
+ (predicate value) - Means that we want to ensure that VALUE
+ satisfies PREDICATE.
+
+Wrapping the TEST form in a NOT simply preducse a negated reason string.&quot;
+  (assert (listp test)
+          (test)
+          &quot;Argument to IS must be a list, not ~S&quot; test)
+  (let (bindings effective-test default-reason-args)
+    (with-unique-names (e a v)
+      (list-match-case test
+        ((not (?predicate ?expected ?actual))
+         (setf bindings (list (list e ?expected)
+                              (list a ?actual))
+               effective-test `(not (,?predicate ,e ,a))
+               default-reason-args (list &quot;~S was ~S to ~S&quot; a `',?predicate e)))
+        ((not (?satisfies ?value))
+         (setf bindings (list (list v ?value))
+               effective-test `(not (,?satisfies ,v))
+               default-reason-args (list  &quot;~S satisfied ~S&quot; v `',?satisfies)))
+        ((?predicate ?expected ?actual)
+         (setf bindings (list (list e ?expected)
+                              (list a ?actual))
+               effective-test `(,?predicate ,e ,a)
+               default-reason-args (list &quot;~S was not ~S to ~S&quot; a `',?predicate e)))
+        ((?satisfies ?value)
+         (setf bindings (list (list v ?value))
+               effective-test `(,?satisfies ,v)
+               default-reason-args (list &quot;~S did not satisfy ~S&quot; v `',?satisfies)))
+        (t
+         (setf bindings '()
+               effective-test test
+               default-reason-args &quot;No reason supplied.&quot;)))
+      `(let ,bindings
+         (if ,effective-test
+             (add-result 'test-passed :test-expr ',test)
+             (process-failure :reason ,(if (null reason-args)
+                                           `(format nil ,@default-reason-args)
+                                           `(format nil ,@reason-args))
+                              :test-expr ',test))))))</pre
+          ><a href="../Checks.html#macro_005FIT.BESE.FIVEAM_003A_003AIS"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

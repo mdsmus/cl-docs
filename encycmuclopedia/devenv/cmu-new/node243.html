@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Step-by-Step Alien Example</TITLE>
+<META NAME="description" CONTENT="Step-by-Step Alien Example">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3768" HREF="node244.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3766" HREF="node221.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3762" HREF="node242.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3770" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3771" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3769" HREF="node244.html">9 Interprocess Communication under </A>
+<B>Up:</B> <A NAME="tex2html3767" HREF="node221.html">8 Alien Objects</A>
+<B> Previous:</B> <A NAME="tex2html3763" HREF="node242.html">8.7.5 Accessing Lisp Arrays</A>
+<BR> <P>
+<H1><A NAME="SECTION00980000000000000000">Step-by-Step Alien Example</A></H1>
+<P>
+This section presents a complete example of an interface to a somewhat
+complicated C function.  This example should give a fairly good idea
+of how to get the effect you want for almost any kind of C function.
+Suppose you have the following C function which you want to be able to
+call from Lisp in the file `<tt>test.c</tt>':
+<PRE>                
+struct c_struct
+{
+  int x;
+  char *s;
+};
+ 
+struct c_struct *c_function (i, s, r, a)
+    int i;
+    char *s;
+    struct c_struct *r;
+    int a[10];
+{
+  int j;
+  struct c_struct *r2;
+ 
+  printf(&quot;i = %d\n&quot;, i);
+  printf(&quot;s = %s\n&quot;, s);
+  printf(&quot;r-&gt;x = %d\n&quot;, r-&gt;x);
+  printf(&quot;r-&gt;s = %s\n&quot;, r-&gt;s);
+  for (j = 0; j &lt; 10; j++) printf(&quot;a[%d] = %d.\n&quot;, j, a[j]);
+  r2 = (struct c_struct *) malloc (sizeof(struct c_struct));
+  r2-&gt;x = i + 5;
+  r2-&gt;s = &quot;A C string&quot;;
+  return(r2);
+};</PRE>
+It is possible to call this function from Lisp using the file `<tt>test.lisp</tt>'
+whose contents is:
+<BLOCKQUOTE> <PRE>;;; -*- Package: test-c-call -*-
+(in-package &quot;TEST-C-CALL&quot;)
+(use-package &quot;ALIEN&quot;)
+(use-package &quot;C-CALL&quot;)
+<P>
+;;; Define the record c-struct in Lisp.
+(def-alien-type nil
+    (struct c-struct
+            (x int)
+            (s c-string)))
+<P>
+;;; Define the Lisp function interface to the C routine.  It returns a
+;;; pointer to a record of type c-struct.  It accepts four parameters:
+;;; i, an int; s, a pointer to a string; r, a pointer to a c-struct
+;;; record; and a, a pointer to the array of 10 ints.
+;;;
+;;; The INLINE declaration eliminates some efficiency notes about heap
+;;; allocation of Alien values.
+(declaim (inline c-function))
+(def-alien-routine c-function
+    (* (struct c-struct))
+  (i int)
+  (s c-string)
+  (r (* (struct c-struct)))
+  (a (array int 10)))
+<P>
+;;; A function which sets up the parameters to the C function and
+;;; actually calls it.
+(defun call-cfun ()
+  (with-alien ((ar (array int 10))
+               (c-struct (struct c-struct)))
+    (dotimes (i 10)                     ; Fill array.
+      (setf (deref ar i) i))
+    (setf (slot c-struct 'x) 20)
+    (setf (slot c-struct 's) &quot;A Lisp String&quot;)
+<P>
+    (with-alien ((res (* (struct c-struct))
+                      (c-function 5 &quot;Another Lisp String&quot; (addr c-struct) ar)))
+      (format t &quot;Returned from C function.&nbsp;(multiple-value-prog1
+          (values (slot res 'x)
+                  (slot res 's))
+        ;;              
+        ;; Deallocate result &#305;after we are done using it.
+        (free-alien res)))))
+</PRE> </BLOCKQUOTE>
+To execute the above example, it is necessary to compile the C routine as
+follows:
+<BLOCKQUOTE> <PRE>cc -c test.c
+</PRE> </BLOCKQUOTE>
+In order to enable incremental loading with some linkers, you may need to say:
+<BLOCKQUOTE> <PRE>cc -G 0 -c test.c
+</PRE> </BLOCKQUOTE>
+Once the C code has been compiled, you can start up Lisp and load it in:
+<BLOCKQUOTE> <PRE>;;; Lisp should start up with its normal prompt.
+<P>
+;;; Compile the Lisp file.  This step can be done separately.  You don't have
+;;; to recompile every time.
+* (compile-file &quot;test.lisp&quot;)
+<P>
+;;; Load the foreign object file to define the necessary symbols.  This must
+;;; be done before loading any code that refers to these symbols.  next block
+;;; of comments are actually the output of LOAD-FOREIGN.  Different linkers
+;;; will give different warnings, but some warning about redefining the code
+;;; size is typical.
+* (load-foreign &quot;test.o&quot;)
+<P>
+;;; Running library:load-foreign.csh...
+;;; Loading object file...
+;;; Parsing symbol table...
+Warning:  &quot;_gp&quot; moved from #x00C082C0 to #x00C08460.
+<P>
+Warning:  &quot;end&quot; moved from #x00C00340 to #x00C004E0.
+<P>
+;;; o.k. now load the compiled Lisp object file.
+* (load &quot;test&quot;)
+<P>
+;;; Now we can call the routine that sets up the parameters and calls the C
+;;; function.
+* (test-c-call::call-cfun)
+<P>
+;;; The C routine prints the following information to standard output.
+i = 5
+s = Another Lisp string
+r-&gt;x = 20
+r-&gt;s = A Lisp string
+a[0] = 0.
+a[1] = 1.
+a[2] = 2.
+a[3] = 3.
+a[4] = 4.
+a[5] = 5.
+a[6] = 6.
+a[7] = 7.
+a[8] = 8.
+a[9] = 9.
+;;; Lisp prints out the following information.
+Returned from C function.
+;;; Return values from the call to test-c-call::call-cfun.
+10
+&quot;A C string&quot;
+*
+</PRE> </BLOCKQUOTE>
+<P>
+If any of the foreign functions do output, they should not be called from
+within Hemlock.  Depending on the situation, various strange behavior occurs.
+Under X, the output goes to the window in which Lisp was started; on a
+terminal, the output will overwrite the Hemlock screen image; in a Hemlock
+slave, standard output is `<tt>/dev/null</tt>' by default, so any output is
+discarded.
+<P>
+<HR><A NAME="tex2html3768" HREF="node244.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3766" HREF="node221.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3762" HREF="node242.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3770" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3771" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3769" HREF="node244.html">9 Interprocess Communication under </A>
+<B>Up:</B> <A NAME="tex2html3767" HREF="node221.html">8 Alien Objects</A>
+<B> Previous:</B> <A NAME="tex2html3763" HREF="node242.html">8.7.5 Accessing Lisp Arrays</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

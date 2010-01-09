@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>3.9.1 Breakpoint Example</TITLE>
+<META NAME="description" CONTENT="3.9.1 Breakpoint Example">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1593" HREF="node80.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1591" HREF="node78.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1587" HREF="node78.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1595" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1596" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1594" HREF="node80.html">3.10 Function Tracing</A>
+<B>Up:</B> <A NAME="tex2html1592" HREF="node78.html">3.9 Breakpoint Commands</A>
+<B> Previous:</B> <A NAME="tex2html1588" HREF="node78.html">3.9 Breakpoint Commands</A>
+<BR> <P>
+<H2><A NAME="SECTION00491000000000000000">3.9.1 Breakpoint Example</A></H2>
+<P>
+Consider this definition of the factorial function:
+<BLOCKQUOTE> <PRE>(defun ! (n)
+  (if (zerop n)
+      1
+      (* n (! (1- n)))))
+</PRE> </BLOCKQUOTE>
+This debugger session demonstrates the use of breakpoints:
+<BLOCKQUOTE> <PRE>common-lisp-user&gt; (break) ; Invoke debugger
+<P>
+Break
+<P>
+Restarts:
+  0: [CONTINUE] Return from BREAK.
+  1: [ABORT   ] Return to Top-Level.
+<P>
+Debug  (type H for help)
+<P>
+(INTERACTIVE-EVAL (BREAK))
+0] ll #'!
+0: #'(LAMBDA (N) (BLOCK ! (IF # 1 #)))
+1: (ZEROP N)
+2: (* N (! (1- N)))
+3: (1- N)
+4: (! (1- N))
+5: (* N (! (1- N)))
+6: #'(LAMBDA (N) (BLOCK ! (IF # 1 #)))
+0] br 2
+(* N (! (1- N)))
+1: 2 in !
+Added.
+0] q
+<P>
+common-lisp-user&gt; (! 10) ; Call the function
+<P>
+*Breakpoint hit*
+<P>
+Restarts:
+  0: [CONTINUE] Return from BREAK.
+  1: [ABORT   ] Return to Top-Level.
+<P>
+Debug  (type H for help)
+<P>
+(! 10) ; We are now in first call (arg 10) before the multiply
+Source: (* N (! (1- N)))
+3] st
+<P>
+*Step*
+<P>
+(! 10) ; We have finished evaluation of (1- n)
+Source: (1- N)
+3] st
+<P>
+*Breakpoint hit*
+<P>
+Restarts:
+  0: [CONTINUE] Return from BREAK.
+  1: [ABORT   ] Return to Top-Level.
+<P>
+Debug  (type H for help)
+<P>
+(! 9) ; We hit the breakpoint in the recursive call
+Source: (* N (! (1- N)))
+3] 
+</PRE> </BLOCKQUOTE><BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

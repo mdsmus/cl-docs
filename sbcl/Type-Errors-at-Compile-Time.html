@@ -1,0 +1,93 @@
+<html lang="en">
+<head>
+<title>Type Errors at Compile Time - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Compiler-Errors.html#Compiler-Errors" title="Compiler Errors">
+<link rel="next" href="Errors-During-Macroexpansion.html#Errors-During-Macroexpansion" title="Errors During Macroexpansion">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Type-Errors-at-Compile-Time"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Errors-During-Macroexpansion.html#Errors-During-Macroexpansion">Errors During Macroexpansion</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Compiler-Errors.html#Compiler-Errors">Compiler Errors</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">3.4.1 Type Errors at Compile Time</h4>
+
+<p><a name="index-Compile-time-type-errors-51"></a><a name="index-Type-checking_002c-at-compile-time-52"></a>
+If the compiler can prove at compile time that some portion of the
+program cannot be executed without a type error, then it will give a
+warning at compile time.
+
+   <p>It is possible that the offending code would never actually be
+executed at run-time due to some higher level consistency constraint
+unknown to the compiler, so a type warning doesn't always indicate an
+incorrect program.
+
+   <p>For example, consider this code fragment:
+
+<pre class="lisp">     (defun raz (foo)
+       (let ((x (case foo
+                   (:this 13)
+                   (:that 9)
+                   (:the-other 42))))
+         (declare (fixnum x))
+         (foo x)))
+</pre>
+   <p>Compilation produces this warning:
+
+<pre class="example">     ; in: DEFUN RAZ
+     ;     (CASE FOO (:THIS 13) (:THAT 9) (:THE-OTHER 42))
+     ; --&gt; LET COND IF COND IF COND IF
+     ; ==&gt;
+     ;   (COND)
+     ;
+     ; caught WARNING:
+     ;   This is not a FIXNUM:
+     ;   NIL
+</pre>
+   <p>In this case, the warning means that if <code>foo</code> isn't any of
+<code>:this</code>, <code>:that</code> or <code>:the-other</code>, then <code>x</code> will be
+initialized to <code>nil</code>, which the <code>fixnum</code> declaration makes
+illegal. The warning will go away if <code>ecase</code> is used instead of
+<code>case</code>, or if <code>:the-other</code> is changed to <code>t</code>.
+
+   <p>This sort of spurious type warning happens moderately often in the
+expansion of complex macros and in inline functions. In such cases,
+there may be dead code that is impossible to correctly execute. The
+compiler can't always prove this code is dead (could never be
+executed), so it compiles the erroneous code (which will always signal
+an error if it is executed) and gives a warning.
+
+   </body></html>
+

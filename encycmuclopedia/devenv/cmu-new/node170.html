@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.11.3 Variables</TITLE>
+<META NAME="description" CONTENT="5.11.3 Variables">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2843" HREF="node171.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2841" HREF="node167.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2835" HREF="node169.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2845" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2846" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2844" HREF="node171.html">5.11.4 Generic Arithmetic</A>
+<B>Up:</B> <A NAME="tex2html2842" HREF="node167.html">5.11 Numbers</A>
+<B> Previous:</B> <A NAME="tex2html2836" HREF="node169.html">Non-Descriptor Representations</A>
+<BR> <P>
+<H2><A NAME="SECTION006113000000000000000">5.11.3 Variables</A></H2>
+<P>
+<A NAME="NDvariables">&#160;</A>
+<A NAME="10529">&#160;</A>
+<A NAME="10530">&#160;</A>
+<A NAME="10531">&#160;</A>
+<P>
+In order to use a non-descriptor representation for a variable or
+expression intermediate value, the compiler must be able to prove that
+the value is always of a particular type having a non-descriptor
+representation.  Type inference (see section&nbsp;<A HREF="node124.html#typeinference">5.3</A>) often needs
+some help from user-supplied declarations.  The best kind of type
+declaration is a variable type declaration placed at the binding
+point:
+<BLOCKQUOTE> <PRE>(let ((x (car l)))
+  (declare (single-float x))
+  ...)
+</PRE> </BLOCKQUOTE>
+Use of <tt>the</tt>, or of variable declarations not at the binding form
+is insufficient to allow non-descriptor representation of the
+variable--with these declarations it is not certain that all
+values of the variable are of the right type.  It is sometimes useful
+to introduce a gratuitous binding that allows the compiler to change
+to a non-descriptor representation, like:
+<BLOCKQUOTE> <PRE>(etypecase x
+  ((signed-byte 32)
+   (let ((x x))
+     (declare (type (signed-byte 32) x)) 
+     ...))
+  ...)
+</PRE> </BLOCKQUOTE>
+The declaration on the inner <tt>x</tt> is necessary here due to a phase
+ordering problem.  Although the compiler will eventually prove that
+the outer <tt>x</tt> is a <tt>(signed-byte 32)</tt> within that
+<tt>etypecase</tt> branch, the inner <tt>x</tt> would have been optimized
+away by that time.  Declaring the type makes let optimization more
+cautious.
+<P>
+Note that storing a value into a global (or <tt>special</tt>) variable
+always forces a descriptor representation.  Wherever possible, you
+should operate only on local variables, binding any referenced globals
+to local variables at the beginning of the function, and doing any
+global assignments at the end.
+<P>
+Efficiency notes signal use of inefficient representations, so
+programmer's needn't continuously worry about the details of
+representation selection (see section&nbsp;<A HREF="node188.html#representationeffnote">5.13.3</A>.)
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

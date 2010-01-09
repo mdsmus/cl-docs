@@ -1,0 +1,159 @@
+<html lang="en">
+<head>
+<title>Dynamic-extent allocation - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Efficiency.html#Efficiency" title="Efficiency">
+<link rel="prev" href="Slot-access.html#Slot-access" title="Slot access">
+<link rel="next" href="Modular-arithmetic.html#Modular-arithmetic" title="Modular arithmetic">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Dynamic-extent-allocation"></a>
+<a name="Dynamic_002dextent-allocation"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Modular-arithmetic.html#Modular-arithmetic">Modular arithmetic</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Slot-access.html#Slot-access">Slot access</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Efficiency.html#Efficiency">Efficiency</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">5.2 Dynamic-extent allocation</h3>
+
+<p><a name="index-Dynamic_002dextent-declaration-137"></a>
+SBCL has limited support for performing allocation on the stack when a
+variable is declared <code>dynamic-extent</code>. The <code>dynamic-extent</code>
+declarations are not verified, but are simply trusted as long as
+<code>sb-ext:*stack-allocate-dynamic-extent*</code> is true.
+
+   <p>If dynamic extent constraints specified in the Common Lisp standard
+are violated, the best that can happen is for the program to have
+garbage in variables and return values; more commonly, the system will
+crash.
+
+   <p><a name="Variable-sb_002dext_003a_002astack_002dallocate_002ddynamic_002dextent_002a"></a>
+
+<div class="defun">
+&mdash; Variable: <b>sb-ext:*stack-allocate-dynamic-extent*</b><var><a name="index-sb_002dext_003a_002astack_002dallocate_002ddynamic_002dextent_002a-138"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003a_002astack_002dallocate_002ddynamic_002dextent_002a-139"></a>If true (the default), the compiler respects <code>dynamic-extent</code> declarations
+and stack allocates otherwise inaccessible parts of the object whenever
+possible. Potentially long (over one page in size) vectors are, however, not
+stack allocated except in zero <code>safety</code> code, as such a vector could overflow
+the stack without triggering overflow protection. 
+</p></blockquote></div>
+
+   <p>There are many cases when <code>dynamic-extent</code> declarations could be
+useful. At present, SBCL implements stack allocation for
+
+     <ul>
+<li><code>&amp;rest</code> lists, when these are declared <code>dynamic-extent</code>.
+
+     <li><code>cons</code>, <code>list</code> and <code>list*</code>, when the result is bound to
+a variable declared <code>dynamic-extent</code>.
+
+     <li>simple forms of <code>make-array</code>, whose result is bound to a variable
+declared <code>dynamic-extent</code>: stack allocation is possible only if
+the resulting array is one-dimensional, and the call has no keyword
+arguments with the exception of <code>:element-type</code>.
+
+     <p><strong>Note</strong>: stack space is limited, so allocation of a large vector
+may cause stack overflow. For this reason potentially large vectors,
+which might circumvent stack overflow detection, are stack allocated
+only in zero <code>safety</code> policies.
+
+     <li>closures defined with <code>flet</code> or <code>labels</code>, with a bound
+<code>dynamic-extent</code> declaration. Closed-over variables, which are
+assigned to (either inside or outside the closure) are still allocated
+on the heap. Blocks and tags are also allocated on the heap, unless
+all non-local control transfers to them are compiled with zero
+<code>safety</code>.
+
+     <li>user-defined structures when the structure constructor defined using
+<code>defstruct</code> has been declared <code>inline</code> and the result of the
+call to the constructor is bound to a variable declared
+<code>dynamic-extent</code>.
+
+     <p><strong>Note:</strong> structures with &ldquo;raw&rdquo; slots can currently be
+stack-allocated only on x86 and x86-64.
+
+     <li>all of the above when they appear as initial parts if another
+stack-allocated object.
+
+   </ul>
+
+   <p>Examples:
+
+<pre class="lisp">     ;;; Declaiming a structure constructor inline before definition makes
+     ;;; stack allocation possible.
+     (declaim (inline make-thing))
+     (defstruct thing obj next)
+     
+     ;;; Stack allocation of various objects bound to DYNAMIC-EXTENT
+     ;;; variables.
+     (let* ((list (list 1 2 3))
+            (nested (cons (list 1 2) (list* 3 4 (list 5))))
+            (vector (make-array 3 :element-type 'single-float))
+            (thing (make-thing :obj list
+                               :next (make-thing :obj (make-array 3)))))
+       (declare (dynamic-extent list nested vector thing))
+       ...)
+     
+     ;;; Stack allocation of arguments to a local function is equivalent
+     ;;; to stack allocation of local variable values.
+     (flet ((f (x)
+              (declare (dynamic-extent x))
+              ...))
+       ...
+       (f (list 1 2 3))
+       (f (cons (cons 1 2) (cons 3 4)))
+       ...)
+     
+     ;;; Stack allocation of &amp;REST lists
+     (defun foo (&amp;rest args)
+       (declare (dynamic-extent args))
+       ...)
+</pre>
+   <p>Future plans include
+
+     <ul>
+<li>Stack allocation of assigned-to closed-over variables, where these are
+declared <code>dynamic-extent</code>;
+
+     <li>Automatic detection of the common idiom of applying a function to some
+defaults and a <code>&amp;rest</code> list, even when this is not declared
+<code>dynamic-extent</code>;
+
+     <li>Automatic detection of the common idiom of calling quantifiers with a
+closure, even when the closure is not declared <code>dynamic-extent</code>.
+
+   </ul>
+
+   </body></html>
+

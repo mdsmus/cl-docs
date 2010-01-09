@@ -1,0 +1,316 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 21</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 21 - Fancy Tricks with Function and Macro Arguments</h1> 
+
+<P>We've already seen (in <a href="chapter04.html">Chapter 4</a>)
+how <code>&amp;OPTIONAL</code> parameters can reduce the number of
+arguments that you have to supply for the most common calls of a
+function. In this chapter we'll look at additional language features
+that let you declare named (keyword) parameters and provide default
+values for unspecified parameters. We'll also take a look at
+structured argument lists, which let you group related parameters
+for clarity.
+
+<h2>Keywords let you name your parameters</h2>
+
+<p>Sometimes you'll want to define a function (or macro) that works
+just fine with a small list of arguments, but can be extended in
+useful -- and obvious, I hope -- ways through the addition of extra
+arguments. But you'd rather not specify <em>all</em> of the
+arguments <em>all</em> of the time. We've already seen keyword
+arguments used in <a href="chapter13.html"> Chapter 13</a> with the
+sequence functions, and in <a href="chapter19.html"> Chapter 19</a>
+with the stream functions.
+
+<p>You can use keyword arguments for your own functions or macros
+by adding a <code>&amp;key</code> marker to the lambda list.  The
+general form (also used for <code>DEFMACRO</code>) is:
+
+<pre>
+(defun <i>name</i> (<i>req-arg</i> ... &amp;key <i>key-arg</i>)
+  ...)
+</pre> 
+
+<p>All of the required arguments (<i>req-arg</i>) must precede the
+<code>&amp;KEY</code> marker. The <i>key-arg</i>s name the variable
+that you'll reference from within your function's definition; the
+same <i>key-arg</i> name in the keyword package (i.e. preceded with
+a colon) is used in the call as a prefix for the keyword value.
+
+<pre>
+? (defun keyword-sample-1 (a b c &amp;key d e f)
+    (list a b c d e f))
+KEYWORD-SAMPLE-1
+? (keyword-sample-1 1 2 3)
+(1 2 3 NIL NIL NIL)
+? (keyword-sample-1 1 2 3 :d 4)
+(1 2 3 4 NIL NIL)
+? (keyword-sample-1 1 2 3 :e 5)
+(1 2 3 NIL 5 NIL)
+? (keyword-sample-1 1 2 3 :f 6 :d 4 :e 5)
+(1 2 3 4 5 6)
+</pre> 
+
+<p>You'll notice from the last sample that keyword parameters may
+be listed in any order. However, as in their lambda list declaration,
+all keyword parameters must follow all required parameters.
+
+<h2>Default values for when you'd rather not say</h2>
+
+<p>Any keyword parameter that you don't specify in a call receives a
+<code>NIL</code> default value. You can change the default using a
+variation of the keyword argument declaration: instead of just the
+argument name, specify <code>(</code><i>name</i>
+<i>default</i><code>)</code>, like this:
+
+<pre>
+? (defun keyword-sample-2 (a &amp;key (b 77) (c 88))
+    (list a b c))
+KEYWORD-SAMPLE-2
+? (keyword-sample-2 1)
+(1 77 88)
+? (keyword-sample-2 1 :c 3)
+(1 77 3)
+</pre> 
+
+<p>You can also find out whether a keyword parameter was specified
+in the call, even if it was specified using the default value. The
+keyword argument declaration looks like this:
+<code>(</code><i>name</i> <i>default</i>
+<i>arg-supplied-p</i><code>)</code>, where <i>arg-supplied-p</i> is
+the name of a variable that your function's definition reads as
+<code>NIL</code> only if no argument is supplied in the call.
+
+<pre>
+? (defun keyword-sample-3 (a &amp;key (b nil b-p) (c 53 c-p))
+    (list a b b-p c c-p))
+KEYWORD-SAMPLE-2
+? (keyword-sample-3 1)
+(1 NIL NIL 53 NIL)
+? (keyword-sample-3 1 :b 74)
+(1 74 T 53 NIL)
+? (keyword-sample-3 1 :b nil)
+(1 NIL T 53 NIL)
+? (keyword-sample-3 1 :c 9)
+(1 NIL NIL 9 T)
+</pre> 
+
+<p>Default values and supplied-p variable can also be used with
+<code>&amp;OPTIONAL</code> parameters.
+
+<pre>
+? (defun optional-sample-1 (a &amp;optional (b nil b-p))
+    (list a b b-p))
+OPTIONAL-SAMPLE-1
+? (optional-sample-1 1)
+(1 NIL NIL)
+? (optional-sample-1 1 nil)
+(1 NIL T)
+? (optional-sample-1 1 2)
+(1 2 T)
+</pre> 
+
+<p>If you use both <code>&amp;OPTIONAL</code> and <code>&amp;KEY</code> 
+parameters, all of the optional parameters must precede all of the keyword
+parameters, both in the declaration and the call. Of course, the required
+parameters must always appear before all other parameters.
+
+<pre>
+? (defun optional-keyword-sample-1 (a &amp;optional b c &amp;key d e)
+    (list a b c d e))
+OPTIONAL-KEYWORD-SAMPLE-1
+? (optional-keyword-sample-1 1)
+(1 NIL NIL NIL NIL)
+? (optional-keyword-sample-1 1 2)
+(1 2 NIL NIL NIL)
+? (optional-keyword-sample-1 1 2 3)
+(1 2 3 NIL NIL)
+? (optional-keyword-sample-1 1 2 3 :e 5)
+(1 2 3 NIL 5)
+</pre> 
+
+<p>When you define both <code>&amp;OPTIONAL</code> and <code>&amp;KEY</code> 
+arguments, the call must include values for <em>all</em> of the optional
+parameters if it specifies <em>any</em> keyword parameters, as in the last
+sample, above.  Look at what can happen if you omit some optional
+parameters:
+
+<pre>
+? (defun optional-keyword-sample-2 (a &amp;optional b c d &amp;key e f)
+    (list a b c d e f))
+OPTIONAL-KEYWORD-SAMPLE-2
+? (optional-keyword-sample-2 1 2 :e 3)
+(1 2 :E 3 NIL NIL)
+</pre> 
+
+<blockquote>
+Even though a Common Lisp function (<code>READ-FROM-STRING</code>) uses
+both optional and keyword arguments, you should <em>not</em> do the same when
+you define your own functions or macros.
+</blockquote> 
+
+<h2>Add some structure to your macros by taking apart arguments</h2>
+
+<p>You can use <em>destructuring</em> to create groups of parameters
+for macros.
+
+<pre>
+? (defmacro destructuring-sample-1 ((a b) (c d))
+    `(list ',a ',b ',c ',d))
+DESTRUCTURING-SAMPLE-1
+? (destructuring-sample-1 (1 2) (3 4))
+(1 2 3 4)
+</pre> 
+
+<p>You can use all the usual techniques within each group.
+
+<pre>
+? (defmacro destructuring-sample-2 ((a &amp;key b) (c &amp;optional d))
+    `(list ',a ',b ',c ',d))
+DESTRUCTURING-SAMPLE-2
+? (destructuring-sample-2 (1) (3))
+(1 NIL 3 NIL)
+? (destructuring-sample-2 (1 :b 2) (3))
+(1 2 3 NIL)
+? (destructuring-sample-2 (1) (3 4))
+(1 NIL 3 4)
+</pre> 
+
+<p>And the groupings can even be nested.
+
+<pre>
+? (defmacro destructuring-sample-3 ((a &amp;key b) (c (d e) &amp;optional f))
+    `(list ',a ',b ',c ',d ',e ',f))
+DESTRUCTURING-SAMPLE-3
+? (destructuring-sample-3 (1) (3 (4 5)))
+(1 NIL 3 4 5 NIL)
+</pre> 
+
+<p>Destructuring is commonly used to set off a group of arguments or
+declarations from the body forms in a macro. Here's an extended
+example, <code>WITH-PROCESSES</code>, that expects a name, a list of
+a variable name (pid) and a process count (num-processes), and a
+list of another variable name (work-item) and a list of elements to
+process (work-queue). All of these arguments are grouped before the
+body forms.
+
+<pre>
+? (defmacro with-processes ((name 
+                             (pid num-processes)
+                             (work-item work-queue)) &amp;body body)
+    (let ((process-fn (gensym))
+          (items (gensym))
+          (items-lock (gensym)))
+      `(let ((,items (copy-list ,work-queue))
+             (,items-lock (make-lock)))
+         (flet ((,process-fn (,pid)
+                  (let ((,work-item nil))
+                    (loop
+                      (with-lock-grabbed (,items-lock)
+                        (setq ,work-item (pop ,items)))
+                      (when (null ,work-item)
+                        (return))
+                      <i>;;(format t "~&amp;running id ~D~%" ,pid)</i> 
+                      ,@body))))
+           (dotimes (i ,num-processes)
+             <i>;;(format t "~&amp;creating id ~D~%" ,id)</i> 
+             (process-run-function
+              (format nil "~A-~D" ,name i)
+              #',process-fn
+              i))))))
+WITH-PROCESSES
+</pre> 
+
+<p>Processes are not part of the ANSI Common Lisp standard, but are 
+present in almost every implementation. (We'll revisit processes in
+<a href="chapter32.html">Chapter 32</a>, along with some other common
+language extensions.)  The code shown above works with Macintosh Common 
+Lisp, whose process interface is very similar to that found on the 
+Symbolics Lisp Machines of days past.
+
+<p>I'll describe a few key portions of the macro expander in case
+you want to figure out what's going on; if you'd rather just see how
+the macro gets called, you can skip the rest of this paragraph. The
+<code>FLET</code> form defines a function. In this case, the
+function defined by <code>FLET</code> will be used to do the actual
+work within a Lisp process -- grab a lock on the work queue, remove
+an item, release the lock, then process the item using the body
+forms. The <code>PROCESS-RUN-FUNCTION</code> creates a Lisp process
+with a given name (generated by the <code>FORMAT</code> form) and a
+function to execute. The <code>WITH-PROCESSES</code> macro creates
+<code>NUM-PROCESSES</code> Lisp processes (named
+<i>name</i>-<i>#</i>) and within each process executes the
+<code>BODY</code> forms with <code>PID</code> bound to the process
+number and <code>WORK-ITEM</code> bound to some element of
+<code>WORK-QUEUE</code>. The processes terminate themselves once the
+work queue has been consumed.
+
+<p>Here's an example of how we call <code>WITH-PROCESSES</code>. The
+parameters are <code>"Test"</code> (used for the process names),
+<code>(id 3)</code> (the variable bound to the process ID within a
+process, and the number of processes to create), and <code>(item '(1
+2 ... 15 16)</code> (the variable bound to an individual work item
+within a process, and the list of items to be consumed by the
+processes). The <code>FORMAT</code> and <code>SLEEP</code> forms
+comprise the body of the processes, and the final argument to the 
+<code>WITH-PROCESSES</code> macro call.
+
+<pre>
+? (with-processes ("Test"
+                   (id 3)
+                   (item '(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16)))
+    (format t "~&amp;id ~D item ~A~%" id item)
+    (sleep (random 1.0)))
+NIL
+id 0 item 1
+id 1 item 2
+id 2 item 3
+id 1 item 4
+id 1 item 5
+id 0 item 6
+id 2 item 7
+id 0 item 8
+id 2 item 9
+id 1 item 10
+id 2 item 11
+id 0 item 12
+id 0 item 13
+id 1 item 14
+id 2 item 15
+id 0 item 16
+</pre> 
+
+<p>The form returns NIL almost immediately, but the created processes
+run for a while to produce the output that follows.  The "item" numbers
+follow an orderly progression as they are consumed from the work queue,
+but the "id" numbers vary according to which process actually consumed
+a particular item.
+
+<p>Destructuring is a useful tool for macros, but you can't use it
+in the lambda list of a function. However, you can destructure a
+list from within a function via <code>DESTRUCTURING-BIND</code>.
+
+<pre>
+? (destructuring-bind ((a &amp;key b) (c (d e) &amp;optional f))
+                      '((1 :b 2) (3 (4 5) 6))
+    (list a b c d e f))
+(1 2 3 4 5 6)
+</pre> 
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter20.html">Chapter 20</a> | Chapter 21 | <a href="chapter22.html">Chapter 22</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

@@ -1,0 +1,107 @@
+<html lang="en">
+<head>
+<title>Open Coding and Inline Expansion - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Compiler.html#Compiler" title="Compiler">
+<link rel="prev" href="Compiler-Errors.html#Compiler-Errors" title="Compiler Errors">
+<link rel="next" href="Interpreter.html#Interpreter" title="Interpreter">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Open-Coding-and-Inline-Expansion"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Interpreter.html#Interpreter">Interpreter</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Compiler-Errors.html#Compiler-Errors">Compiler Errors</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Compiler.html#Compiler">Compiler</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">3.5 Open Coding and Inline Expansion</h3>
+
+<p><a name="index-Open_002dcoding-55"></a><a name="index-Inline-expansion-56"></a><a name="index-Static-functions-57"></a>
+Since Common Lisp forbids the redefinition of standard functions, the
+compiler can have special knowledge of these standard functions
+embedded in it. This special knowledge is used in various ways (open
+coding, inline expansion, source transformation), but the implications
+to the user are basically the same:
+
+     <ul>
+<li>Attempts to redefine standard functions may be frustrated, since the
+function may never be called. Although it is technically illegal to
+redefine standard functions, users sometimes want to implicitly
+redefine these functions when they are debugging using the
+<code>trace</code> macro.  Special-casing of standard functions can be
+inhibited using the <code>notinline</code> declaration, but even then some
+phases of analysis such as type inferencing are applied by the
+compiler.
+
+     <li>The compiler can have multiple alternate implementations of standard
+functions that implement different trade-offs of speed, space and
+safety.  This selection is based on the compiler policy, <a href="Compiler-Policy.html#Compiler-Policy">Compiler Policy</a>.
+
+   </ul>
+
+   <p>When a function call is <em>open coded</em>, inline code whose effect is
+equivalent to the function call is substituted for that function
+call. When a function call is <em>closed coded</em>, it is usually left
+as is, although it might be turned into a call to a different function
+with different arguments. As an example, if <code>nthcdr</code> were to be
+open coded, then
+
+<pre class="lisp">     (nthcdr 4 foobar)
+</pre>
+   <p>might turn into
+
+<pre class="lisp">     (cdr (cdr (cdr (cdr foobar))))
+</pre>
+   <p>or even
+
+<pre class="lisp">     (do ((i 0 (1+ i))
+       (list foobar (cdr foobar)))
+       ((= i 4) list))
+</pre>
+   <p>If <code>nth</code> is closed coded, then
+
+<pre class="lisp">     (nth x l)
+</pre>
+   <p>might stay the same, or turn into something like
+
+<pre class="lisp">     (car (nthcdr x l))
+</pre>
+   <p>In general, open coding sacrifices space for speed, but some functions
+(such as <code>car</code>) are so simple that they are always
+open-coded. Even when not open-coded, a call to a standard function
+may be transformed into a different function call (as in the last
+example) or compiled as <em>static call</em>. Static function call uses
+a more efficient calling convention that forbids redefinition.
+
+   </body></html>
+

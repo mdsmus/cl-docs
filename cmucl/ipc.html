@@ -1,0 +1,731 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+"http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+<meta name="generator" content=
+"HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 13), see www.w3.org">
+<meta http-equiv="Content-Type" content=
+"text/html; charset=us-ascii">
+<meta name="GENERATOR" content="hevea 1.06">
+<link rel="stylesheet" href="cmucl.css" type="text/css">
+<meta http-equiv="Content-Language" content="en">
+<title>CMUCL User's Manual: Interprocess Communication under
+LISP</title>
+</head>
+<body>
+<a href="aliens.html"><img src="previous_motif.gif" alt=
+"Previous"></a> <a href="index.html"><img src="contents_motif.gif"
+alt="Up"></a> <a href="internet.html"><img src="next_motif.gif"
+alt="Next"></a>
+<hr>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFBC">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc264" id="htoc264"><b><font size=
+"6">Chapter&nbsp;9</font></b></a></td>
+<td width="100%" align="center"><b><font size="6">Interprocess
+Communication under LISP</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<ul>
+<li><a href="ipc.html#toc269">The REMOTE Package</a>
+<ul>
+<li><a href="ipc.html#toc270">Connecting Servers and
+Clients</a></li>
+<li><a href="ipc.html#toc271">Remote Evaluations</a></li>
+<li><a href="ipc.html#toc272">Remote Objects</a></li>
+</ul>
+</li>
+<li><a href="ipc.html#toc273">The WIRE Package</a>
+<ul>
+<li><a href="ipc.html#toc274">Untagged Data</a></li>
+<li><a href="ipc.html#toc275">Tagged Data</a></li>
+<li><a href="ipc.html#toc276">Making Your Own Wires</a></li>
+</ul>
+</li>
+<li><a href="ipc.html#toc277">Out-Of-Band Data</a></li>
+</ul>
+<a name="remote" id="remote"></a><br>
+<div align="center"><b>by William Lott and Bill Chiles</b></div>
+<br>
+CMUCL offers a facility for interprocess communication (IPC) on top
+of using Unix system calls and the complications of that level of
+IPC. There is a simple remote-procedure-call (RPC) package build on
+top of TCP/IP sockets.<br>
+<br>
+<a name="toc269" id="toc269"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc265" id="htoc265"><b><font size=
+"5">9.1</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">The REMOTE
+Package</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+The <tt class="code">remote</tt> package provides simple RPC
+facility including interfaces for creating servers, connecting to
+already existing servers, and calling functions in other Lisp
+processes. The routines for establishing a connection between two
+processes, <tt class="code">create-request-server</tt> and
+<tt class="code">connect-to-remote-server</tt>, return <tt class=
+"variable">wire</tt> structures. A wire maintains the current state
+of a connection, and all the RPC forms require a wire to indicate
+where to send requests.<br>
+<br>
+<a name="toc270" id="toc270"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc266" id="htoc266"><b><font size=
+"4">9.1.1</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Connecting
+Servers and Clients</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+Before a client can connect to a server, it must know the network
+address on which the server accepts connections. Network addresses
+consist of a host address or name, and a port number. Host
+addresses are either a string of the form <tt class=
+"code">VANCOUVER.SLISP.CS.CMU.EDU</tt> or a 32 bit unsigned
+integer. Port numbers are 16 bit unsigned integers. Note:
+<tt class="variable">port</tt> in this context has nothing to do
+with Mach ports and message passing.<br>
+<br>
+When a process wants to receive connection requests (that is,
+become a server), it first picks an integer to use as the port.
+Only one server (Lisp or otherwise) can use a given port number on
+a given machine at any particular time. This can be an iterative
+process to find a free port: picking an integer and calling
+<tt class="code">create-request-server</tt>. This function signals
+an error if the chosen port is unusable. You will probably want to
+write a loop using <tt class="code">handler-case</tt>, catching
+conditions of type error, since this function does not signal more
+specific conditions.<br>
+<br>
+<br>
+<a name="@funs224"></a><a name="FN:create-request-server" id=
+"FN:create-request-server"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">wire:</tt><tt class=
+"function-name">create-request-server</tt> <tt class=
+"variable">port</tt> <tt class="code">&amp;optional</tt> <tt class=
+"variable">on-connect</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+<br>
+<tt class="code">create-request-server</tt> sets up the current
+Lisp to accept connections on the given port. If port is
+unavailable for any reason, this signals an error. When a client
+connects to this port, the acceptance mechanism makes a wire
+structure and invokes the <tt class="variable">on-connect</tt>
+function. Invoking this function has a couple of purposes, and
+<tt class="variable">on-connect</tt> may be <tt class=
+"code">nil</tt> in which case the system foregoes invoking any
+function at connect time.<br>
+<br>
+The <tt class="variable">on-connect</tt> function is both a hook
+that allows you access to the wire created by the acceptance
+mechanism, and it confirms the connection. This function takes two
+arguments, the wire and the host address of the connecting process.
+See the section on host addresses below. When <tt class=
+"variable">on-connect</tt> is <tt class="code">nil</tt>, the
+request server allows all connections. When it is non-<tt class=
+"code">nil</tt>, the function returns two values, whether to accept
+the connection and a function the system should call when the
+connection terminates. Either value may be <tt class=
+"code">nil</tt>, but when the first value is <tt class=
+"code">nil</tt>, the acceptance mechanism destroys the wire.<br>
+<br>
+<tt class="code">create-request-server</tt> returns an object that
+<tt class="code">destroy-request-server</tt> uses to terminate a
+connection.</blockquote>
+<br>
+<a name="@funs225"></a><a name="FN:destroy-request-server" id=
+"FN:destroy-request-server"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">wire:</tt><tt class=
+"function-name">destroy-request-server</tt> <tt class=
+"variable">server</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+<br>
+<tt class="code">destroy-request-server</tt> takes the result of
+<tt class="code">create-request-server</tt> and terminates that
+server. Any existing connections remain intact, but all additional
+connection attempts will fail.</blockquote>
+<br>
+<a name="@funs226"></a><a name="FN:connect-to-remote-server" id=
+"FN:connect-to-remote-server"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">wire:</tt><tt class=
+"function-name">connect-to-remote-server</tt> <tt class=
+"variable">host</tt> <tt class="variable">port</tt> <tt class=
+"code">&amp;optional</tt> <tt class="variable">on-death</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+<br>
+<tt class="code">connect-to-remote-server</tt> attempts to connect
+to a remote server at the given <tt class="variable">port</tt> on
+<tt class="variable">host</tt> and returns a wire structure if it
+is successful. If <tt class="variable">on-death</tt> is
+non-<tt class="code">nil</tt>, it is a function the system invokes
+when this connection terminates.</blockquote>
+<a name="toc271" id="toc271"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc267" id="htoc267"><b><font size=
+"4">9.1.2</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Remote
+Evaluations</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+After the server and client have connected, they each have a wire
+allowing function evaluation in the other process. This RPC
+mechanism has three flavors: for side-effect only, for a single
+value, and for multiple values.<br>
+<br>
+Only a limited number of data types can be sent across wires as
+arguments for remote function calls and as return values: integers
+inclusively less than 32 bits in length, symbols, lists, and
+<tt class="variable">remote-objects</tt> (see section&nbsp;<a href=
+"#remote-objs">9.1.3</a>). The system sends symbols as two strings,
+the package name and the symbol name, and if the package doesn't
+exist remotely, the remote process signals an error. The system
+ignores other slots of symbols. Lists may be any tree of the above
+valid data types. To send other data types you must represent them
+in terms of these supported types. For example, you could use
+<tt class="code">prin1-to-string</tt> locally, send the string, and
+use <tt class="code">read-from-string</tt> remotely.<br>
+<br>
+<br>
+<a name="@funs227"></a><a name="FN:remote" id="FN:remote"></a>
+<div align="left">[Macro]<br>
+<tt class="function-name">wire:</tt><tt class=
+"function-name">remote</tt> <tt class="variable">wire</tt>
+<tt class="code">{call-specs}</tt><sup><font size=
+"2">*</font></sup> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+The <tt class="code">remote</tt> macro arranges for the process at
+the other end of <tt class="variable">wire</tt> to invoke each of
+the functions in the <tt class="variable">call-specs</tt>. To make
+sure the system sends the remote evaluation requests over the wire,
+you must call <tt class="code">wire-force-output</tt>.<br>
+<br>
+Each of <tt class="variable">call-specs</tt> looks like a function
+call textually, but it has some odd constraints and semantics. The
+function position of the form must be the symbolic name of a
+function. <tt class="code">remote</tt> evaluates each of the
+argument subforms for each of the <tt class=
+"variable">call-specs</tt> locally in the current context, sending
+these values as the arguments for the functions.<br>
+<br>
+Consider the following example:
+<pre>
+(defun write-remote-string (str)
+  (declare (simple-string str))
+  (wire:remote wire
+    (write-string str)))
+</pre>
+The value of <tt class="code">str</tt> in the local process is
+passed over the wire with a request to invoke <tt class=
+"code">write-string</tt> on the value. The system does not expect
+to remotely evaluate <tt class="code">str</tt> for a value in the
+remote process.</blockquote>
+<br>
+<a name="@funs228"></a><a name="FN:wire-force-output" id=
+"FN:wire-force-output"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">wire:</tt><tt class=
+"function-name">wire-force-output</tt> <tt class=
+"variable">wire</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+<br>
+<tt class="code">wire-force-output</tt> flushes all internal
+buffers associated with <tt class="variable">wire</tt>, sending the
+remote requests. This is necessary after a call to <tt class=
+"code">remote</tt>.</blockquote>
+<br>
+<a name="@funs229"></a><a name="FN:remote-value" id=
+"FN:remote-value"></a>
+<div align="left">[Macro]<br>
+<tt class="function-name">wire:</tt><tt class=
+"function-name">remote-value</tt> <tt class="variable">wire</tt>
+<tt class="variable">call-spec</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+The <tt class="code">remote-value</tt> macro is similar to the
+<tt class="code">remote</tt> macro. <tt class=
+"code">remote-value</tt> only takes one <tt class=
+"variable">call-spec</tt>, and it returns the value returned by the
+function call in the remote process. The value must be a valid type
+the system can send over a wire, and there is no need to call
+<tt class="code">wire-force-output</tt> in conjunction with this
+interface.<br>
+<br>
+If client unwinds past the call to <tt class=
+"code">remote-value</tt>, the server continues running, but the
+system ignores the value the server sends back.<br>
+<br>
+If the server unwinds past the remotely requested call, instead of
+returning normally, <tt class="code">remote-value</tt> returns two
+values, <tt class="code">nil</tt> and <tt class="code">t</tt>.
+Otherwise this returns the result of the remote evaluation and
+<tt class="code">nil</tt>.</blockquote>
+<br>
+<a name="@funs230"></a><a name="FN:remote-value-bind" id=
+"FN:remote-value-bind"></a>
+<div align="left">[Macro]<br>
+<tt class="function-name">wire:</tt><tt class=
+"function-name">remote-value-bind</tt> <tt class=
+"variable">wire</tt> (<tt class=
+"code">{variable}</tt><sup><font size="2">*</font></sup>)
+remote-form <tt class="code">{local-forms}</tt><sup><font size=
+"2">*</font></sup> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+<br>
+<tt class="code">remote-value-bind</tt> is similar to <tt class=
+"code">multiple-value-bind</tt> except the values bound come from
+<tt class="variable">remote-form</tt>'s evaluation in the remote
+process. The <tt class="variable">local-forms</tt> execute in an
+implicit <tt class="code">progn</tt>.<br>
+<br>
+If the client unwinds past the call to <tt class=
+"code">remote-value-bind</tt>, the server continues running, but
+the system ignores the values the server sends back.<br>
+<br>
+If the server unwinds past the remotely requested call, instead of
+returning normally, the <tt class="variable">local-forms</tt> never
+execute, and <tt class="code">remote-value-bind</tt> returns
+<tt class="code">nil</tt>.</blockquote>
+<a name="toc272" id="toc272"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc268" id="htoc268"><b><font size=
+"4">9.1.3</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Remote
+Objects</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="remote-objs" id="remote-objs"></a><br>
+The wire mechanism only directly supports a limited number of data
+types for transmission as arguments for remote function calls and
+as return values: integers inclusively less than 32 bits in length,
+symbols, lists. Sometimes it is useful to allow remote processes to
+refer to local data structures without allowing the remote process
+to operate on the data. We have <tt class=
+"variable">remote-objects</tt> to support this without the need to
+represent the data structure in terms of the above data types, to
+send the representation to the remote process, to decode the
+representation, to later encode it again, and to send it back along
+the wire.<br>
+<br>
+You can convert any Lisp object into a remote-object. When you send
+a remote-object along a wire, the system simply sends a unique
+token for it. In the remote process, the system looks up the token
+and returns a remote-object for the token. When the remote process
+needs to refer to the original Lisp object as an argument to a
+remote call back or as a return value, it uses the remote-object it
+has which the system converts to the unique token, sending that
+along the wire to the originating process. Upon receipt in the
+first process, the system converts the token back to the same
+(<tt class="code">eq</tt>) remote-object.<br>
+<br>
+<br>
+<a name="@funs231"></a><a name="FN:make-remote-object" id=
+"FN:make-remote-object"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">wire:</tt><tt class=
+"function-name">make-remote-object</tt> <tt class=
+"variable">object</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+<br>
+<tt class="code">make-remote-object</tt> returns a remote-object
+that has <tt class="variable">object</tt> as its value. The
+remote-object can be passed across wires just like the directly
+supported wire data types.</blockquote>
+<br>
+<a name="@funs232"></a><a name="FN:remote-object-p" id=
+"FN:remote-object-p"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">wire:</tt><tt class=
+"function-name">remote-object-p</tt> <tt class=
+"variable">object</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+The function <tt class="code">remote-object-p</tt> returns
+<tt class="code">t</tt> if <tt class="variable">object</tt> is a
+remote object and <tt class="code">nil</tt> otherwise.</blockquote>
+<br>
+<a name="@funs233"></a><a name="FN:remote-object-local-p" id=
+"FN:remote-object-local-p"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">wire:</tt><tt class=
+"function-name">remote-object-local-p</tt> <tt class=
+"variable">remote</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+The function <tt class="code">remote-object-local-p</tt> returns
+<tt class="code">t</tt> if <tt class="variable">remote</tt> refers
+to an object in the local process. This is can only occur if the
+local process created <tt class="variable">remote</tt> with
+<tt class="code">make-remote-object</tt>.</blockquote>
+<br>
+<a name="@funs234"></a><a name="FN:remote-object-eq" id=
+"FN:remote-object-eq"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">wire:</tt><tt class=
+"function-name">remote-object-eq</tt> <tt class=
+"variable">obj1</tt> <tt class="variable">obj2</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+The function <tt class="code">remote-object-eq</tt> returns
+<tt class="code">t</tt> if <tt class="variable">obj1</tt> and
+<tt class="variable">obj2</tt> refer to the same (<tt class=
+"code">eq</tt>) lisp object, regardless of which process created
+the remote-objects.</blockquote>
+<br>
+<a name="@funs235"></a><a name="FN:remote-object-value" id=
+"FN:remote-object-value"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">wire:</tt><tt class=
+"function-name">remote-object-value</tt> <tt class=
+"variable">remote</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This function returns the original object used to create the given
+remote object. It is an error if some other process originally
+created the remote-object.</blockquote>
+<br>
+<a name="@funs236"></a><a name="FN:forget-remote-translation" id=
+"FN:forget-remote-translation"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">wire:</tt><tt class=
+"function-name">forget-remote-translation</tt> <tt class=
+"variable">object</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This function removes the information and storage necessary to
+translate remote-objects back into <tt class=
+"variable">object</tt>, so the next <tt class="code">gc</tt> can
+reclaim the memory. You should use this when you no longer expect
+to receive references to <tt class="variable">object</tt>. If some
+remote process does send a reference to <tt class=
+"variable">object</tt>, <tt class="code">remote-object-value</tt>
+signals an error.</blockquote>
+<a name="toc273" id="toc273"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc269" id="htoc269"><b><font size=
+"5">9.2</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">The WIRE
+Package</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+The <tt class="code">wire</tt> package provides for sending data
+along wires. The <tt class="code">remote</tt> package sits on top
+of this package. All data sent with a given output routine must be
+read in the remote process with the complementary fetching routine.
+For example, if you send so a string with <tt class=
+"code">wire-output-string</tt>, the remote process must know to use
+<tt class="code">wire-get-string</tt>. To avoid rigid data
+transfers and complicated code, the interface supports sending
+<tt class="variable">tagged</tt> data. With tagged data, the system
+sends a tag announcing the type of the next data, and the remote
+system takes care of fetching the appropriate type.<br>
+<br>
+When using interfaces at the wire level instead of the RPC level,
+the remote process must read everything sent by these routines. If
+the remote process leaves any input on the wire, it will later
+mistake the data for an RPC request causing unknown lossage.<br>
+<br>
+<a name="toc274" id="toc274"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc270" id="htoc270"><b><font size=
+"4">9.2.1</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Untagged
+Data</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+When using these routines both ends of the wire know exactly what
+types are coming and going and in what order. This data is
+restricted to the following types:
+<ul>
+<li>8 bit unsigned bytes.<br>
+<br></li>
+<li>32 bit unsigned bytes.<br>
+<br></li>
+<li>32 bit integers.<br>
+<br></li>
+<li>simple-strings less than 65535 in length.</li>
+</ul>
+<br>
+<a name="@funs237"></a><a name="FN:wire-output-byte" id=
+"FN:wire-output-byte"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">wire:</tt><tt class=
+"function-name">wire-output-byte</tt> <tt class=
+"variable">wire</tt> <tt class="variable">byte</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+<a name="@funs238"></a><a name="FN:wire-get-byte" id=
+"FN:wire-get-byte"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">wire:</tt><tt class=
+"function-name">wire-get-byte</tt> <tt class="variable">wire</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<br>
+<a name="@funs239"></a><a name="FN:wire-output-number" id=
+"FN:wire-output-number"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">wire:</tt><tt class=
+"function-name">wire-output-number</tt> <tt class=
+"variable">wire</tt> <tt class="variable">number</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<br>
+<a name="@funs240"></a><a name="FN:wire-get-number" id=
+"FN:wire-get-number"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">wire:</tt><tt class=
+"function-name">wire-get-number</tt> <tt class="variable">wire</tt>
+<tt class="code">&amp;optional</tt> <tt class=
+"variable">signed</tt> &nbsp;&nbsp;&nbsp;</div>
+<br>
+<a name="@funs241"></a><a name="FN:wire-output-string" id=
+"FN:wire-output-string"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">wire:</tt><tt class=
+"function-name">wire-output-string</tt> <tt class=
+"variable">wire</tt> <tt class="variable">string</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<br>
+<a name="@funs242"></a><a name="FN:wire-get-string" id=
+"FN:wire-get-string"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">wire:</tt><tt class=
+"function-name">wire-get-string</tt> <tt class="variable">wire</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<br>
+These functions either output or input an object of the specified
+data type. When you use any of these output routines to send data
+across the wire, you must use the corresponding input routine
+interpret the data.</blockquote>
+<a name="toc275" id="toc275"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc271" id="htoc271"><b><font size=
+"4">9.2.2</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Tagged
+Data</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+When using these routines, the system automatically transmits and
+interprets the tags for you, so both ends can figure out what kind
+of data transfers occur. Sending tagged data allows a greater
+variety of data types: integers inclusively less than 32 bits in
+length, symbols, lists, and <tt class=
+"variable">remote-objects</tt> (see section&nbsp;<a href=
+"#remote-objs">9.1.3</a>). The system sends symbols as two strings,
+the package name and the symbol name, and if the package doesn't
+exist remotely, the remote process signals an error. The system
+ignores other slots of symbols. Lists may be any tree of the above
+valid data types. To send other data types you must represent them
+in terms of these supported types. For example, you could use
+<tt class="code">prin1-to-string</tt> locally, send the string, and
+use <tt class="code">read-from-string</tt> remotely.<br>
+<br>
+<br>
+<a name="@funs243"></a><a name="FN:wire-output-object" id=
+"FN:wire-output-object"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">wire:</tt><tt class=
+"function-name">wire-output-object</tt> <tt class=
+"variable">wire</tt> <tt class="variable">object</tt> <tt class=
+"code">&amp;optional</tt> <tt class="variable">cache-it</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+<a name="@funs244"></a><a name="FN:wire-get-object" id=
+"FN:wire-get-object"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">wire:</tt><tt class=
+"function-name">wire-get-object</tt> <tt class="variable">wire</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<br>
+The function <tt class="code">wire-output-object</tt> sends
+<tt class="variable">object</tt> over <tt class=
+"variable">wire</tt> preceded by a tag indicating its type.<br>
+<br>
+If <tt class="variable">cache-it</tt> is non-<tt class=
+"code">nil</tt>, this function only sends <tt class=
+"variable">object</tt> the first time it gets <tt class=
+"variable">object</tt>. Each end of the wire associates a token
+with <tt class="variable">object</tt>, similar to remote-objects,
+allowing you to send the object more efficiently on successive
+transmissions. <tt class="variable">cache-it</tt> defaults to
+<tt class="code">t</tt> for symbols and <tt class="code">nil</tt>
+for other types. Since the RPC level requires function names, a
+high-level protocol based on a set of function calls saves time in
+sending the functions' names repeatedly.<br>
+<br>
+The function <tt class="code">wire-get-object</tt> reads the
+results of <tt class="code">wire-output-object</tt> and returns
+that object.</blockquote>
+<a name="toc276" id="toc276"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc272" id="htoc272"><b><font size=
+"4">9.2.3</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Making Your Own
+Wires</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+You can create wires manually in addition to the <tt class=
+"code">remote</tt> package's interface creating them for you. To
+create a wire, you need a Unix <em>file descriptor</em>. If you are
+unfamiliar with Unix file descriptors, see section 2 of the Unix
+manual pages.<br>
+<br>
+<br>
+<a name="@funs245"></a><a name="FN:make-wire" id=
+"FN:make-wire"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">wire:</tt><tt class=
+"function-name">make-wire</tt> <tt class="variable">descriptor</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+The function <tt class="code">make-wire</tt> creates a new wire
+when supplied with the file descriptor to use for the underlying
+I/O operations.</blockquote>
+<br>
+<a name="@funs246"></a><a name="FN:wire-p" id="FN:wire-p"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">wire:</tt><tt class=
+"function-name">wire-p</tt> <tt class="variable">object</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This function returns <tt class="code">t</tt> if <tt class=
+"variable">object</tt> is indeed a wire, <tt class="code">nil</tt>
+otherwise.</blockquote>
+<br>
+<a name="@funs247"></a><a name="FN:wire-fd" id="FN:wire-fd"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">wire:</tt><tt class=
+"function-name">wire-fd</tt> <tt class="variable">wire</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This function returns the file descriptor used by the <tt class=
+"variable">wire</tt>.</blockquote>
+<a name="toc277" id="toc277"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc273" id="htoc273"><b><font size=
+"5">9.3</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Out-Of-Band
+Data</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+The TCP/IP protocol allows users to send data asynchronously,
+otherwise known as <tt class="variable">out-of-band</tt> data. When
+using this feature, the operating system interrupts the receiving
+process if this process has chosen to be notified about out-of-band
+data. The receiver can grab this input without affecting any
+information currently queued on the socket. Therefore, you can use
+this without interfering with any current activity due to other
+wire and remote interfaces.<br>
+<br>
+Unfortunately, most implementations of TCP/IP are broken, so use of
+out-of-band data is limited for safety reasons. You can only
+reliably send one character at a time.<br>
+<br>
+The Wire package is built on top of CMUCLs networking support. In
+view of this, it is possible to use the routines described in
+section <a href="internet.html#internet-oob">10.6</a> for handling
+and sending out-of-band data. These all take a Unix file descriptor
+instead of a wire, but you can fetch a wire's file descriptor with
+<tt class="code">wire-fd</tt>.
+<hr>
+<a href="aliens.html"><img src="previous_motif.gif" alt=
+"Previous"></a> <a href="index.html"><img src="contents_motif.gif"
+alt="Up"></a> <a href="internet.html"><img src="next_motif.gif"
+alt="Next"></a>
+</body>
+</html>

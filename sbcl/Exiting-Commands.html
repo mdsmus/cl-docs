@@ -1,0 +1,94 @@
+<html lang="en">
+<head>
+<title>Exiting Commands - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Debugger.html#Debugger" title="Debugger">
+<link rel="prev" href="Debugger-Policy-Control.html#Debugger-Policy-Control" title="Debugger Policy Control">
+<link rel="next" href="Information-Commands.html#Information-Commands" title="Information Commands">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Exiting-Commands"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Information-Commands.html#Information-Commands">Information Commands</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Debugger-Policy-Control.html#Debugger-Policy-Control">Debugger Policy Control</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Debugger.html#Debugger">Debugger</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">4.7 Exiting Commands</h3>
+
+<p>These commands get you out of the debugger.
+
+<div class="defun">
+&mdash; Debugger Command: <b>toplevel</b><var><a name="index-toplevel-100"></a></var><br>
+<blockquote><p>Throw to top level. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Debugger Command: <b>restart</b> [<var>n</var>]<var><a name="index-restart-101"></a></var><br>
+<blockquote><p>Invokes the <var>n</var>th restart case as displayed by the <code>error</code>
+command.  If <var>n</var> is not specified, the available restart cases are
+reported. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Debugger Command: <b>continue</b><var><a name="index-continue-102"></a></var><br>
+<blockquote><p>Calls <code>continue</code> on the condition given to <code>debug</code>.  If there is no
+restart case named <var>continue</var>, then an error is signaled. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Debugger Command: <b>abort</b><var><a name="index-abort-103"></a></var><br>
+<blockquote><p>Calls <code>abort</code> on the condition given to <code>debug</code>.  This is
+useful for popping debug command loop levels or aborting to top level,
+as the case may be. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Debugger Command: <b>return</b><var> value<a name="index-return-104"></a></var><br>
+<blockquote><p>Returns <var>value</var> from the current stack frame.  This command is
+available when the <code>debug</code> optimization quality is greater than
+both <code>speed</code> and <code>space</code>.  Care must be taken that the value
+is of the same type as SBCL expects the stack frame to return. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Debugger Command: <b>restart-frame</b><var><a name="index-restart_002dframe-105"></a></var><br>
+<blockquote><p>Restarts execution of the current stack frame. This command is
+available when the <code>debug</code> optimization quality is greater than
+both <code>speed</code> and <code>space</code> and when the frame is for is a global
+function. If the function is redefined in the debugger before the frame
+is restarted, the new function will be used. 
+</p></blockquote></div>
+
+   </body></html>
+

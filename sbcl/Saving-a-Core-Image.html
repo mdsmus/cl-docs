@@ -1,0 +1,146 @@
+<html lang="en">
+<head>
+<title>Saving a Core Image - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Stopping-SBCL.html#Stopping-SBCL" title="Stopping SBCL">
+<link rel="prev" href="End-of-File.html#End-of-File" title="End of File">
+<link rel="next" href="Exit-on-Errors.html#Exit-on-Errors" title="Exit on Errors">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Saving-a-Core-Image"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Exit-on-Errors.html#Exit-on-Errors">Exit on Errors</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="End-of-File.html#End-of-File">End of File</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Stopping-SBCL.html#Stopping-SBCL">Stopping SBCL</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">2.2.3 Saving a Core Image</h4>
+
+<p>SBCL has the ability to save its state as a file for later
+execution. This functionality is important for its bootstrapping
+process, and is also provided as an extension to the user.
+
+   <p><a name="Function-sb_002dext_003asave_002dlisp_002dand_002ddie"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-ext:save-lisp-and-die</b><var> core-file-name &amp;key toplevel purify root-structures environment-name executable<a name="index-sb_002dext_003asave_002dlisp_002dand_002ddie-8"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003asave_002dlisp_002dand_002ddie-9"></a>Save a "core image", i.e. enough information to restart a Lisp
+process later in the same state, in the file of the specified name. 
+Only global state is preserved: the stack is unwound in the process.
+
+        <p>The following <code>&amp;key</code> arguments are defined:
+
+          <dl>
+<dt><code>:toplevel</code><dd>     The function to run when the created core file is resumed. The
+     default function handles command line toplevel option processing
+     and runs the top level read-eval-print loop. This function should
+     not return.
+
+          <br><dt><code>:executable</code><dd>     If true, arrange to combine the <code>sbcl</code> runtime and the core image
+     to create a standalone executable.  If false (the default), the
+     core image will not be executable on its own.
+
+          <br><dt><code>:purify</code><dd>     If true (the default on cheneygc), do a purifying <code>gc</code> which moves all
+     dynamically allocated objects into static space. This takes
+     somewhat longer than the normal <code>gc</code> which is otherwise done, but
+     it's only done once, and subsequent GC's will be done less often
+     and will take less time in the resulting core file. See the <code>purify</code>
+     function. This parameter has no effect on platforms using the
+     generational garbage collector.
+
+          <br><dt><code>:root-structures</code><dd>     This should be a list of the main entry points in any newly loaded
+     systems. This need not be supplied, but locality and/or <code>gc</code> performance
+     may be better if they are. Meaningless if <code>:purify</code> is <code>nil</code>. See the
+     <code>purify</code> function.
+
+          <br><dt><code>:environment-name</code><dd>     This is also passed to the <code>purify</code> function when <code>:purify</code> is <code>t</code>. 
+     (rarely used)
+
+        </dl>
+
+        <p>The save/load process changes the values of some global variables:
+
+          <dl>
+<dt><code>*standard-output*</code><em>, </em><code>*debug-io*</code><em>, etc.</em><dd>    Everything related to open streams is necessarily changed, since
+    the <code>os</code> won't let us preserve a stream across save and load.
+
+          <br><dt><code>*default-pathname-defaults*</code><dd>    This is reinitialized to reflect the working directory where the
+    saved core is loaded.
+
+        </dl>
+
+        <p><code>save-lisp-and-die</code> interacts with <code>sb-alien:load-foreign-object:</code> see its
+documentation for details.
+
+        <p>On threaded platforms only a single thread may remain running after
+<code>sb-ext:*save-hooks*</code> have run. Applications using multiple threads can
+be <code>save-lisp-and-die</code> friendly by registering a save-hook that quits
+any additional threads, and an init-hook that restarts them.
+
+        <p>This implementation is not as polished and painless as you might like:
+          <ul>
+<li>It corrupts the current Lisp image enough that the current process
+    needs to be killed afterwards. This can be worked around by forking
+    another process that saves the core. 
+<li>There is absolutely no binary compatibility of core images between
+    different runtime support programs. Even runtimes built from the same
+    sources at different times are treated as incompatible for this
+    purpose. 
+</ul>
+        This isn't because we like it this way, but just because there don't
+seem to be good quick fixes for either limitation and no one has been
+sufficiently motivated to do lengthy fixes. 
+</p></blockquote></div>
+
+   <p><a name="Variable-sb_002dext_003a_002asave_002dhooks_002a"></a>
+
+<div class="defun">
+&mdash; Variable: <b>sb-ext:*save-hooks*</b><var><a name="index-sb_002dext_003a_002asave_002dhooks_002a-10"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003a_002asave_002dhooks_002a-11"></a>This is a list of functions which are called in an unspecified
+order before creating a saved core image. Unused by <code>sbcl</code> itself:
+reserved for user and applications. 
+</p></blockquote></div>
+
+   <p>To facilitate distribution of SBCL applications using external
+resources, the filesystem location of the SBCL core file being used is
+available from Lisp.
+
+   <p><a name="Variable-sb_002dext_003a_002acore_002dpathname_002a"></a>
+
+<div class="defun">
+&mdash; Variable: <b>sb-ext:*core-pathname*</b><var><a name="index-sb_002dext_003a_002acore_002dpathname_002a-12"></a></var><br>
+<blockquote><p><a name="index-sb_002dext_003a_002acore_002dpathname_002a-13"></a>The absolute pathname of the running <code>sbcl</code> core. 
+</p></blockquote></div>
+
+   </body></html>
+

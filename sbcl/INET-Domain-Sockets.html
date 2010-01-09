@@ -1,0 +1,95 @@
+<html lang="en">
+<head>
+<title>INET Domain Sockets - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Networking.html#Networking" title="Networking">
+<link rel="prev" href="Socket-Options.html#Socket-Options" title="Socket Options">
+<link rel="next" href="Local-_0028Unix_0029-Domain-Sockets.html#Local-_0028Unix_0029-Domain-Sockets" title="Local (Unix) Domain Sockets">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="INET-Domain-Sockets"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Local-_0028Unix_0029-Domain-Sockets.html#Local-_0028Unix_0029-Domain-Sockets">Local (Unix) Domain Sockets</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Socket-Options.html#Socket-Options">Socket Options</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Networking.html#Networking">Networking</a>
+<hr>
+</div>
+
+<h3 class="section">13.4 INET Domain Sockets</h3>
+
+<p>The TCP and UDP sockets that you know and love. Some representation
+issues:
+
+     <ul>
+<li>Internet addresses are represented by vectors of (unsigned-byte 8) -
+viz. #(127 0 0 1). Ports are just integers: 6010. No conversion
+between network- and host-order data is needed from the user of this
+package.
+
+     <li>Socket addresses are represented by the two values for address and
+port, so for example, (socket-connect s #(192 168 1 1) 80).
+
+   </ul>
+
+   <p><a name="Class-sb_002dbsd_002dsockets_003ainet_002dsocket"></a>
+
+<div class="defun">
+&mdash; Class: <b>sb-bsd-sockets:inet-socket</b><var><a name="index-sb_002dbsd_002dsockets_003ainet_002dsocket-544"></a></var><br>
+<blockquote><p><a name="index-sb_002dbsd_002dsockets_003ainet_002dsocket-545"></a>Class precedence list: <code>inet-socket, socket, standard-object, t</code>
+
+        <p>Class representing <code>tcp</code> and <code>udp</code> sockets.
+
+        <p>Examples:
+
+     <pre class="lisp">           (make-instance 'inet-socket :type :stream :protocol :tcp)
+</pre>
+        <pre class="lisp">           (make-instance 'inet-socket :type :datagram :protocol :udp)
+</pre>
+        </blockquote></div>
+
+   <p><a name="Function-sb_002dbsd_002dsockets_003amake_002dinet_002daddress"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-bsd-sockets:make-inet-address</b><var> dotted-quads<a name="index-sb_002dbsd_002dsockets_003amake_002dinet_002daddress-546"></a></var><br>
+<blockquote><p><a name="index-sb_002dbsd_002dsockets_003amake_002dinet_002daddress-547"></a>Return a vector of octets given a string <code>dotted-quads</code> in the format
+"127.0.0.1". Signals an error if the string is malformed. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dbsd_002dsockets_003aget_002dprotocol_002dby_002dname"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-bsd-sockets:get-protocol-by-name</b><var> name<a name="index-sb_002dbsd_002dsockets_003aget_002dprotocol_002dby_002dname-548"></a></var><br>
+<blockquote><p><a name="index-sb_002dbsd_002dsockets_003aget_002dprotocol_002dby_002dname-549"></a>Returns the network protocol number associated with the string <code>name</code>,
+using getprotobyname(2) which typically looks in <code>nis</code> or /etc/protocols
+</p></blockquote></div>
+
+   </body></html>
+

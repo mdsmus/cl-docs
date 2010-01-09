@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.11.9 Specialized Structure Slots</TITLE>
+<META NAME="description" CONTENT="5.11.9 Specialized Structure Slots">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2915" HREF="node177.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2913" HREF="node167.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2907" HREF="node175.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2917" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2918" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2916" HREF="node177.html">5.11.10 Interactions With Local </A>
+<B>Up:</B> <A NAME="tex2html2914" HREF="node167.html">5.11 Numbers</A>
+<B> Previous:</B> <A NAME="tex2html2908" HREF="node175.html">5.11.8 Specialized Arrays</A>
+<BR> <P>
+<H2><A NAME="SECTION006119000000000000000">5.11.9 Specialized Structure Slots</A></H2>
+<P>
+<A NAME="rawslots">&#160;</A>
+<A NAME="10684">&#160;</A>
+<A NAME="10685">&#160;</A>
+<P>
+Structure slots declared by the <tt>:type</tt> <tt>defstruct</tt> slot option
+to have certain known numeric types are also given non-descriptor
+representations.  These types (and subtypes of these types) are supported:
+<BLOCKQUOTE> <PRE>(unsigned-byte 32)
+single-float
+double-float
+</PRE> </BLOCKQUOTE>
+<P>
+The primary advantage of specialized slot representations is a large
+reduction spurious memory allocation and access overhead of programs
+that intensively use these types.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

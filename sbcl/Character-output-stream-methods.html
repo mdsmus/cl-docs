@@ -1,0 +1,140 @@
+<html lang="en">
+<head>
+<title>Character output stream methods - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Gray-Streams.html#Gray-Streams" title="Gray Streams">
+<link rel="prev" href="Character-input-stream-methods.html#Character-input-stream-methods" title="Character input stream methods">
+<link rel="next" href="Gray-Streams-examples.html#Gray-Streams-examples" title="Gray Streams examples">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Character-output-stream-methods"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Gray-Streams-examples.html#Gray-Streams-examples">Gray Streams examples</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Character-input-stream-methods.html#Character-input-stream-methods">Character input stream methods</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Gray-Streams.html#Gray-Streams">Gray Streams</a>
+<hr>
+</div>
+
+<h4 class="subsection">9.2.7 Character output stream methods</h4>
+
+<p>These generic functions are used to implement subclasses of
+fundamental-character-output-stream:
+
+   <p><a name="Generic_002dFunction-sb_002dgray_003astream_002dadvance_002dto_002dcolumn"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-gray:stream-advance-to-column</b><var> stream column<a name="index-sb_002dgray_003astream_002dadvance_002dto_002dcolumn-351"></a></var><br>
+<blockquote><p><a name="index-sb_002dgray_003astream_002dadvance_002dto_002dcolumn-352"></a>Write enough blank space so that the next character will be
+  written at the specified column. Returns true if the operation is
+  successful, or <code>nil</code> if it is not supported for this stream. This is
+  intended for use by by <code>pprint</code> and <code>format</code> ~T. The default method uses
+  <code>stream-line-column</code> and repeated calls to <code>stream-write-char</code> with a
+  #SPACE character; it returns <code>nil</code> if <code>stream-line-column</code> returns <code>nil</code>. 
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dgray_003astream_002dfresh_002dline"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-gray:stream-fresh-line</b><var> stream<a name="index-sb_002dgray_003astream_002dfresh_002dline-353"></a></var><br>
+<blockquote><p><a name="index-sb_002dgray_003astream_002dfresh_002dline-354"></a>Outputs a new line to the Stream if it is not positioned at the
+  begining of a line. Returns <code>t</code> if it output a new line, nil
+  otherwise. Used by <code>fresh-line</code>. The default method uses
+  <code>stream-start-line-p</code> and <code>stream-terpri</code>. 
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dgray_003astream_002dline_002dcolumn"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-gray:stream-line-column</b><var> stream<a name="index-sb_002dgray_003astream_002dline_002dcolumn-355"></a></var><br>
+<blockquote><p><a name="index-sb_002dgray_003astream_002dline_002dcolumn-356"></a>Return the column number where the next character
+  will be written, or <code>nil</code> if that is not meaningful for this stream. 
+  The first column on a line is numbered 0. This function is used in
+  the implementation of <code>pprint</code> and the <code>format</code> ~T directive. For every
+  character output stream class that is defined, a method must be
+  defined for this function, although it is permissible for it to
+  always return <code>nil</code>. 
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dgray_003astream_002dline_002dlength"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-gray:stream-line-length</b><var> stream<a name="index-sb_002dgray_003astream_002dline_002dlength-357"></a></var><br>
+<blockquote><p><a name="index-sb_002dgray_003astream_002dline_002dlength-358"></a>Return the stream line length or <code>nil</code>. 
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dgray_003astream_002dstart_002dline_002dp"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-gray:stream-start-line-p</b><var> stream<a name="index-sb_002dgray_003astream_002dstart_002dline_002dp-359"></a></var><br>
+<blockquote><p><a name="index-sb_002dgray_003astream_002dstart_002dline_002dp-360"></a>Is <code>stream</code> known to be positioned at the beginning of a line? 
+  It is permissible for an implementation to always return
+  <code>nil</code>. This is used in the implementation of <code>fresh-line</code>. Note that
+  while a value of 0 from <code>stream-line-column</code> also indicates the
+  beginning of a line, there are cases where <code>stream-start-line-p</code> can be
+  meaningfully implemented although <code>stream-line-column</code> can't be. For
+  example, for a window using variable-width characters, the column
+  number isn't very meaningful, but the beginning of the line does have
+  a clear meaning. The default method for <code>stream-start-line-p</code> on class
+  <code>fundamental-character-output-stream</code> uses <code>stream-line-column</code>, so if
+  that is defined to return <code>nil</code>, then a method should be provided for
+  either <code>stream-start-line-p</code> or <code>stream-fresh-line</code>. 
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dgray_003astream_002dterpri"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-gray:stream-terpri</b><var> stream<a name="index-sb_002dgray_003astream_002dterpri-361"></a></var><br>
+<blockquote><p><a name="index-sb_002dgray_003astream_002dterpri-362"></a>Writes an end of line, as for <code>terpri</code>. Returns <code>nil</code>. The default
+  method does (STREAM-WRITE-CHAR stream #NEWLINE). 
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dgray_003astream_002dwrite_002dchar"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-gray:stream-write-char</b><var> stream character<a name="index-sb_002dgray_003astream_002dwrite_002dchar-363"></a></var><br>
+<blockquote><p><a name="index-sb_002dgray_003astream_002dwrite_002dchar-364"></a>Write <code>character</code> to <code>stream</code> and return <code>character</code>. Every
+  subclass of <code>fundamental-character-output-stream</code> must have a method
+  defined for this function. 
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dgray_003astream_002dwrite_002dstring"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-gray:stream-write-string</b><var> stream string &amp;optional start end<a name="index-sb_002dgray_003astream_002dwrite_002dstring-365"></a></var><br>
+<blockquote><p><a name="index-sb_002dgray_003astream_002dwrite_002dstring-366"></a>This is used by <code>write-string</code>. It writes the string to the stream,
+  optionally delimited by start and end, which default to 0 and <code>nil</code>. 
+  The string argument is returned. The default method provided by
+  <code>fundamental-character-output-stream</code> uses repeated calls to
+  <code>stream-write-char</code>. 
+</p></blockquote></div>
+
+   </body></html>
+

@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>2.10 Stream Extensions</TITLE>
+<META NAME="description" CONTENT="2.10 Stream Extensions">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1072" HREF="node39.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1070" HREF="node11.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1064" HREF="node37.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1074" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1075" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1073" HREF="node39.html">2.11 Running Programs from </A>
+<B>Up:</B> <A NAME="tex2html1071" HREF="node11.html">2 Design Choices and </A>
+<B> Previous:</B> <A NAME="tex2html1065" HREF="node37.html">2.9 The Reader</A>
+<BR> <P>
+<H1><A NAME="SECTION003100000000000000000">2.10 Stream Extensions</A></H1>
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:read-n-bytes</tt> <em> <i>stream buffer start numbytes</i> 
+      <i>&amp;optional</i> <i>eof-error-p</i></em><BR>
+<P>
+  On streams that support it, this function reads multiple bytes of
+  data into a buffer.  The buffer must be a <tt>simple-string</tt> or
+  <tt>(simple-array (unsigned-byte 8) (*))</tt>.  The argument
+  <i>nbytes</i> specifies the desired number of bytes, and the return
+  value is the number of bytes actually read.
+  <UL>
+<LI> If <i>eof-error-p</i> is true, an <A NAME="8010">&#160;</A><tt>end-of-file</tt>
+    condition is signalled if end-of-file is encountered before
+    <i>count</i> bytes have been read.
+<LI> If <i>eof-error-p</i> is false, <tt>read-n-bytes reads</tt> as
+    much data is currently available (up to count bytes.)  On pipes or
+    similar devices, this function returns as soon as any data is
+    available, even if the amount read is less than <i>count</i> and
+    eof has not been hit.  See also <A NAME="8016">&#160;</A><tt>make-fd-stream</tt> (page&nbsp;<A HREF="node206.html#FNmakefdstream"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>).
+  </UL><BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

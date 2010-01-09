@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>8.5 Alien Data Structure Example</TITLE>
+<META NAME="description" CONTENT="8.5 Alien Data Structure Example">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3671" HREF="node236.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3669" HREF="node221.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3663" HREF="node234.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3673" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3674" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3672" HREF="node236.html">8.6 Loading Unix Object </A>
+<B>Up:</B> <A NAME="tex2html3670" HREF="node221.html">8 Alien Objects</A>
+<B> Previous:</B> <A NAME="tex2html3664" HREF="node234.html">8.4.2 External Alien Variables</A>
+<BR> <P>
+<H1><A NAME="SECTION00950000000000000000">8.5 Alien Data Structure Example</A></H1>
+<P>
+Now that we have Alien types, operations and variables, we can manipulate
+foreign data structures.  This C declaration can be translated into the
+following Alien type:
+<BLOCKQUOTE> <PRE>struct foo {
+    int a;
+    struct foo *b[100];
+};
+<P>
+ <IMG WIDTH=11 HEIGHT=8 ALIGN=BOTTOM ALT="tex2html_wrap_inline16775" SRC="img14.gif">
+<P>
+(def-alien-type nil
+  (struct foo
+    (a int)
+    (b (array (* (struct foo)) 100))))
+</PRE> </BLOCKQUOTE>
+<P>
+With this definition, the following C expression can be translated in this way:
+<BLOCKQUOTE> <PRE>struct foo f;
+f.b[7].a
+<P>
+ <IMG WIDTH=11 HEIGHT=8 ALIGN=BOTTOM ALT="tex2html_wrap_inline16775" SRC="img14.gif">
+<P>
+(with-alien ((f (struct foo)))
+  (slot (deref (slot f 'b) 7) 'a)
+  ;;
+  ;; Do something with f...
+  )
+</PRE> </BLOCKQUOTE>
+<P>
+Or consider this example of an external C variable and some accesses:
+<BLOCKQUOTE> <PRE>struct c_struct {
+        short x, y;
+        char a, b;
+        int z;
+        c_struct *n;
+};
+<P>
+extern struct c_struct *my_struct;
+<P>
+my_struct-&gt;x++;
+my_struct-&gt;a = 5;
+my_struct = my_struct-&gt;n;
+</PRE> </BLOCKQUOTE>
+which can be made be manipulated in Lisp like this:
+<BLOCKQUOTE> <PRE>(def-alien-type nil
+  (struct c-struct
+          (x short)
+          (y short)
+          (a char)
+          (b char)
+          (z int)
+          (n (* c-struct))))
+<P>
+(def-alien-variable &quot;my_struct&quot; (* c-struct))
+<P>
+(incf (slot my-struct 'x))
+(setf (slot my-struct 'a) 5)
+(setq my-struct (slot my-struct 'n))
+</PRE> </BLOCKQUOTE><BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

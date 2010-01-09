@@ -1,0 +1,85 @@
+<html lang="en">
+<head>
+<title>Command Line Options - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Starting-and-Stopping.html#Starting-and-Stopping" title="Starting and Stopping">
+<link rel="prev" href="Stopping-SBCL.html#Stopping-SBCL" title="Stopping SBCL">
+<link rel="next" href="Initialization-Files.html#Initialization-Files" title="Initialization Files">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Command-Line-Options"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Initialization-Files.html#Initialization-Files">Initialization Files</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Stopping-SBCL.html#Stopping-SBCL">Stopping SBCL</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Starting-and-Stopping.html#Starting-and-Stopping">Starting and Stopping</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">2.3 Command Line Options</h3>
+
+<!-- FIXME: This is essentially cut-and-paste from the manpage -->
+<!-- What should probably be done is generate both this and the -->
+<!-- man-page from ``sbcl -help'' output. -->
+<p>Command line options can be considered an advanced topic; for ordinary
+interactive use, no command line arguments should be necessary.
+
+   <p>In order to understand the command line argument syntax for SBCL, it
+is helpful to understand that the SBCL system is implemented as two
+components, a low-level runtime environment written in C and a
+higher-level system written in Common Lisp itself. Some command line
+arguments are processed during the initialization of the low-level
+runtime environment, some command line arguments are processed during
+the initialization of the Common Lisp system, and any remaining
+command line arguments are passed on to user code.
+
+   <p>The full, unambiguous syntax for invoking SBCL at the command line is:
+
+   <p><samp><span class="command">sbcl</span></samp> <var>runtime-option</var>* <code>--end-runtime-options</code> <var>toplevel-option</var>* <code>--end-toplevel-options</code> <var>user-options</var>*
+
+   <p>For convenience, the <code>--end-runtime-options</code> and
+<code>--end-toplevel-options</code> elements can be omitted. Omitting these
+elements can be convenient when you are running the program
+interactively, and you can see that no ambiguities are possible with
+the option values you are using. Omitting these elements is probably a
+bad idea for any batch file where any of the options are under user
+control, since it makes it impossible for SBCL to detect erroneous
+command line input, so that erroneous command line arguments will be
+passed on to the user program even if they was intended for the
+runtime system or the Lisp system.
+
+<ul class="menu">
+<li><a accesskey="1" href="Runtime-Options.html#Runtime-Options">Runtime Options</a>
+<li><a accesskey="2" href="Toplevel-Options.html#Toplevel-Options">Toplevel Options</a>
+</ul>
+
+   </body></html>
+

@@ -1,0 +1,45 @@
+<html
+  ><head
+    ><title
+      >Macro DEF-FIXTURE</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Macro: DEF-FIXTURE</h1
+        ><div class="contents"
+          ><h2
+  >Documentation</h2
+><blockquote
+  >Defines a fixture named NAME. A fixture is very much like a
+macro but is used only for simple templating. A fixture created
+with DEF-FIXTURE is a macro which can use the special macrolet
+&amp;BODY to specify where the body should go.
+
+See Also: WITH-FIXTURE
+</blockquote
+><h2
+            >Source</h2
+          ><pre class="code"
+            >(defmacro def-fixture (name args &amp;body body)
+  &quot;Defines a fixture named NAME. A fixture is very much like a
+macro but is used only for simple templating. A fixture created
+with DEF-FIXTURE is a macro which can use the special macrolet
+&amp;BODY to specify where the body should go.
+
+See Also: WITH-FIXTURE
+&quot;
+  `(eval-when (:compile-toplevel :load-toplevel :execute)
+     (setf (get-fixture ',name) (cons ',args ',body))
+     ',name))</pre
+          ><a href="../Checks.html#macro_005FIT.BESE.FIVEAM_003A_003ADEF-FIXTURE"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

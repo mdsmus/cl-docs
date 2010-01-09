@@ -1,0 +1,73 @@
+<html lang="en">
+<head>
+<title>Foreign Function Calls - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Foreign-Function-Interface.html#Foreign-Function-Interface" title="Foreign Function Interface">
+<link rel="prev" href="Loading-Shared-Object-Files.html#Loading-Shared-Object-Files" title="Loading Shared Object Files">
+<link rel="next" href="Step_002dBy_002dStep-Example-of-the-Foreign-Function-Interface.html#Step_002dBy_002dStep-Example-of-the-Foreign-Function-Interface" title="Step-By-Step Example of the Foreign Function Interface">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Foreign-Function-Calls"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Step_002dBy_002dStep-Example-of-the-Foreign-Function-Interface.html#Step_002dBy_002dStep-Example-of-the-Foreign-Function-Interface">Step-By-Step Example of the Foreign Function Interface</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Loading-Shared-Object-Files.html#Loading-Shared-Object-Files">Loading Shared Object Files</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Foreign-Function-Interface.html#Foreign-Function-Interface">Foreign Function Interface</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">7.7 Foreign Function Calls</h3>
+
+<p>The foreign function call interface allows a Lisp program to call
+many functions written in languages that use the C calling convention.
+
+   <p>Lisp sets up various signal handling routines and other environment
+information when it first starts up, and expects these to be in place
+at all times. The C functions called by Lisp should not change the
+environment, especially the signal handlers: the signal handlers
+installed by Lisp typically have interesting flags set (e.g to request
+machine context information, or for signal delivery on an alternate
+stack) which the Lisp runtime relies on for correct operation. 
+Precise details of how this works may change without notice between
+versions; the source, or the brain of a friendly SBCL developer, is
+the only documentation.  Users of a Lisp built with the
+<code>:sb-thread</code> feature should also read the section about threads,
+<a href="Threading.html#Threading">Threading</a>.
+
+<ul class="menu">
+<li><a accesskey="1" href="The-alien_002dfuncall-Primitive.html#The-alien_002dfuncall-Primitive">The alien-funcall Primitive</a>
+<li><a accesskey="2" href="The-define_002dalien_002droutine-Macro.html#The-define_002dalien_002droutine-Macro">The define-alien-routine Macro</a>
+<li><a accesskey="3" href="define_002dalien_002droutine-Example.html#define_002dalien_002droutine-Example">define-alien-routine Example</a>
+<li><a accesskey="4" href="Calling-Lisp-From-C.html#Calling-Lisp-From-C">Calling Lisp From C</a>
+</ul>
+
+   </body></html>
+

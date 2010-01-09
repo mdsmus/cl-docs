@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>The alien-funcall Primitive</TITLE>
+<META NAME="description" CONTENT="The alien-funcall Primitive">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3712" HREF="node239.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3710" HREF="node237.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3704" HREF="node237.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3714" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3715" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3713" HREF="node239.html">The def-alien-routine Macro</A>
+<B>Up:</B> <A NAME="tex2html3711" HREF="node237.html">8.7 Alien Function Calls</A>
+<B> Previous:</B> <A NAME="tex2html3705" HREF="node237.html">8.7 Alien Function Calls</A>
+<BR> <P>
+<H2><A NAME="SECTION00971000000000000000">The alien-funcall Primitive</A></H2>
+<P>
+<b>[Function]</b><BR> 
+<tt> alien: alien-funcall</tt> <em> <i>alien-function</i> <i>&amp;rest</i> <i>arguments</i></em><BR>
+<P>
+  This function is the foreign function call primitive:
+  <i>alien-function</i> is called with the supplied <i>arguments</i> and
+  its value is returned.  The <i>alien-function</i> is an arbitrary
+  run-time expression; to call a constant function, use
+  <A NAME="11781">&#160;</A><tt>extern-alien</tt> (page&nbsp;<A HREF="node234.html#FNexternalien"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>) or <tt>def-alien-routine</tt>.
+<P>
+  The type of <i>alien-function</i> must be <tt>(alien (function
+    ...))</tt> or <tt>(alien (* (function ...)))</tt>,
+  See section&nbsp;<A HREF="node226.html#alienfunctiontypes">8.2.3</A>.  The function type is used to
+  determine how to call the function (as through it was declared with
+  a prototype.)  The type need not be known at compile time, but only
+  known-type calls are efficiently compiled.  Limitations:
+  <UL>
+<LI> Structure type return values are not implemented.
+<LI> Passing of structures by value is not implemented.
+  </UL>
+<P>
+Here is an example which allocates a <tt>(struct foo)</tt>, calls a foreign
+function to initialize it, then returns a Lisp vector of all the
+<tt>(* (struct foo))</tt> objects filled in by the foreign call:
+<BLOCKQUOTE> <PRE>;;
+;; Allocate a foo on the stack.
+(with-alien ((f (struct foo)))
+  ;;
+  ;; Call some C function to fill in foo fields.
+  (alien-funcall (extern-alien &quot;mangle_foo&quot; (function void (* foo)))
+                 (addr f))
+  ;;
+  ;; Find how many foos to use by getting the A field.
+  (let* ((num (slot f 'a))
+         (result (make-array num)))
+    ;;
+    ;; Get a pointer to the array so that we don't have to keep extracting it:
+    (with-alien ((a (* (array (* (struct foo)) 100)) (addr (slot f 'b))))
+      ;;
+      ;; Loop over the first N elements and stash them in the result vector.
+      (dotimes (i num)
+        (setf (svref result i) (deref (deref a) i)))
+      result)))
+</PRE> </BLOCKQUOTE><BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

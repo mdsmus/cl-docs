@@ -1,0 +1,44 @@
+<html
+  ><head
+    ><title
+      >Macro FINISHES</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Macro: FINISHES</h1
+        ><div class="contents"
+          ><h2
+  >Documentation</h2
+><blockquote
+  >Generates a pass if BODY executes to normal completion. In
+other words if body does signal, return-from or throw this test
+fails.</blockquote
+><h2
+            >Source</h2
+          ><pre class="code"
+            >(defmacro finishes (&amp;body body)
+  &quot;Generates a pass if BODY executes to normal completion. In
+other words if body does signal, return-from or throw this test
+fails.&quot;
+  `(let ((ok nil))
+     (unwind-protect
+	 (progn 
+	   ,@body
+	   (setf ok t))
+       (if ok
+	   (add-result 'test-passed :test-expr ',body)
+           (process-failure
+            :reason (format nil &quot;Test didn't finish&quot;)
+            :test-expr ',body)))))</pre
+          ><a href="../Checks.html#macro_005FIT.BESE.FIVEAM_003A_003AFINISHES"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

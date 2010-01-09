@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>4.4.3 The Processing Path</TITLE>
+<META NAME="description" CONTENT="4.4.3 The Processing Path">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1761" HREF="node92.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1759" HREF="node88.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1753" HREF="node90.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1763" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1764" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1762" HREF="node92.html">4.4.4 Error Severity</A>
+<B>Up:</B> <A NAME="tex2html1760" HREF="node88.html">4.4 Interpreting Error Messages</A>
+<B> Previous:</B> <A NAME="tex2html1754" HREF="node90.html">4.4.2 The Original and </A>
+<BR> <P>
+<H2><A NAME="SECTION00543000000000000000">4.4.3 The Processing Path</A></H2>
+<P>
+<A NAME="9442">&#160;</A>
+<A NAME="9443">&#160;</A>
+<A NAME="9444">&#160;</A>
+<P>
+The processing path is mainly useful for debugging macros, so if you don't
+write macros, you can ignore the processing path.  Consider this example:
+<BLOCKQUOTE> <PRE>(defun foo (n)
+  (dotimes (i n *undefined*)))
+</PRE> </BLOCKQUOTE>
+Compiling results in this error message:
+<BLOCKQUOTE> <PRE>In: DEFUN FOO
+  (DOTIMES (I N *UNDEFINED*))
+-&gt; DO BLOCK LET TAGBODY RETURN-FROM 
+==&gt;
+  (PROGN *UNDEFINED*)
+Warning: Undefined variable: *UNDEFINED*
+</PRE> </BLOCKQUOTE>
+Note that <tt>do</tt> appears in the processing path.  This is because <tt>dotimes</tt>
+expands into:
+<BLOCKQUOTE> <PRE>(do ((i 0 (1+ i)) (#:g1 n))
+    ((&gt;= i #:g1) *undefined*)
+  (declare (type unsigned-byte i)))
+</PRE> </BLOCKQUOTE>
+The rest of the processing path results from the expansion of <tt>do</tt>:
+<BLOCKQUOTE> <PRE>(block nil
+  (let ((i 0) (#:g1 n))
+    (declare (type unsigned-byte i))
+    (tagbody (go #:g3)
+     #:g2    (psetq i (1+ i))
+     #:g3    (unless (&gt;= i #:g1) (go #:g2))
+             (return-from nil (progn *undefined*)))))
+</PRE> </BLOCKQUOTE>
+In this example, the compiler descended into the <tt>block</tt>,
+<tt>let</tt>, <tt>tagbody</tt> and <tt>return-from</tt> to reach the
+<tt>progn</tt> printed as the actual source.  This is a place where the
+``actual source appears in explanation'' rule was applied.  The
+innermost actual source form was the symbol <tt>*undefined*</tt> itself,
+but that also appeared in the explanation, so the compiler backed out
+one level.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

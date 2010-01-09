@@ -1,0 +1,130 @@
+<html lang="en">
+<head>
+<title>asdf Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name=description content="asdf Manual">
+<meta name=generator content="makeinfo 4.2">
+<link href="http://www.gnu.org/software/texinfo/" rel=generator-home>
+<!--
+This manual describes asdf, a system definition facility for Common
+Lisp programs and libraries.
+
+<p>asdf Copyright &copy; 2001-2004 Daniel Barlow and contributors
+
+<p>This manual Copyright &copy; 2001-2004 Daniel Barlow and
+contributors
+
+<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+-->
+</head>
+<body>
+<p>
+Node:<a name="The%20defsystem%20grammar">The defsystem grammar</a>,
+Previous:<a rel=previous accesskey=p href="A-more-involved-example.html#A%20more%20involved%20example">A more involved example</a>,
+Up:<a rel=up accesskey=u href="Defining-systems-with-defsystem.html#Defining%20systems%20with%20defsystem">Defining systems with defsystem</a>
+<hr><br>
+
+<h3>The defsystem grammar</h3>
+
+<pre>
+system-definition := ( defsystem system-designator {option}* )
+
+option := :components component-list
+        | :pathname pathname
+        | :default-component-class
+        | :perform method-form 
+        | :explain method-form
+	| :output-files  method-form
+        | :operation-done-p method-form
+        | :depends-on ( {simple-component-name}* ) 
+	| :serial [ t | nil ]
+        | :in-order-to ( {dependency}+ )
+
+component-list := ( {component-def}* )
+                
+component-def  := simple-component-name
+                | ( component-type name {option}* )
+
+component-type := :module | :file | :system | other-component-type
+
+dependency := (dependent-op {requirement}+)
+requirement := (required-op {required-component}+)
+             | (feature feature-name)
+dependent-op := operation-name
+required-op := operation-name | feature
+</pre>
+
+<h4>Serial dependencies</h4>
+
+<p>If the <code>:serial t</code> option is specified for a module, asdf will add
+dependencies for each each child component, on all the children
+textually preceding it.  This is done as if by <code>:depends-on</code>.
+
+<br><pre>:components ((:file "a") (:file "b") (:file "c"))
+:serial t
+</pre>
+
+<p>is equivalent to
+
+<br><pre>:components ((:file "a")
+	     (:file "b" :depends-on ("a"))
+	     (:file "c" :depends-on ("a" "b")))
+</pre>
+
+<h4>Source location</h4>
+
+<p>The <code>:pathname</code> option is optional in all cases for systems
+defined via <code>defsystem</code>, and in the usual case the user is
+recommended not to supply it.
+
+<p>Instead, asdf follows a hairy set of rules that are designed so that
+<ol type=1 start=1>
+</p><li><code>find-system</code> will load a system from disk and have its pathname
+default to the right place
+<li>this pathname information will not be
+overwritten with <code>*default-pathname-defaults*</code> (which could be
+somewhere else altogether) if the user loads up the <code>.asd</code> file
+into his editor and interactively re-evaluates that form.
+</ol>
+
+<p>If a system is being loaded for the first time, its top-level pathname
+will be set to:
+
+<ul>
+<li>The host/device/directory parts of <code>*load-truename*</code>, if it is bound
+<li><code>*default-pathname-defaults*</code>, otherwise
+</ul>
+
+<p>If a system is being redefined, the top-level pathname will be
+
+<ul>
+<li>changed, if explicitly supplied or obtained from
+<code>*load-truename*</code> (so that an updated source location is
+reflected in the system definition)
+<li>changed if it had previously been set from
+<code>*default-pathname-defaults*</code>
+<li>left as before, if it had previously been set from
+<code>*load-truename*</code> and <code>*load-truename*</code> is currently
+unbound (so that a developer can evaluate a <code>defsystem</code> form from
+within an editor without clobbering its source location)
+</ul>
+
+</body></html>
+

@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.13.3 Representation Efficiency Notes</TITLE>
+<META NAME="description" CONTENT="5.13.3 Representation Efficiency Notes">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3064" HREF="node189.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3062" HREF="node185.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3056" HREF="node187.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3066" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3067" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3065" HREF="node189.html">5.13.4 Verbosity Control</A>
+<B>Up:</B> <A NAME="tex2html3063" HREF="node185.html">5.13 Efficiency Notes</A>
+<B> Previous:</B> <A NAME="tex2html3057" HREF="node187.html">5.13.2 Efficiency Notes and </A>
+<BR> <P>
+<H2><A NAME="SECTION006133000000000000000">5.13.3 Representation Efficiency Notes</A></H2>
+<P>
+<A NAME="representationeffnote">&#160;</A>
+<A NAME="10771">&#160;</A>
+<A NAME="10772">&#160;</A>
+<A NAME="10773">&#160;</A>
+<A NAME="10774">&#160;</A>
+<A NAME="10775">&#160;</A>
+<A NAME="10776">&#160;</A>
+<P>
+When operating on values that have non-descriptor representations
+(see section&nbsp;<A HREF="node169.html#nondescriptor">5.11.2</A>), there can be a substantial time and consing
+penalty for converting to and from descriptor representations.  For
+this reason, the compiler gives an efficiency note whenever it is
+forced to do a representation coercion more expensive than
+<A NAME="10778">&#160;</A><tt>*efficiency-note-cost-threshold*</tt> (page&nbsp;<A HREF="node189.html#VRefficiencynotecostthreshold"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>).
+<P>
+Inefficient representation coercions may be due to type uncertainty,
+as in this example:
+<BLOCKQUOTE> <PRE>(defun set-flo (x)
+  (declare (single-float x))
+  (prog ((var 0.0))
+    (setq var (gorp))
+    (setq var x)
+    (return var)))
+</PRE> </BLOCKQUOTE>
+which produces this efficiency note:
+<BLOCKQUOTE> <PRE>In: DEFUN SET-FLO
+  (SETQ VAR X)
+Note: Doing float to pointer coercion (cost 13) from X to VAR.
+</PRE> </BLOCKQUOTE>
+The variable <tt>var</tt> is not known to always hold values of type
+<tt>single-float</tt>, so a descriptor representation must be used for its value.
+In sort of situation, and adding a declaration will eliminate the inefficiency.
+<P>
+Often inefficient representation conversions are not due to type
+uncertainty--instead, they result from evaluating a
+non-descriptor expression in a context that requires a descriptor
+result:
+<UL>
+<LI> Assignment to or initialization of any data structure other than
+  a specialized array (see section&nbsp;<A HREF="node175.html#specializedarraytypes">5.11.8</A>), or
+<LI> Assignment to a <tt>special</tt> variable, or
+<LI> Passing as an argument or returning as a value in any function
+  call that is not a local call (see section&nbsp;<A HREF="node177.html#numberlocalcall">5.11.10</A>.)
+</UL>
+<P>
+If such inefficient coercions appear in a ``hot spot'' in the program, data
+structures redesign or program reorganization may be necessary to improve
+efficiency.  See sections <A HREF="node148.html#blockcompilation">5.7</A>, <A HREF="node167.html#numerictypes">5.11</A> and
+<A HREF="node190.html#profiling">5.14</A>.
+<P>
+Because representation selection is done rather late in compilation,
+the source context in these efficiency notes is somewhat vague, making
+interpretation more difficult.  This is a fairly straightforward
+example:
+<BLOCKQUOTE> <PRE>(defun cf+ (x y)
+  (declare (single-float x y))
+  (cons (+ x y) t))
+</PRE> </BLOCKQUOTE>
+which gives this efficiency note:
+<BLOCKQUOTE> <PRE>In: DEFUN CF+
+  (CONS (+ X Y) T)
+Note: Doing float to pointer coercion (cost 13), for:
+      The first argument of CONS.
+</PRE> </BLOCKQUOTE>
+The source context form is almost always the form that receives the value being
+coerced (as it is in the preceding example), but can also be the source form
+which generates the coerced value.  Compiling this example:
+<BLOCKQUOTE> <PRE>(defun if-cf+ (x y)
+  (declare (single-float x y))
+  (cons (if (grue) (+ x y) (snoc)) t))
+</PRE> </BLOCKQUOTE>
+produces this note:
+<BLOCKQUOTE> <PRE>In: DEFUN IF-CF+
+  (+ X Y)
+Note: Doing float to pointer coercion (cost 13).
+</PRE> </BLOCKQUOTE>
+<P>
+In either case, the note's text explanation attempts to include
+additional information about what locations are the source and
+destination of the coercion.  Here are some example notes:
+<BLOCKQUOTE> <PRE>(IF (GRUE) X (SNOC))
+Note: Doing float to pointer coercion (cost 13) from X.
+<P>
+  (SETQ VAR X)
+Note: Doing float to pointer coercion (cost 13) from X to VAR.
+</PRE> </BLOCKQUOTE>
+Note that the return value of a function is also a place to which coercions may
+have to be done:
+<BLOCKQUOTE> <PRE>(DEFUN F+ (X Y) (DECLARE (SINGLE-FLOAT X Y)) (+ X Y))
+Note: Doing float to pointer coercion (cost 13) to &quot;&lt;return value&gt;&quot;.
+</PRE> </BLOCKQUOTE>
+Sometimes the compiler is unable to determine a name for the source or
+destination, in which case the source context is the only clue.
+<P>
+<HR><A NAME="tex2html3064" HREF="node189.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3062" HREF="node185.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3056" HREF="node187.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3066" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3067" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3065" HREF="node189.html">5.13.4 Verbosity Control</A>
+<B>Up:</B> <A NAME="tex2html3063" HREF="node185.html">5.13 Efficiency Notes</A>
+<B> Previous:</B> <A NAME="tex2html3057" HREF="node187.html">5.13.2 Efficiency Notes and </A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>10.3 Frames</TITLE>
+<META NAME="description" CONTENT="10.3 Frames">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3994" HREF="node261.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3992" HREF="node255.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3986" HREF="node259.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3996" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3997" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3995" HREF="node261.html">Debug-functions</A>
+<B>Up:</B> <A NAME="tex2html3993" HREF="node255.html">10 Debugger Programmer's Interface</A>
+<B> Previous:</B> <A NAME="tex2html3987" HREF="node259.html">Debug-variables</A>
+<BR> <P>
+<H1><A NAME="SECTION001130000000000000000">10.3 Frames</A></H1>
+<P>
+Frames describe a particular call on the stack for a particular thread.  This
+is the environment for name resolution, getting arguments and locals, and
+returning values.  The stack conceptually grows up, so the top of the stack is
+the most recently called function.
+<P>
+<tt>top-frame</tt>, <tt>frame-down</tt>, <tt>frame-up</tt>, and
+<tt>frame-debug-function</tt> can only fail when there is absolutely no
+debug information available.  This can only happen when someone saved a
+Lisp image specifying that the system dump all debugging data.
+<P>
+<b>[Function]</b><BR> 
+<tt>  top-frame</tt> <em> </em><BR>
+<P>
+  This function never returns the frame for itself, always the frame
+  before calling <tt>top-frame</tt>.
+<P>
+<b>[Function]</b><BR> 
+<tt>  frame-down</tt> <em> <i>frame</i></em><BR>
+<P>
+  This returns the frame immediately below <i>frame</i> on the stack.
+  When <i>frame</i> is the bottom of the stack, this returns <i>nil</i>.
+<P>
+<b>[Function]</b><BR> 
+<tt>  frame-up</tt> <em> <i>frame</i></em><BR>
+<P>
+  This returns the frame immediately above <i>frame</i> on the stack.
+  When <i>frame</i> is the top of the stack, this returns <i>nil</i>.
+<P>
+<b>[Function]</b><BR> 
+<tt>  frame-debug-function</tt> <em> <i>frame</i></em><BR>
+<P>
+  This function returns the debug-function for the function whose call
+  <i>frame</i> represents.
+<P>
+<b>[Function]</b><BR> 
+<tt>  frame-code-location</tt> <em> <i>frame</i></em><BR>
+<P>
+  This function returns the code-location where <i>frame</i>'s
+  debug-function will continue running when program execution returns
+  to <i>frame</i>.  If someone interrupted this frame, the result could
+  be an unknown code-location.
+<P>
+<b>[Function]</b><BR> 
+<tt>  frame-catches</tt> <em> <i>frame</i></em><BR>
+<P>
+  This function returns an a-list for all active catches in
+  <i>frame</i> mapping catch tags to the code-locations at which the
+  catch re-enters.
+<P>
+<b>[Function]</b><BR> 
+<tt>  eval-in-frame</tt> <em> <i>frame</i> <i>form</i></em><BR>
+<P>
+  This evaluates <i>form</i> in <i>frame</i>'s environment.  This can
+  signal several different debug-conditions since its success relies
+  on a variety of inexact debug information: <tt>invalid-value</tt>,
+  <tt>ambiguous-variable-name</tt>, <tt>frame-function-mismatch</tt>.  See
+  also <A NAME="12239">&#160;</A><tt>preprocess-for-eval</tt> (page&nbsp;<A HREF="node261.html#FNpreprocessforeval"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>).
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

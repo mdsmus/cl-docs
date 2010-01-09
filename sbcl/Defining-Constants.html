@@ -1,0 +1,84 @@
+<html lang="en">
+<head>
+<title>Defining Constants - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Idiosyncrasies.html#Idiosyncrasies" title="Idiosyncrasies">
+<link rel="prev" href="Compiler_002donly-Implementation.html#Compiler_002donly-Implementation" title="Compiler-only Implementation">
+<link rel="next" href="Style-Warnings.html#Style-Warnings" title="Style Warnings">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Defining-Constants"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Style-Warnings.html#Style-Warnings">Style Warnings</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Compiler_002donly-Implementation.html#Compiler_002donly-Implementation">Compiler-only Implementation</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Idiosyncrasies.html#Idiosyncrasies">Idiosyncrasies</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">1.3.3 Defining Constants</h4>
+
+<p><a name="index-defconstant-1"></a>
+SBCL is quite strict about ANSI's definition of <code>defconstant</code>. 
+ANSI says that doing <code>defconstant</code> of the same symbol more than
+once is undefined unless the new value is <code>eql</code> to the old value. 
+Conforming to this specification is a nuisance when the &ldquo;constant&rdquo;
+value is only constant under some weaker test like <code>string=</code> or
+<code>equal</code>.
+
+   <p>It's especially annoying because, in SBCL, <code>defconstant</code> takes
+effect not only at load time but also at compile time, so that just
+compiling and loading reasonable code like
+<pre class="lisp">     (defconstant +foobyte+ '(1 4))
+</pre>
+   <p>runs into this undefined behavior. Many implementations of Common Lisp
+try to help the programmer around this annoyance by silently accepting
+the undefined code and trying to do what the programmer probably
+meant.
+
+   <p>SBCL instead treats the undefined behavior as an error. Often such
+code can be rewritten in portable ANSI Common Lisp which has the
+desired behavior. E.g., the code above can be given an exactly defined
+meaning by replacing <code>defconstant</code> either with
+<code>defparameter</code> or with a customized macro which does the right
+thing, eg.
+<pre class="lisp">     (defmacro define-constant (name value &amp;optional doc)
+       `(defconstant ,name (if (boundp ',name) (symbol-value ',name) ,value)
+                           ,@(when doc (list doc))))
+</pre>
+   <p>or possibly along the lines of the <code>defconstant-eqx</code> macro used
+internally in the implementation of SBCL itself. In circumstances
+where this is not appropriate, the programmer can handle the condition
+type <code>sb-ext:defconstant-uneql</code>, and choose either the
+<samp><span class="command">continue</span></samp> or <samp><span class="command">abort</span></samp> restart as appropriate.
+
+   </body></html>
+

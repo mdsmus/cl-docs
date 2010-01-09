@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>33.2. Internationalization of User Programs</title><link rel="stylesheet" href="impnotes.css" type="text/css" /><link rev="made" href="mailto:clisp-list@lists.sourceforge.net" /><meta name="generator" content="DocBook XSL Stylesheets Vsnapshot_7566" /><link rel="start" href="index.html" title="Implementation Notes for GNU CLISP" /><link rel="up" href="ext-modules.html" title="Chapter 33. Extensions Implemented as Modules" /><link rel="prev" href="syscalls.html" title="33.1. System Calls" /><link rel="next" href="regexp-mod.html" title="33.3. POSIX Regular Expressions" /><link rel="copyright" href="legalese.html" title="Legal Status of the CLISP Implementation Notes" /><meta name="date" content="'generated: 2008-07-02 11:52:30-04:00'" /><link rel="author" title="Authors" href="index.html#authors" /><link rel="contents" title="Table of Contents" href="index.html" /><link rel="glossary" href="glossary.html" /><link rel="help" href="faq.html#faq-help" title="How do I ask for help?" /><link rel="home" title="Home" href="http://clisp.cons.org" /><link rel="index" href="idx.html" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">33.2. Internationalization of User Programs</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="syscalls.html">Prev</a> </td><th width="60%" align="center">Chapter 33. Extensions Implemented as Modules</th><td width="20%" align="right"> <a accesskey="n" href="regexp-mod.html">Next</a></td></tr></table><hr /></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="i18n-mod"></a>33.2. Internationalization of User Programs</h2></div></div></div><div class="toc"><dl><dt><span class="section"><a href="i18n-mod.html#ggettext">33.2.1. The GNU gettext</a></span></dt><dd><dl><dt><span class="section"><a href="i18n-mod.html#domain">33.2.1.1. Domain</a></span></dt><dt><span class="section"><a href="i18n-mod.html#category">33.2.1.2. Category</a></span></dt><dt><span class="section"><a href="i18n-mod.html#i18n-example">33.2.1.3. Internationalization Example</a></span></dt></dl></dd><dt><span class="section"><a href="i18n-mod.html#i18n-locale">33.2.2. Locale</a></span></dt></dl></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="ggettext"></a>33.2.1. The <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/gettext/" target="_top">gettext</a></h3></div></div></div><div class="toc"><dl><dt><span class="section"><a href="i18n-mod.html#domain">33.2.1.1. Domain</a></span></dt><dt><span class="section"><a href="i18n-mod.html#category">33.2.1.2. Category</a></span></dt><dt><span class="section"><a href="i18n-mod.html#i18n-example">33.2.1.3. Internationalization Example</a></span></dt></dl></div><p><a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/gettext/" target="_top">gettext</a> is a set of functions, included in <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> or the
+<a class="ulink" href="http://c-faq.com/" target="_top"><span class="command"><strong>C</strong></span></a> library, which permit looking up translations of strings
+through message catalogs. It is also a set of tools which makes the
+translation maintenance easy for the translator and the program
+maintainer.</p><p>The <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/gettext/" target="_top">gettext</a> functions are available in <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> in the
+<a class="link" href="i18n.html" title="31.4. Internationalization of CLISP"><strong class="package">“<span class="quote">I18N</span>”</strong></a> package, which is <a class="link" href="pack-intro.html#re-export" title="11.1.3. Function EXT:RE-EXPORT"><code class="function">EXT:RE-EXPORT</code></a>ed from the <a class="link" href="imppack.html#ext-pac"><strong class="package">“<span class="quote">EXT</span>”</strong></a>
+package.</p><p>This module is present in the <a href="modules.html#base-modules" class="olink"><span class="command"><strong>base</strong></span></a> <a href="modules.html#linkset" class="olink">linking set</a> by default.</p><p>When this module is present, <a href="features.html" class="olink"><code class="varname">*FEATURES*</code></a>
+ contains the symbol <code class="constant">:I18N</code>.</p><div class="variablelist"><dl><dt><a id="gettext"></a><span class="term"><code class="code">(<a class="link" href="i18n-mod.html#gettext"><code class="function">I18N:GETTEXT</code></a>
+    <em class="replaceable"><code>MSGID</code></em> <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/sec_3-4-1.html" target="_top"><code class="literal">&amp;OPTIONAL</code></a> <a class="link" href="i18n-mod.html#domain" title="33.2.1.1. Domain"><em class="replaceable"><code>DOMAIN</code></em></a> <a class="link" href="i18n-mod.html#category" title="33.2.1.2. Category"><em class="replaceable"><code>CATEGORY</code></em></a>)</code></span></dt><dd>returns the translation of the message <em class="replaceable"><code>MSGID</code></em>,
+    in the given <a class="link" href="i18n-mod.html#domain" title="33.2.1.1. Domain"><em class="replaceable"><code>DOMAIN</code></em></a>, depending on the given <a class="link" href="i18n-mod.html#category" title="33.2.1.2. Category"><em class="replaceable"><code>CATEGORY</code></em></a>.
+    <em class="replaceable"><code>MSGID</code></em> should be an <a class="ulink" href="http://en.wikipedia.org/wiki/ASCII" target="_top"><span class="platform">ASCII</span></a> string, and is normally the English message.
+ </dd><dt><a id="ngettext"></a><span class="term"><code class="code">(<a class="link" href="i18n-mod.html#ngettext"><code class="function">I18N:NGETTEXT</code></a>
+    <em class="replaceable"><code>MSGID</code></em> <em class="replaceable"><code>msgid_plural</code></em>
+    <em class="replaceable"><code>n</code></em> <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/sec_3-4-1.html" target="_top"><code class="literal">&amp;OPTIONAL</code></a> <a class="link" href="i18n-mod.html#domain" title="33.2.1.1. Domain"><em class="replaceable"><code>DOMAIN</code></em></a> <a class="link" href="i18n-mod.html#category" title="33.2.1.2. Category"><em class="replaceable"><code>CATEGORY</code></em></a>)</code></span></dt><dd>returns the plural form of the translation for of
+    <em class="replaceable"><code>MSGID</code></em> and <em class="replaceable"><code>n</code></em> in the given <a class="link" href="i18n-mod.html#domain" title="33.2.1.1. Domain"><em class="replaceable"><code>DOMAIN</code></em></a>, depending on the given
+    <a class="link" href="i18n-mod.html#category" title="33.2.1.2. Category"><em class="replaceable"><code>CATEGORY</code></em></a>.  <em class="replaceable"><code>MSGID</code></em> and <em class="replaceable"><code>msgid_plural</code></em>
+    should be <a class="ulink" href="http://en.wikipedia.org/wiki/ASCII" target="_top"><span class="platform">ASCII</span></a> strings, and are normally the English singular and
+    English plural variant of the message, respectively.
+ </dd></dl></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h4 class="title"><a id="domain"></a>33.2.1.1. Domain</h4></div></div></div><p>The <a class="link" href="i18n-mod.html#domain" title="33.2.1.1. Domain"><em class="replaceable"><code>DOMAIN</code></em></a> is a string identifier denoting the program that
+is requesting the translation.  The pathname of the message catalog
+depends on the <a class="link" href="i18n-mod.html#domain" title="33.2.1.1. Domain"><em class="replaceable"><code>DOMAIN</code></em></a>: usually it is located at
+<code class="filename">TEXTDOMAINDIR/l/LC_MESSAGES/domain.mo</code>, where
+<em class="replaceable"><code>l</code></em> is the <a class="ulink" href="http://www.loc.gov/standards/iso639-2/" target="_top">ISO
+ 639-2</a> code of the language.
+The notion of <a class="link" href="i18n-mod.html#domain" title="33.2.1.1. Domain"><em class="replaceable"><code>DOMAIN</code></em></a> allows several Lisp programs running in the same
+image to request translations independently of each other.</p><p><a id="textdomain"></a><b>Function <a class="link" href="i18n-mod.html#textdomain" title="Function I18N:TEXTDOMAIN"><code class="function">I18N:TEXTDOMAIN</code></a>. </b><code class="code">(<a class="link" href="i18n-mod.html#textdomain" title="Function I18N:TEXTDOMAIN"><code class="function">I18N:TEXTDOMAIN</code></a>)</code> is a <a class="" href="http://www.lisp.org/HyperSpec/Body/glo_p.html#place">place</a> that returns the default
+ <a class="link" href="i18n-mod.html#domain" title="33.2.1.1. Domain"><em class="replaceable"><code>DOMAIN</code></em></a>, used when no <a class="link" href="i18n-mod.html#domain" title="33.2.1.1. Domain"><em class="replaceable"><code>DOMAIN</code></em></a> argument is passed to the <a class="link" href="i18n-mod.html#gettext"><code class="function">I18N:GETTEXT</code></a> and
+ <a class="link" href="i18n-mod.html#ngettext"><code class="function">I18N:NGETTEXT</code></a> functions.  It is <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/mac_setfcm_psetf.html" target="_top"><code class="function">SETF</code></a>able.
+<code class="code">(<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/mac_setfcm_psetf.html" target="_top"><code class="function">SETF</code></a> <a class="link" href="i18n-mod.html#textdomain" title="Function I18N:TEXTDOMAIN"><code class="function">I18N:TEXTDOMAIN</code></a>)</code> is usually used
+during the startup phase of a program.
+Note that the default <a class="link" href="i18n-mod.html#domain" title="33.2.1.1. Domain"><em class="replaceable"><code>DOMAIN</code></em></a> is not saved in a <a href="image.html" class="olink">memory image</a>.
+The use of <code class="code">(<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/mac_setfcm_psetf.html" target="_top"><code class="function">SETF</code></a> <a class="link" href="i18n-mod.html#textdomain" title="Function I18N:TEXTDOMAIN"><code class="function">I18N:TEXTDOMAIN</code></a>)</code> is
+recommended only for programs that are so simple that they will never
+need more than one <a class="link" href="i18n-mod.html#domain" title="33.2.1.1. Domain"><em class="replaceable"><code>DOMAIN</code></em></a>.</p><p><a id="textdomaindir"></a><b>Function <a class="link" href="i18n-mod.html#textdomaindir" title="Function I18N:TEXTDOMAINDIR"><code class="function">I18N:TEXTDOMAINDIR</code></a>. </b><code class="code">(<a class="link" href="i18n-mod.html#textdomaindir" title="Function I18N:TEXTDOMAINDIR"><code class="function">I18N:TEXTDOMAINDIR</code></a> <a class="link" href="i18n-mod.html#domain" title="33.2.1.1. Domain"><em class="replaceable"><code>DOMAIN</code></em></a>)</code>
+is a <a class="" href="http://www.lisp.org/HyperSpec/Body/glo_p.html#place">place</a> that returns the base directory, called
+<code class="filename">TEXTDOMAINDIR</code> above, where the message
+catalogs for the given <a class="link" href="i18n-mod.html#domain" title="33.2.1.1. Domain"><em class="replaceable"><code>DOMAIN</code></em></a> are assumed to be installed.
+It is <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/mac_setfcm_psetf.html" target="_top"><code class="function">SETF</code></a>able.
+<code class="code">(<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/mac_setfcm_psetf.html" target="_top"><code class="function">SETF</code></a> <a class="link" href="i18n-mod.html#textdomaindir" title="Function I18N:TEXTDOMAINDIR"><code class="function">I18N:TEXTDOMAINDIR</code></a>)</code> is usually used
+during the startup phase of a program, and should be used because only
+the program knows where its message catalogs are installed.
+Note that the <code class="filename">TEXTDOMAINDIR</code>s
+are not saved in a <a href="image.html" class="olink">memory image</a>.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h4 class="title"><a id="category"></a>33.2.1.2. Category</h4></div></div></div><p>The <a class="link" href="i18n-mod.html#category" title="33.2.1.2. Category"><em class="replaceable"><code>CATEGORY</code></em></a> argument of the <a class="link" href="i18n-mod.html#gettext"><code class="function">I18N:GETTEXT</code></a> and <a class="link" href="i18n-mod.html#ngettext"><code class="function">I18N:NGETTEXT</code></a>
+functions denotes which <em class="replaceable"><code><a class="unix" href="http://www.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap07.html">LOCALE</a></code></em> facet the result should depend on.
+The possible values are a platform-dependent subset of
+<span class="simplelist"><code class="constant">:LC_ADDRESS</code>, <code class="constant">:LC_ALL</code>, <code class="constant">:LC_COLLATE</code>, <code class="constant">:LC_CTYPE</code>, <code class="constant">:LC_IDENTIFICATION</code>, <code class="constant">:LC_MEASUREMENT</code>, <code class="constant">:LC_MESSAGES</code>, <code class="constant">:LC_MONETARY</code>, <code class="constant">:LC_NAME</code>, <code class="constant">:LC_NUMERIC</code>, <code class="constant">:LC_PAPER</code>, <code class="constant">:LC_TELEPHONE</code>, <code class="constant">:LC_TIME</code></span>
+The use of these values is useful for users who have a
+character/time/collation/money handling set differently from the usual
+message handling.
+Note that when a <a class="link" href="i18n-mod.html#category" title="33.2.1.2. Category"><em class="replaceable"><code>CATEGORY</code></em></a> argument is used, the message catalog
+location depends on the <a class="link" href="i18n-mod.html#category" title="33.2.1.2. Category"><em class="replaceable"><code>CATEGORY</code></em></a>: it will be expected at
+<code class="filename">TEXTDOMAINDIR/ll/category/domain.mo</code>.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h4 class="title"><a id="i18n-example"></a>33.2.1.3. Internationalization Example</h4></div></div></div><p>A non-internationalized program simulating a restaurant dialogue
+might look as follows.</p><p><a id="i18n-non-i"></a><b>prog.lisp. </b></p><pre class="programlisting">
+(setq n (parse-integer (first <a href="quickstart.html#script-exec" class="olink"><code class="varname">EXT:*ARGS*</code></a>)))
+
+(format t "~A~%" "'Your command, please?', asked the waiter.")
+
+(format t "~@?~%"
+          (if (= n 1) "a piece of cake" "~D pieces of cake")
+          n)
+</pre><p>After being internationalized, all strings are wrapped in
+<a class="link" href="i18n-mod.html#gettext"><code class="function">I18N:GETTEXT</code></a> calls, and <a class="link" href="i18n-mod.html#ngettext"><code class="function">I18N:NGETTEXT</code></a> is used for plurals.
+Also, <a class="link" href="i18n-mod.html#textdomaindir" title="Function I18N:TEXTDOMAINDIR"><code class="function">I18N:TEXTDOMAINDIR</code></a> is assigned a value; in our case, for simplicity,
+the current directory.</p><p><a id="i18n-i"></a><b>prog.lisp. </b></p><pre class="programlisting">
+(setf (textdomain) "prog")
+(setf (textdomaindir "prog") "./")
+
+(setq n (parse-integer (first <a href="quickstart.html#script-exec" class="olink"><code class="varname">EXT:*ARGS*</code></a>)))
+
+(format t "~A~%"
+          (gettext "'Your command, please?', asked the waiter."))
+
+(format t "~@?~%"
+          (ngettext "a piece of cake" "~D pieces of cake" n)
+          n)
+</pre><p>For ease of reading, it is customary to define an abbreviation
+for the <a class="link" href="i18n-mod.html#gettext"><code class="function">I18N:GETTEXT</code></a> function.  An underscore is customary.</p><p><a id="i18n-i-abbrev"></a><b>prog.lisp. </b></p><pre class="programlisting">
+(setf (textdomaindir "prog") "./")
+(defun _ (msgid) (gettext msgid "prog"))
+
+(setq n (parse-integer (first <a href="quickstart.html#script-exec" class="olink"><code class="varname">EXT:*ARGS*</code></a>)))
+
+(format t "~A~%"
+          (_"'Your command, please?', asked the waiter."))
+
+(format t "~@?~%"
+          (ngettext "a piece of cake" "~D pieces of cake" n "prog")
+          n)
+</pre><p>Now the program's maintainer creates a message catalog template
+through the command
+</p><pre class="screen">
+<strong><code class="prompt">$</code></strong> xgettext -o prog.pot prog.lisp
+</pre><p>
+</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>xgettext version 0.11 or higher is required here.</p></div><p>The message catalog template looks roughly like this.</p><p><a id="i18n-pot"></a><b>prog.pot. </b></p><pre class="programlisting">
+msgid "'Your command, please?', asked the waiter."
+msgstr ""
+
+msgid "a piece of cake"
+msgid_plural "%d pieces of cake"
+msgstr[0] ""
+msgstr[1] ""
+</pre><p>Then a French translator creates a French message catalog</p><p><a id="i18n-fr-po"></a><b>prog.fr.po. </b></p><pre class="programlisting">
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Plural-Forms: nplurals=2; plural=(n &gt; 1);\n"
+
+msgid "'Your command, please?', asked the waiter."
+msgstr "«Votre commande, s'il vous plait», dit le garçon."
+
+# Les gateaux allemands sont les meilleurs du monde.
+msgid "a piece of cake"
+msgid_plural "%d pieces of cake"
+msgstr[0] "un morceau de gateau"
+msgstr[1] "%d morceaux de gateau"
+</pre><p>and sends it to the program's maintainer.</p><p>The program's maintainer compiles the catalog as follows:
+</p><pre class="screen">
+<strong><code class="prompt">$</code></strong> mkdir -p ./fr/LC_MESSAGES
+<strong><code class="prompt">$</code></strong> msgfmt -o ./fr/LC_MESSAGES/prog.mo prog.fr.po
+</pre><p>When a user in a french <em class="replaceable"><code><a class="unix" href="http://www.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap07.html">LOCALE</a></code></em> then runs the program
+</p><pre class="screen">
+<strong><code class="prompt">$</code></strong> clisp prog.lisp 2
+</pre><p>
+she will get the output
+</p><pre class="screen">
+    «Votre commande, s'il vous plait», dit le garçon.
+    2 morceaux de gateau
+</pre><p>
+</p></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="i18n-locale"></a>33.2.2. Locale</h3></div></div></div><div class="variablelist"><dl><dt><a id="set-locale"></a><span class="term"><code class="code">(<a class="link" href="i18n-mod.html#set-locale"><code class="function">I18N:SET-LOCALE</code></a>
+   <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/sec_3-4-1.html" target="_top"><code class="literal">&amp;OPTIONAL</code></a> <a class="link" href="i18n-mod.html#category" title="33.2.1.2. Category"><em class="replaceable"><code>CATEGORY</code></em></a> <em class="replaceable"><code><a class="unix" href="http://www.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap07.html">LOCALE</a></code></em>)</code></span></dt><dd><p>This is an interface to
+   <a class="unix" href="http://www.opengroup.org/onlinepubs/009695399/functions/setlocale.html"><code class="function">setlocale</code></a>.</p><p>When <em class="replaceable"><code><a class="unix" href="http://www.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap07.html">LOCALE</a></code></em> is missing or <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_nil.html" target="_top"><code class="constant">NIL</code></a>, return the current one.</p><p>When <a class="link" href="i18n-mod.html#category" title="33.2.1.2. Category"><em class="replaceable"><code>CATEGORY</code></em></a> is missing or <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_nil.html" target="_top"><code class="constant">NIL</code></a>, return all categories
+   as a <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_list.html" target="_top"><code class="classname">LIST</code></a>.</p></dd><dt><a id="locale-conv"></a><span class="term"><code class="code">(<a class="link" href="i18n-mod.html#locale-conv"><code class="function">I18N:LOCALE-CONV</code></a>)</code></span></dt><dd><p>This is an interface to
+   <a class="unix" href="http://www.opengroup.org/onlinepubs/009695399/functions/localeconv.html"><code class="function">localeconv</code></a>.</p><p>Returns a <span class="type">I18N:LOCALE-CONV</span>
+   structure.</p></dd><dt><a id="lang-info"></a><span class="term"><code class="code">(<a class="link" href="i18n-mod.html#lang-info"><code class="function">I18N:LANGUAGE-INFORMATION</code></a>
+   <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/sec_3-4-1.html" target="_top"><code class="literal">&amp;OPTIONAL</code></a> <em class="replaceable"><code>item</code></em>)</code></span></dt><dd><p>This is an interface to
+   <a class="unix" href="http://www.opengroup.org/onlinepubs/009695399/functions/nl_langinfo.html"><code class="function">nl_langinfo</code></a> (<a class="ulink" href="http://www.unix.org/online.html" target="_top"><span class="strong"><strong>UNIX</strong></span></a>)
+   and <a class="win32" href="http://search.msdn.microsoft.com/Default.aspx?query=GetLocaleInfo"><code class="function">GetLocaleInfo</code></a> (<a class="ulink" href="http://winehq.org/" target="_top"><span class="platform">Win32</span></a>).</p><p>When <em class="replaceable"><code>item</code></em> is missing or <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_nil.html" target="_top"><code class="constant">NIL</code></a>,
+   return all available information as a <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_list.html" target="_top"><code class="classname">LIST</code></a>.</p></dd></dl></div></div></div><div class="bookinfo"><hr /><table width="100%" summary="impnotes meta info"><th><td align="left">These notes document <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> version 2.46</td><td align="right">Last modified: 2008-07-02</td></th></table></div><div class="custom-footer"><hr /><table width="100%"><tr><td align="left"><a href="http://clisp.cons.org"><img src="clisp.png" width="48" height="48" alt="[CLISP home]" /></a></td><td align="center"><a href="http://sourceforge.net/donate/index.php?group_id=1355"><img src="http://images.sourceforge.net/images/project-support.jpg" width="88" height="32" alt="[Support CLISP]" /></a></td><td align="right"><a href="http://sourceforge.net"><img width="125" height="37" alt="[SourceForge]" src="http://sflogo.sourceforge.net/sflogo.php?group_id=1355&amp;type=2&amp;page=i18n-mod" /></a></td></tr></table></div><hr /><form method="get" action="http://www.google.com/custom" target="_top"><table width="100%" border="0"><tr><td nowrap="nowrap" align="center"><input type="hidden" name="domains" value="clisp.cons.org;clisp.podval.org;www.lisp.org" /><label for="sbi" style="display: none">Enter your search terms</label><input type="text" name="q" size="50" maxlength="255" id="sbi" value="33.2. Internationalization of User Programs" /><label for="sbb" style="display: none">Submit search form</label><input type="submit" name="sa" value="Google Search" id="sbb" /></td></tr><tr><td nowrap="nowrap" align="center"><input type="radio" name="sitesearch" value="" checked="1" id="ss0" /><label for="ss0" title="Search the Web"><small>Web</small></label><input type="radio" name="sitesearch" value="clisp.cons.org" id="ss1" /><label for="ss1" title="Search clisp.cons.org"><small>clisp.cons.org</small></label><input type="radio" name="sitesearch" value="clisp.podval.org" id="ss2" /><label for="ss2" title="Search clisp.podval.org"><small>clisp.podval.org</small></label><input type="radio" name="sitesearch" value="www.lisp.org" id="ss3" /><label for="ss3" title="Search www.lisp.org"><small>www.lisp.org</small></label><input type="hidden" name="client" value="pub-4445255502750357" /><input type="hidden" name="forid" value="1" /><input type="hidden" name="ie" value="UTF-8" /><input type="hidden" name="oe" value="UTF-8" /><input type="hidden" name="cof" value="GALT:#008000;GL:1;DIV:#336699;VLC:663399;AH:center;BGC:FFFFFF;LBGC:000000;ALC:0000FF;LC:0000FF;T:000000;GFNT:0000FF;GIMP:0000FF;LH:48;LW:48;L:http://clisp.cons.org/clisp.png;S:http://clisp.cons.org;FORID:1" /><input type="hidden" name="hl" value="en" /></td></tr></table></form><hr /><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="syscalls.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="ext-modules.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="regexp-mod.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">33.1. System Calls </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 33.3. POSIX Regular Expressions</td></tr></table></div></body></html>

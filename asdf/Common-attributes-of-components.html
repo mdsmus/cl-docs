@@ -1,0 +1,217 @@
+<html lang="en">
+<head>
+<title>asdf Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name=description content="asdf Manual">
+<meta name=generator content="makeinfo 4.2">
+<link href="http://www.gnu.org/software/texinfo/" rel=generator-home>
+<!--
+This manual describes asdf, a system definition facility for Common
+Lisp programs and libraries.
+
+<p>asdf Copyright &copy; 2001-2004 Daniel Barlow and contributors
+
+<p>This manual Copyright &copy; 2001-2004 Daniel Barlow and
+contributors
+
+<p>Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+<p>The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+-->
+</head>
+<body>
+<p>
+Node:<a name="Common%20attributes%20of%20components">Common attributes of components</a>,
+Next:<a rel=next accesskey=n href="Pre-defined-subclasses-of-component.html#Pre-defined%20subclasses%20of%20component">Pre-defined subclasses of component</a>,
+Previous:<a rel=previous accesskey=p href="Components.html#Components">Components</a>,
+Up:<a rel=up accesskey=u href="Components.html#Components">Components</a>
+<hr><br>
+
+<h4>Common attributes of components</h4>
+
+<p>All components, regardless of type, have the following attributes. 
+All attributes except <code>name</code> are optional.
+
+<h5>Name</h5>
+
+<p>A component name is a string or a symbol.  If a symbol, its name is
+taken and lowercased.  The name must be a suitable value for the
+<code>:name</code> initarg to <code>make-pathname</code> in whatever filesystem
+the system is to be found.
+
+<p>The lower-casing-symbols behaviour is unconventional, but was selected
+after some consideration.  Observations suggest that the type of
+systems we want to support either have lowercase as customary case
+(Unix, Mac, windows) or silently convert lowercase to uppercase
+(lpns), so this makes more sense than attempting to use <code>:case
+:common</code> as argument to <code>make-pathname</code>, which is reported not to
+work on some implementations
+
+<h5>Version identifier</h5>
+
+<p>This optional attribute is used by the test-system-version
+operation. See <a href="Predefined-operations-of-asdf.html#Predefined%20operations%20of%20asdf">Predefined operations of asdf</a>.  For the default method of
+test-system-version, the version should be a string of intergers
+separated by dots, for example <code>1.0.11</code>.
+
+<h5>Required features</h5>
+
+<p>Traditionally defsystem users have used reader conditionals to include
+or exclude specific per-implementation files.  This means that any
+single implementation cannot read the entire system, which becomes a
+problem if it doesn't wish to compile it, but instead for example to
+create an archive file containing all the sources, as it will omit to
+process the system-dependent sources for other systems.
+
+<p>Each component in an asdf system may therefore specify features using
+the same syntax as #+ does, and it will (somehow) be ignored for
+certain operations unless the feature conditional is a member of
+<code>*features*</code>.
+
+<h5>Dependencies</h5>
+
+<p>This attribute specifies dependencies of the component on its
+siblings.  It is optional but often necessary.
+
+<p>There is an excitingly complicated relationship between the initarg
+and the method that you use to ask about dependencies
+
+<p>Dependencies are between (operation component) pairs.  In your
+initargs for the component, you can say
+
+<br><pre>:in-order-to ((compile-op (load-op "a" "b") (compile-op "c"))
+	      (load-op (load-op "foo")))
+</pre>
+
+<p>This means the following things:
+<ul>
+<li>before performing compile-op on this component, we must perform
+load-op on <var>a</var> and <var>b</var>, and compile-op on <var>c</var>,
+<li>before performing <code>load-op</code>, we have to load <var>foo</var>
+</ul>
+
+<p>The syntax is approximately
+
+<pre>
+(this-op {(other-op required-components)}+)
+
+required-components := component-name
+                     | (required-components required-components)
+
+component-name := string
+                | (:version string minimum-version-object)
+</pre>
+
+<p>Side note:
+
+<p>This is on a par with what ACL defsystem does.  mk-defsystem is less
+general: it has an implied dependency
+
+<pre>
+  for all x, (load x) depends on (compile x)
+</pre>
+
+<p>and using a <code>:depends-on</code> argument to say that <var>b</var> depends on
+<var>a</var> <em>actually</em> means that
+
+<pre>
+  (compile b) depends on (load a) 
+</pre>
+
+<p>This is insufficient for e.g. the McCLIM system, which requires that
+all the files are loaded before any of them can be compiled ]
+
+<p>End side note
+
+<p>In asdf, the dependency information for a given component and
+operation can be queried using <code>(component-depends-on operation
+component)</code>, which returns a list
+
+<br><pre>((load-op "a") (load-op "b") (compile-op "c") ...)
+</pre>
+
+<p><code>component-depends-on</code> can be subclassed for more specific
+component/operation types: these need to <code>(call-next-method)</code> and
+append the answer to their dependency, unless they have a good reason
+for completely overriding the default dependencies
+
+<p>(If it weren't for CLISP, we'd be using a <code>LIST</code> method
+combination to do this transparently.  But, we need to support CLISP. 
+If you have the time for some CLISP hacking, I'm sure they'd welcome
+your fixes)
+
+<h5>pathname</h5>
+
+<p>This attribute is optional and if absent will be inferred from the
+component's name, type (the subclass of source-file), and the location
+of its parent.
+
+<p>The rules for this inference are:
+
+<p>(for source-files)
+<ul>
+<li>the host is taken from the parent
+<li>pathname type is <code>(source-file-type component system)</code>
+<li>the pathname case option is <code>:local</code>
+<li>the pathname is merged against the parent
+</ul>
+
+<p>(for modules)
+<ul>
+<li>the host is taken from the parent
+<li>the name and type are <code>NIL</code>
+<li>the directory is <code>(:relative component-name)</code>
+<li>the pathname case option is <code>:local</code>
+<li>the pathname is merged against the parent
+</ul>
+
+<p>Note that the DEFSYSTEM operator (used to create a "top-level"
+system) does additional processing to set the filesystem location of
+the top component in that system.  This is detailed
+elsewhere, See <a href="Defining-systems-with-defsystem.html#Defining%20systems%20with%20defsystem">Defining systems with defsystem</a>.
+
+<p>The answer to the frequently asked question "how do I create a system
+definition where all the source files have a .cl extension" is thus
+
+<br><pre>(defmethod source-file-type ((c cl-source-file) (s (eql (find-system 'my-sys))))
+   "cl")
+</pre>
+
+<h5>properties</h5>
+
+<p>This attribute is optional.
+
+<p>Packaging systems often require information about files or systems in
+addition to that specified by asdf's pre-defined component attributes. 
+Programs that create vendor packages out of asdf systems therefore
+have to create "placeholder" information to satisfy these systems. 
+Sometimes the creator of an asdf system may know the additional
+information and wish to provide it directly.
+
+<p>(component-property component property-name) and associated setf
+method will allow the programmatic update of this information. 
+Property names are compared as if by <code>EQL</code>, so use symbols or
+keywords or something.
+
+<ul>
+<li><a accesskey=1 href="Pre-defined-subclasses-of-component.html#Pre-defined%20subclasses%20of%20component">Pre-defined subclasses of component</a>: 
+<li><a accesskey=2 href="Creating-new-component-types.html#Creating%20new%20component%20types">Creating new component types</a>: 
+</ul>
+
+</body></html>
+

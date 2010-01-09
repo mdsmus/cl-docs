@@ -1,0 +1,89 @@
+<html lang="en">
+<head>
+<title>Coercing Foreign Values - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Operations-On-Foreign-Values.html#Operations-On-Foreign-Values" title="Operations On Foreign Values">
+<link rel="prev" href="Accessing-Foreign-Values.html#Accessing-Foreign-Values" title="Accessing Foreign Values">
+<link rel="next" href="Foreign-Dynamic-Allocation.html#Foreign-Dynamic-Allocation" title="Foreign Dynamic Allocation">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Coercing-Foreign-Values"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Foreign-Dynamic-Allocation.html#Foreign-Dynamic-Allocation">Foreign Dynamic Allocation</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Accessing-Foreign-Values.html#Accessing-Foreign-Values">Accessing Foreign Values</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Operations-On-Foreign-Values.html#Operations-On-Foreign-Values">Operations On Foreign Values</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h4 class="subsection">7.3.2 Coercing Foreign Values</h4>
+
+<div class="defun">
+&mdash; Function: <b>sb-alien:addr</b><var> alien-expr<a name="index-sb_002dalien_003aaddr-262"></a></var><br>
+<blockquote><p><a name="index-addr-263"></a>
+The <code>sb-alien:addr</code> macro returns a pointer to the location
+specified by <var>alien-expr</var>, which must be either a foreign
+variable, a use of <code>sb-alien:deref</code>, a use of
+<code>sb-alien:slot</code>, or a use of <code>sb-alien:extern-alien</code>. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Function: <b>sb-alien:cast</b><var> foreign-value new-type<a name="index-sb_002dalien_003acast-264"></a></var><br>
+<blockquote><p><a name="index-cast-265"></a>
+The <code>sb-alien:cast</code> macro converts <var>foreign-value</var> to a new
+foreign value with the specified <var>new-type</var>. Both types, old and
+new, must be foreign pointer, array or function types.  Note that the
+resulting Lisp foreign variable object is not <code>eq</code> to the
+argument, but it does refer to the same foreign data bits. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Function: <b>sb-alien:sap-alien</b><var> sap type<a name="index-sb_002dalien_003asap_002dalien-266"></a></var><br>
+<blockquote><p><a name="index-sap_002dalien-267"></a>
+The <code>sb-alien:sap-alien</code> function converts <var>sap</var> (a system
+area pointer) to a foreign value with the specified
+<var>type</var>. <var>type</var> is not evaluated.
+
+        <p>The <var>type</var> must be some foreign pointer, array, or record type. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Function: <b>sb-alien:alien-sap</b><var> foreign-value<a name="index-sb_002dalien_003aalien_002dsap-268"></a></var><br>
+<blockquote><p><a name="index-alien_002dsap-269"></a>
+The <code>sb-alien:alien-sap</code> function returns the <acronym>SAP</acronym> which
+points to <var>alien-value</var>'s data.
+
+        <p>The <var>foreign-value</var> must be of some foreign pointer, array, or
+record type. 
+</p></blockquote></div>
+
+   </body></html>
+

@@ -1,0 +1,522 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 3, Lesson 10</title> 
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 3 - Essential Lisp in Twelve Lessons</h1> 
+
+<h2><A NAME="lesson-10">Lesson 10 - A Preview of Other Data Types</A></h2> 
+
+<h3>Lisp almost always does the right thing with numbers</h3> 
+
+<P>This sounds like a strange thing to say.  Don't computers always do the 
+right thing with numbers?  Well, no...  Not usually.</P>
+
+<P>Numeric calculations can break in lots of different ways.  One of the 
+biggest trouble spots is in calculations with floating point numbers (your 
+language may call them <I>real</I> numbers, but that's a lie).  There are 
+probably half as many books written on proper use of floating point 
+calculations as there are on visual- or object-oriented-anything -- and 
+that's a lot.</P>
+
+<P>The problem with floating point numbers is that they're not 
+mathematically accurate real numbers, but are often (mis)used as if they 
+are.  The main problem is that floating point numbers have a limited 
+accuracy -- only so many digits to the right of the decimal point.  Now, if 
+all of the numbers in a calculation are of approximately the same 
+magnitude, then the calculation won't lose 
+accuracy.  But if the numbers are of very different magnitude, then a 
+floating point calculation sacrifices accuracy.</P>
+
+<BLOCKQUOTE>
+Suppose that a floating point number on your computer can accurately represent 
+7 decimal digits.  Then you can add 1897482.0 to 2973225.0 and get a completely 
+accurate answer.  But if you try to add 1897482.0 to 0.2973225, the 
+accurate answer has fourteen digits, while your computer will answer with 
+1897482.0.
+</BLOCKQUOTE>
+
+<P>The other problem with floating point numbers is more subtle.  When you 
+write a program, you write numbers in base 10.  But the computer does all 
+arithmetic in base 2.  The conversion from base 10 to base 2 does funny 
+things to certain "obviously exact" numbers.  For example, the decimal 
+number 0.1 is a repeating fraction when translated into binary.  Because 
+the computer can't store the infinite number of digits required by a 
+repeating fraction, it can't store the number 0.1 accurately.</P>
+
+<P>Integer (whole number) arithmetic poses another problem in most 
+computer languages -- they tend to impose a limit on the maximum positive 
+or negative value that an integer can hold.  So, if you try to add the 
+number one to the largest integer your language lets the computer handle, 
+one of two things will happen:</P>
+
+<OL>
+<LI>your program will terminate with an error, or</LI>
+<LI>you'll get a wildly incorrect answer (the largest 
+positive number plus one yields the largest negative integer in at least 
+one computer language).</LI>
+</OL>
+
+<P>So how does Lisp manage to do the right thing with numbers?  After all, 
+it seems like these problems are inherent in computer arithmetic.  The 
+answer is that Lisp doesn't do use just the built-in computer arithmetic 
+operations -- it adds certain mathematically accurate numeric data types:</P>
+
+<UL>
+<LI><EM>bignums</EM> are integers with an unlimited number of digits 
+(subject only to limitations of computer memory)</LI>
+<LI><EM>rational numbers</EM> are the exact quotient of two integers, not a 
+floating point number resulting from an approximate machine division 
+algorithm</LI>
+</UL>
+
+<P>Of course, Lisp also has machine-based integers and floating point 
+numbers.  Machine integers are called <EM>fixnums</EM> in Lisp.  So long 
+as a whole number falls within the numeric range of a fixnum, Lisp will store 
+it as a machine integer.  But if it gets too big, Lisp automatically 
+promotes it to a bignum.</P>
+
+<P>When I said that Lisp almost always does the right thing with numbers, I 
+meant that it <EM>almost always</EM> chooses the numeric representation 
+that is mathematically correct:</P>
+
+<pre width=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (/ 1 3)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 1/3<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (+ (/ 7 11) (/ 13 31))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 360/341<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (defun factorial (n)<br>     (cond ((= n 0) 1)<br>           (t (* n (factorial (- n 1))))))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> FACTORIAL<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (factorial 100)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 933262154439441526816992388562667004907159682643816214685<br>   929638952175999932299156089414639761565182862536979208272<br>   23758251185210916864000000000000000000000000</pre>
+
+<P>You can write calculations to use floating point numbers, but Lisp won't 
+automatically turn an exact numeric result into an inexact floating 
+point number -- you have to ask for it.  Floating point numbers are 
+<EM>contagious</EM> -- once you introduce one into a calculation, the 
+result of the entire calculation stays a floating point number:</P>
+
+<pre width=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (float (/ 1 3))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 0.3333333333333333<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (* (float (/ 1 10)) (float (/ 1 10)))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 0.010000000000000002<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (+ 1/100 (* (float (/ 1 10)) (float (/ 1 10))))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 0.020000000000000004<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (+ 1/100 1/100) <EM>; compare to previous calculation</EM><br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 1/50<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (* 3 7 10.0)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 210.0<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (- 1.0 1)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 0.0<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (+ 1/3 2/3 0.0)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 1.0<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (+ 1/3 2/3)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 1 <EM>; compare to previous calculation</EM></pre>
+
+<P>Lisp prints floating point numbers with a decimal point, and integers 
+without.</P>
+
+<h3><A NAME="characters">Characters give Lisp something to read and write</A></h3> 
+
+<P>Basic Lisp I/O uses characters.  The <CODE>READ</CODE> and 
+<CODE>WRITE</CODE> functions turn characters into Lisp objects and vice 
+versa.  <CODE>READ-CHAR</CODE> and <CODE>WRITE-CHAR</CODE> read and write 
+single characters.</P>
+
+<pre width=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (read)<br><IMG SRC="gifs/dot.gif" ALT="?" ALIGN="BOTTOM"> a<IMG SRC="gifs/return.gif" ALT="CR" ALIGN="BOTTOM"><br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> A<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (read)<br><IMG SRC="gifs/dot.gif" ALT="??" ALIGN="BOTTOM"> #\a<IMG SRC="gifs/return.gif" ALT="CR" ALIGN="BOTTOM"><br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> a<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (read-char)<br><IMG SRC="gifs/dot.gif" ALT="??" ALIGN="BOTTOM"> a<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> #\a<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (write 'a)<br><IMG SRC="gifs/double-right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> A<br><IMG SRC="gifs/right-arrow.gif" ALT="=&gt;" ALIGN="BOTTOM"> A<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (write #\a)<br><IMG SRC="gifs/double-right-arrow.gif" ALT="=&gt;" ALIGN="BOTTOM"> #\a<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> #\a<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (write-char #\a)<br><IMG SRC="gifs/double-right-arrow.gif" ALT="=&gt;" ALIGN="BOTTOM"> a<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> #\a<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (write-char 'a)<br><IMG SRC="gifs/right-arrow-bar.gif" ALT="-&gt;|" ALIGN="BOTTOM"> Error: Not a character</pre>
+
+<P>We've introduced some new notation in the above examples.  The <IMG 
+SRC="gifs/dot.gif" ALT="?" ALIGN="BOTTOM"> symbol means that Lisp expects 
+input in response to an input function such as <CODE>READ</CODE>.  This is 
+different from <IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM">, 
+which accepts input to be evaluated and printed.  The <IMG 
+SRC="gifs/return.gif" ALT="CR" ALIGN="BOTTOM"> symbol indicates a
+newline character, generated by the <KBD>return</KBD> or 
+<KBD>enter</KBD> key.</P>
+
+<P>The <IMG SRC="gifs/double-right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 
+indicates output that is printed rather than returned as a value.</P>
+
+<P>You should notice that newline terminates <CODE>READ</CODE> input.  This 
+is because <CODE>READ</CODE> collects characters trying to form a complete 
+Lisp expression.  We'll see more of this in <A 
+HREF="chapter03-11.html">Lesson 11</A>.  In the example, <CODE>READ</CODE> 
+collects a symbol, which is terminated by the newline.  The symbol could 
+also have been terminated by a space, a parenthesis, or any other character 
+that can't be part of a symbol.</P>
+
+<P>In contrast, <CODE>READ-CHAR</CODE> reads exactly one character from the 
+input.  As soon as that character is consumed, <CODE>READ-CHAR</CODE> 
+completes executing and returns the character.</P>
+
+<BLOCKQUOTE>
+Some Lisp systems systems may require you to press the <KBD>return</KBD> 
+key before any input is recognized.  This is unusual, and can often be 
+fixed by a configuration parameter -- consult your Lisp vendor.
+</BLOCKQUOTE>
+
+<P><CODE>WRITE</CODE> and <CODE>WRITE-CHAR</CODE> both return the value 
+they're given.  The way in which they print the value is different.  
+<CODE>WRITE</CODE> prints the value so that it could be presented to 
+<CODE>READ</CODE> to create the same value.  <CODE>WRITE-CHAR</CODE> 
+prints just the readable character, without the extra Lisp syntax (the 
+<CODE>#\</CODE>) that would identify it to <CODE>READ</CODE> as a 
+character.</P>
+
+<P>Lisp represents a single character using the notation 
+<CODE>#\<I>char</I></CODE>, where <I>char</I> is a literal character or the 
+name of a character that does not have a printable glyph.</P>
+
+<pre>
+Character           Hex Value   Lisp           Standard?
+--------------------------------------------------------
+  space                 20      #\Space          yes
+  newline               --      #\Newline        yes
+  backspace             08      #\Backspace      semi
+  tab                   09      #\Tab            semi
+  linefeed              0A      #\Linefeed       semi
+  formfeed              0C      #\Page           semi
+  carriage return       0D      #\Return         semi
+  rubout or DEL         7F      #\Rubout         semi
+</pre>
+  
+<P>Only <CODE>#\Space</CODE> and <CODE>#\Newline</CODE> are required on all 
+Lisp systems.  Systems that use the ASCII character set will probably 
+implement the rest of the character codes shown above.</P>
+
+<P>The <CODE>#\Newline</CODE> character stands for whatever convention 
+represents the end of a printed line on the host system, e.g.:</P>
+
+<pre>
+System        Newline     Hex Value
+-----------------------------------
+Macintosh       CR          0D
+MS-DOS          CR LF       0D 0A
+Unix            LF          0A
+</pre>
+
+<P>The 94 printable standard characters are represented by 
+#\<I>char</I>:</P>
+
+<pre>
+  ! " # $ % & ' ( ) * + , - . / 
+0 1 2 3 4 5 6 7 8 9 : ; &lt; = &gt; ? 
+@ A B C D E F G H I J K L M N O 
+P Q R S T U V W X Y Z [ \ ] ^ _ 
+` a b c d e f g h i j k l m n o 
+p q r s t u v w x y z { | } ~
+</pre>
+
+<h3>Arrays organize data into tables</h3> 
+
+<P>If you need to organize data in tables of two, three, or more 
+dimensions, you can create an array:</P>
+
+<pre width=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq a1 (make-array '(3 4)))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> #2A((NIL NIL NIL NIL) <br>      (NIL NIL NIL NIL) <br>      (NIL NIL NIL NIL))<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setf (aref a1 0 0) (list 'element 0 0))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (ELEMENT 0 0)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setf (aref a1 1 0) (list 'element 1 0))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (ELEMENT 1 0)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setf (aref a1 2 0) (list 'element 2 0))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (ELEMENT 2 0)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> a1<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> #2A(((ELEMENT 0 0) NIL NIL NIL) <br>      ((ELEMENT 1 0) NIL NIL NIL) <br>      ((ELEMENT 2 0) NIL NIL NIL))<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (aref a1 0 0)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (ELEMENT 0 0)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setf (aref a1 0 1) pi)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 3.141592653589793<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setf (aref a1 0 2) "hello")<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> "hello"<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (aref a1 0 2)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> "hello"</pre>
+
+<P>You create an array using <CODE>MAKE-ARRAY</CODE>, which takes a list of 
+dimensions and returns an array.  By default, an array can contain any 
+kind of data; optional arguments let you restrict the element data types 
+for the sake of efficiency.</P>
+
+<P>An array's <EM>rank</EM> is the same as its number of dimensions.  We 
+created a rank-2 array in the above example.  Lisp prints an array using 
+the notation <CODE>#<I>rank</I>A(...)</CODE>.  The contents of the array 
+appear as nested lists, with the first dimension appearing as the outermost 
+grouping, and the last dimension appearing as the elements of the 
+innermost grouping.</P>
+
+<BLOCKQUOTE>
+Your Lisp system will probably not print an array with line breaks as I've 
+shown here.  I added these breaks to emphasize the structure of the array.
+</BLOCKQUOTE>
+
+<P>To retrieve an element of an array, use <CODE>AREF</CODE>.  
+<CODE>AREF</CODE>'s first argument is the array; the remaining arguments 
+specify the index along each dimension.  The number of indices must match 
+the rank of the array.</P>
+
+<P>To set an element of an array, use <CODE>AREF</CODE> inside a 
+<CODE>SETF</CODE> form as shown in the example.  <CODE>SETF</CODE> is 
+similar to <CODE>SETQ</CODE>, except where <CODE>SETQ</CODE> assigns a 
+value to a <EM>symbol</EM>, <CODE>SETF</CODE> assigns a value to a 
+<EM>place</EM>.  In the examples, the <CODE>AREF</CODE> form specifies the 
+place as an element in the array.</P>
+
+<h3>Vectors are one-dimensional arrays</h3> 
+
+<P>Vectors are one-dimensional arrays.  You can create a vector using 
+<CODE>MAKE-ARRAY</CODE>, and access its elements using <CODE>AREF</CODE>.</P>
+
+<pre width=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq v1 (make-array '(3)))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> #(NIL NIL NIL)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (make-array 3)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> #(NIL NIL NIL)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setf (aref v1 0) :zero)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> :ZERO<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setf (aref v1 1) :one)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> :ONE<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (aref v1 0)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> :ZERO<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> v1<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> #(:ZERO :ONE NIL)</pre>
+
+<P>Lisp prints vectors using the slightly abbreviated form 
+<CODE>#(...)</CODE>, rather than <CODE>#1A(...)</CODE>.</P>
+
+<P>You can use either a single-element list or a number to specify the 
+vector dimensions to <CODE>MAKE-ARRAY</CODE> -- the effect is the same.</P>
+
+<P>You can create a vector from a list of values, using the <CODE>VECTOR</CODE> 
+form:</P>
+
+<pre width=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (vector 34 22 30)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> #(34 22 30)</pre>
+
+<P>This is similar to the <CODE>LIST</CODE> form, except that the result is 
+a vector instead of a list.  There are other similarities between lists 
+and vectors: both are <EM>sequences</EM>.  Sequences are manipulated by the 
+functions we'll see in <A HREF="chapter13.html">Chapter 13</A>.</P>
+
+<P>You can use <CODE>AREF</CODE> to access the elements of a vector, or you 
+can use the sequence-specific function, <CODE>ELT</CODE>:</P>
+
+<pre width=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setf v2 (vector 34 22 30 99 66 77))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> #(34 22 30 99 66 77)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setf (elt v2 3) :radio)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> :RADIO<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> v2<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> #(34 22 30 :RADIO 66 77)</pre>
+
+<h3>Strings are vectors that contain only characters</h3> 
+
+<P>You already know how to write a string using the <CODE>"..."</CODE> 
+syntax.  Since a string is a vector, you can apply the array and vector 
+functions to access elements of a string.  You can also create strings 
+using the <CODE>MAKE-STRING</CODE> function or change characters or symbols 
+to strings using the <CODE>STRING</CODE> function.</P>
+
+<pre width=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq s1 "hello, there.")<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> "hello, there."<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setf (elt s1 0) #\H))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> #\H<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setf (elt s1 12) #\!)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> #\!<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> s1<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> "Hello, there!"<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (string 'a-symbol)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> "A-SYMBOL"<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (string #\G)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> "G"</pre>
+
+<h3>Symbols are unique, but they have many values</h3> 
+
+<P>We saw in <A HREF="chapter03-05.html">Lesson 5</A> that a symbol has a 
+unique identity, but this bears repeating: A symbol is <EM>identical</EM> 
+to any other symbol spelled the same way 
+(including its package designation, which we'll learn more about at the end 
+of this lesson).  This means that you can have Lisp read a program or data, 
+and every occurrence of a symbol with the same spelling is the same 
+symbol.  Since Lisp supplies the mechanism to do this, it's one less thing 
+you have to worry about when you write a program that manipulates 
+<EM>symbolic</EM> information.</P>
+
+<P>We also learned in <A HREF="chapter03-05.html">Lesson 5</A> that a 
+symbol can have values as a variable and a function, and for documentation, 
+print name, and properties.  <A NAME="property-list">A symbol's property 
+list is like a miniature database which associates a number of key/value 
+pairs with the symbol.  For example, if your program represented and 
+manipulated objects, you could store information about an object on its 
+property list:</A></P>
+
+<pre width=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setf (get 'object-1 'color) 'red)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> RED<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setf (get 'object-1 'size) 'large)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> LARGE<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setf (get 'object-1 'shape) 'round)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> ROUND<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setf (get 'object-1 'position) '(on table))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (ON TABLE)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setf (get 'object-1 'weight) 15)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 15<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (symbol-plist 'object-1)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (WEIGHT 15 POSITION (ON TABLE) SHAPE ROUND SIZE LARGE <br>     COLOR RED)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (get 'object-1 'color)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> RED<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> object-1<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> Error: no value<br></pre>
+
+<P>Note that <CODE>OBJECT-1</CODE> doesn't have a value -- all of the 
+useful information is in two places: the <EM>identity</EM> of the symbol, 
+and the symbol's properties.</P>
+
+<BLOCKQUOTE>
+This use of properties predates modern object programming by a few 
+decades.  It provides two of the three essential mechanisms of an object: 
+identity and encapsulation (remember that property values could just as 
+well be a function).  The third mechanism, inheritance, was sometimes 
+simulated by links to other "objects."
+</BLOCKQUOTE>
+
+<P>Properties are less often used in modern Lisp programs.  Hash tables (<A 
+HREF="#hash-tables">see below)</A>, structures (described in the next 
+section), and CLOS objects (see <A HREF="chapter07.html">Chapter 7</A> and 
+<A HREF="chapter14.html">Chapter 14</A>) provide all of the capabilities of 
+property lists in ways that are easier to use and more efficient.  Modern 
+Lisp development systems often use properties to annotate a program by 
+keeping track of certain information such as the file and file position of 
+the defining form for a symbol, and the definition of a function's argument 
+list (for use by informational tools in the programming environment).</P>
+
+<h3><A NAME="structures">Structures let you store related data</A></h3> 
+
+<P>A Lisp structure gives you a way to create an object which stores related 
+data in named slots.</P>
+
+<pre width=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (defstruct struct-1 color size shape position weight)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> STRUCT-1<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq object-2 (make-struct-1<br>                     :size 'small <br>                     :color 'green <br>                     :weight 10 <br>                     :shape 'square))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> #S(STRUCT-1 :COLOR GREEN :SIZE SMALL :SHAPE SQUARE <br>     :POSITION NIL :WEIGHT 10)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (struct-1-shape object-2)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> SQUARE<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (struct-1-position object-2)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> NIL<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setf (struct-1-position object-2) '(under table))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (UNDER TABLE)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (struct-1-position object-2)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (UNDER-TABLE)</pre>
+
+<P>In the example, we defined a structure type named <CODE>STRUCT-1</CODE> 
+with slots named <CODE>COLOR</CODE>, <CODE>SHAPE</CODE>, <CODE>SIZE</CODE>, 
+<CODE>POSITION</CODE>, and <CODE>WEIGHT</CODE>.  Then we created an 
+instance of a <CODE>STRUCT-1</CODE> type, and assigned the instance to the 
+variable <CODE>OBJECT-2</CODE>.  The rest of the example shows how to 
+access slots of a struct instance using accessor functions named for the 
+structure type and the slot name.  Lisp generates the 
+make-<I>structname</I> and <I>structname</I>-<I>slotname</I> functions when 
+you define a structure using <CODE>DEFSTRUCT</CODE>.</P>
+
+<P>We'll look at <CODE>DEFSTRUCT</CODE>'s optional features in <A 
+HREF="chapter06.html">Chapter 6</A>.</P>
+
+<h3>Type information is apparent at runtime</h3> 
+
+<P>A symbol can be associated with any type of value at runtime.  For cases 
+where it matters, Lisp lets you query the type of a value.</P>
+
+<pre width=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (type-of 123)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> FIXNUM<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (type-of 123456789000)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> BIGNUM<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (type-of "hello, world")<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (SIMPLE-BASE-STRING 12)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (type-of 'fubar)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> SYMBOL<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (type-of '(a b c))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> CONS</pre>
+
+<P><CODE>TYPE-OF</CODE> returns a symbol or a list indicating the type of 
+its argument.  This information can then be used to guide a program's 
+behavior based upon the type of its arguments.  The <CODE>TYPECASE</CODE> 
+function combines the type inquiry with a <CODE>COND</CODE>-like dispatch.</P>
+
+<BLOCKQUOTE>
+With the introduction of generic functions in CLOS (see <A 
+HREF="chapter14.html">Chapter 14</A>), <CODE>TYPE-OF</CODE> is not as 
+important as it once was.
+</BLOCKQUOTE>
+
+<h3><A NAME="hash-tables">Hash Tables provide quick data access from a lookup key</A></h3> 
+
+<P>A hash table associates a value with a unique key.  Unlike a <A 
+HREF="#property-list">property list</A>, a hash table is well suited to a 
+large number of key/value pairs, but suffers from excessive overhead for 
+smaller sets of associations.</P>
+
+<pre width=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq ht1 (make-hash-table))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> #&lt;HASH-TABLE&gt;<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (gethash 'quux ht1)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> NIL<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> NIL<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setf (gethash 'baz ht1) 'baz-value)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> BAZ-VALUE<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (gethash 'baz ht1)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> BAZ-VALUE<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> T<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setf (gethash 'gronk ht1) nil)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> NIL<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (gethash 'gronk ht1)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> NIL<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> T</pre>
+
+<P>You create a hash table using <CODE>MAKE-HASH-TABLE</CODE>, and access 
+values using <CODE>GETHASH</CODE>.  <CODE>GETHASH</CODE> returns two 
+values.  The first is the value associated with the key.  The second 
+is <CODE>T</CODE> if the key was found, and <CODE>NIL</CODE> 
+otherwise.  Notice the difference between the first and last 
+<CODE>GETHASH</CODE> form in the examples above.</P>
+
+<P>By default, a hash table is created so that its keys are compared using 
+<EM>EQ</EM> -- this works for symbols, but not numbers or lists.  We'll 
+learn more about equality predicates in <A HREF="chapter17.html">Chapter 
+17</A>.  For now, just remember that if you want to use numbers for keys, 
+you must create a hash table using the form:</P>
+
+<p><tt>(make-hash-table :test #'eql)</tt>
+
+<p>If you want to use lists for keys, create your hash table with:
+
+<p><tt>(make-hash-table :test #'equal)</tt>
+
+<P>If you want to remove a key, use the form <CODE>(REMHASH <VAR>key</VAR> 
+<VAR>hash-table</VAR>)</CODE>.  And if you want to change the value for a 
+key, use <CODE>GETHASH</CODE> with <CODE>SETF</CODE>, just as if you were 
+adding a new key/value pair.</P>
+
+<h3>Packages keep names from colliding</h3> 
+
+<P>One of the things that's hard about writing programs is naming parts of 
+your program.  On one hand, you want to use names that are easy to remember and 
+evocative of the role or purpose of the named object.  On the other hand, 
+you don't want to use a name that someone else has already used (or is 
+likely to use) in a different program that you may 
+someday have to make work with your program.</P>
+
+<P>One way to avoid naming conflicts is to give every name in your program 
+a unique prefix that no one else is likely to use.  You see this done all 
+the time with libraries -- the prefix is typically one to three 
+characters.  Unfortunately, this still leaves a lot of room for two 
+software developers to choose the same prefix; especially since some 
+prefixes are more evocative than others.  If you have control over all the 
+software that will be developed for your product, you can choose all of the 
+prefixes and avoid problems.  If you're going to buy third-party software 
+that uses a prefix naming scheme, you'll have to work around the names 
+chosen by your vendors and hope that two different vendors don't stumble 
+upon the same prefix.</P>
+
+<IMG SRC="gifs/prefixed-names.gif" ALT="prefixed names example" ALIGN="BOTTOM">
+
+<P>Another way to avoid naming conflicts is to use qualified names.  To do 
+this, the language must provide support for separate namespaces defined and 
+controlled by the programmer.  To understand how this works, imagine that 
+all the names you create for your program get written on a sheet of paper 
+with your name written at the top as a title -- this is the 
+<EM>qualifier</EM> for all of your names.  To see whether a name is safe to 
+use, you only have to check the list of names you've written on this page.  
+When someone else's software needs the services of your program, they refer 
+to your names by using both your qualifier and name.  Because the other 
+person's software has a different qualifier, and their qualifier is 
+implicit (that is, it doesn't need to be written) for their own names, 
+there's no chance of a name conflict.</P>
+
+<P>You might think that a qualifier is no more than a complicated way to 
+add a prefix to a name.  However, there's a subtle but important 
+difference.  A prefix is part of the name; it cannot be changed once 
+written.  A qualifier is separate from the names it qualifies, and is 
+"written down" in exactly one place.  Furthermore, you can point to the 
+"sheet of paper" upon which names are written and refer to it as "those 
+names." If you happen to choose the same qualifier as another programmer, 
+you can still refer to "those names" by a qualifier of your own choosing -- 
+In other words, you can change the qualifier <EM>after the software has 
+been delivered for your use</EM>.</P>
+
+<IMG SRC="gifs/rename-package.gif" ALT="rename-package example" ALIGN="BOTTOM">
+
+<P>In the above example, two libraries are delivered in files 
+<CODE>LIB1</CODE> and <CODE>LIB2</CODE>.  Both library designers used the 
+name <CODE>UTIL</CODE> for the name of their namespace, known in Lisp as a 
+package name.  Each library lists the names exposed to a client.  The 
+programmer who uses the two libraries writes code in the package name 
+<CODE>MY-PACKAGE</CODE>.  After loading each library, the programmer 
+renames its package so the names are distinct.  Then, names in the library 
+are referenced using their <EM>renamed</EM> qualifiers, as we see in the 
+calls to <CODE>UTIL-1:INITIALIZE</CODE> and <CODE>UTIL-2:INITIALIZE</CODE>.  
+Notice how the <CODE>INITIALIZE</CODE> name is still available to the 
+programmer in its unqualified form -- this is equivalent to 
+<CODE>MY-PACKAGE:INITIALIZE</CODE>.</P>
+
+<P>Lisp provides this functionality through a set of functions and macros 
+collective known as the <EM>package</EM> facility.  The <CODE>DEFPACKAGE</CODE> 
+macro conveniently provides most package operations, while the 
+<CODE>IN-PACKAGE</CODE> macro sets the current package:</P>
+
+<pre>
+;;;; ---- File 1 ----
+(defpackage util1
+  (:export init func1 func2)
+  (:use common-lisp))
+(in-package util1)
+
+(defun init () 'util1-init)
+(defun func1 () 'util1-func1)
+(defun func2 () 'util1-func2)
+
+;;;; ---- File 2 ----
+(defpackage util2
+  (:export init func1 func2)
+  (:use common-lisp))
+(in-package util2)
+
+(defun init () 'util2-init)
+(defun func1 () 'util2-func1)
+(defun func2 () 'util2-func2)
+
+;;;; ---- File 3 ----
+(defpackage client
+  (:use common-lisp)
+  (:import-from util1 func1)
+  (:import-from util2 func2))
+(in-package client)
+
+(defun init () 'client-init)
+(util1:init)
+(util2:init)
+(init)
+(func1)
+(func2)
+</pre>
+
+<P>The example lists the contents of three files.  File 1 and File 2 both 
+define three functions using identical names.  File 1 puts names in the 
+<CODE>UTIL1</CODE> package, while File 2 uses the <CODE>UTIL2</CODE> 
+package.  The <CODE>DEFPACKAGE</CODE> form names the package.  The 
+<CODE>:USE</CODE> option specifies that names from another package may be 
+used without qualification, while the <CODE>:EXPORT</CODE> option 
+specifies the names that are exposed to clients of the package.</P>
+
+<P>The <CODE>DEFPACKAGE</CODE> form only creates a package.  The 
+<CODE>USE-PACKAGE</CODE> form makes a package <EM>current</EM> -- all 
+unqualified names are in whatever package is current.  The 
+<CODE>COMMON-LISP:*PACKAGE*</CODE> variable always contains the current 
+package.</P>
+
+<P>File 3 creates the <CODE>CLIENT</CODE> package.  The 
+<CODE>:IMPORT-FROM</CODE> options bring in specific names from the 
+<CODE>UTIL1</CODE> and <CODE>UTIL2</CODE> packages -- these names may be 
+used without qualification in the <CODE>CLIENT</CODE> package.  Names that 
+are exported from <CODE>UTIL1</CODE> or <CODE>UTIL2</CODE> but not imported 
+by <CODE>CLIENT</CODE> may still be referenced within <CODE>CLIENT</CODE> 
+by using an explicit qualifier of the form 
+<CODE><I>package</I>:<I>name</I></CODE>.</P>
+
+<P>This section covered only very basic package operations.  We'll cover 
+additional details in <A HREF="chapter31.html">Chapter 31</A>, when we look 
+again at packages within the context of constructing large software 
+systems.</P>
+
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter02.html">Chapter 2</a> | <A HREF="chapter03.html">Chapter 3, Introduction</A> | <A HREF="chapter03-09.html">Chapter 3, Lesson 9</A> | Chapter 3, Lesson 10 | <A HREF="chapter03-11.html">Chapter 3, Lesson 11</A> | <a href="chapter04.html">Chapter 4</a> | 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its 
+author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

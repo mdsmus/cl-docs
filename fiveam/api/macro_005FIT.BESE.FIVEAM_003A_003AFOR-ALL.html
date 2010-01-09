@@ -1,0 +1,32 @@
+<html
+  ><head
+    ><title
+      >Macro FOR-ALL</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Macro: FOR-ALL</h1
+        ><div class="contents"
+          ><h2
+            >Source</h2
+          ><pre class="code"
+            >(defmacro for-all (bindings &amp;body body)
+  `(perform-random-testing
+    (list ,@(mapcar #'second bindings))
+    (lambda ,(mapcar #'first bindings)
+      (if (and ,@(delete-if #'null (mapcar #'third bindings)))
+          (progn ,@body)
+          (throw 'run-once
+            (list :guard-conditions-failed))))))</pre
+          ><a href="../Checks.html#macro_005FIT.BESE.FIVEAM_003A_003AFOR-ALL"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

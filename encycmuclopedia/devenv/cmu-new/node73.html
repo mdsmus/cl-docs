@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>3.5.1 How the Source is Found</TITLE>
+<META NAME="description" CONTENT="3.5.1 How the Source is Found">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1524" HREF="node74.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1522" HREF="node72.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1516" HREF="node72.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1526" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1527" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1525" HREF="node74.html">3.5.2 Source Location Availability</A>
+<B>Up:</B> <A NAME="tex2html1523" HREF="node72.html">3.5 Source Location Printing</A>
+<B> Previous:</B> <A NAME="tex2html1517" HREF="node72.html">3.5 Source Location Printing</A>
+<BR> <P>
+<H2><A NAME="SECTION00451000000000000000">3.5.1 How the Source is Found</A></H2>
+<P>
+If the code was defined from Common Lisp by <tt>compile</tt> or
+<tt>eval</tt>, then the source can always be reliably located.  If the
+code was defined from a <tt>fasl</tt> file created by
+<A NAME="8879">&#160;</A><tt>compile-file</tt>, then the debugger gets the source forms it
+prints by reading them from the original source file.  This is a
+potential problem, since the source file might have moved or changed
+since the time it was compiled.
+<P>
+The source file is opened using the <tt>truename</tt> of the source file
+pathname originally given to the compiler.  This is an absolute pathname
+with all logical names and symbolic links expanded.  If the file can't
+be located using this name, then the debugger gives up and signals an
+error.
+<P>
+If the source file can be found, but has been modified since the time it was
+compiled, the debugger prints this warning:
+<BLOCKQUOTE> <PRE>; File has been modified since compilation:
+;   <i>filename</i>
+; Using form offset instead of character position.
+</PRE> </BLOCKQUOTE>
+where <i>filename</i> is the name of the source file.  It then proceeds using a
+robust but not foolproof heuristic for locating the source.  This heuristic
+works if:
+<UL>
+<LI>
+No top-level forms before the top-level form containing the source have been
+added or deleted, and
+<LI>
+The top-level form containing the source has not been modified much.  (More
+precisely, none of the list forms beginning before the source form have been
+added or deleted.)
+</UL>
+<P>
+If the heuristic doesn't work, the displayed source will be wrong, but will
+probably be near the actual source.  If the ``shape'' of the top-level form in
+the source file is too different from the original form, then an error will be
+signaled.  When the heuristic is used, the the source location commands are
+noticeably slowed.
+<P>
+Source location printing can also be confused if (after the source was
+compiled) a read-macro you used in the code was redefined to expand into
+something different, or if a read-macro ever returns the same <tt>eq</tt>
+list twice.  If you don't define read macros and don't use <tt>##</tt> in
+perverted ways, you don't need to worry about this.
+<P>
+<HR><A NAME="tex2html1524" HREF="node74.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1522" HREF="node72.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1516" HREF="node72.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1526" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1527" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1525" HREF="node74.html">3.5.2 Source Location Availability</A>
+<B>Up:</B> <A NAME="tex2html1523" HREF="node72.html">3.5 Source Location Printing</A>
+<B> Previous:</B> <A NAME="tex2html1517" HREF="node72.html">3.5 Source Location Printing</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

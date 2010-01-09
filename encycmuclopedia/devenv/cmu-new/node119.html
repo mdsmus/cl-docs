@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.2.7 The Values Declaration</TITLE>
+<META NAME="description" CONTENT="5.2.7 The Values Declaration">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2201" HREF="node120.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2199" HREF="node112.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2193" HREF="node118.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2203" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2204" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2202" HREF="node120.html">5.2.8 Structure Types</A>
+<B>Up:</B> <A NAME="tex2html2200" HREF="node112.html">5.2 More About Types </A>
+<B> Previous:</B> <A NAME="tex2html2194" HREF="node118.html">5.2.6 Function Types</A>
+<BR> <P>
+<H2><A NAME="SECTION00627000000000000000">5.2.7 The Values Declaration</A></H2>
+<P>
+<A NAME="9799">&#160;</A>
+<P>
+CMU Common Lisp supports the <tt>values</tt> declaration as an extension to
+Common Lisp.  The syntax is <tt>(values <i>type1</i>
+    <i>type2</i><IMG WIDTH=74 HEIGHT=11 ALIGN=BOTTOM ALT="tex2html_wrap_inline23388" SRC="img15.gif"><i>typen</i>)</tt>.  This declaration is
+semantically equivalent to a <tt>the</tt> form wrapped around the body
+of the special form in which the <tt>values</tt> declaration appears.
+The advantage of <tt>values</tt> over <A NAME="9811">&#160;</A><tt>the</tt> is purely
+syntactic--it doesn't introduce more indentation.  For example:
+<BLOCKQUOTE> <PRE>(defun foo (x)
+  (declare (values single-float))
+  (ecase x
+    (:this ...)
+    (:that ...)
+    (:the-other ...)))
+</PRE> </BLOCKQUOTE>
+is equivalent to:
+<BLOCKQUOTE> <PRE>(defun foo (x)
+  (the single-float
+       (ecase x
+         (:this ...)
+         (:that ...)
+         (:the-other ...))))
+</PRE> </BLOCKQUOTE>
+and
+<BLOCKQUOTE> <PRE>(defun floor (number &amp;optional (divisor 1))
+  (declare (values integer real))
+  ...)
+</PRE> </BLOCKQUOTE>
+is equivalent to:
+<BLOCKQUOTE> <PRE>(defun floor (number &amp;optional (divisor 1))
+  (the (values integer real)
+       ...))
+</PRE> </BLOCKQUOTE>
+In addition to being recognized by <tt>lambda</tt> (and hence by
+<tt>defun</tt>), the <tt>values</tt> declaration is recognized by all the
+other special forms with bodies and declarations: <tt>let</tt>,
+<tt>let*</tt>, <tt>labels</tt> and <tt>flet</tt>.  Macros with declarations
+usually splice the declarations into one of the above forms, so they
+will accept this declaration too, but the exact effect of a
+<tt>values</tt> declaration will depend on the macro.
+<P>
+If you declare the types of all arguments to a function, and also
+declare the return value types with <tt>values</tt>, you have described
+the type of the function.  Python will use this argument and result
+type information to derive a function type that will then be applied
+to calls of the function (see section&nbsp;<A HREF="node118.html#functiontypes">5.2.6</A>.)  This provides a
+way to declare the types of functions that is much less syntactically
+awkward than using the <tt>ftype</tt> declaration with a <tt>function</tt>
+type specifier.
+<P>
+Although the <tt>values</tt> declaration is non-standard, it is
+relatively harmless to use it in otherwise portable code, since any
+warning in non-CMU implementations can be suppressed with the standard
+<tt>declaration</tt> proclamation.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,353 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 24</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 24 - FORMAT Speaks a Different Language</h1> 
+
+<P>Throughout this book, we've shown some simple uses of <code>FORMAT</code> 
+without explanation. In this chapter, we'll inventory and describe 
+<code>FORMAT</code>'s most useful capabilities, and a few of its more
+esoteric features.
+
+<h2>FORMAT rhymes with FORTRAN, sort of...</h2>
+
+<p><code>FORMAT</code> appears to have been inspired by FORTRAN's
+varied and capable function of the same name. But Lisp's
+<code>FORMAT</code> implements a programming language in its own
+right, designed expressly for the purposes of formatting textual
+output. <code>FORMAT</code> can print data of many types, using
+various decorations and embellishments. It can print numbers as
+words or -- for you movie buffs -- as Roman numerals. Columnar
+output is a breeze with <code>FORMAT</code>'s facilities for
+iterating over lists and advancing to specific positions on an
+output line. You can even make portions of the output appear
+differently depending upon the formatted variables. This chapter
+covers a representative portion of what <code>FORMAT</code> can do;
+you should consult a Lisp reference to get the full story.
+
+<h2>Formatting</h2>
+
+<p><code>FORMAT</code> expects a destination argument, a format
+control string, and a list of zero or more arguments to be used by
+the control string to produce formatted output.  
+
+<p>Output goes to a location determined by the destination argument.
+If the destination is <code>T</code>, output goes to
+<code>*STANDARD-OUTPUT*</code>. The destination can also be a
+specific output stream.
+
+<p>There are two ways <code>FORMAT</code> can send output to a string.
+One is to specify <code>NIL</code> for the destination: <code>FORMAT</code> 
+will return a string containing the formatted output. The other way is to
+specify a string for the destination; the string must have a fill pointer.
+
+<pre>
+? (defparameter *s* 
+    (make-array 0 
+                :element-type 'character 
+                :adjustable t 
+                :fill-pointer 0))
+""
+? (format *s* "Hello~%")
+NIL
+? *s*
+"Hello
+"
+? (format *s* "Goodbye")
+NIL
+? *s*
+"Hello
+Goodbye"
+? (setf (fill-pointer *s*) 0)
+0
+? *s*
+""
+? (format *s* "A new beginning")
+NIL
+? *s*
+"A new beginning"
+</pre> 
+
+<p>The call to <code>MAKE-ARRAY</code> with options as shown above creates
+an empty string that can expand to accommodate new output.  As you can see,
+formatting additional output to this string appends the new output to whatever
+is already there.  To empty the string, you can either reset its fill pointer
+(as shown) or create a new emtpy string.
+
+<p><code>FORMAT</code> returns <code>NIL</code> except when the destination
+is <code>NIL</code>.
+
+<p>The format control string contains literal text and formatting directives.
+Directives are always introduced with a <code>~</code> character.
+
+<pre>
+  Directive   Interpretation
+  ---------   --------------
+     ~%       new line
+     ~&       fresh line
+     ~|       page break
+     ~T       tab stop
+     ~&lt;       justification
+     ~&gt;       terminate ~&lt;
+     ~C       character
+     ~(       case conversion
+     ~)       terminate ~(
+     ~D       decimal integer
+     ~B       binary integer
+     ~O       octal integer
+     ~X       hexadecimal integer
+     ~bR      base-b integer
+     ~R       spell an integer
+     ~P       plural
+     ~F       floating point
+     ~E       scientific notation
+     ~G       ~F or ~E, depending upon magnitude
+     ~$       monetary
+     ~A       legibly, without escapes
+     ~S       READably, with escapes
+     ~~       ~
+</pre> 
+
+<p>The first few directives in the table above are for generating whitespace.
+A <code>~%</code> directive inserts a newline character.  <code>~&amp;</code> 
+inserts a newline only if <code>FORMAT</code> output is not already at the
+beginning of a new line.  <code>~|</code> generates a page break character;
+not all devices are capable of responding to this character.  You can cause
+<code>FORMAT</code> to emit multiple line or page breaks by using an optional
+argument, as in <code>~5%</code> which generates five newlines.
+
+<p>To advance output to column <i>n</i> by inserting spaces, use 
+<code>~</code><i>n</i><code>T</code>.
+
+<p>You can justify output using <code>~&lt;</code> and <code>~&gt;</code> to
+enclose the output to be justified.  
+<code>~</code><code>w</code><code>&lt;</code><i>text</i><code>~&gt;</code>
+right-justifies <i>text</i> in a field of width <i>n</i>. If you segment
+<i>text</i> using <code>~;</code> as a separator, the segments will be
+evenly distributed across the field of width <i>w</i>.
+
+<p><code>~C</code> formats a character. Normally, the character
+formats as itself.  However, if you modify the directive to <code>~:C</code>,
+then non-printable characters are spelled out.
+
+<pre>
+? (format nil "~:C" 7)  <i>;; 7 is ASCII BEL</i> 
+"Bell"
+</pre> 
+
+<p>You can change the alphabetic case by enclosing output in
+<code>~(</code> and <code>~)</code>. Different forms of the
+directive produce different results.
+<code>~(</code><i>text</i><code>~)</code> converts <i>text</i> to
+lower case. <code>~:@(</code><i>text</i><code>~)</code> converts
+<i>text</i> to upper case.
+<code>~:(</code><i>text</i><code>~)</code> capitalizes each word in
+<i>text</i>. <code>~@(</code><i>text</i><code>~)</code> capitalizes
+the first word in <i>text</i> and converts the rest to lower case.
+
+<p>The <code>~D</code> directive formats an integer as decimal
+digits with a leading minus sign if the number is negative.
+<code>~</code><i>w</i><code>D</code> right-justifies the output in a
+field of width <i>w</i>, padding on the left with spaces.
+<code>~</code><i>w</i><code>,'</code><i>c</i><code>D</code> pads on the
+left with the character <i>c</i>. Adding the <code>@</code> modifier
+immediately after the <code>~</code> causes a leading plus sign to
+be emitted for positive numbers as well as the leading minus sign
+that is always emitted for negative numbers. A <code>:</code> modifier
+causes commas to be inserted between each group of three digits.
+
+<p>You can format numbers in binary (base 2), octal (base 8) or
+hexadecimal (base 16) radix using the directives <code>~B</code>,
+<code>~O</code>, and <code>~X</code>, respectively. Except for the
+radix, these behave exactly as <code>~D</code>.
+
+<p>The <code>~R</code> directive has two forms.
+<code>~</code><i>b</i><code>R</code> prints an integer in base
+<i>b</i>. The directive <code>~10R</code> is identical to
+<code>~D</code>. Optional values should be specified following the
+radix. For example, <i>~3,8R</i> prints a base-3 number in a field
+of width 8.
+
+<p>Without the radix specifier, <code>~R</code> spells out an integer as
+a cardinal (counting) number in English.
+
+<pre>
+? (format nil "~R" 7)
+"seven"
+? (format nil "~R" 376)
+"three hundred seventy-six"
+</pre> 
+
+<p><code>~:R</code> spells out an ordinal (positional) number.
+
+<pre>
+? (format nil "~:R" 7)
+"seventh"
+</pre> 
+
+<p>You can even print Roman numerals using <code>~@R</code>.
+
+<pre>
+? (format nil "~@R" 1999)
+"MCMXCIX"
+</pre> 
+
+<p>One of the hallmarks of professional-looking output is getting
+plurals right. Lisp makes this easy with the <code>~P</code> format
+directive. Unless its argument is 1, <code>~P</code> formats an "s".
+<code>~@P</code> formats a "y" if its argument is 1, or an "ies" if
+the argument is not 1. Since these operations so commonly follow the
+printing of a number, <code>~:P</code> and <code>~:@P</code> reuse
+the previously consumed argument.
+
+<pre>
+? (format nil "~D time~:P, ~D fl~:@P" 1 1)
+"1 time, 1 fly"
+? (format nil "~D time~:P, ~D fl~:@P" 3 4)
+"3 times, 4 flies"
+</pre> 
+
+<p>You can print floating-point numbers in four different ways:
+
+<dl>
+<dt><code>~F</code> 
+<dd>As a number with a decimal point, e.g. 723.0059
+<dt><code>~E</code> 
+<dd>In scientific notation, e.g. 7.230059E+2
+<dt><code>~G</code> 
+<dd>As the shorter of the above two representations, followed by a tab to align columns
+<dt><code>~$</code> 
+<dd>As a monetary value, e.g. 723.01
+</dl> 
+
+<p>There are many options for printing floating point numbers.  The most 
+common is the field-width specifier, which behaves as it does in the
+<code>~D</code> directive.
+
+<p>Non-numeric Lisp data is printed using the <code>~A</code> and
+<code>~S</code> directives.  Use <code>~A</code> when you want to print
+data in its most visually attractive form; that is, without the escape
+characters that would let the data be read correctly by <code>READ</code>.
+Using <code>~A</code>, strings are formatted without quotes, symbols are 
+formatted without package prefixes or escapes for mixed-case or blank 
+characters, and characters are printed as themselves.  Using <code>~S</code>,
+every Lisp object is printed in such a way that <code>READ</code> can
+reconstruct the object (unless, of course, the object does not have a
+readable representation).
+
+<h2>Iteration</h2>
+
+<p>List elements can be formatted using the directive 
+<code>~{</code><i>format-control</i><code>~}</code>. The argument
+<em>must</em> be a list; <i>format-control</i> consumes elements
+of the list.  Iteration terminates when the list is empty before
+the next pass over <i>format-control</i>.  Here's a simple example:
+
+<pre>
+? (format t "~&amp;Name~20TExtension~{~&amp;~A~20T~A~}"
+          '("Joe" 3215 "Mary" 3246 "Fred" 3222 "Dave" 3232 "Joseph" 3212))
+Name                Extension
+Joe                 3215
+Mary                3246
+Fred                3222
+Dave                3232
+Joseph              3212
+NIL
+</pre> 
+
+<p>If your list might end in the middle of the iteration's
+<i>format-control</i>, you can insert a <code>~^</code> directive at
+that point. If the argument list is empty when interpreting the
+<code>~^</code> directive, the iteration
+<code>~{</code><i>format-control</i><code>~}</code> terminates at
+that point.
+
+<p>Additional options let you limit the number of iterations and specify
+different requirements for the arguments.  Consult a Lisp reference for
+details.
+
+<h2>Conditionals</h2>
+
+<p>Conditional format directives are introduced by <code>~[</code>
+and delimited by <code>~]</code>. There are several forms, which
+I'll call ordinal, binary, and conditional. The ordinal form is
+<code>~[</code><i>format-0</i><code>~;</code><i>format-1</i><code>~;</code><i>...</i><code>~;</code><i>format-N</i><code>~]</code>,
+which selects the <i>format-Ith</i> clause for an argument value of
+<i>I</i>.
+
+<pre>
+? (format t "~[Lisp 1.5~;MACLISP~;PSL~;Common Lisp~]" 2)
+PSL
+NIL
+</pre> 
+
+<p>Within <code>~[</code> and <code>~]</code> you can specify a
+final <em>default</em> clause as
+<code>~:;</code><i>format-default</i>; this is selected if the argument 
+is outside the range 0 to N.
+
+<p>The binary form is written
+<code>~:[</code><i>format-false</i><code>~;</code><i>format-true</i><code>~]</code>.
+The <i>format-false</i> clause is interpreted if the argument is
+<code>NIL</code>; otherwise, the <i>format-true</i> clause is
+interpreted.
+
+<pre>
+? (format t "My computer ~:[doesn't~;does~] like Lisp." t)
+My computer does like Lisp.
+NIL
+? (format t "My computer ~:[doesn't~;does~] like Lisp." nil)
+My computer doesn't like Lisp.
+NIL
+</pre> 
+
+<p>The conditional form, written as <code>~@[</code><i>format</i><code>~]</code>, first tests its argument. If the argument is not <code>NIL</code>,
+it is not consumed; rather, it is left for <i>format</i> to consume.  If
+the argument is <code>NIL</code>, then it is consumed and <i>format</i> is
+not interpreted.
+
+<pre>
+? (format nil "~{~@[~A ~]~}" '(1 2 nil 3 t nil 4 nil))
+"1 2 3 T 4"
+</pre> 
+
+
+<h2>Floobydust</h2>
+
+<p>As you've seen, many of the format directives accept optional parameters,
+such as the field width parameter of the justification, tabbing, and numeric
+directives.  Our examples have encoded these parameters into the format 
+control string.  Sometimes it is useful to have a parameter vary during the
+program's operation.  You can do this by specifying <code>V</code> where
+the parameter would appear; the parameter's value is then taken from the
+next argument in the argument list.
+
+<pre>
+? (format t "~{~&amp;~VD~}" '(5 37 10 253 15 9847 10 559 5 12))
+   37
+       253
+           9847
+       559
+   12
+NIL
+</pre> 
+
+<p>In this example, the arguments are consumed in pairs, with the first
+of each pair specifying a field width and the second being the number to
+print.
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter23.html">Chapter 23</a> | Chapter 24 | <a href="chapter25.html">Chapter 25</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

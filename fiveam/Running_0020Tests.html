@@ -1,0 +1,294 @@
+<html
+  ><head
+    ><title
+      >FiveAM</title
+    ><link href="style.css" rel="stylesheet"
+    /><link title="Print" href="print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><h1 class="title"
+        >FiveAM</h1
+      ><div class="contents"
+        ><h2
+  ><a name="Running_0020Tests"
+  >Running Tests</a
+>&nbsp;</h2
+><div class="nav-links"
+  ><a class="nav-link" href="Test_0020Suites.html#Managing_0020the_0020Current_0020Suite"
+  >prev</a
+> | <span class="dead-nav-link"
+  >up</span
+> | <a href="Running_0020Tests.html#Public_0020entry_0020points"
+  >next</a
+> | <a href="index.html"
+    >toc</a
+  ></div
+>
+<p> Once the programmer has defined what the tests are these need to
+ be run and the expected effects should be compared with the
+ actual effects. FiveAM provides the function RUN for this
+ purpose, RUN executes a number of tests and collects the results
+ of each individual check into a list which is then
+ returned. There are three types of test results: passed, failed
+ and skipped, these are represented by TEST-RESULT objects.
+
+<p> Generally running a test will return normally, but there are two
+ exceptional situations which can occur:
+
+<p> - An exception is signaled while running the test. If the
+   variable *debug-on-error* is T than FiveAM will enter the
+   debugger, otherwise a test failure (of type
+   unexpected-test-failure) is returned. When entering the
+   debugger two restarts are made available, one simply reruns the
+   current test and another signals a test-failure and continues
+   with the remaining tests.
+
+<p> - A circular dependency is detected. An error is signaled and a
+   restart is made available which signals a test-skipped and
+   continues with the remaining tests. This restart also sets the
+   dependency status of the test to nil, so any tests which depend
+   on this one (even if the dependency is not circular) will be
+   skipped.
+
+<p> The functions RUN!, !, !! and !!! are convenient wrappers around
+ RUN and EXPLAIN.
+
+<div class="computational-element-link computational-element-link-variable"
+  ><p
+    ><a href="api/variable_005FIT.BESE.FIVEAM_003A_003A_002ADEBUG-ON-ERROR_002A.html" name="variable_005FIT.BESE.FIVEAM_003A_003A_002ADEBUG-ON-ERROR_002A"
+      >Variable *DEBUG-ON-ERROR*</a
+    > T if we should drop into a debugger on error, NIL otherwise.</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-variable"
+  ><p
+    ><a href="api/variable_005FIT.BESE.FIVEAM_003A_003A_002ADEBUG-ON-FAILURE_002A.html" name="variable_005FIT.BESE.FIVEAM_003A_003A_002ADEBUG-ON-FAILURE_002A"
+      >Variable *DEBUG-ON-FAILURE*</a
+    > T if we should drop into a debugger on a failing check, NIL otherwise.</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-function"
+  ><p
+    ><a href="api/function_005FIT.BESE.FIVEAM_003A_003AIMPORT-TESTING-SYMBOLS.html" name="function_005FIT.BESE.FIVEAM_003A_003AIMPORT-TESTING-SYMBOLS"
+      >Function IMPORT-TESTING-SYMBOLS</a
+    > </p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-variable"
+  ><p
+    ><a href="api/variable_005FIT.BESE.FIVEAM_003A_003A_002ARUN-QUEUE_002A.html" name="variable_005FIT.BESE.FIVEAM_003A_003A_002ARUN-QUEUE_002A"
+      >Variable *RUN-QUEUE*</a
+    > List of test waiting to be run.</p
+  ></div
+>
+
+<pre class="code"
+  ><span class="first-line"><span class="paren">(</span>define-condition circular-dependency <span class="paren">(</span>error<span class="paren">)</span></span><span class"body">
+  <span class="paren">(</span><span class="paren">(</span>test-case :initarg :test-case<span class="paren">)</span><span class="paren">)</span>
+  <span class="paren">(</span>:report <span class="paren">(</span>lambda <span class="paren">(</span>cd stream<span class="paren">)</span>
+             <span class="paren">(</span>format stream &quot;A circular dependency wes detected in ~S.&quot; <span class="paren">(</span>slot-value cd 'test-case<span class="paren">)</span><span class="paren">)</span><span class="paren">)</span><span class="paren">)</span>
+  <span class="paren">(</span>:documentation &quot;Condition signaled when a circular dependency
+between test-cases has been detected.&quot;<span class="paren">)</span><span class="paren">)</span></span></pre
+>
+
+<div class="computational-element-link computational-element-link-generic function"
+  ><p
+    ><a href="api/generic_0020function_005FIT.BESE.FIVEAM_003A_003ARUN-RESOLVING-DEPENDENCIES.html" name="generic_0020function_005FIT.BESE.FIVEAM_003A_003ARUN-RESOLVING-DEPENDENCIES"
+      >Generic Function RUN-RESOLVING-DEPENDENCIES</a
+    > Given a dependency spec determine if the spec
+is satisfied or not, this will generally involve running other
+tests.</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-method"
+  ><p
+    ><a href="api/method_005FIT.BESE.FIVEAM_003A_003A_0028RUN-RESOLVING-DEPENDENCIES_0020TEST-CASE_0029.html" name="method_005FIT.BESE.FIVEAM_003A_003A_0028RUN-RESOLVING-DEPENDENCIES_0020TEST-CASE_0029"
+      >Method (RUN-RESOLVING-DEPENDENCIES TEST-CASE)</a
+    > Return true if this test, and its dependencies, are satisfied,
+  NIL otherwise.</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-method"
+  ><p
+    ><a href="api/method_005FIT.BESE.FIVEAM_003A_003A_0028RESOLVE-DEPENDENCIES_0020SYMBOL_0029.html" name="method_005FIT.BESE.FIVEAM_003A_003A_0028RESOLVE-DEPENDENCIES_0020SYMBOL_0029"
+      >Method (RESOLVE-DEPENDENCIES SYMBOL)</a
+    > A test which depends on a symbol is interpreted as `(AND
+  ,DEPENDS-ON).</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-method"
+  ><p
+    ><a href="api/method_005FIT.BESE.FIVEAM_003A_003A_0028RESOLVE-DEPENDENCIES_0020LIST_0029.html" name="method_005FIT.BESE.FIVEAM_003A_003A_0028RESOLVE-DEPENDENCIES_0020LIST_0029"
+      >Method (RESOLVE-DEPENDENCIES LIST)</a
+    > Return true if the dependency spec DEPENDS-ON is satisfied,
+  nil otherwise.</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-function"
+  ><p
+    ><a href="api/function_005FIT.BESE.FIVEAM_003A_003ARESULTS-STATUS.html" name="function_005FIT.BESE.FIVEAM_003A_003ARESULTS-STATUS"
+      >Function RESULTS-STATUS</a
+    > Given a list of test results (generated while running a test)
+  return true if all of the results are of type TEST-PASSED,
+  faile otherwise.</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-function"
+  ><p
+    ><a href="api/function_005FIT.BESE.FIVEAM_003A_003ARETURN-RESULT-LIST.html" name="function_005FIT.BESE.FIVEAM_003A_003ARETURN-RESULT-LIST"
+      >Function RETURN-RESULT-LIST</a
+    > Run the test function TEST-LAMBDA and return a list of all
+  test results generated, does not modify the special environment
+  variable RESULT-LIST.</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-method"
+  ><p
+    ><a href="api/method_005FIT.BESE.FIVEAM_003A_003A_0028RUN-TEST-LAMBDA_0020TEST-CASE_0029.html" name="method_005FIT.BESE.FIVEAM_003A_003A_0028RUN-TEST-LAMBDA_0020TEST-CASE_0029"
+      >Method (RUN-TEST-LAMBDA TEST-CASE)</a
+    > </p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-generic function"
+  ><p
+    ><a href="api/generic_0020function_005FIT.BESE.FIVEAM_003A_003A_0025RUN.html" name="generic_0020function_005FIT.BESE.FIVEAM_003A_003A_0025RUN"
+      >Generic Function %RUN</a
+    > Internal method for running a test.</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-method"
+  ><p
+    ><a href="api/method_005FIT.BESE.FIVEAM_003A_003A_0028_0025RUN_0020TEST-CASE_0029.html" name="method_005FIT.BESE.FIVEAM_003A_003A_0028_0025RUN_0020TEST-CASE_0029"
+      >Method (%RUN TEST-CASE)</a
+    > </p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-method"
+  ><p
+    ><a href="api/method_005FIT.BESE.FIVEAM_003A_003A_0028_0025RUN_0020TEST-SUITE_0029.html" name="method_005FIT.BESE.FIVEAM_003A_003A_0028_0025RUN_0020TEST-SUITE_0029"
+      >Method (%RUN TEST-SUITE)</a
+    > </p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-method"
+  ><p
+    ><a href="api/method_005FIT.BESE.FIVEAM_003A_003A_0028_0025RUN_0020SYMBOL_0029.html" name="method_005FIT.BESE.FIVEAM_003A_003A_0028_0025RUN_0020SYMBOL_0029"
+      >Method (%RUN SYMBOL)</a
+    > </p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-variable"
+  ><p
+    ><a href="api/variable_005FIT.BESE.FIVEAM_003A_003A_002AINITIAL-_0021_002A.html" name="variable_005FIT.BESE.FIVEAM_003A_003A_002AINITIAL-_0021_002A"
+      >Variable *INITIAL-!*</a
+    > </p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-variable"
+  ><p
+    ><a href="api/variable_005FIT.BESE.FIVEAM_003A_003A_002A_0021_002A.html" name="variable_005FIT.BESE.FIVEAM_003A_003A_002A_0021_002A"
+      >Variable *!*</a
+    > </p
+  ></div
+>
+<div class="computational-element-link computational-element-link-variable"
+  ><p
+    ><a href="api/variable_005FIT.BESE.FIVEAM_003A_003A_002A_0021_0021_002A.html" name="variable_005FIT.BESE.FIVEAM_003A_003A_002A_0021_0021_002A"
+      >Variable *!!*</a
+    > </p
+  ></div
+>
+<div class="computational-element-link computational-element-link-variable"
+  ><p
+    ><a href="api/variable_005FIT.BESE.FIVEAM_003A_003A_002A_0021_0021_0021_002A.html" name="variable_005FIT.BESE.FIVEAM_003A_003A_002A_0021_0021_0021_002A"
+      >Variable *!!!*</a
+    > </p
+  ></div
+>
+
+<h3
+  ><a name="Public_0020entry_0020points"
+  >Public entry points</a
+>&nbsp;</h3
+><div class="nav-links"
+  ><a class="nav-link" href="Running_0020Tests.html"
+  >prev</a
+> | <a class="nav-link" href="Running_0020Tests.html"
+  >up</a
+> | <a href="Analyzing_0020the_0020results.html"
+  >next</a
+> | <a href="index.html"
+    >toc</a
+  ></div
+>
+<div class="computational-element-link computational-element-link-function"
+  ><p
+    ><a href="api/function_005FIT.BESE.FIVEAM_003A_003ARUN_0021.html" name="function_005FIT.BESE.FIVEAM_003A_003ARUN_0021"
+      >Function RUN!</a
+    > Equivalent to (explain (run TEST-SPEC)).</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-function"
+  ><p
+    ><a href="api/function_005FIT.BESE.FIVEAM_003A_003AEXPLAIN_0021.html" name="function_005FIT.BESE.FIVEAM_003A_003AEXPLAIN_0021"
+      >Function EXPLAIN!</a
+    > Explain the results of RESULT-LIST using a
+detailed-text-explainer with output going to *test-dribble*</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-function"
+  ><p
+    ><a href="api/function_005FIT.BESE.FIVEAM_003A_003ARUN.html" name="function_005FIT.BESE.FIVEAM_003A_003ARUN"
+      >Function RUN</a
+    > Run the test specified by TEST-SPEC.</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-function"
+  ><p
+    ><a href="api/function_005FIT.BESE.FIVEAM_003A_003A_0021.html" name="function_005FIT.BESE.FIVEAM_003A_003A_0021"
+      >Function !</a
+    > Rerun the most recently run test and explain the results.</p
+  ></div
+>
+
+<div class="computational-element-link computational-element-link-function"
+  ><p
+    ><a href="api/function_005FIT.BESE.FIVEAM_003A_003A_0021_0021.html" name="function_005FIT.BESE.FIVEAM_003A_003A_0021_0021"
+      >Function !!</a
+    > Rerun the second most recently run test and explain the results.</p
+  ></div
+>
+  
+<div class="computational-element-link computational-element-link-function"
+  ><p
+    ><a href="api/function_005FIT.BESE.FIVEAM_003A_003A_0021_0021_0021.html" name="function_005FIT.BESE.FIVEAM_003A_003A_0021_0021_0021"
+      >Function !!!</a
+    > Rerun the third most recently run test and explain the results.</p
+  ></div
+>
+
+
+</div
+      ></div
+    ></body
+  ></html
+>

@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 33</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 33 - Where to Go Next</h1> 
+
+<P>I hope that this book has whetted your appetite for Lisp. If so,
+you'll want to explore further; this chapter provides pointers to
+other sources of information and products.
+
+
+<h2>Suggestions for further reading</h2>
+
+<dl>
+<dt><a name="kiczales91">The Art of the Metaobject Protocol, Kiczales et al, MIT Press, 1991, ISBN 0-262-61074-4</a> 
+<dd>This is the definitive text on the metaobject protocol,
+    referred to in Lisp circles as "AMOP."
+    This is <em>not</em> light reading; save it for when you
+    feel quite confident in your Lisp abilities.
+
+<dt><a name="graham96">ANSI Common Lisp, Graham, 1996, Prentice-Hall, ISBN 0-13-370875-6</a> 
+<dd>This is a good refresher for an experienced Lisp programmer,
+as well as being an excellent second text for the beginner. (I think
+it's a bit too terse to use as a first text for a beginner, but you
+may want to look at it and see whether you think it's approachable.)
+
+<dt><a name="graham94">On Lisp: Advanced Techniques for Common Lisp, Graham,
+Prentice Hall, 1994, ISBN 0-13-030552-9</a> 
+<dd>This has become the canonical reference for macro techniques.
+
+<dt><a name="keene89">Object-Oriented Programming in Common Lisp: A Programmer's Guide to CLOS, Keene, 1989, Addison-Wesley, ISBN 0-201-17589-4</a> 
+<dd>Keene's book is quite simply <em>the</em> book to read when you
+want to understand CLOS. It's short, and it covers all of the
+essentials. Its best feature is its profuse application of
+real-world examples.
+
+<dt><a name="lawless91">Understanding CLOS: The Common Lisp Object System, Lawless &amp; Miller, 1991, Digital Press, ISBN 1-55558-064-5</a> 
+<dd>Lawless and Miller's book covers more of CLOS than Keene's book,
+but the treatment is closer to a reference than a tutorial.
+
+<dt><a name="cltl2">Common Lisp: The Language, 2nd Ed., Steele, 1990, Digital Press, ISBN 1-55558-041-6</a> 
+<dd>Dubbed "CLtL2," this was an interim interpretation of the work of the ANSI
+standardization committee. It has no standing as part of the standards
+process, but was used by many Lisp vendors to anticipate the final
+outcome of the committee's work. Some Lisp systems still implement
+portions of both the CLtL2 description and the ANSI standard.
+
+<dt><a name="jones96">Garbage Collection: Algorithms for Automatic Dynamic 
+Memory Management, Jones et al, 1996, Wiley, ISBN 0-471-94184-4</a> 
+<dd>This is an excellent reference covering all aspects of dynamic
+storage allocation techniques.
+
+<dt><a name="slade98">Object-Oriented Common Lisp, Slade, 1998, Prentice-Hall, ISBN 0-13-605940-6</a> 
+<dd>Slade's book is probably the best book available on actually
+<em>using</em> a Common Lisp environment for something other than AI
+programming. I think it's suitable for a beginner, but should
+probably be supplemented by another title that provides better
+insight into the Lisp language.
+
+<dt><a name="wilensky86">Common LISPcraft, Wilensky, 1986, W.W. Norton &amp; Co., ISBN 0-393-95544-3</a> 
+<dd>When I was first learning Common Lisp, I found Wilensky's
+book the most helpful at exposing some of Lisp's unique concepts,
+such as closures. This book is easy to read (without being
+patronizing) and includes a lot of very clear examples. There's also
+a brief Common Lisp reference in the appendix. I still recommend
+this as a first book for beginners.
+
+</dl> 
+
+<h2>Historical References</h2> 
+
+<dl>
+<dt><a name="dijkstra68">Cooperating Sequential Processes, Dijkstra,
+pp. 43-112 in Programming Languages, Genuys (ed.), Academic Press,
+1968.</a> 
+<dd>Dijkstra described the techniques used for process coordination.
+The <a href="chapter32.html#dining-philosophers">dining philosophers</a> 
+problem is one of Dijkstra's examples of process coordination when
+resources must be shared.
+
+<dt><a name="mccarthy60">Recursive Functions of Symbolic Expressions, 
+J. McCarthy, CACM, 3, 4, 1960, ppg. 184-195.</a>
+<dd>This is McCarthy's seminal Lisp paper. (Available online in 
+various formats at his web site:
+<a href="http://www-formal.stanford.edu/jmc/index.html">http://www-formal.stanford.edu/jmc/index.html</a>)
+
+</dl> 
+
+<h2>On-line sources</h2>
+
+<dl>
+<DT><A HREF="http://www.lisp.org/">The Association of Lisp Users</A>
+<DD>Information on conferences, jobs, implementations, etc.
+
+<DT><A HREF="http://www.xanalys.com/software_tools/reference/HyperSpec/"> Common Lisp HyperSpec (TM)</A>
+<DD>A hypertext version of the <a
+href="ftp://parcftp.xerox.com/pub/cl/dpANS3/">ANSI Common Lisp
+standard</a> , constructed by Kent Pittman and hosted by XANALYS 
+(formerly Harlequin, Inc.).
+
+<dt><a href="http://www.lisp.org/mop/index.html">MetaObject Protocol</a> 
+<dd>Not a part of the Common Lisp standard, the MetaObject Protocol is
+    widely supported as a interface to the mechanism underlying CLOS.
+
+</dl> 
+
+<h2>Commercial vendors</h2>
+
+<dl>
+<DT><A HREF="http://www.digitool.com/">Digitool, Inc. Home Page</A>
+<DD>Digitool provides both 68K and PPC versions of Macintosh Common Lisp, a world-class Lisp development system.
+
+<DT><A HREF="http://www.franz.com/">The Franz Inc. Home Page</A>
+<DD>Franz makes Common Lisp compilers for Unix and Windows.  They
+    have trial versions for Windows and Linux.
+
+<DT><A HREF="http://www.harlequin.com/">XANALYS</A>
+<DD>XANALYS (formerly Harlequin) ofers a free Lisp interpreter based upon their LispWorks environment.
+
+</dl> 
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter32.html">Chapter 32</a> | Chapter 33 | <a href="chapter34.html">Chapter 34</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

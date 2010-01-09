@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>8.7 Alien Function Calls</TITLE>
+<META NAME="description" CONTENT="8.7 Alien Function Calls">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3695" HREF="node238.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3693" HREF="node221.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3687" HREF="node236.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3697" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3698" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3696" HREF="node238.html">The alien-funcall Primitive</A>
+<B>Up:</B> <A NAME="tex2html3694" HREF="node221.html">8 Alien Objects</A>
+<B> Previous:</B> <A NAME="tex2html3688" HREF="node236.html">8.6 Loading Unix Object </A>
+<BR> <P>
+<H1><A NAME="SECTION00970000000000000000">8.7 Alien Function Calls</A></H1>
+<P>
+The foreign function call interface allows a Lisp program to call functions
+written in other languages.  The current implementation of the foreign
+function call interface assumes a C calling convention and thus routines
+written in any language that adheres to this convention may be called from
+Lisp.
+<P>
+Lisp sets up various interrupt handling routines and other environment
+information when it first starts up, and expects these to be in place at all
+times.  The C functions called by Lisp should either not change the
+environment, especially the interrupt entry points, or should make sure
+that these entry points are restored when the C function returns to Lisp.
+If a C function makes changes without restoring things to the way they were
+when the C function was entered, there is no telling what will happen.
+<P>
+<BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html3699" HREF="node238.html#SECTION00971000000000000000">The alien-funcall Primitive</A>
+<LI> <A NAME="tex2html3700" HREF="node239.html#SECTION00972000000000000000">The def-alien-routine Macro</A>
+<LI> <A NAME="tex2html3701" HREF="node240.html#SECTION00973000000000000000">def-alien-routine Example</A>
+<LI> <A NAME="tex2html3702" HREF="node241.html#SECTION00974000000000000000">8.7.4 Calling Lisp from C</A>
+<LI> <A NAME="tex2html3703" HREF="node242.html#SECTION00975000000000000000">8.7.5 Accessing Lisp Arrays</A>
+</UL>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>1.3.1 CMU Distribution</TITLE>
+<META NAME="description" CONTENT="1.3.1 CMU Distribution">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html630" HREF="node7.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html628" HREF="node5.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html622" HREF="node5.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html632" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html633" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html631" HREF="node7.html">1.3.2 Net Distribution</A>
+<B>Up:</B> <A NAME="tex2html629" HREF="node5.html">1.3 Net Distribution of </A>
+<B> Previous:</B> <A NAME="tex2html623" HREF="node5.html">1.3 Net Distribution of </A>
+<BR> <P>
+<H2><A NAME="SECTION00231000000000000000">1.3.1 CMU Distribution</A></H2>
+<P>
+Externally, CMU Common Lisp is only available via anonymous FTP.  We
+don't have the manpower to make tapes.  These are our distribution
+machines:
+<BLOCKQUOTE> <PRE>lisp-rt1.slisp.cs.cmu.edu (128.2.217.9)
+lisp-rt2.slisp.cs.cmu.edu (128.2.217.10)
+</PRE> </BLOCKQUOTE>
+<P>
+Log in with the user `<tt>anonymous</tt>' and `<tt>username@host</tt>' as
+password (i.e. your EMAIL address.)  When you log in, the current
+directory should be set to the CMU Common Lisp release area.  If you have any
+trouble with FTP access, please send mail to `<tt>slisp@cs.cmu.edu</tt>'.
+<P>
+The release area holds compressed tar files with names of the form:
+<BLOCKQUOTE> <PRE><i>version</i>-<i>machine</i>_<i>os</i>.tar.Z
+</PRE> </BLOCKQUOTE>
+FTP compressed tar archives in binary mode.  To extract, `<tt>cd</tt>' to
+the directory that is to be the root of the tree, then type:
+<BLOCKQUOTE> <PRE>uncompress &lt;file.tar.Z | tar xf - .
+</PRE> </BLOCKQUOTE>
+The resulting tree is about 23 megabytes.  For installation
+directions, see the section ``site initialization'' in README file at
+the root of the tree.
+<P>
+If poor network connections make it difficult to transfer a 10 meg
+file, the release is also available split into five parts, with the
+suffix `<tt>.0</tt>' to `<tt>.4</tt>'. To extract from multiple files, use:
+<BLOCKQUOTE> <PRE>cat file.tar.Z.* | uncompress | tar xf - .
+</PRE> </BLOCKQUOTE>
+<P>
+The release area also contains source distributions and other binary
+distributions.  A listing of the current contents of the release area
+is in `<tt>FILES</tt>'.  Major release announcements will be made to
+<tt>comp.lang.lisp</tt> until there is enough volume to warrant a
+<tt>comp.lang.lisp.cmu</tt>.
+<P>
+<BR><IMG WIDTH=104 HEIGHT=24 ALIGN=BOTTOM ALT="change_begin" SRC="change_begin.gif"><BR>
+<P>
+<BR><IMG WIDTH=104 HEIGHT=24 ALIGN=BOTTOM ALT="change_end" SRC="change_end.gif"><BR>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

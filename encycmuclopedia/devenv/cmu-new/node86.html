@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>4.3 Compilation Units</TITLE>
+<META NAME="description" CONTENT="4.3 Compilation Units">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1695" HREF="node87.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1693" HREF="node83.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1687" HREF="node85.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1697" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1698" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1696" HREF="node87.html">4.3.1 Undefined Warnings</A>
+<B>Up:</B> <A NAME="tex2html1694" HREF="node83.html">4 The Compiler</A>
+<B> Previous:</B> <A NAME="tex2html1688" HREF="node85.html">4.2 Calling the Compiler</A>
+<BR> <P>
+<H1><A NAME="SECTION00530000000000000000">4.3 Compilation Units</A></H1>
+<P>
+<A NAME="9333">&#160;</A>
+<P>
+CMU Common Lisp supports the <tt>with-compilation-unit</tt> macro added to the
+language by the proposed X3J13 ``with-compilation-unit'' compiler
+cleanup.  This provides a mechanism for eliminating spurious undefined
+warnings when there are forward references across files, and also
+provides a standard way to access compiler extensions.
+<P>
+<b>[Macro]</b><BR> 
+<tt>  with-compilation-unit</tt> <em> (<IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>key</i> <i>value</i></i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif">) <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>form</i></i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></em><BR>
+<P>
+  This macro evaluates the <i>forms</i> in an environment that causes
+  warnings for undefined variables, functions and types to be delayed
+  until all the forms have been evaluated.  Each keyword <i>value</i>
+  is an evaluated form.  These keyword options are recognized:
+  <DL ><DT><STRONG><tt>:override</tt></STRONG>
+<DD> If uses of <tt>with-compilation-unit</tt> are
+    dynamically nested, the outermost use will take precedence,
+    suppressing printing of undefined warnings by inner uses.
+    However, when the <tt>override</tt> option is true this shadowing is
+    inhibited; an inner use will print summary warnings for the
+    compilations within the inner scope.
+<P>
+  <DT><STRONG><tt>:optimize</tt></STRONG>
+<DD> This is a CMU extension that specifies of the
+    ``global'' compilation policy for the dynamic extent of the body.
+    The argument should evaluate to an <tt>optimize</tt> declare form,
+    like:
+    <BLOCKQUOTE> <PRE>(optimize (speed 3) (safety 0))
+    </PRE> </BLOCKQUOTE>
+    See section&nbsp;<A HREF="node102.html#optimizedeclaration">4.7.1</A>
+<P>
+  <DT><STRONG><tt>:optimize-interface</tt></STRONG>
+<DD> Similar to <tt>:optimize</tt>, but
+    specifies the compilation policy for function interfaces (argument
+    count and type checking) for the dynamic extent of the body.
+    See section&nbsp;<A HREF="node103.html#optimizeinterfacedeclaration">4.7.2</A>.
+<P>
+  <DT><STRONG><tt>:context-declarations</tt></STRONG>
+<DD> This is a CMU extension that
+    pattern-matches on function names, automatically splicing in any
+    appropriate declarations at the head of the function definition.
+    See section&nbsp;<A HREF="node153.html#contextdeclarations">5.7.5</A>.
+<P>
+</DL><BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html1699" HREF="node87.html#SECTION00531000000000000000">4.3.1 Undefined Warnings</A>
+</UL>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

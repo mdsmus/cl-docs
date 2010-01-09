@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.14.6 Additional Timing Utilities</TITLE>
+<META NAME="description" CONTENT="5.14.6 Additional Timing Utilities">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3164" HREF="node197.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3162" HREF="node190.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3156" HREF="node195.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3166" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3167" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3165" HREF="node197.html">5.14.7 A Note on </A>
+<B>Up:</B> <A NAME="tex2html3163" HREF="node190.html">5.14 Profiling</A>
+<B> Previous:</B> <A NAME="tex2html3157" HREF="node195.html">5.14.5 Profiling overhead</A>
+<BR> <P>
+<H2><A NAME="SECTION006146000000000000000">5.14.6 Additional Timing Utilities</A></H2>
+<P>
+<b>[Macro]</b><BR> 
+<tt>  time</tt> <em>  <i>form</i></em><BR>
+<P>
+  This macro evaluates <i>form</i>, prints some timing and memory
+  allocation information to <tt>*trace-output*</tt>, and returns any
+  values that <i>form</i> returns.  The timing information includes
+  real time, user run time, and system run time.  This macro executes
+  a form and reports the time and consing overhead.  If the
+  <tt>time</tt> form is not compiled (e.g. it was typed at top-level),
+  then <tt>compile</tt> will be called on the form to give more accurate
+  timing information.  If you really want to time interpreted speed,
+  you can say:
+<BLOCKQUOTE> <PRE>(time (eval '<i>form</i>))
+</PRE> </BLOCKQUOTE>
+Things that execute fairly quickly should be timed more than once,
+since there may be more paging overhead in the first timing.  To
+increase the accuracy of very short times, you can time multiple
+evaluations:
+<BLOCKQUOTE> <PRE>(time (dotimes (i 100) <i>form</i>))
+</PRE> </BLOCKQUOTE>
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:get-bytes-consed</tt> <em> </em><BR>
+<P>
+  This function returns the number of bytes allocated since the first
+  time you called it.  The first time it is called it returns zero.
+  The above profiling routines use this to report consing information.
+<P>
+<b>[Variable]</b><BR> 
+<tt> extensions:*gc-run-time*</tt><BR> <BR>
+<P>
+  This variable accumulates the run-time consumed by garbage
+  collection, in the units returned by
+  <A NAME="10866">&#160;</A><tt>get-internal-run-time</tt>.
+<P>
+<b>[Constant]</b><BR> 
+<tt>  internal-time-units-per-second</tt><BR> 
+The value of internal-time-units-per-second is 100.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

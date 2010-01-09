@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 22</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 22 - How to Find Your Way Around, Part 3</h1> 
+
+<P>In <a href="chapter10.html">Chapter 10</a> we learned about two
+functions you can use to examine Lisp objects: <code>DESCRIBE</code> and 
+<code>INSPECT</code>. These are available in every implementation, so
+you should learn how to use them just in case you find yourself sitting
+at a console in front of a new and unknown Lisp system someday.
+
+<p>Some Lisp systems offer additional tools that aren't part of ANSI
+Common Lisp. Sometimes the extra tools are built in, and other times
+they're provided by the vendor but not installed by default. In this
+chapter I'll tell you a bit about these tools, so you'll know what to
+look for.
+
+<p>In addition to exploring the structure and relationships of objects,
+it's sometimes useful to "hook in" to the behavior of certain functions.
+You might just want to know when -- or whether -- a function
+is called with certain arguments. <code>TRACE</code> is always at your
+disposal (see <a href="chapter16.html">Chapter 16</a>), but you may only
+be interested in one particular call out of thousands; generating the
+trace output (never mind sifting through it later) can be very time
+consuming. For cases like this, some Lisp implementations let you 
+<em>advise</em> an existing function without changing its source code.
+
+<h2>Class and method browsers help you find your way in a sea of objects</h2>
+
+<p>When you program a large system using CLOS, especially if the
+system evolves over time as so many do, you'll need a tool to help
+you examine the relationships between classes. Some Lisp
+systems provide a browser that displays these relationships
+graphically. Here's an example of what my system's browser displays
+as the subclasses of <code>ARRAY</code>:
+
+<p><img src="gifs/array-class-hierarchy.gif">
+
+<p>Another useful tool, the method browser, lets you explore all of
+the specializations of a particular method. The browser may let you
+filter on particular qualifiers (we learned about qualifiers in <a
+href="chapter14.html">Chapter 14</a>), and will almost certainly give
+you navigational access to selected method definitions. Here's a
+list from the method browser in my Lisp system; I asked for a list
+of all <i>INITIALIZE-INSTANCE</i> methods having the
+<code>:AROUND</code> qualifier:
+
+<p><img src="gifs/method-browser-list.gif">
+
+<p>Remember that methods do not belong to classes; that's why we
+have separate browsers. (Some browsers give you the ability to
+navigate the coincidental connections between classes and methods,
+such as by examining the classes used to specialize arguments to a
+method.)
+
+<h2>ADVISE lets you modify a function's behavior without changing the function</h2>
+
+<p>Some Lisp systems include an <code>ADVISE</code> capability. This
+lets you intercept calls to existing functions. You can provide code
+that examines (and perhaps alters) the function's arguments and
+results. <code>ADVISE</code> has many uses, most of them invented on
+the spur of the moment. However, one common use of
+<code>ADVISE</code> is to implement a <code>TRACE</code> or
+<code>BREAK</code> that is conditioned upon particular arguments or
+results.
+
+<p>The syntax and options for <code>ADVISE</code> vary from system to
+system. Here's an example of defining advice in one particular 
+implementation:
+
+<pre>
+(advise fibonacci
+        (when (zerop (first arglist)) (break))
+        :when :before
+        :name :break-on-zero)
+</pre> 
+
+<p>This example shows how to advise a <code>FIBONACCI</code>
+function by adding code that breaks into the debugger when
+<code>FIBONACCI</code>'s first argument is zero. Note that we
+do not need any knowledge of or access to the source code of
+<code>FIBONACCI</code> in order to add this advice.
+
+<p>This particular implementation of <code>ADVISE</code> binds a
+list of all of the advised function's arguments into a variable
+named <code>ARGLIST</code>. The keyword arguments declare that the
+advice form, <code>(WHEN (ZEROP (FIRST ARGLIST)) (BREAK))</code>, is
+to be executed <em>before</em> each call to <code>FIBONACCI</code>.
+The advice has the name <code>:BREAK-ON-ZERO</code>; this name is
+used when removing advice (typically via an <code>UNADVISE</code>
+form) or when redefining the behavior of a particular advice.
+
+<h2>WATCH lets you open a window on interesting variables</h2>
+
+<p>A <em>watch</em> tool, found less commonly on Lisp systems,
+allows you to display the current state of a variable as your
+program runs. The details vary widely. Implementations may give you
+sampled real-time display, or may slow the program down in order to
+give you an accurate display of each change. Sometimes the watcher
+is integrated with a debugger or stepper, and other times it is an
+independent tool. Consult your vendor's documentation to learn
+whether your Lisp system has a watch tool.
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter21.html">Chapter 21</a> | Chapter 22 | <a href="chapter23.html">Chapter 23</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

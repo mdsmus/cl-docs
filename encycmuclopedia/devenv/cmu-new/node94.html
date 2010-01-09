@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>4.4.6 Read Errors</TITLE>
+<META NAME="description" CONTENT="4.4.6 Read Errors">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1797" HREF="node95.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1795" HREF="node88.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1789" HREF="node93.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1799" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1800" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1798" HREF="node95.html">4.4.7 Error Message Parameterization</A>
+<B>Up:</B> <A NAME="tex2html1796" HREF="node88.html">4.4 Interpreting Error Messages</A>
+<B> Previous:</B> <A NAME="tex2html1790" HREF="node93.html">4.4.5 Errors During Macroexpansion</A>
+<BR> <P>
+<H2><A NAME="SECTION00546000000000000000">4.4.6 Read Errors</A></H2>
+<P>
+<A NAME="9461">&#160;</A>
+<P>
+The compiler also handles errors while reading the source.  For example:
+<BLOCKQUOTE> <PRE>Error: Read error at 2:
+ &quot;(,/<IMG WIDTH=6 HEIGHT=16 ALIGN=BOTTOM ALT="tex2html_wrap18423" SRC="img1.gif">foo)&quot;
+Error in function LISP::COMMA-MACRO.
+Comma not inside a backquote.
+</PRE> </BLOCKQUOTE>
+The ``<tt>at 2</tt>'' refers to the character position in the source file at
+which the error was signaled, which is generally immediately after the
+erroneous text.  The next line, ``<tt>(,/<IMG WIDTH=6 HEIGHT=16 ALIGN=BOTTOM ALT="tex2html_wrap18423" SRC="img1.gif">foo)</tt>'', is the line in
+the source that contains the error file position.  The ``<tt>/<IMG WIDTH=6 HEIGHT=16 ALIGN=BOTTOM ALT="tex2html_wrap18423" SRC="img1.gif"> </tt>''
+indicates the error position within that line (in this example,
+immediately after the offending comma.)
+<P>
+When in Hemlock (or any other EMACS-like editor), you can go to a
+character position with:
+<BLOCKQUOTE> <PRE>M-&lt; C-u <i>position</i> C-f
+</PRE> </BLOCKQUOTE>
+Note that if the source is from a Hemlock buffer, then the position
+is relative to the start of the compiled region or <tt>defun</tt>, not the
+file or buffer start.
+<P>
+After printing a read error message, the compiler attempts to recover from the
+error by backing up to the start of the enclosing top-level form and reading
+again with <tt>*read-suppress*</tt> true.  If the compiler can recover from the
+error, then it substitutes a call to <tt>cerror</tt> for the unreadable form and
+proceeds to compile the rest of the file normally.
+<P>
+If there is a read error when the file position is at the end of the file
+(i.e., an unexpected EOF error), then the error message looks like this:
+<BLOCKQUOTE> <PRE>Error: Read error in form starting at 14:
+ &quot;(defun test ()&quot;
+Error in function LISP::FLUSH-WHITESPACE.
+EOF while reading #&lt;Stream for file &quot;/usr/me/test.lisp&quot;&gt;
+</PRE> </BLOCKQUOTE>
+In this case, ``<tt>starting at 14</tt>'' indicates the character
+position at which the compiler started reading, i.e. the position
+before the start of the form that was missing the closing delimiter.
+The line &quot;<tt>(defun test ()</tt>&quot; is first line after the starting
+position that the compiler thinks might contain the unmatched open
+delimiter.
+<P>
+<HR><A NAME="tex2html1797" HREF="node95.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1795" HREF="node88.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1789" HREF="node93.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1799" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1800" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1798" HREF="node95.html">4.4.7 Error Message Parameterization</A>
+<B>Up:</B> <A NAME="tex2html1796" HREF="node88.html">4.4 Interpreting Error Messages</A>
+<B> Previous:</B> <A NAME="tex2html1790" HREF="node93.html">4.4.5 Errors During Macroexpansion</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

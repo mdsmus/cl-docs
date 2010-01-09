@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>2.6 Describe</TITLE>
+<META NAME="description" CONTENT="2.6 Describe">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1000" HREF="node33.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html998" HREF="node11.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html992" HREF="node31.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1002" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1003" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1001" HREF="node33.html">2.7 The Inspector</A>
+<B>Up:</B> <A NAME="tex2html999" HREF="node11.html">2 Design Choices and </A>
+<B> Previous:</B> <A NAME="tex2html993" HREF="node31.html">2.5.3 Finalization</A>
+<BR> <P>
+<H1><A NAME="SECTION00360000000000000000">2.6 Describe</A></H1>
+<P>
+In addition to the basic function described below, there are a number of
+switches and other things that can be used to control <tt>describe</tt>'s
+behavior.
+<P>
+<b>[Function]</b><BR> 
+<tt>  describe</tt> <em>  <i>object</i> &amp;optional <i>stream</i></em><BR>
+<P>
+  The <tt>describe</tt> function prints useful information about
+  <i>object</i> on <i>stream</i>, which defaults to
+  <tt>*standard-output*</tt>.  For any object, <tt>describe</tt> will
+  print out the type.  Then it prints other information based on the
+  type of <i>object</i>.  The types which are presently handled are:
+<P>
+  <DL ><DT><STRONG><A NAME="7912">&#160;</A><tt>hash-table</tt></STRONG>
+<DD> <tt>describe</tt> prints the number of
+    entries currently in the hash table and the number of buckets
+    currently allocated.
+<P>
+  <DT><STRONG><A NAME="7915">&#160;</A><tt>function</tt></STRONG>
+<DD> <tt>describe</tt> prints a list of the
+    function's name (if any) and its formal parameters.  If the name
+    has function documentation, then it will be printed.  If the
+    function is compiled, then the file where it is defined will be
+    printed as well.
+<P>
+  <DT><STRONG><A NAME="7918">&#160;</A><tt>fixnum</tt></STRONG>
+<DD> <tt>describe</tt> prints whether the integer
+    is prime or not.
+<P>
+  <DT><STRONG><A NAME="7921">&#160;</A><tt>symbol</tt></STRONG>
+<DD> The symbol's value, properties, and
+    documentation are printed.  If the symbol has a function
+    definition, then the function is described.
+<P>
+</DL>
+  If there is anything interesting to be said about some component of
+  the object, describe will invoke itself recursively to describe that
+  object.  The level of recursion is indicated by indenting output.
+<P>
+<b>[Variable]</b><BR> 
+<tt> extensions:*describe-level*</tt><BR> <BR>
+<P>
+  The maximum level of recursive description allowed.  Initially two.
+<P>
+<b>[Variable]</b><BR> 
+<tt> extensions:*describe-indentation*</tt><BR> <BR>
+<P>
+The number of spaces to indent for each level of recursive
+description, initially three.
+<P>
+<b>[Variable]</b><BR> 
+<tt> extensions:*describe-print-level*</tt><BR> <BR> 
+  <tt>extensions:*describe-print-length*</tt><BR>
+<P>
+  The values of <tt>*print-level*</tt> and <tt>*print-length*</tt> during
+  description.  Initially two and five.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

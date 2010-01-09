@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.14.7 A Note on Timing</TITLE>
+<META NAME="description" CONTENT="5.14.7 A Note on Timing">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3176" HREF="node198.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3174" HREF="node190.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3168" HREF="node196.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3178" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3179" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3177" HREF="node198.html">5.14.8 Benchmarking Techniques</A>
+<B>Up:</B> <A NAME="tex2html3175" HREF="node190.html">5.14 Profiling</A>
+<B> Previous:</B> <A NAME="tex2html3169" HREF="node196.html">5.14.6 Additional Timing Utilities</A>
+<BR> <P>
+<H2><A NAME="SECTION006147000000000000000">5.14.7 A Note on Timing</A></H2>
+<P>
+<A NAME="10868">&#160;</A>
+<A NAME="10869">&#160;</A>
+<A NAME="10870">&#160;</A>
+<P>
+There are two general kinds of timing information provided by the
+<tt>time</tt> macro and other profiling utilities: real time and run
+time.  Real time is elapsed, wall clock time.  It will be affected in
+a fairly obvious way by any other activity on the machine.  The more
+other processes contending for CPU and memory, the more real time will
+increase.  This means that real time measurements are difficult to
+replicate, though this is less true on a dedicated workstation.  The
+advantage of real time is that it is real.  It tells you really how
+long the program took to run under the benchmarking conditions.  The
+problem is that you don't know exactly what those conditions were.
+<P>
+Run time is the amount of time that the processor supposedly spent
+running the program, as opposed to waiting for I/O or running other
+processes.  ``User run time'' and ``system run time'' are numbers
+reported by the Unix kernel.  They are supposed to be a measure of how
+much time the processor spent running your ``user'' program (which
+will include GC overhead, etc.), and the amount of time that the
+kernel spent running ``on your behalf.''
+<P>
+Ideally, user time should be totally unaffected by benchmarking
+conditions; in reality user time does depend on other system activity,
+though in rather non-obvious ways.
+<P>
+System time will clearly depend on benchmarking conditions.  In Lisp
+benchmarking, paging activity increases system run time (but not by as much
+as it increases real time, since the kernel spends some time waiting for
+the disk, and this is not run time, kernel or otherwise.)
+<P>
+In my experience, the biggest trap in interpreting kernel/user run time is
+to look only at user time.  In reality, it seems that the <i>sum</i> of kernel
+and user time is more reproducible.  The problem is that as system activity
+increases, there is a spurious <i>decrease</i> in user run time.  In effect, as
+paging, etc., increases, user time leaks into system time.
+<P>
+So, in practice, the only way to get truly reproducible results is to run
+with the same competing activity on the system.  Try to run on a machine
+with nobody else logged in, and check with ``ps aux'' to see if there are any
+system processes munching large amounts of CPU or memory.  If the ratio
+between real time and the sum of user and system time varies much between
+runs, then you have a problem.
+<P>
+<HR><A NAME="tex2html3176" HREF="node198.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3174" HREF="node190.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3168" HREF="node196.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3178" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3179" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3177" HREF="node198.html">5.14.8 Benchmarking Techniques</A>
+<B>Up:</B> <A NAME="tex2html3175" HREF="node190.html">5.14 Profiling</A>
+<B> Previous:</B> <A NAME="tex2html3169" HREF="node196.html">5.14.6 Additional Timing Utilities</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

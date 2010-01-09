@@ -1,0 +1,106 @@
+<html lang="en">
+<head>
+<title>Variable Access - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Debugger.html#Debugger" title="Debugger">
+<link rel="prev" href="Stack-Frames.html#Stack-Frames" title="Stack Frames">
+<link rel="next" href="Source-Location-Printing.html#Source-Location-Printing" title="Source Location Printing">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Variable-Access"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Source-Location-Printing.html#Source-Location-Printing">Source Location Printing</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Stack-Frames.html#Stack-Frames">Stack Frames</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Debugger.html#Debugger">Debugger</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">4.4 Variable Access</h3>
+
+<p><a name="index-Debug-variables-83"></a><a name="index-Variables_002c-debugger-access-84"></a>
+There are two ways to access the current frame's local variables in
+the debugger: <samp><span class="command">list-locals</span></samp> and <code>sb-debug:var</code>.
+
+   <p>The debugger doesn't really understand lexical scoping; it has just
+one namespace for all the variables in the current stack frame.  If a
+symbol is the name of multiple variables in the same function, then
+the reference appears ambiguous, even though lexical scoping specifies
+which value is visible at any given source location.  If the scopes of
+the two variables are not nested, then the debugger can resolve the
+ambiguity by observing that only one variable is accessible.
+
+   <p>When there are ambiguous variables, the evaluator assigns each one a
+small integer identifier.  The <code>sb-debug:var</code> function uses this
+identifier to distinguish between ambiguous variables.  The
+<samp><span class="command">list-locals</span></samp> command prints the identifier.  In the
+following example, there are two variables named <code>X</code>.  The first
+one has identifier 0 (which is not printed), the second one has
+identifier 1.
+
+<pre class="example">     X  =  1
+     X#1  =  2
+</pre>
+   <div class="defun">
+&mdash; Debugger Command: <b>list-locals</b> [<var>prefix</var>]<var><a name="index-list_002dlocals-85"></a></var><br>
+<blockquote><p>This command prints the name and value of all variables in the current
+frame whose name has the specified <var>prefix</var>.  <var>prefix</var> may be
+a string or a symbol.  If no <var>prefix</var> is given, then all available
+variables are printed.  If a variable has a potentially ambiguous
+name, then the name is printed with a &ldquo;<code>#</code><var>identifier</var>&rdquo;
+suffix, where <var>identifier</var> is the small integer used to make the
+name unique. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Function: <b>sb-debug:var</b><var> name &amp;optional identifier<a name="index-sb_002ddebug_003avar-86"></a></var><br>
+<blockquote><p>This function returns the value of the variable in the current frame
+with the specified <var>name</var>.  If supplied, <var>identifier</var>
+determines which value to return when there are ambiguous variables.
+
+        <p>When <var>name</var> is a symbol, it is interpreted as the symbol name of
+the variable, i.e. the package is significant.  If <var>name</var> is an
+uninterned symbol (gensym), then return the value of the uninterned
+variable with the same name.  If <var>name</var> is a string,
+<code>sb-debug:var</code> interprets it as the prefix of a variable name
+that must unambiguously complete to the name of a valid variable.
+
+        <p><var>identifier</var> is used to disambiguate the variable name; use
+<samp><span class="command">list-locals</span></samp> to find out the identifiers. 
+</p></blockquote></div>
+
+<ul class="menu">
+<li><a accesskey="1" href="Variable-Value-Availability.html#Variable-Value-Availability">Variable Value Availability</a>
+<li><a accesskey="2" href="Note-On-Lexical-Variable-Access.html#Note-On-Lexical-Variable-Access">Note On Lexical Variable Access</a>
+</ul>
+
+   </body></html>
+

@@ -1,0 +1,68 @@
+<html lang="en">
+<head>
+<title>Local (Unix) Domain Sockets - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Networking.html#Networking" title="Networking">
+<link rel="prev" href="INET-Domain-Sockets.html#INET-Domain-Sockets" title="INET Domain Sockets">
+<link rel="next" href="Name-Service.html#Name-Service" title="Name Service">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Local-(Unix)-Domain-Sockets"></a>
+<a name="Local-_0028Unix_0029-Domain-Sockets"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Name-Service.html#Name-Service">Name Service</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="INET-Domain-Sockets.html#INET-Domain-Sockets">INET Domain Sockets</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Networking.html#Networking">Networking</a>
+<hr>
+</div>
+
+<h3 class="section">13.5 Local (Unix) Domain Sockets</h3>
+
+<p>Local domain (<code>AF_LOCAL</code>) sockets are also known as Unix-domain
+sockets, but were renamed by POSIX presumably on the basis that they
+may be available on other systems too.
+
+   <p>A local socket address is a string, which is used to create a node in
+the local filesystem. This means of course that they cannot be used
+across a network.
+
+   <p><a name="Class-sb_002dbsd_002dsockets_003alocal_002dsocket"></a>
+
+<div class="defun">
+&mdash; Class: <b>sb-bsd-sockets:local-socket</b><var><a name="index-sb_002dbsd_002dsockets_003alocal_002dsocket-550"></a></var><br>
+<blockquote><p><a name="index-sb_002dbsd_002dsockets_003alocal_002dsocket-551"></a>Class precedence list: <code>local-socket, socket, standard-object, t</code>
+
+        <p>Class representing local domain (AF_LOCAL) sockets,
+also known as unix-domain sockets. 
+</p></blockquote></div>
+
+   </body></html>
+

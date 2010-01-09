@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.7 Block Compilation</TITLE>
+<META NAME="description" CONTENT="5.7 Block Compilation">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2559" HREF="node149.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2557" HREF="node105.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2551" HREF="node147.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2561" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2562" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2560" HREF="node149.html">5.7.1 Block Compilation Semantics</A>
+<B>Up:</B> <A NAME="tex2html2558" HREF="node105.html">5 Advanced Compiler Use </A>
+<B> Previous:</B> <A NAME="tex2html2552" HREF="node147.html">5.6.5 Return Values</A>
+<BR> <P>
+<H1><A NAME="SECTION00670000000000000000">5.7 Block Compilation</A></H1>
+<P>
+<A NAME="blockcompilation">&#160;</A>
+<A NAME="10180">&#160;</A>
+<A NAME="10181">&#160;</A>
+<P>
+Block compilation allows calls to global functions defined by
+<A NAME="10182">&#160;</A><tt>defun</tt> to be compiled as local calls.  The function call
+can be in a different top-level form than the <tt>defun</tt>, or even in a
+different file.
+<P>
+In addition, block compilation allows the declaration of the &#305;entry points
+to the block compiled portion.  An entry point is any function that may be
+called from outside of the block compilation.  If a function is not an entry
+point, then it can be compiled more efficiently, since all calls are known at
+compile time.  In particular, if a function is only called in one place, then
+it will be let converted.  This effectively inline expands the function, but
+without the code duplication that results from defining the function normally
+and then declaring it inline.
+<P>
+The main advantage of block compilation is that it it preserves efficiency in
+programs even when (for readability and syntactic convenience) they are broken
+up into many small functions.  There is absolutely no overhead for calling a
+non-entry point function that is defined purely for modularity (i.e. called
+only in one place.)
+<P>
+Block compilation also allows the use of non-descriptor arguments and return
+values in non-trivial programs (see section&nbsp;<A HREF="node177.html#numberlocalcall">5.11.10</A>).
+<P>
+<BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html2563" HREF="node149.html#SECTION00671000000000000000">5.7.1 Block Compilation Semantics</A>
+<LI> <A NAME="tex2html2564" HREF="node150.html#SECTION00672000000000000000">5.7.2 Block Compilation Declarations</A>
+<LI> <A NAME="tex2html2565" HREF="node151.html#SECTION00673000000000000000">5.7.3 Compiler Arguments</A>
+<LI> <A NAME="tex2html2566" HREF="node152.html#SECTION00674000000000000000">5.7.4 Practical Difficulties</A>
+<LI> <A NAME="tex2html2567" HREF="node153.html#SECTION00675000000000000000">5.7.5 Context Declarations</A>
+<LI> <A NAME="tex2html2568" HREF="node154.html#SECTION00676000000000000000">5.7.6 Context Declaration Example</A>
+</UL>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

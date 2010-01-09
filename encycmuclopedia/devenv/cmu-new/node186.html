@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.13.1 Type Uncertainty</TITLE>
+<META NAME="description" CONTENT="5.13.1 Type Uncertainty">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3040" HREF="node187.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3038" HREF="node185.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3032" HREF="node185.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3042" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3043" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3041" HREF="node187.html">5.13.2 Efficiency Notes and </A>
+<B>Up:</B> <A NAME="tex2html3039" HREF="node185.html">5.13 Efficiency Notes</A>
+<B> Previous:</B> <A NAME="tex2html3033" HREF="node185.html">5.13 Efficiency Notes</A>
+<BR> <P>
+<H2><A NAME="SECTION006131000000000000000">5.13.1 Type Uncertainty</A></H2>
+<P>
+<A NAME="10749">&#160;</A>
+<A NAME="10750">&#160;</A>
+<P>
+The main cause of inefficiency is the compiler's lack of adequate
+information about the types of function argument and result values.
+Many important operations (such as arithmetic) have an inefficient
+general (generic) case, but have efficient implementations that can
+usually be used if there is sufficient argument type information.
+<P>
+Type efficiency notes are given when a value's type is uncertain.
+There is an important distinction between values that are &#305;not
+  known to be of a good type (uncertain) and values that are &#305;known
+  not to be of a good type.  Efficiency notes are given mainly for
+the first case (uncertain types.)  If it is clear to the compiler that
+that there is not an efficient implementation for a particular
+function call, then an efficiency note will only be given if the
+<tt>extensions:inhibit-warnings</tt> optimization quality is <tt>0</tt>
+(see section&nbsp;<A HREF="node102.html#optimizedeclaration">4.7.1</A>.)
+<P>
+In other words, the default efficiency notes only suggest that you add
+declarations, not that you change the semantics of your program so
+that an efficient implementation will apply.  For example, compilation
+of this form will not give an efficiency note:
+<BLOCKQUOTE> <PRE>(elt (the list l) i)
+</PRE> </BLOCKQUOTE>
+even though a vector access is more efficient than indexing a list.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

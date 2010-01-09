@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>3.9 Breakpoint Commands</TITLE>
+<META NAME="description" CONTENT="3.9 Breakpoint Commands">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1582" HREF="node79.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1580" HREF="node59.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1574" HREF="node77.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1584" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1585" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1583" HREF="node79.html">3.9.1 Breakpoint Example</A>
+<B>Up:</B> <A NAME="tex2html1581" HREF="node59.html">3 The Debugger</A>
+<B> Previous:</B> <A NAME="tex2html1575" HREF="node77.html">3.8 Information Commands</A>
+<BR> <P>
+<H1><A NAME="SECTION00490000000000000000">3.9 Breakpoint Commands</A></H1>
+<P>
+CMU Common Lisp supports setting of breakpoints inside compiled functions and
+stepping of compiled code.  Breakpoints can only be set at at known
+locations (see section&nbsp;<A HREF="node68.html#unknownlocations">3.3.6</A>), so these commands are largely
+useless unless the <tt>debug</tt> optimize quality is at least <tt>2</tt>
+(see section&nbsp;<A HREF="node75.html#debuggerpolicy">3.6</A>).  These commands manipulate breakpoints:
+<DL ><DT><STRONG><tt>breakpoint</tt> <i>location</i> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>option</i> <i>value</i></i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></STRONG>
+<DD>
+Set a breakpoint in some function.  <i>location</i> may be an integer
+code location number (as displayed by <tt>list-locations</tt>) or a
+keyword.  The keyword can be used to indicate setting a breakpoint at
+the function start (<tt>:start</tt>, <tt>:s</tt>) or function end
+(<tt>:end</tt>, <tt>:e</tt>).  The <tt>breakpoint</tt> command has
+<tt>:condition</tt>, <tt>:break</tt>, <tt>:print</tt> and <tt>:function</tt>
+options which work similarly to the <tt>trace</tt> options.
+<P>
+<DT><STRONG><tt>list-locations</tt> (or <tt>ll</tt>) <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>function</i></i></i><IMG WIDTH=5 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17168" SRC="img6.gif"></STRONG>
+<DD>List all the code locations in the current frame's function, or in
+<i>function</i> if it is supplied.  The display format is the code
+location number, a colon and then the source form for that location:
+<BLOCKQUOTE> <PRE>3: (1- N)
+</PRE> </BLOCKQUOTE>
+If consecutive locations have the same source, then a numeric range like
+<tt>3-5:</tt> will be printed.  For example, a default function call has a
+known location both immediately before and after the call, which would
+result in two code locations with the same source.  The listed function
+becomes the new default function for breakpoint setting (via the
+<tt>breakpoint</tt>) command.
+<P>
+<DT><STRONG><tt>list-breakpoints</tt> (or <tt>lb</tt>)</STRONG>
+<DD>List all currently active breakpoints with their breakpoint number.
+<P>
+<DT><STRONG><tt>delete-breakpoint</tt> (or <tt>db</tt>) <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>number</i></i></i><IMG WIDTH=5 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17168" SRC="img6.gif"></STRONG>
+<DD>Delete a breakpoint specified by its breakpoint number.  If no number is
+specified, delete all breakpoints.
+<P>
+<DT><STRONG><tt>step</tt></STRONG>
+<DD>Step to the next possible breakpoint location in the current function.
+This always steps over function calls, instead of stepping into them
+<P>
+</DL><BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html1586" HREF="node79.html#SECTION00491000000000000000">3.9.1 Breakpoint Example</A>
+</UL>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

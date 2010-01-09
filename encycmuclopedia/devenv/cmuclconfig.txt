@@ -1,0 +1,66 @@
+
+
+
+cmuclconfig(8)					   cmuclconfig(8)
+
+
+NAME
+       cmuclconfig - CMU Common Lisp configuration
+
+SYNOPSIS
+       cmuclconfig
+
+DESCRIPTION
+       cmuclconfig  Reconfigures  CMU  Common  Lisp.  The program
+       shows a menu of packages you can install in a custom  lisp
+       image and then offers the option of making this image.
+
+       If the user has write-permission for /etc/lisp-config.lisp
+       you can configure some defaults. Otherwise  you	can  only
+       create a custom lisp image.
+
+FILES
+       /usr/bin/lisp
+		 The lisp c-core executable.
+
+       /usr/lib/cmucl/lisp-small.core
+		 The   small   lisp  core.   /usr/lib/cmucl/lisp-
+		 safe.core     The     safer	  lisp	    core.
+		 /usr/lib/cmucl/lisp.core  A symbolic link to the
+		 default lisp core, configured in with	cmuclcon-
+		 fig.
+
+       /usr/lib/cmucl/config.lisp
+		 The   configuration  program  that  this  script
+		 calls.
+
+       /var/lib/cmucl/site-init.lisp
+		 Site specific initialization.
+
+
+
+SEE ALSO
+       cmucl(1), lisp(1)
+       The ``CMU Common Lisp User's Manual'',
+       the ``Hemlock User's Manual'', and
+       the ``Hemlock Command Implementor's Manual''
+
+
+BUGS
+       Bug reports should be sent to cmucl-help@cons.org.  Please
+       consult your local CMU CL maintainer or Common Lisp expert
+       to verify that the problem really is a bug before  sending
+       to this list.
+
+
+
+
+
+
+
+
+
+
+			September 16, 1999			1
+
+

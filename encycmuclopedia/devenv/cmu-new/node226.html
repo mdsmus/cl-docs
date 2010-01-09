@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>8.2.3 Alien Type Specifiers</TITLE>
+<META NAME="description" CONTENT="8.2.3 Alien Type Specifiers">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3564" HREF="node227.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3562" HREF="node223.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3556" HREF="node225.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3566" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3567" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3565" HREF="node227.html">The C-Call Package</A>
+<B>Up:</B> <A NAME="tex2html3563" HREF="node223.html">8.2 Alien Types</A>
+<B> Previous:</B> <A NAME="tex2html3557" HREF="node225.html">8.2.2 Alien Types and </A>
+<BR> <P>
+<H2><A NAME="SECTION00923000000000000000">8.2.3 Alien Type Specifiers</A></H2>
+<P>
+Some Alien type names are Common Lisp symbols, but the names are
+still exported from the <tt>alien</tt> package, so it is legal to say
+<tt>alien:single-float</tt>.  These are the basic Alien type specifiers:
+<P>
+<b>[ Alien type]</b><BR> 
+<tt> *</tt> <i> <i>type</i></i><BR>
+<P>
+  A pointer to an object of the specified <i>type</i>.  If <i>type</i>
+  is <i>t</i>, then it means a pointer to anything, similar to
+  ``<tt>void *</tt>'' in ANSI C.  Currently, the only way to detect a
+  null pointer is:
+<BLOCKQUOTE> <PRE>(zerop (sap-int (alien-sap <i>ptr</i>)))
+</PRE> </BLOCKQUOTE>
+See section&nbsp;<A HREF="node204.html#systemareapointers">6.5</A>
+<P>
+<b>[ Alien type]</b><BR> 
+<tt> array</tt> <i> <i>type</i> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>dimension</i></i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></i><BR>
+<P>
+  An array of the specified <i>dimensions</i>, holding elements of type
+  <i>type</i>.  Note that <tt>(* int)</tt> and <tt>(array int)</tt> are
+  considered to be different types when type checking is done; pointer
+  and array types must be explicitly coerced using <tt>cast</tt>.
+<P>
+  Arrays are accessed using <tt>deref</tt>, passing the indices as
+  additional arguments.  Elements are stored in column-major order (as
+  in C), so the first dimension determines only the size of the memory
+  block, and not the layout of the higher dimensions.  An array whose
+  first dimension is variable may be specified by using <i>nil</i> as the
+  first dimension.  Fixed-size arrays can be allocated as array
+  elements, structure slots or <tt>with-alien</tt> variables.  Dynamic
+  arrays can only be allocated using <A NAME="11471">&#160;</A><tt>make-alien</tt> (page&nbsp;<A HREF="node231.html#FNmakealien"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>).
+<P>
+<b>[ Alien type]</b><BR> 
+<tt> struct</tt> <i> <i>name</i> 
+    <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i>(<i>field</i> <i>type</i> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>bits</i></i></i><IMG WIDTH=5 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17168" SRC="img6.gif">)</i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></i><BR>
+<P>
+  A structure type with the specified <i>name</i> and <i>fields</i>.
+  Fields are allocated at the same positions used by the
+  implementation's C compiler.  <i>bits</i> is intended for C-like bit
+  field support, but is currently unused.  If <i>name</i> is <i>nil</i>,
+  then the type is anonymous.
+<P>
+  If a named Alien <tt>struct</tt> specifier is passed to
+  <A NAME="11497">&#160;</A><tt>def-alien-type</tt> (page&nbsp;<A HREF="node224.html#FNdefalientype"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>) or <A NAME="11500">&#160;</A><tt>with-alien</tt> (page&nbsp;<A HREF="node233.html#FNwithalien"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>), then this defines,
+  respectively, a new global or local Alien structure type.  If no
+  <i>fields</i> are specified, then the fields are taken from the
+  current (local or global) Alien structure type definition of
+  <i>name</i>.
+<P>
+<b>[ Alien type]</b><BR> 
+<tt> union</tt> <i> <i>name</i> 
+    <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i>(<i>field</i> <i>type</i> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>bits</i></i></i><IMG WIDTH=5 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17168" SRC="img6.gif">)</i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></i><BR>
+<P>
+  Similar to <tt>struct</tt>, but defines a union type.  All fields are
+  allocated at the same offset, and the size of the union is the size
+  of the largest field.  The programmer must determine which field is
+  active from context.
+<P>
+<b>[ Alien type]</b><BR> 
+<tt> enum</tt> <i> <i>name</i> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>spec</i></i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></i><BR>
+<P>
+  An enumeration type that maps between integer values and keywords.
+  If <i>name</i> is <i>nil</i>, then the type is anonymous.  Each
+  <i>spec</i> is either a keyword, or a list <tt>(<i>keyword</i>
+    <i>value</i>)</tt>.  If <i>integer</i> is not supplied, then it defaults
+  to one greater than the value for the preceding spec (or to zero if
+  it is the first spec.)
+<P>
+<b>[ Alien type]</b><BR> 
+<tt> signed</tt> <i> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>bits</i></i></i><IMG WIDTH=5 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17168" SRC="img6.gif"></i><BR> 
+  A signed integer with the specified number of bits precision.  The
+  upper limit on integer precision is determined by the machine's word
+  size.  If no size is specified, the maximum size will be used.
+<P>
+<b>[ Alien type]</b><BR> 
+<tt> integer</tt> <i> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>bits</i></i></i><IMG WIDTH=5 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17168" SRC="img6.gif"></i><BR> 
+  Identical to <tt>signed</tt>--the distinction between <tt>signed</tt>
+  and <tt>integer</tt> is purely stylistic.
+<P>
+<b>[ Alien type]</b><BR> 
+<tt> unsigned</tt> <i> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>bits</i></i></i><IMG WIDTH=5 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17168" SRC="img6.gif"></i><BR> 
+  Like <tt>signed</tt>, but specifies an unsigned integer.
+<P>
+<b>[ Alien type]</b><BR> 
+<tt> boolean</tt> <i> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>bits</i></i></i><IMG WIDTH=5 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17168" SRC="img6.gif"></i><BR> 
+  Similar to an enumeration type that maps <tt>0</tt> to <i>nil</i> and
+  all other values to <i>t</i>.  <i>bits</i> determines the amount of
+  storage allocated to hold the truth value.
+<P>
+<b>[ Alien type]</b><BR> 
+<tt> single-float</tt> <i> </i><BR> 
+  A floating-point number in IEEE single format.
+<P>
+<b>[ Alien type]</b><BR> 
+<tt> double-float</tt> <i> </i><BR> 
+  A floating-point number in IEEE double format.
+<P>
+<b>[ Alien type]</b><BR> 
+<tt> function</tt> <i> <i>result-type</i> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>arg-type</i></i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></i><BR> 
+  <A NAME="alienfunctiontypes">&#160;</A>
+  A Alien function that takes arguments of the specified
+  <i>arg-types</i> and returns a result of type <i>result-type</i>.
+  Note that the only context where a <tt>function</tt> type is directly
+  specified is in the argument to <tt>alien-funcall</tt> (see section
+  <A NAME="11582">&#160;</A><tt>alien-funcall</tt> (page&nbsp;<A HREF="node238.html#FNalienfuncall"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>).)  In all other contexts, functions are
+  represented by function pointer types: <tt>(* (function ...))</tt>.
+<P>
+<b>[ Alien type]</b><BR> 
+<tt> system-area-pointer</tt> <i> </i><BR> 
+  A pointer which is represented in Lisp as a
+  <tt>system-area-pointer</tt> object (see section&nbsp;<A HREF="node204.html#systemareapointers">6.5</A>.)
+<P>
+<HR><A NAME="tex2html3564" HREF="node227.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3562" HREF="node223.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3556" HREF="node225.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3566" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3567" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3565" HREF="node227.html">The C-Call Package</A>
+<B>Up:</B> <A NAME="tex2html3563" HREF="node223.html">8.2 Alien Types</A>
+<B> Previous:</B> <A NAME="tex2html3557" HREF="node225.html">8.2.2 Alien Types and </A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

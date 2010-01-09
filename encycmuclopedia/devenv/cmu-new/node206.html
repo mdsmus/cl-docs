@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>6.7 File Descriptor Streams</TITLE>
+<META NAME="description" CONTENT="6.7 File Descriptor Streams">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3293" HREF="node207.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3291" HREF="node199.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3285" HREF="node205.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3295" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3296" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3294" HREF="node207.html">6.8 Making Sense of </A>
+<B>Up:</B> <A NAME="tex2html3292" HREF="node199.html">6 UNIX Interface</A>
+<B> Previous:</B> <A NAME="tex2html3286" HREF="node205.html">6.6 Unix System Calls</A>
+<BR> <P>
+<H1><A NAME="SECTION00770000000000000000">6.7 File Descriptor Streams</A></H1>
+<P>
+Many of the UNIX system calls return file descriptors.  Instead of using other
+UNIX system calls to perform I/O on them, you can create a stream around them.
+For this purpose, fd-streams exist.  See also <A NAME="11012">&#160;</A><tt>read-n-bytes</tt> (page&nbsp;<A HREF="node38.html#FNreadnbytes"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>).
+<P>
+<b>[Function]</b><BR> 
+<tt> system:make-fd-stream</tt> <em> <i>descriptor</i> <tt>&amp;key</tt> <tt>:input</tt> <tt>:output</tt>
+      <tt>:element-type</tt> <tt>:buffering</tt> <tt>:name</tt>
+      <tt>:file</tt> <tt>:original</tt> <tt>:delete-original</tt>
+      <tt>:auto-close</tt> <tt>:timeout</tt> <tt>:pathname</tt></em><BR>
+<P>
+  This function creates a file descriptor stream using
+  <i>descriptor</i>.  If <tt>:input</tt> is non-<i>nil</i>, input operations are
+  allowed.  If <tt>:output</tt> is non-<i>nil</i>, output operations are
+  allowed.  The default is input only.  These keywords are defined:
+  <DL ><DT><STRONG><tt>:element-type</tt></STRONG>
+<DD> is the type of the unit of transaction for
+    the stream, which defaults to <tt>string-char</tt>.  See the Common
+    Lisp description of <tt>open</tt> for valid values.
+<P>
+  <DT><STRONG><tt>:buffering</tt></STRONG>
+<DD> is the kind of output buffering desired for
+    the stream.  Legal values are <tt>:none</tt> for no buffering,
+    <tt>:line</tt> for buffering up to each newline, and <tt>:full</tt> for
+    full buffering.
+<P>
+  <DT><STRONG><tt>:name</tt></STRONG>
+<DD> is a simple-string name to use for descriptive
+    purposes when the system prints an fd-stream.  When printing
+    fd-streams, the system prepends the streams name with <tt>Stream
+      for </tt>.  If <i>name</i> is unspecified, it defaults to a string
+    containing <i>file</i> or <i>descriptor</i>, in order of preference.
+<P>
+  <DT><STRONG><tt>:file</tt>, <tt>:original</tt></STRONG>
+<DD> <i>file</i> specifies the defaulted
+    namestring of the associated file when creating a file stream
+    (must be a <tt>simple-string</tt>). <i>original</i> is the
+    <tt>simple-string</tt> name of a backup file containing the original
+    contents of <i>file</i> while writing <i>file</i>.
+<P>
+    When you abort the stream by passing <i>t</i> to <tt>close</tt> as
+    the second argument, if you supplied both <i>file</i> and
+    <i>original</i>, <tt>close</tt> will rename the <i>original</i> name
+    to the <i>file</i> name.  When you <tt>close</tt> the stream
+    normally, if you supplied <i>original</i>, and
+    <i>delete-original</i> is non-<i>nil</i>, <tt>close</tt> deletes
+    <i>original</i>.  If <i>auto-close</i> is true (the default), then
+    <i>descriptor</i> will be closed when the stream is garbage
+    collected.
+<P>
+  <DT><STRONG><tt>:pathname</tt></STRONG>
+<DD>: The original pathname passed to open and
+    returned by <tt>pathname</tt>; not defaulted or translated.
+<P>
+  <DT><STRONG><tt>:timeout</tt></STRONG>
+<DD> if non-null, then <i>timeout</i> is an integer
+    number of seconds after which an input wait should time out.  If a
+    read does time out, then the <tt>system:io-timeout</tt> condition is
+    signalled.
+<P>
+</DL>
+<P>
+<b>[Function]</b><BR> 
+<tt> system:fd-stream-p</tt> <em> <i>object</i></em><BR>
+<P>
+  This function returns <i>t</i> if <i>object</i> is an fd-stream, and
+  <i>nil</i> if not.  Obsolete: use the portable <tt>(typep x
+    'file-stream)</tt>.
+<P>
+<b>[Function]</b><BR> 
+<tt> system:fd-stream-fd</tt> <em> <i>stream</i></em><BR>
+<P>
+  This returns the file descriptor associated with <i>stream</i>.
+<P>
+<HR><A NAME="tex2html3293" HREF="node207.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3291" HREF="node199.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3285" HREF="node205.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3295" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3296" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3294" HREF="node207.html">6.8 Making Sense of </A>
+<B>Up:</B> <A NAME="tex2html3292" HREF="node199.html">6 UNIX Interface</A>
+<B> Previous:</B> <A NAME="tex2html3286" HREF="node205.html">6.6 Unix System Calls</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

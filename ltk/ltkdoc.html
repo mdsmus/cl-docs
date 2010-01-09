@@ -1,0 +1,4956 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<!--Converted with LaTeX2HTML 2002-2-1 (1.70)
+original version by:  Nikos Drakos, CBLU, University of Leeds
+* revised and updated by:  Marcus Hennecke, Ross Moore, Herb Swan
+* with significant contributions from:
+  Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
+<HTML>
+<HEAD>
+<TITLE>LTK - a Lisp binding to the Tk toolkit</TITLE>
+<META NAME="description" CONTENT="LTK - a Lisp binding to the Tk toolkit">
+<META NAME="keywords" CONTENT="ltkdoc">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+
+<META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+
+<LINK REL="STYLESHEET" HREF="ltkdoc.css">
+
+</HEAD>
+
+<BODY >
+<!--Navigation Panel-->
+<IMG WIDTH="81" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next_inactive" SRC="nx_grp_g.png"> 
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_g.png"> 
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev_g.png">   
+<BR>
+<BR>
+<BR>
+<!--End of Navigation Panel-->
+
+<P>
+
+<P>
+
+<P>
+
+<P>
+<H1 ALIGN="CENTER"> LTK - a Lisp binding to the Tk toolkit</H1>
+<DIV>
+
+<P ALIGN="CENTER"><STRONG>Peter Herth</STRONG></P>
+<P ALIGN="CENTER"><STRONG>November 1, 2009</STRONG></P>
+</DIV>
+
+<P>
+<BR>
+
+<H2><A NAME="SECTION00010000000000000000">
+Contents</A>
+</H2>
+<!--Table of Contents-->
+
+<UL>
+<LI><A NAME="tex2html62"
+  HREF="ltkdoc.html#SECTION00020000000000000000">Introduction</A>
+<LI><A NAME="tex2html63"
+  HREF="ltkdoc.html#SECTION00030000000000000000">Installation</A>
+<LI><A NAME="tex2html64"
+  HREF="ltkdoc.html#SECTION00040000000000000000">Tutorial</A>
+<UL>
+<LI><A NAME="tex2html65"
+  HREF="ltkdoc.html#SECTION00041000000000000000">First steps</A>
+<LI><A NAME="tex2html66"
+  HREF="ltkdoc.html#SECTION00042000000000000000">A more complex example</A>
+<LI><A NAME="tex2html67"
+  HREF="ltkdoc.html#SECTION00043000000000000000">Canvas</A>
+<LI><A NAME="tex2html68"
+  HREF="ltkdoc.html#SECTION00044000000000000000">Radio-button</A>
+<LI><A NAME="tex2html69"
+  HREF="ltkdoc.html#SECTION00045000000000000000">Text</A>
+<LI><A NAME="tex2html70"
+  HREF="ltkdoc.html#SECTION00046000000000000000">Screen functions</A>
+<LI><A NAME="tex2html71"
+  HREF="ltkdoc.html#SECTION00047000000000000000">Window manager functions</A>
+<LI><A NAME="tex2html72"
+  HREF="ltkdoc.html#SECTION00048000000000000000">Parameters for with-ltk</A>
+<LI><A NAME="tex2html73"
+  HREF="ltkdoc.html#SECTION00049000000000000000">Running it manually</A>
+<LI><A NAME="tex2html74"
+  HREF="ltkdoc.html#SECTION000410000000000000000">Special variables</A>
+<LI><A NAME="tex2html75"
+  HREF="ltkdoc.html#SECTION000411000000000000000">Generic functions</A>
+<LI><A NAME="tex2html76"
+  HREF="ltkdoc.html#SECTION000412000000000000000">The pack geometry manager</A>
+<LI><A NAME="tex2html77"
+  HREF="ltkdoc.html#SECTION000413000000000000000">The grid geometry manager</A>
+<LI><A NAME="tex2html78"
+  HREF="ltkdoc.html#SECTION000414000000000000000">Configuring widgets</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html79"
+  HREF="ltkdoc.html#SECTION00050000000000000000">Event handling</A>
+<UL>
+<LI><A NAME="tex2html80"
+  HREF="ltkdoc.html#SECTION00051000000000000000">command</A>
+<LI><A NAME="tex2html81"
+  HREF="ltkdoc.html#SECTION00052000000000000000">bind</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html82"
+  HREF="ltkdoc.html#SECTION00060000000000000000">Widgets</A>
+<UL>
+<LI><A NAME="tex2html83"
+  HREF="ltkdoc.html#SECTION00061000000000000000">Button</A>
+<LI><A NAME="tex2html84"
+  HREF="ltkdoc.html#SECTION00062000000000000000">Canvas</A>
+<LI><A NAME="tex2html85"
+  HREF="ltkdoc.html#SECTION00063000000000000000">Check-button</A>
+<LI><A NAME="tex2html86"
+  HREF="ltkdoc.html#SECTION00064000000000000000">Entry</A>
+<LI><A NAME="tex2html87"
+  HREF="ltkdoc.html#SECTION00065000000000000000">Frame</A>
+<LI><A NAME="tex2html88"
+  HREF="ltkdoc.html#SECTION00066000000000000000">Label</A>
+<LI><A NAME="tex2html89"
+  HREF="ltkdoc.html#SECTION00067000000000000000">Labelframe</A>
+<LI><A NAME="tex2html90"
+  HREF="ltkdoc.html#SECTION00068000000000000000">Listbox</A>
+<LI><A NAME="tex2html91"
+  HREF="ltkdoc.html#SECTION00069000000000000000">Menu</A>
+<LI><A NAME="tex2html92"
+  HREF="ltkdoc.html#SECTION000610000000000000000">Menubutton</A>
+<LI><A NAME="tex2html93"
+  HREF="ltkdoc.html#SECTION000611000000000000000">Message</A>
+<LI><A NAME="tex2html94"
+  HREF="ltkdoc.html#SECTION000612000000000000000">Paned-window</A>
+<LI><A NAME="tex2html95"
+  HREF="ltkdoc.html#SECTION000613000000000000000">Radio-button</A>
+<LI><A NAME="tex2html96"
+  HREF="ltkdoc.html#SECTION000614000000000000000">Scale</A>
+<LI><A NAME="tex2html97"
+  HREF="ltkdoc.html#SECTION000615000000000000000">Scrollbar</A>
+<LI><A NAME="tex2html98"
+  HREF="ltkdoc.html#SECTION000616000000000000000">Spinbox</A>
+<LI><A NAME="tex2html99"
+  HREF="ltkdoc.html#SECTION000617000000000000000">Text</A>
+<LI><A NAME="tex2html100"
+  HREF="ltkdoc.html#SECTION000618000000000000000">Toplevel</A>
+<LI><A NAME="tex2html101"
+  HREF="ltkdoc.html#SECTION000619000000000000000">Widget</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html102"
+  HREF="ltkdoc.html#SECTION00070000000000000000">Under the hood</A>
+<UL>
+<LI><A NAME="tex2html103"
+  HREF="ltkdoc.html#SECTION00071000000000000000">Communication</A>
+<LI><A NAME="tex2html104"
+  HREF="ltkdoc.html#SECTION00072000000000000000">Writing Ltk extensions</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html105"
+  HREF="ltkdoc.html#SECTION00080000000000000000">ltk-remote</A>
+<LI><A NAME="tex2html106"
+  HREF="ltkdoc.html#SECTION00090000000000000000">ltk-mw</A>
+<UL>
+<LI><A NAME="tex2html107"
+  HREF="ltkdoc.html#SECTION00091000000000000000">progress</A>
+<LI><A NAME="tex2html108"
+  HREF="ltkdoc.html#SECTION00092000000000000000">history-entry</A>
+<LI><A NAME="tex2html109"
+  HREF="ltkdoc.html#SECTION00093000000000000000">menu-entry</A>
+</UL>
+<BR>
+<LI><A NAME="tex2html110"
+  HREF="ltkdoc.html#SECTION000100000000000000000">Example: A ``Hello World'' application</A>
+<LI><A NAME="tex2html111"
+  HREF="ltkdoc.html#SECTION000110000000000000000">Index</A>
+</UL>
+<!--End of Table of Contents-->
+<P>
+
+<P>
+
+<H1><A NAME="SECTION00020000000000000000">
+Introduction</A>
+</H1>
+
+<P>
+Tk is a graphics toolkit for the tcl programming language developed by
+John Ousterhout.  Initially developed for the X-Window system, it has
+been ported to a wide selection of operating systems, including
+Windows and MacOs. Due to its ubiquous nature, it is an ideal candidate
+to write a portable GUI library for Lisp.
+
+<P>
+While one can find many code snippets how to set up a communication
+with Tk from Lisp, the use of those to create actual programs,
+requires tcl/tk knowledge. In fact this way the GUIs are created by
+tcl code put into lisp programs. But one does not become a Lisp
+programmer to then write the GUIs in tcl/tk. So the Ltk library was
+born, to create a wrapper around Tk in pure Lisp. Ideally, no tcl/tk
+knowledge is required to write GUIs. However the lisp code is made
+closely to the tcl/tk library structure, so that the man pages for the
+tk widgets can serve as a detailled reference. They should be
+readable without any tcl knowledge.
+
+<P>
+The main objective for Ltk was to create a GUI library which is
+portable across different operating systems <EM>and </EM> Common Lisp
+implementations. Furthermore it should be easy to set up. So with
+the exception of one single function, the whole code of ltk is
+pure ANSI Common Lisp. No external programs besides a standard
+installation of tcl/tk are required. 
+
+<P>
+Ltk supports the following Lisp systems: Allegro, CMUCL, CLisp, ECL, LispWorks, OpenMCL, SBCL.
+Ltk was successfully tested using Lispworks, CLisp, CMUCL, SBCL under 
+Linux and Lispworks, CLisp, and SBCL using Mac OS X, CLisp, Allegro and Lispworks using Windows.
+
+<P>
+
+<H1><A NAME="SECTION00030000000000000000"></A>
+<A NAME="14"></A>
+<BR>
+Installation
+</H1>
+This is the shortest section of this document.  
+You just compile the file:
+<PRE>
+(compile-file "ltk")
+</PRE>
+and load it:
+<PRE>
+(load "ltk")
+</PRE>
+Now ltk is ready to use. For trying out the examples of this document,
+you might want to change into the Ltk package:
+<PRE>
+(in-package :ltk)
+</PRE>
+And to look, whether it works call the test example:
+<PRE>
+(ltktest)
+</PRE>
+or, for some fun:
+<PRE>
+(ltk::ltk-eyes)
+</PRE>
+
+<P>
+To use Ltk you need of course tcl/tk installed. This should be default on
+most Linux systems, for Windows/Mac OS you need to download and install 
+tcl/tk. Ltk has been tested against Tcl/Tk 8.4, but other versions should
+work also.
+
+<P>
+Alternatively, you can use ASDF to load ltk. If you have a symbolic link
+to ltk.asd in your site-systems directory a simple (require 'ltk) compiles
+and loads ltk (assuming you have ASDF loaded). And it is even installable via ASDF-INSTALL!
+
+<P>
+
+<P>
+
+<H1><A NAME="SECTION00040000000000000000">
+Tutorial</A>
+</H1>
+
+<P>
+
+<H2><A NAME="SECTION00041000000000000000">
+First steps</A>
+</H2>
+
+<P>
+Let's start with the obligatory ``hello world'' type of program:
+<A NAME="27"></A> 
+<PRE>
+(defun hello-1()
+  (with-ltk ()
+   (let ((b (make-instance 'button 
+                           :master nil
+                           :text "Press Me"
+                           :command (lambda ()
+                                      (format t "Hello World!~&amp;")))))
+     (pack b))))
+</PRE>
+
+<P>
+
+<DIV ALIGN="CENTER"><A NAME="hello-1"></A><A NAME="458"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 1:</STRONG>
+The window created by <TT>hello-1</TT></CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER"><IMG
+  WIDTH="140" HEIGHT="63" ALIGN="BOTTOM" BORDER="0"
+ SRC="./hello-1.jpg"
+ ALT="Image hello-1">
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+Let's go through it step-by-step. The whole code of <code>hello-1</code> is
+wrapped into the <code>with-ltk</code> macro. It ensures that the GUI
+library is properly set up and the communication with the Tk toolkit
+is established. It runs the contained code which should initialize the
+GUI and after that calls <code>mainloop</code> to process the GUI events.
+
+<P>
+The next step is to create the button. This is done by
+creating an instance of the class button. 
+The <TT>:text</TT> argument gives the text to display on the button
+and <TT>:command</TT> is the function to call, whenever the button is pressed.
+While the last two arguments should be obvious, the <TT>master</TT> needs
+explanation. In Tk, all GUI elements are arranged in a tree. So 
+every GUI element has a parent node or ``master'' which designates
+its position in the tree structure. So put there the object that
+should be the parent for your button. Only for top level components
+<code>nil</code> may be given instead of an object.
+
+<P>
+For displaying any ltk
+object, a layout manager is used. There are two layout managers available,
+which can be used to arrange widgets in its parent, <code>pack</code> and <code>grid</code>.
+<code>pack</code> arranges widgets as a heap of boxes, which are horizontally or
+vertically stacked. <code>grid</code> arranges widgets in a table-like layout. 
+NEVER use <code>pack</code> and <code>grid</code> for the same container, unpredictable
+behaviour may the result (or rather, the program will very predictably crash).
+
+<P>
+
+<H2><A NAME="SECTION00042000000000000000"></A>
+<A NAME="39"></A>
+<BR>
+A more complex example
+</H2>
+<PRE>
+(defun hello-2()
+  (with-ltk ()
+   (let* ((f (make-instance 'frame))
+          (b1 (make-instance 'button
+                             :master f
+                             :text "Button 1"
+                             :command (lambda () (format t "Button1~&amp;"))))
+          (b2 (make-instance 'button
+                             :master f
+                             :text "Button 2"
+                             :command (lambda () (format t "Button2~&amp;")))))
+     (pack f)
+     (pack b1 :side :left)
+     (pack b2 :side :left)
+     (configure f :borderwidth 3)
+     (configure f :relief :sunken)
+     )))
+</PRE>
+
+<DIV ALIGN="CENTER"><A NAME="hello-2"></A><A NAME="459"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 2:</STRONG>
+The window created by <TT>hello-2</TT></CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER"><IMG
+  WIDTH="184" HEIGHT="76" ALIGN="BOTTOM" BORDER="0"
+ SRC="./hello-2.jpg"
+ ALT="Image hello-2">
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+The example <code>hello-2</code> shows how you group 2 buttons within a frame and 
+configure widgets in general. 
+The created frame is given as the master parameter to the button creations.
+This automatically ensures that the buttons are packed within the frame.
+To change the appeareance of the Frame <code>f</code>, the <code>configure</code> 
+function is used. This is a very generic function, which can be used
+upon any tk object. It takes two arguments, the name of the configuration option
+and the value to set into it. The value can be any tk object or any properly
+printable Lisp object. 
+
+<P>
+In this case, we set the width of the border of the frame to 3 and make it
+a sunken border. Other styles would be raised, ridge, groove, flat and solid.
+For a comprehensive list of configuration options look in the manpage of the tk 
+widgets as well as man options for options shared by all tk widgets.
+
+<P>
+
+<H2><A NAME="SECTION00043000000000000000"></A> <A NAME="48"></A>
+<BR>
+Canvas
+</H2> 
+
+<P>
+The canvas widget is used to display all kind of graphics output.
+Graphic components are defined as objects like line, circle and
+photoimage which are displayed on the canvas. These objects can be
+modified through methods to change their appearance.  The display and
+redrawing is handled by the canvas widget automatically, so that the
+user does not need to care for that. For convenience, ltk adds a
+scrolled-canvas widget which contains a canvas widget and adds 
+automatically scrollbars to it. You gain access to the contained
+canvas with the <code>canvas</code> method.
+
+<P>
+A canvas widget is created by the <code>make-canvas</code> function.  It has
+the optional arguments <code>width</code> and <code>height</code> for the width
+and height used to display the canvas widget. The drawing region
+itself can be bigger, its size is set by the <code>scrollregion</code>
+method, which has the canvas and the dimension as the coordinates x0
+y0 and x1 y1 as parameters.
+
+<P>
+Objects to be displayed in a canvas are created via the create-xxx methods, with xxx the
+type of object to be created. They take the canvas as first argument and return an index
+(integer) which is used as handle for the modifying functions.
+A list of currently supported objects and the create method
+parameters:
+
+<P>
+<DL>
+<DT></DT>
+<DD><TT>(create-arc <I>canvas x0 y0 x1 y1</I> :start <I>a1</I> :extent <I>a2</I> :style <I>style</I>)</TT> 
+  <A NAME="54"></A> 
+
+<P>
+Creates an arc item. The arc angles are specified in starting angle
+  and extend of the arc. So a quater circle would have an extent of 90. Style determines
+  how the arc is rendered. Available styles are:
+  <DL>
+<DT></DT>
+<DD><TT>pieslice</TT>  (default) Draw the ark as the slice of a pie, that is an arc with
+    2 lines to the center of the circle.
+  
+</DD>
+<DT></DT>
+<DD><TT>chord</TT> Draw the arc as an arc and a line connecting the end points of the arc.
+  
+</DD>
+<DT></DT>
+<DD><TT>arc</TT> Draw only the arc.
+  
+</DD>
+</DL>
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(create-bitmap <I>canvas x y</I> &amp;key <I>bitmap</I>)</TT> <A NAME="62"></A> 
+
+<P>
+Creates an bitmap on the canvas, if <I>bitmap</I> is given, its displayed in this item.
+  Special configuration options are:
+  <DL>
+<DT></DT>
+<DD><TT>anchor</TT> <I>anchorPos</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>bitmap</TT> <I>bitmap</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>foreground</TT> <I>color</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>background</TT> <I>color</I>
+  
+</DD>
+</DL>
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(create-image <I>canvas x y</I> &amp;key <I>image</I>)</TT> <A NAME="76"></A> 
+
+<P>
+Creates an image on the canvas, if <I>image</I> is given, its displayed in this image.
+  Special configuration options are:
+  <DL>
+<DT></DT>
+<DD><TT>anchor</TT> <I>anchorPos</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>image</TT> <I>image</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>activeimage</TT> <I>image</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>disabledimage</TT> <I>image</I>
+  
+</DD>
+</DL>
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(create-line <I>canvas coords</I>)</TT> <A NAME="89"></A> 
+
+<P>
+<I>Coords</I> is a list of the coordinates of the line in the form
+  (<I>x0 y0 x1 y1 x2 y2 </I>...).  Lines with any number of segments
+  can be created this way.  Special configuration options for line
+  items (see itemconfigure) are:
+  <DL>
+<DT></DT>
+<DD><TT>arrow</TT> <I>where</I> one of none (no arrow), first (arrow
+    on first point of line), last and both.
+  
+</DD>
+<DT></DT>
+<DD><TT>arrowshape</TT> <I>shape</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>capstyle</TT> <I>style</I> butt, projecting, or round.
+  
+</DD>
+<DT></DT>
+<DD><TT>joinstyle</TT> <I>style</I> bevel, miter, or round.
+  
+</DD>
+<DT></DT>
+<DD><TT>smooth</TT> <I>method</I> 0 or bezier
+  
+</DD>
+<DT></DT>
+<DD><TT>splinesteps</TT> <I>number</I> Degree of smoothness if smooth is specified.
+  
+</DD>
+</DL>
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(create-line* <I>canvas</I> &amp;rest <I>coords</I>)</TT> <A NAME="108"></A>
+
+<P>
+Like <TT>create-line</TT>, but the coordinates are directly given in
+  the form <I>x0 y0 x1 y1 x2 y2 </I>.
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(create-oval <I>canvas x0 y0 x1 y1</I>)</TT> <A NAME="112"></A> 
+
+<P>
+Creates an oval fitting within the rectangular of the given
+  coordinates.
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(create-polygon <I>canvas coords</I>)</TT> <A NAME="114"></A>
+
+<P>
+Similiar to create-line, creates a closed polygon.
+
+<P>
+Special configuration options for polygon items (see itemconfigure) are:
+  <DL>
+<DT></DT>
+<DD><TT>joinstyle</TT> <I>style</I> bevel, miter, or round.
+  
+</DD>
+<DT></DT>
+<DD><TT>smooth</TT> <I>method</I> 0 or bezier
+  
+</DD>
+<DT></DT>
+<DD><TT>splinesteps</TT> <I>number</I> Degree of smoothness if smooth is specified.
+  
+</DD>
+</DL>
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(create-rectangle <I>canvas x0 y0 x1 y1</I>)</TT> <A NAME="124"></A> 
+
+<P>
+Creates an rectangle with the given coordinates.
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(create-text <I>canvas x y text</I>)</TT> <A NAME="126"></A> 
+
+<P>
+Creates a text displaying object at the position <I>x,y</I>. <I>    Text</I> is the string to be displayed.  Special configuration
+  options are:
+
+<P>
+<DL>
+<DT></DT>
+<DD><TT>anchor</TT> <I>anchorpos</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>font</TT> <I>fontname</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>justify</TT> <I>justification</I> left,right, or center.
+  
+</DD>
+<DT></DT>
+<DD><TT>text</TT> <I>string</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>width</TT> <I>length</I> Line length for wrapping the text, if
+    0, no wrapping happens.
+  
+</DD>
+</DL>
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(create-window <I>canvas x y widget</I>)</TT> <A NAME="142"></A> 
+
+<P>
+Embeds a widget into the canvas at the position (<I>x y</I>). The widget
+  has to be created before with <I>canvas</I> or one of the masters of <I>canvas</I>
+  as its master.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H3><A NAME="SECTION00043100000000000000">
+Managing graphical objects</A>
+</H3>
+
+<P>
+<DL>
+<DT></DT>
+<DD><TT>(set-coords <I>canvas item coords</I>)</TT> <A NAME="150"></A>
+
+<P>
+Changes the coordinate settings for any canvas item. <I>item</I> is
+  the handle returned by the create function, <I>coords</I> is a list
+  with the coordinates. With this function, objects can be moved or
+  reshaped.  
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(scrollregion <I>canvas x0 y0 x1 y1</I>)</TT> <A NAME="154"></A>
+
+<P>
+Set the scroll region of the canvas.  <I>x0 y0</I> are the
+  coordinates of the upper left, <I>x1 y1</I> of the lower right corner
+  of the scroll region.
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(itemconfigure <I>canvas item option value</I>)</TT> <A NAME="158"></A>
+
+<P>
+Configure
+  one configuration option for <I>item</I> displayed on <I>canvas</I>.
+  Options are given as strings, value is any tkobject or printable
+  value. Options possible for all items are:
+
+<P>
+<DL>
+<DT></DT>
+<DD><TT>dash</TT> <I>pattern</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>activedash</TT> <I>pattern</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>disableddash</TT> <I>pattern</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>dashoffset</TT> <I>offset</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>fill</TT> <I>color</I>  name of a color to fill the item, or empty string for none.
+  
+</DD>
+<DT></DT>
+<DD><TT>activefill</TT> <I>color</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>disabledfill</TT> <I>color</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>outline</TT> <I>color </I>
+  
+</DD>
+<DT></DT>
+<DD><TT>activeoutline</TT> <I>color</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>disabledoutline</TT> <I>color</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>offset</TT> <I>offset</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>outlinestipple</TT> <I>bitmap</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>activeoutlinestipple</TT> <I>bitmap</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>stipple</TT> <I>bitmap</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>activestipple</TT> <I>bitmap</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>disabledstipple</TT> <I>bitmap</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>state</TT> <I>state</I> One of normal, disabled or hidden.
+  
+</DD>
+<DT></DT>
+<DD><TT>tags</TT> <I>taglist</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>width</TT> <I>outlinewidth</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>activewidth</TT> <I>outlinewidth</I>
+  
+</DD>
+<DT></DT>
+<DD><TT>disabledwidth</TT> <I>outlinewidth</I>
+  
+</DD>
+</DL>
+</DD>
+</DL>
+
+<P>
+
+<H3><A NAME="SECTION00043200000000000000">
+Example</A>
+</H3>
+
+<P>
+The function canvastest demonstrates the basic canvas usage: <A NAME="473"></A>
+<PRE>
+(defun canvastest()
+  (with-ltk ()
+   (let* ((sc (make-instance 'scrolled-canvas))
+          (c (canvas sc))
+          (line (create-line c  (list 100 100 400 50 700 150)))
+          (polygon (create-polygon c (list 50 150  250 160 250 
+                                                 300 50 330 )))
+          (text (create-text c 260 250 "Canvas test")))
+     (pack sc :expand 1 :fill :both)
+     (scrollregion c 0 0 800 800)
+     )))
+</PRE>
+
+<DIV ALIGN="CENTER"><A NAME="canvastest"></A><A NAME="474"></A>
+<TABLE>
+<CAPTION ALIGN="BOTTOM"><STRONG>Figure 3:</STRONG>
+The window created by <TT>canvastest</TT></CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER"><IMG
+  WIDTH="494" HEIGHT="356" ALIGN="BOTTOM" BORDER="0"
+ SRC="./canvastest.jpg"
+ ALT="Image canvastest">
+</DIV></TD></TR>
+</TABLE>
+</DIV>
+
+<P>
+
+<H2><A NAME="SECTION00044000000000000000">
+Radio-button</A>
+</H2>
+
+<P>
+To use the radio-button widget, the two initargs <TT>value</TT> and <TT>variable</TT>
+have to be given.
+
+<P>
+
+<H2><A NAME="SECTION00045000000000000000">
+Text</A>
+</H2>
+
+<P>
+The text widget is a very powerful text editor. It allows displaying
+and editing of texts of arbitrary size. It supports fancy text display
+by attaching tags to sections of the displayed text. The tags can be
+customized by specifying font and color of text associated with the
+tag and even bind events to the corresponding text.
+
+<P>
+Methods:
+
+<P>
+<DL>
+<DT></DT>
+<DD><TT>(append-text <I>text txt</I> <I>[tag]</I>) </TT> <A NAME="222"></A>
+
+<P>
+Appends txt to the widgets content. If given, tag is the tag to
+be associated with the appended text.
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(clear-text <I>text</I>) </TT> <A NAME="224"></A> 
+
+<P>
+Clear the content of the widget.
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(text <I>text</I>)</TT> <A NAME="226"></A> 
+
+<P>
+Get the content of the widget.
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(setf (text <I>text</I>) <I>content</I>)</TT> <A NAME="229"></A> 
+
+<P>
+Set the content of the widget.
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(see <I>text pos</I>)</TT> <A NAME="231"></A> 
+
+<P>
+Ensure that pos is within the displayed area.
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(tag-configure <I>text tag option value</I>)</TT> <A NAME="233"></A> 
+
+<P>
+Configure a tag of the text widget.
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(tag-bind <I>text tag event fun</I>)</TT> <A NAME="235"></A> 
+
+<P>
+Bind event to the specified tag
+of the widget, calling fun when the event occurs.
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(save-text <I>text filename</I>)</TT> <A NAME="237"></A>
+
+<P>
+Write the content of the widget to the
+file named by filename. Note: filename is a string to be interpreted by tcl/tk
+on the client computer.
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(load-text <I>text filename</I>)</TT> <A NAME="239"></A> 
+
+<P>
+Loads the content of the widget from
+the file named by filename. Note: filename is a string to be interpreted by tcl/tk
+on the client computer.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00046000000000000000">
+Screen functions</A>
+</H2>
+
+<P>
+<DL>
+<DT></DT>
+<DD><TT>(screen-width (&amp;optional (w nil)))</TT> <A NAME="244"></A>
+
+<P>
+Give the width of the screen in pixels (if w is given, of the screen the widget w is displayed on)
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(screen-height (&amp;optional (w nil)))</TT> <A NAME="246"></A>
+
+<P>
+Give the height of the screen in pixels (if w is given, of the screen the widget w is displayed on).
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(screen-width-mm (&amp;optional (w nil)))</TT> <A NAME="248"></A>
+
+<P>
+Give the width of the screen in mm (if w is given, of the screen the widget w is displayed on)
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(screen-heigth-mm (&amp;optional (w nil)))</TT> <A NAME="250"></A>
+
+<P>
+Give the height of the screen in mm (if w is given, of the screen the widget w is displayed on)
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(screen-mouse-x (&amp;optional (w nil)))</TT> <A NAME="252"></A>
+
+<P>
+Give x position of the mouse on screen (if w is given, of the screen the widget w is displayed on)
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(screen-mouse-y (&amp;optional (w nil)))</TT> <A NAME="254"></A>
+
+<P>
+Give y position of the mouse on screen (if w is given, of the screen the widget w is displayed on)
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(screen-mouse (&amp;optional (w nil)))</TT> <A NAME="256"></A>
+
+<P>
+Give the position of the mouse on screen as <TT>(values x y)</TT> (if w is given, of the screen the widget w is displayed on)
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(window-width (tl))</TT> <A NAME="259"></A>
+
+<P>
+Give the width of the widget in pixels. This function can be called on widgets as well as toplevel windows.
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(window-height (tl))</TT> <A NAME="261"></A>
+
+<P>
+Give the height of the widget in pixels. This function can be called on widgets as well as toplevel windows.
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(window-x (tl))</TT> <A NAME="263"></A>
+
+<P>
+Give the x position of the widget in pixels.
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(window-y (tl))</TT> <A NAME="265"></A>
+
+<P>
+Give the y position of the widget in pixels.
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00047000000000000000">
+Window manager functions</A>
+</H2>
+
+<P>
+<DL>
+<DT></DT>
+<DD><TT>(wm-title toplevel title)</TT> <A NAME="270"></A>
+
+<P>
+Set the title of the window.
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(minsize toplevel width height)</TT>  <A NAME="272"></A>
+
+<P>
+Set the minsize of the window in pixels.
+  (send-w (format nil "wm minsize&nbsp;a&nbsp;a&nbsp;a" (path w) x y)))
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(maxsize toplevel width height)</TT> <A NAME="274"></A>
+
+<P>
+Set the maximum size of the window in pixels.
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(withdraw toplevel)</TT> <A NAME="276"></A>
+
+<P>
+Withdraw the window from display.
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(normalize toplevel)</TT> <A NAME="278"></A>
+
+<P>
+Set the state of the window to normal display.
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(iconify toplevel)</TT> <A NAME="280"></A>
+
+<P>
+Iconify the window.
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(deiconify toplevel)</TT> <A NAME="282"></A>
+
+<P>
+De-iconify the window.
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(geometry toplevel)</TT> <A NAME="284"></A>
+
+<P>
+Read the geometry string for the window.
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(set-geometry toplevel width height x y)</TT> <A NAME="286"></A>
+
+<P>
+Set the geometry for the window.
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(on-close toplevel fun)</TT> <A NAME="288"></A>
+
+<P>
+Set fun to be called whenever the close button of the window is pressed.
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>(on-focus toplevel fun)</TT> <A NAME="290"></A>
+
+<P>
+Call fun whenever the window gets the focus.
+
+<P>
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00048000000000000000">
+Parameters for with-ltk</A>
+</H2>
+
+<P>
+<BR><P></P>
+<DIV ALIGN="CENTER"><A NAME="485"></A>
+<TABLE>
+<CAPTION><STRONG>Table 1:</STRONG>
+Possible values and their description for the <TT>:debug</TT> keyarg. The value can be given in the form of the number or the keyword.</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER"><TABLE CELLPADDING=3 BORDER="1">
+<TR><TD ALIGN="LEFT">value</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=227>description</TD>
+</TR>
+<TR><TD ALIGN="LEFT">0 :minimum</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=227>&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">1 :deploy</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=227>&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">2 :develop</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=227>&nbsp;</TD>
+</TR>
+<TR><TD ALIGN="LEFT">3 :maximum</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=227>&nbsp;</TD>
+</TR>
+</TABLE>
+
+<A NAME="tbl_debug"></A></DIV></TD></TR>
+</TABLE>
+</DIV><P></P>
+<BR>
+
+<P>
+In the examples so far the parameter list for the macro <TT>with-ltk</TT> was kept empty. 
+Using it, the behaviour of <TT>with-ltk</TT> can be fine tuned.  At the moment the only
+used keyword is <TT>:debug</TT>. Valid values for it are listed in table <A HREF="#tbl_debug">1</A>.
+
+<P>
+
+<H2><A NAME="SECTION00049000000000000000">
+Running it manually</A>
+</H2>
+
+<P>
+While the <TT>with-ltk</TT> macro is the most convenient way to run Ltk,
+you can do it manuall, especially if you want to play with the Ltk 
+objects in the REPL. To start Ltk you just need to call:
+<PRE>
+(start-wish)
+</PRE>
+which starts the Tk sub process and initializes the stream to communicate
+with it. Now you can create and use any Ltk objects. To enable
+event handling call
+<PRE>
+(mainloop)
+</PRE>
+which is responsible for event handling. You can interrupt it any time
+you like, call any lisp function and restart it again.
+
+<P>
+
+<H2><A NAME="SECTION000410000000000000000">
+Special variables</A>
+</H2>
+
+<P>
+The following special variables are defined:
+<DL>
+<DT></DT>
+<DD><TT>*debug-tk*</TT> When <TT>t</TT>, the communication with <TT>wish</TT> is echoed to the
+standard output. Default value: <TT>t</TT>
+</DD>
+<DT></DT>
+<DD><TT>*wish-pathname*</TT> The path to the executable to wish. 
+</DD>
+<DT></DT>
+<DD><TT>*wish-args*</TT> The arguments passed to the call to wish. Default value: <TT>("-name" "LTK")</TT>
+</DD>
+<DT></DT>
+<DD><TT>*ltk-version*</TT> The version of the Ltk library. 
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000411000000000000000">
+Generic functions</A>
+</H2>
+
+<P>
+The following generic functions are defined on widgets:
+
+<P>
+<DL>
+<DT></DT>
+<DD><TT>(value <I>widget</I>)</TT> Reads/sets the value of the widget.  Applicable
+for: <TT>check-button</TT>, <TT>radio-button</TT>, <TT>menucheckbutton</TT>,
+<TT>menuradiobutton</TT>, <TT>scale</TT>.
+</DD>
+<DT></DT>
+<DD><TT>(text <I>widget</I>)</TT> Reads/sets the text of the widget.
+  Depending on the widget, this can be text displayed on the widget
+  (<TT>button</TT>) or contained as data (<TT>entry</TT>). Applicable for
+  <TT>button</TT>, <TT>check-button</TT>, <TT>entry</TT>, <TT>label</TT>, <TT>    labelframe</TT>, <TT>spinbox</TT>, <TT>text</TT>.
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000412000000000000000">
+The pack geometry manager</A>
+</H2> 
+
+<P>
+<A NAME="341"></A>
+
+<P>
+The pack geometry manager treats widges as boxes to be piled into one
+direction. This direction can be either horizontally or vertically.
+Complex layouts can be created by using frames to pack piles together.
+
+<P>
+The behaviour of the pack geometry manager is controlled by the keyword
+parameters to the pack function. The keywords and their effects are:
+
+<P>
+<DL>
+<DT></DT>
+<DD><TT>:side</TT> The direction in which the widgets are packed. Possible values 
+are <TT>:left</TT> , <TT>:right</TT>, <TT>:top</TT> (default), <TT>:bottom</TT>.
+</DD>
+<DT></DT>
+<DD><TT>:expand</TT> If <TT>t</TT>, then the packed widget may take more place than
+</DD>
+<DT></DT>
+<DD><TT>:fill</TT> Allows the packed widget to grow in the given
+  direction, if it gets expanded. Possible values are <TT>:none</TT> (default),
+  <TT>:x</TT>, <TT>:y</TT> or <TT>:both</TT> needed.
+</DD>
+<DT></DT>
+<DD><TT>:after</TT> <I>widget</I> Pack it after the widget.
+</DD>
+<DT></DT>
+<DD><TT>:before</TT> <I>widget</I> Pack it before the widget
+</DD>
+<DT></DT>
+<DD><TT>:padx</TT> <I>n</I> Leave <I>n</I> pixel space in x direction around the widget.
+</DD>
+<DT></DT>
+<DD><TT>:pady</TT> <I>n</I> Leave <I>n</I> pixel space in y direction around the widget.
+</DD>
+<DT></DT>
+<DD><TT>:ipadx</TT> <I>n</I> Grow the widget <I>n</I> pixel in x direction.
+</DD>
+<DT></DT>
+<DD><TT>:ipady</TT> <I>n</I> Grow the widget <I>n</I> pixel in y direction.
+</DD>
+<DT></DT>
+<DD><TT>:anchor</TT> <I>direction</I> Specify which point of the widget
+  to use for anchoring it, for example <TT>:ne</TT> for the upper right
+  corner.
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION000413000000000000000">
+The grid geometry manager</A>
+</H2> 
+
+<P>
+<A NAME="376"></A>
+
+<P>
+The grid geometry manager creates a table-like layout.
+So to arrange a widget with the grid manager, use the 
+<code>grid</code> function with the parameters of row and column
+number (starting from zero). There is one keyword parameter <code>:sticky</code>
+which governs the widget alignment within its table cell. Its a string containing
+any combination of ``n'' ``e'' ``s'' and ``w''.
+
+<P>
+The behaviour of the single rows and columns of the grid are controlled by the 
+<code>grid-rowconfigure</code> and <code>grid-columnconfigure</code> functions. Its most
+common use is to set the weight of a column between 0 and 1 to control the
+resizing behaviour.
+
+<P>
+
+<H2><A NAME="SECTION000414000000000000000"></A>
+<A NAME="378"></A>
+<BR>
+Configuring widgets
+</H2>
+
+<P>
+Almost all aspects of widgets can be configured after creation
+via the <TT>configure</TT> function. It has the form:
+<TT>(configure <I>widget option value</I>)</TT> where widget is the
+widget to be configured, option the name of the option to configure 
+(on the Lisp side a string or a keyword) and value any printable value that should be set
+for the option or a <TT>tkobject</TT>.
+Options used by all widgets are (not complete):
+
+<P>
+<DL>
+<DT></DT>
+<DD><TT>anchor </TT> <I>position</I> <A NAME="385"></A> n, ne, e, se, s, sw, w, nw, center
+</DD>
+<DT></DT>
+<DD><TT>background</TT> <I>color</I> <A NAME="388"></A> Background color of the widget
+</DD>
+<DT></DT>
+<DD><TT>bitmap</TT> <I>bitmap</I> <A NAME="391"></A> Specifies a bitmap to display in the widget.
+</DD>
+<DT></DT>
+<DD><TT>borderwidth</TT> <I>width</I> <A NAME="394"></A> borderwidth in pixels
+</DD>
+<DT></DT>
+<DD><TT>cursor</TT> <I>cursorname</I> <A NAME="397"></A> Set the icon for the mouse cursor. A list of portable names is in the variable <TT>*cursors</TT>.
+</DD>
+<DT></DT>
+<DD><TT>foreground</TT> <I>color</I> <A NAME="401"></A> Foreground color.
+</DD>
+<DT></DT>
+<DD><TT>image</TT> <I>image</I> <A NAME="404"></A> Photo image to be displayed on the widget.
+</DD>
+<DT></DT>
+<DD><TT>justify</TT> <I>value</I> <A NAME="407"></A> Justification of text displayed on the widget, may be left, center, or right.
+</DD>
+<DT></DT>
+<DD><TT>padx</TT> <I>pixels</I> <A NAME="410"></A> Extra padding around the widget. 
+</DD>
+<DT></DT>
+<DD><TT>pady</TT> <I>pixels</I> <A NAME="413"></A> Extra padding around the widget. 
+</DD>
+<DT></DT>
+<DD><TT>relief </TT> <I>value</I> <A NAME="416"></A> Effect for border display. May be raised, sunken, flat, ridge, solid, or groove.
+</DD>
+<DT></DT>
+<DD><TT>orient</TT> <I>orientation</I> <A NAME="419"></A> The orientation of the widget (e.g. for scrollbars). May be horizontal or vertical.    
+</DD>
+<DT></DT>
+<DD><TT>takefocus</TT> <I>takeit</I> <A NAME="422"></A> 0 or 1, determines whether the widget accepts the focus.
+</DD>
+<DT></DT>
+<DD><TT>text</TT> <I>string</I> <A NAME="425"></A> The text to be displayed on the widget.  
+</DD>
+<DT></DT>
+<DD><TT>underline</TT> <I>index</I> <A NAME="428"></A> The index of the character to underline in the text of the widget for keyboard traversal. 
+</DD>
+</DL>
+
+<P>
+Example: <TT>(configure txt :background :blue)</TT>
+
+<P>
+
+<H1><A NAME="SECTION00050000000000000000">
+Event handling</A>
+</H1>
+
+<P>
+There are two ways to get notified by Tk events: <TT>command</TT> and <TT>bind</TT>. Widgets, which
+have a default event type, like pressing buttons, define a <TT>command</TT> initarg. With it, a
+function can be bound to this default event type. This is a function, that will be called
+with zero or one parameter, depending on the widget type. For those that use it, this parameter
+will be the value of the widget (example value of the scale widget). 
+
+<P>
+
+<H2><A NAME="SECTION00051000000000000000">
+<TT>command</TT></A>
+</H2>
+
+<P>
+<BR><P></P>
+<DIV ALIGN="CENTER"><A NAME="442"></A>
+<TABLE>
+<CAPTION><STRONG>Table 2:</STRONG>
+Classes with a command property and their descriptions</CAPTION>
+<TR><TD>
+<DIV ALIGN="CENTER">
+<TABLE CELLPADDING=3 BORDER="1" ALIGN="CENTER">
+<TR><TD ALIGN="LEFT">widget</TD>
+<TD ALIGN="LEFT">argument</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=255>description</TD>
+</TR>
+<TR><TD ALIGN="LEFT">button</TD>
+<TD ALIGN="LEFT">-</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=255>called when the button is clicked</TD>
+</TR>
+<TR><TD ALIGN="LEFT">check-button</TD>
+<TD ALIGN="LEFT">value</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=255>report the value when the button is clicked</TD>
+</TR>
+<TR><TD ALIGN="LEFT">listbox</TD>
+<TD ALIGN="LEFT">selection</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=255>a list of the selected indices (0 for first) whenever the listbox is clicked</TD>
+</TR>
+<TR><TD ALIGN="LEFT">scale</TD>
+<TD ALIGN="LEFT">value</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=255>whenever the value is changed, called with the new value</TD>
+</TR>
+<TR><TD ALIGN="LEFT">spinbox</TD>
+<TD ALIGN="LEFT">value</TD>
+<TD ALIGN="LEFT" VALIGN="TOP" WIDTH=255>whenever the value of the spinbox is changed by the buttons, the new one is returned</TD>
+</TR>
+</TABLE>
+</DIV>
+
+<A NAME="table_command"></A></TD></TR>
+</TABLE>
+</DIV><P></P>
+<BR>
+
+<P>
+With the <TT>command</TT> property a function for handling the default event type of
+widgets can be specified. This can be done with the <TT>:command</TT> initarg or 
+the <TT>command</TT> accessor (settable) for those widgets. The widgets that support
+the <TT>command</TT> property are listed in table <A HREF="#table_command">2</A>. The first
+column lists the widgets, the second which arguments the function is passed (if any)
+and the third one gives a brief description about when the event happens and what
+the arguments contain.
+
+<P>
+
+<H2><A NAME="SECTION00052000000000000000">
+<TT>bind</TT></A>
+</H2>
+
+<P>
+A more generic and complex event type can be created via the <TT>bind</TT> function. With it
+for any widget type events can be defined, the function bound to it always needs to accept
+one parameter an <TT>event</TT> structure. 
+Its usage is: <TT>(bind widget event function)</TT><A NAME="tex2html6"
+  HREF="#foot454"><SUP>1</SUP></A>
+<P>
+A scribble example:
+
+<P>
+<PRE>
+(defun scribble ()
+  (with-ltk ()
+   (let* ((canvas (make-instance 'canvas))
+          (down nil))
+     (pack canvas)
+     (bind canvas "&lt;ButtonPress-1&gt;"
+           (lambda (evt)
+             (setf down t)                                    
+             (create-oval canvas
+                      (- (event-x evt) 10) (- (event-y evt) 10)
+                      (+ (event-x evt) 10) (+ (event-y evt) 10))))
+     (bind canvas "&lt;ButtonRelease-1&gt;" (lambda (evt) 
+                                        (declare (ignore evt))
+                                        (setf down nil)))
+     (bind canvas "&lt;Motion&gt;"
+           (lambda (evt)
+             (when down
+               (create-oval canvas
+                    (- (event-x evt) 10) (- (event-y evt) 10)
+                    (+ (event-x evt) 10) (+ (event-y evt) 10))))))))
+</PRE>
+
+<P>
+
+<H1><A NAME="SECTION00060000000000000000">
+Widgets</A>
+</H1>
+
+<P>
+In this section the available widgets are listed and described.
+
+<P>
+
+<H2><A NAME="SECTION00061000000000000000"></A><A NAME="1457"></A>
+<BR>
+Button
+</H2>
+
+<P>
+The following keyword arguments are available for creating an instance of the button and for configuring it<DL>
+<DT></DT>
+<DD><TT>activebackground</TT><A NAME="1460"></A> 
+                background of the active area
+</DD>
+<DT></DT>
+<DD><TT>activeforeground</TT><A NAME="1462"></A> 
+                foreground color for active widgets (when the mouse cursor is over the widget)
+</DD>
+<DT></DT>
+<DD><TT>anchor</TT><A NAME="1464"></A> 
+                specify the alignment of text/image drawn on the widget, one of (:n :w :s :e :nw :sw :se :ne) with :nw designating the top left corner
+</DD>
+<DT></DT>
+<DD><TT>background</TT><A NAME="1466"></A> 
+                background color of the widget
+</DD>
+<DT></DT>
+<DD><TT>bitmap</TT><A NAME="1468"></A> 
+                the bitmap to display on the widget, the display is affected by the options 'anchor' and 'justify'
+</DD>
+<DT></DT>
+<DD><TT>borderwidth</TT><A NAME="1470"></A> 
+                width of the border around the widget in pixels
+</DD>
+<DT></DT>
+<DD><TT>command</TT><A NAME="1472"></A> 
+                function to call when the action of the widget is executed
+</DD>
+<DT></DT>
+<DD><TT>compound</TT><A NAME="1474"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>cursor</TT><A NAME="1476"></A> 
+                mouse pointer to display on the widget (valid values are listed in *cursors*)
+</DD>
+<DT></DT>
+<DD><TT>default</TT><A NAME="1478"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>disabledforeground</TT><A NAME="1480"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>font</TT><A NAME="1482"></A> 
+                font to use to display text on the widget
+</DD>
+<DT></DT>
+<DD><TT>foreground</TT><A NAME="1484"></A> 
+                foreground color of the widget
+</DD>
+<DT></DT>
+<DD><TT>height</TT><A NAME="1486"></A> 
+                height of the widget
+</DD>
+<DT></DT>
+<DD><TT>highlightbackground</TT><A NAME="1488"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightcolor</TT><A NAME="1490"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightthickness</TT><A NAME="1492"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>image</TT><A NAME="1494"></A> 
+                the image to display on the widget, the display is affected by the options 'anchor' and 'justify'
+</DD>
+<DT></DT>
+<DD><TT>justify</TT><A NAME="1496"></A> 
+                justification of the text on the widget
+</DD>
+<DT></DT>
+<DD><TT>overrelief</TT><A NAME="1498"></A> 
+                relief of the border, when the mouse is over the widget
+</DD>
+<DT></DT>
+<DD><TT>padx</TT><A NAME="1500"></A> 
+                padding around text displayed on the widget
+</DD>
+<DT></DT>
+<DD><TT>pady</TT><A NAME="1502"></A> 
+                padding around text displayed on the widget
+</DD>
+<DT></DT>
+<DD><TT>relief</TT><A NAME="1504"></A> 
+                relief of the widgets border (raised, sunken, ridge, groove)
+</DD>
+<DT></DT>
+<DD><TT>repeatdelay</TT><A NAME="1506"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>repeatinterval</TT><A NAME="1508"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>state</TT><A NAME="1510"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>takefocus</TT><A NAME="1512"></A> 
+                if true, the widget can take the focus
+</DD>
+<DT></DT>
+<DD><TT>text</TT><A NAME="1514"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>underline</TT><A NAME="1516"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>width</TT><A NAME="1518"></A> 
+                width of the widget
+</DD>
+<DT></DT>
+<DD><TT>wraplength</TT><A NAME="1520"></A> 
+
+<P>
+</DD>
+</DL>
+
+<H2><A NAME="SECTION00062000000000000000"></A><A NAME="1611"></A>
+<BR>
+Canvas
+</H2>
+
+<P>
+The following keyword arguments are available for creating an instance of the canvas and for configuring it<DL>
+<DT></DT>
+<DD><TT>background</TT><A NAME="1614"></A> 
+                background color of the widget
+</DD>
+<DT></DT>
+<DD><TT>borderwidth</TT><A NAME="1616"></A> 
+                width of the border around the widget in pixels
+</DD>
+<DT></DT>
+<DD><TT>closeenough</TT><A NAME="1618"></A> 
+                dermines when the mouse coursor is considered to be inside a shape, the default is 1.0
+</DD>
+<DT></DT>
+<DD><TT>confine</TT><A NAME="1620"></A> 
+                if t (default) allowed values for view are confined to the scrollregion
+</DD>
+<DT></DT>
+<DD><TT>cursor</TT><A NAME="1622"></A> 
+                mouse pointer to display on the widget (valid values are listed in *cursors*)
+</DD>
+<DT></DT>
+<DD><TT>height</TT><A NAME="1624"></A> 
+                height of the widget
+</DD>
+<DT></DT>
+<DD><TT>highlightbackground</TT><A NAME="1626"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightcolor</TT><A NAME="1628"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightthickness</TT><A NAME="1630"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>insertbackground</TT><A NAME="1632"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>insertborderwidth</TT><A NAME="1634"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>insertofftime</TT><A NAME="1636"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>insertontime</TT><A NAME="1638"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>insertwidth</TT><A NAME="1640"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>offset</TT><A NAME="1642"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>relief</TT><A NAME="1644"></A> 
+                relief of the widgets border (raised, sunken, ridge, groove)
+</DD>
+<DT></DT>
+<DD><TT>scrollregion</TT><A NAME="1646"></A> 
+                region in which the canvas should be scolled
+</DD>
+<DT></DT>
+<DD><TT>selectbackground</TT><A NAME="1648"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>selectborderwidth</TT><A NAME="1650"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>selectforeground</TT><A NAME="1652"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>state</TT><A NAME="1654"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>takefocus</TT><A NAME="1656"></A> 
+                if true, the widget can take the focus
+</DD>
+<DT></DT>
+<DD><TT>width</TT><A NAME="1658"></A> 
+                width of the widget
+</DD>
+<DT></DT>
+<DD><TT>xscrollcommand</TT><A NAME="1660"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>xscrollincrement</TT><A NAME="1662"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>yscrollcommand</TT><A NAME="1664"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>yscrollincrement</TT><A NAME="1666"></A> 
+
+<P>
+</DD>
+</DL>
+
+<H2><A NAME="SECTION00063000000000000000"></A><A NAME="1759"></A>
+<BR>
+Check-button
+</H2>
+
+<P>
+The following keyword arguments are available for creating an instance of the check-button and for configuring it<DL>
+<DT></DT>
+<DD><TT>activebackground</TT><A NAME="1762"></A> 
+                background of the active area
+</DD>
+<DT></DT>
+<DD><TT>activeforeground</TT><A NAME="1764"></A> 
+                foreground color for active widgets (when the mouse cursor is over the widget)
+</DD>
+<DT></DT>
+<DD><TT>anchor</TT><A NAME="1766"></A> 
+                specify the alignment of text/image drawn on the widget, one of (:n :w :s :e :nw :sw :se :ne) with :nw designating the top left corner
+</DD>
+<DT></DT>
+<DD><TT>background</TT><A NAME="1768"></A> 
+                background color of the widget
+</DD>
+<DT></DT>
+<DD><TT>bitmap</TT><A NAME="1770"></A> 
+                the bitmap to display on the widget, the display is affected by the options 'anchor' and 'justify'
+</DD>
+<DT></DT>
+<DD><TT>borderwidth</TT><A NAME="1772"></A> 
+                width of the border around the widget in pixels
+</DD>
+<DT></DT>
+<DD><TT>command</TT><A NAME="1774"></A> 
+                function to call when the action of the widget is executed
+</DD>
+<DT></DT>
+<DD><TT>compound</TT><A NAME="1776"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>cursor</TT><A NAME="1778"></A> 
+                mouse pointer to display on the widget (valid values are listed in *cursors*)
+</DD>
+<DT></DT>
+<DD><TT>disabledforeground</TT><A NAME="1780"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>font</TT><A NAME="1782"></A> 
+                font to use to display text on the widget
+</DD>
+<DT></DT>
+<DD><TT>foreground</TT><A NAME="1784"></A> 
+                foreground color of the widget
+</DD>
+<DT></DT>
+<DD><TT>height</TT><A NAME="1786"></A> 
+                height of the widget
+</DD>
+<DT></DT>
+<DD><TT>highlightbackground</TT><A NAME="1788"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightcolor</TT><A NAME="1790"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightthickness</TT><A NAME="1792"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>image</TT><A NAME="1794"></A> 
+                the image to display on the widget, the display is affected by the options 'anchor' and 'justify'
+</DD>
+<DT></DT>
+<DD><TT>indicatoron</TT><A NAME="1796"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>justify</TT><A NAME="1798"></A> 
+                justification of the text on the widget
+</DD>
+<DT></DT>
+<DD><TT>offrelief</TT><A NAME="1800"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>offvalue</TT><A NAME="1802"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>onvalue</TT><A NAME="1804"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>overrelief</TT><A NAME="1806"></A> 
+                relief of the border, when the mouse is over the widget
+</DD>
+<DT></DT>
+<DD><TT>padx</TT><A NAME="1808"></A> 
+                padding around text displayed on the widget
+</DD>
+<DT></DT>
+<DD><TT>pady</TT><A NAME="1810"></A> 
+                padding around text displayed on the widget
+</DD>
+<DT></DT>
+<DD><TT>relief</TT><A NAME="1812"></A> 
+                relief of the widgets border (raised, sunken, ridge, groove)
+</DD>
+<DT></DT>
+<DD><TT>selectcolor</TT><A NAME="1814"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>selectimage</TT><A NAME="1816"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>state</TT><A NAME="1818"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>takefocus</TT><A NAME="1820"></A> 
+                if true, the widget can take the focus
+</DD>
+<DT></DT>
+<DD><TT>text</TT><A NAME="1822"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>underline</TT><A NAME="1824"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>variable</TT><A NAME="1826"></A> 
+                name of the variable associated with the widget
+</DD>
+<DT></DT>
+<DD><TT>width</TT><A NAME="1828"></A> 
+                width of the widget
+</DD>
+<DT></DT>
+<DD><TT>wraplength</TT><A NAME="1830"></A> 
+
+<P>
+</DD>
+</DL>
+
+<H2><A NAME="SECTION00064000000000000000"></A><A NAME="1935"></A>
+<BR>
+Entry
+</H2>
+
+<P>
+The following keyword arguments are available for creating an instance of the entry and for configuring it<DL>
+<DT></DT>
+<DD><TT>background</TT><A NAME="1938"></A> 
+                background color of the widget
+</DD>
+<DT></DT>
+<DD><TT>borderwidth</TT><A NAME="1940"></A> 
+                width of the border around the widget in pixels
+</DD>
+<DT></DT>
+<DD><TT>cursor</TT><A NAME="1942"></A> 
+                mouse pointer to display on the widget (valid values are listed in *cursors*)
+</DD>
+<DT></DT>
+<DD><TT>disabledbackground</TT><A NAME="1944"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>disabledforeground</TT><A NAME="1946"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>exportselection</TT><A NAME="1948"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>font</TT><A NAME="1950"></A> 
+                font to use to display text on the widget
+</DD>
+<DT></DT>
+<DD><TT>foreground</TT><A NAME="1952"></A> 
+                foreground color of the widget
+</DD>
+<DT></DT>
+<DD><TT>highlightbackground</TT><A NAME="1954"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightcolor</TT><A NAME="1956"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightthickness</TT><A NAME="1958"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>insertbackground</TT><A NAME="1960"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>insertborderwidth</TT><A NAME="1962"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>insertofftime</TT><A NAME="1964"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>insertontime</TT><A NAME="1966"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>insertwidth</TT><A NAME="1968"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>invalidcommand</TT><A NAME="1970"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>justify</TT><A NAME="1972"></A> 
+                justification of the text on the widget
+</DD>
+<DT></DT>
+<DD><TT>readonlybackground</TT><A NAME="1974"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>relief</TT><A NAME="1976"></A> 
+                relief of the widgets border (raised, sunken, ridge, groove)
+</DD>
+<DT></DT>
+<DD><TT>selectbackground</TT><A NAME="1978"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>selectborderwidth</TT><A NAME="1980"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>selectforeground</TT><A NAME="1982"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>show</TT><A NAME="1984"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>state</TT><A NAME="1986"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>takefocus</TT><A NAME="1988"></A> 
+                if true, the widget can take the focus
+</DD>
+<DT></DT>
+<DD><TT>text</TT><A NAME="1990"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>validate</TT><A NAME="1992"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>validatecommand</TT><A NAME="1994"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>width</TT><A NAME="1996"></A> 
+                width of the widget
+</DD>
+<DT></DT>
+<DD><TT>xscrollcommand</TT><A NAME="1998"></A> 
+
+<P>
+</DD>
+</DL>
+
+<H2><A NAME="SECTION00065000000000000000"></A><A NAME="2109"></A>
+<BR>
+Frame
+</H2>
+
+<P>
+The following keyword arguments are available for creating an instance of the frame and for configuring it<DL>
+<DT></DT>
+<DD><TT>background</TT><A NAME="2112"></A> 
+                background color of the widget
+</DD>
+<DT></DT>
+<DD><TT>borderwidth</TT><A NAME="2114"></A> 
+                width of the border around the widget in pixels
+</DD>
+<DT></DT>
+<DD><TT>class</TT><A NAME="2116"></A> 
+                the class of the widget, used for lookup in the option database. This option cannot be changed after the widget creation.
+</DD>
+<DT></DT>
+<DD><TT>colormap</TT><A NAME="2118"></A> 
+                The colormap to use for the widget.
+</DD>
+<DT></DT>
+<DD><TT>container</TT><A NAME="2120"></A> 
+                if t, then the widget will be used as a container for other widgets.
+</DD>
+<DT></DT>
+<DD><TT>cursor</TT><A NAME="2122"></A> 
+                mouse pointer to display on the widget (valid values are listed in *cursors*)
+</DD>
+<DT></DT>
+<DD><TT>height</TT><A NAME="2124"></A> 
+                height of the widget
+</DD>
+<DT></DT>
+<DD><TT>highlightbackground</TT><A NAME="2126"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightcolor</TT><A NAME="2128"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightthickness</TT><A NAME="2130"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>padx</TT><A NAME="2132"></A> 
+                padding around text displayed on the widget
+</DD>
+<DT></DT>
+<DD><TT>pady</TT><A NAME="2134"></A> 
+                padding around text displayed on the widget
+</DD>
+<DT></DT>
+<DD><TT>relief</TT><A NAME="2136"></A> 
+                relief of the widgets border (raised, sunken, ridge, groove)
+</DD>
+<DT></DT>
+<DD><TT>takefocus</TT><A NAME="2138"></A> 
+                if true, the widget can take the focus
+</DD>
+<DT></DT>
+<DD><TT>visual</TT><A NAME="2140"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>width</TT><A NAME="2142"></A> 
+                width of the widget
+</DD>
+</DL>
+
+<H2><A NAME="SECTION00066000000000000000"></A><A NAME="2187"></A>
+<BR>
+Label
+</H2>
+
+<P>
+The following keyword arguments are available for creating an instance of the label and for configuring it<DL>
+<DT></DT>
+<DD><TT>activebackground</TT><A NAME="2190"></A> 
+                background of the active area
+</DD>
+<DT></DT>
+<DD><TT>activeforeground</TT><A NAME="2192"></A> 
+                foreground color for active widgets (when the mouse cursor is over the widget)
+</DD>
+<DT></DT>
+<DD><TT>anchor</TT><A NAME="2194"></A> 
+                specify the alignment of text/image drawn on the widget, one of (:n :w :s :e :nw :sw :se :ne) with :nw designating the top left corner
+</DD>
+<DT></DT>
+<DD><TT>background</TT><A NAME="2196"></A> 
+                background color of the widget
+</DD>
+<DT></DT>
+<DD><TT>bitmap</TT><A NAME="2198"></A> 
+                the bitmap to display on the widget, the display is affected by the options 'anchor' and 'justify'
+</DD>
+<DT></DT>
+<DD><TT>borderwidth</TT><A NAME="2200"></A> 
+                width of the border around the widget in pixels
+</DD>
+<DT></DT>
+<DD><TT>compound</TT><A NAME="2202"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>cursor</TT><A NAME="2204"></A> 
+                mouse pointer to display on the widget (valid values are listed in *cursors*)
+</DD>
+<DT></DT>
+<DD><TT>disabledforeground</TT><A NAME="2206"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>font</TT><A NAME="2208"></A> 
+                font to use to display text on the widget
+</DD>
+<DT></DT>
+<DD><TT>foreground</TT><A NAME="2210"></A> 
+                foreground color of the widget
+</DD>
+<DT></DT>
+<DD><TT>height</TT><A NAME="2212"></A> 
+                height of the widget
+</DD>
+<DT></DT>
+<DD><TT>highlightbackground</TT><A NAME="2214"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightcolor</TT><A NAME="2216"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightthickness</TT><A NAME="2218"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>image</TT><A NAME="2220"></A> 
+                the image to display on the widget, the display is affected by the options 'anchor' and 'justify'
+</DD>
+<DT></DT>
+<DD><TT>justify</TT><A NAME="2222"></A> 
+                justification of the text on the widget
+</DD>
+<DT></DT>
+<DD><TT>padx</TT><A NAME="2224"></A> 
+                padding around text displayed on the widget
+</DD>
+<DT></DT>
+<DD><TT>pady</TT><A NAME="2226"></A> 
+                padding around text displayed on the widget
+</DD>
+<DT></DT>
+<DD><TT>relief</TT><A NAME="2228"></A> 
+                relief of the widgets border (raised, sunken, ridge, groove)
+</DD>
+<DT></DT>
+<DD><TT>state</TT><A NAME="2230"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>takefocus</TT><A NAME="2232"></A> 
+                if true, the widget can take the focus
+</DD>
+<DT></DT>
+<DD><TT>text</TT><A NAME="2234"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>underline</TT><A NAME="2236"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>width</TT><A NAME="2238"></A> 
+                width of the widget
+</DD>
+<DT></DT>
+<DD><TT>wraplength</TT><A NAME="2240"></A> 
+
+<P>
+</DD>
+</DL>
+
+<H2><A NAME="SECTION00067000000000000000"></A><A NAME="2315"></A>
+<BR>
+Labelframe
+</H2>
+
+<P>
+The following keyword arguments are available for creating an instance of the labelframe and for configuring it<DL>
+<DT></DT>
+<DD><TT>background</TT><A NAME="2318"></A> 
+                background color of the widget
+</DD>
+<DT></DT>
+<DD><TT>borderwidth</TT><A NAME="2320"></A> 
+                width of the border around the widget in pixels
+</DD>
+<DT></DT>
+<DD><TT>class</TT><A NAME="2322"></A> 
+                the class of the widget, used for lookup in the option database. This option cannot be changed after the widget creation.
+</DD>
+<DT></DT>
+<DD><TT>colormap</TT><A NAME="2324"></A> 
+                The colormap to use for the widget.
+</DD>
+<DT></DT>
+<DD><TT>container</TT><A NAME="2326"></A> 
+                if t, then the widget will be used as a container for other widgets.
+</DD>
+<DT></DT>
+<DD><TT>cursor</TT><A NAME="2328"></A> 
+                mouse pointer to display on the widget (valid values are listed in *cursors*)
+</DD>
+<DT></DT>
+<DD><TT>font</TT><A NAME="2330"></A> 
+                font to use to display text on the widget
+</DD>
+<DT></DT>
+<DD><TT>foreground</TT><A NAME="2332"></A> 
+                foreground color of the widget
+</DD>
+<DT></DT>
+<DD><TT>height</TT><A NAME="2334"></A> 
+                height of the widget
+</DD>
+<DT></DT>
+<DD><TT>highlightbackground</TT><A NAME="2336"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightcolor</TT><A NAME="2338"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightthickness</TT><A NAME="2340"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>labelanchor</TT><A NAME="2342"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>labelwidget</TT><A NAME="2344"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>padx</TT><A NAME="2346"></A> 
+                padding around text displayed on the widget
+</DD>
+<DT></DT>
+<DD><TT>pady</TT><A NAME="2348"></A> 
+                padding around text displayed on the widget
+</DD>
+<DT></DT>
+<DD><TT>relief</TT><A NAME="2350"></A> 
+                relief of the widgets border (raised, sunken, ridge, groove)
+</DD>
+<DT></DT>
+<DD><TT>takefocus</TT><A NAME="2352"></A> 
+                if true, the widget can take the focus
+</DD>
+<DT></DT>
+<DD><TT>text</TT><A NAME="2354"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>visual</TT><A NAME="2356"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>width</TT><A NAME="2358"></A> 
+                width of the widget
+</DD>
+</DL>
+
+<H2><A NAME="SECTION00068000000000000000"></A><A NAME="2419"></A>
+<BR>
+Listbox
+</H2>
+
+<P>
+The following keyword arguments are available for creating an instance of the listbox and for configuring it<DL>
+<DT></DT>
+<DD><TT>activestyle</TT><A NAME="2422"></A> 
+                the style for drawing the active part (dotbox, none, underline (default))
+</DD>
+<DT></DT>
+<DD><TT>background</TT><A NAME="2424"></A> 
+                background color of the widget
+</DD>
+<DT></DT>
+<DD><TT>borderwidth</TT><A NAME="2426"></A> 
+                width of the border around the widget in pixels
+</DD>
+<DT></DT>
+<DD><TT>cursor</TT><A NAME="2428"></A> 
+                mouse pointer to display on the widget (valid values are listed in *cursors*)
+</DD>
+<DT></DT>
+<DD><TT>disabledforeground</TT><A NAME="2430"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>exportselection</TT><A NAME="2432"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>font</TT><A NAME="2434"></A> 
+                font to use to display text on the widget
+</DD>
+<DT></DT>
+<DD><TT>foreground</TT><A NAME="2436"></A> 
+                foreground color of the widget
+</DD>
+<DT></DT>
+<DD><TT>height</TT><A NAME="2438"></A> 
+                height of the widget
+</DD>
+<DT></DT>
+<DD><TT>highlightbackground</TT><A NAME="2440"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightcolor</TT><A NAME="2442"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightthickness</TT><A NAME="2444"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>listvariable</TT><A NAME="2446"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>relief</TT><A NAME="2448"></A> 
+                relief of the widgets border (raised, sunken, ridge, groove)
+</DD>
+<DT></DT>
+<DD><TT>selectbackground</TT><A NAME="2450"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>selectborderwidth</TT><A NAME="2452"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>selectforeground</TT><A NAME="2454"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>selectmode</TT><A NAME="2456"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>setgrid</TT><A NAME="2458"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>state</TT><A NAME="2460"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>takefocus</TT><A NAME="2462"></A> 
+                if true, the widget can take the focus
+</DD>
+<DT></DT>
+<DD><TT>width</TT><A NAME="2464"></A> 
+                width of the widget
+</DD>
+<DT></DT>
+<DD><TT>xscrollcommand</TT><A NAME="2466"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>yscrollcommand</TT><A NAME="2468"></A> 
+
+<P>
+</DD>
+</DL>
+
+<H2><A NAME="SECTION00069000000000000000"></A><A NAME="2549"></A>
+<BR>
+Menu
+</H2>
+
+<P>
+The following keyword arguments are available for creating an instance of the menu and for configuring it<DL>
+<DT></DT>
+<DD><TT>activebackground</TT><A NAME="2552"></A> 
+                background of the active area
+</DD>
+<DT></DT>
+<DD><TT>activeborderwidth</TT><A NAME="2554"></A> 
+                the border width for active widgets (when the mouse cursor is over the widget)
+</DD>
+<DT></DT>
+<DD><TT>activeforeground</TT><A NAME="2556"></A> 
+                foreground color for active widgets (when the mouse cursor is over the widget)
+</DD>
+<DT></DT>
+<DD><TT>background</TT><A NAME="2558"></A> 
+                background color of the widget
+</DD>
+<DT></DT>
+<DD><TT>borderwidth</TT><A NAME="2560"></A> 
+                width of the border around the widget in pixels
+</DD>
+<DT></DT>
+<DD><TT>cursor</TT><A NAME="2562"></A> 
+                mouse pointer to display on the widget (valid values are listed in *cursors*)
+</DD>
+<DT></DT>
+<DD><TT>disabledforeground</TT><A NAME="2564"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>font</TT><A NAME="2566"></A> 
+                font to use to display text on the widget
+</DD>
+<DT></DT>
+<DD><TT>foreground</TT><A NAME="2568"></A> 
+                foreground color of the widget
+</DD>
+<DT></DT>
+<DD><TT>postcommand</TT><A NAME="2570"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>relief</TT><A NAME="2572"></A> 
+                relief of the widgets border (raised, sunken, ridge, groove)
+</DD>
+<DT></DT>
+<DD><TT>selectcolor</TT><A NAME="2574"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>takefocus</TT><A NAME="2576"></A> 
+                if true, the widget can take the focus
+</DD>
+<DT></DT>
+<DD><TT>tearoff</TT><A NAME="2578"></A> 
+                if true, the menu can be torn off
+</DD>
+<DT></DT>
+<DD><TT>tearoffcommand</TT><A NAME="2580"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>title</TT><A NAME="2582"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>type</TT><A NAME="2584"></A> 
+
+<P>
+</DD>
+</DL>
+
+<H2><A NAME="SECTION000610000000000000000"></A><A NAME="2635"></A>
+<BR>
+Menubutton
+</H2>
+
+<P>
+The following keyword arguments are available for creating an instance of the menubutton and for configuring it<DL>
+<DT></DT>
+<DD><TT>activebackground</TT><A NAME="2638"></A> 
+                background of the active area
+</DD>
+<DT></DT>
+<DD><TT>activeforeground</TT><A NAME="2640"></A> 
+                foreground color for active widgets (when the mouse cursor is over the widget)
+</DD>
+<DT></DT>
+<DD><TT>anchor</TT><A NAME="2642"></A> 
+                specify the alignment of text/image drawn on the widget, one of (:n :w :s :e :nw :sw :se :ne) with :nw designating the top left corner
+</DD>
+<DT></DT>
+<DD><TT>background</TT><A NAME="2644"></A> 
+                background color of the widget
+</DD>
+<DT></DT>
+<DD><TT>bitmap</TT><A NAME="2646"></A> 
+                the bitmap to display on the widget, the display is affected by the options 'anchor' and 'justify'
+</DD>
+<DT></DT>
+<DD><TT>borderwidth</TT><A NAME="2648"></A> 
+                width of the border around the widget in pixels
+</DD>
+<DT></DT>
+<DD><TT>compound</TT><A NAME="2650"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>cursor</TT><A NAME="2652"></A> 
+                mouse pointer to display on the widget (valid values are listed in *cursors*)
+</DD>
+<DT></DT>
+<DD><TT>direction</TT><A NAME="2654"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>disabledforeground</TT><A NAME="2656"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>font</TT><A NAME="2658"></A> 
+                font to use to display text on the widget
+</DD>
+<DT></DT>
+<DD><TT>foreground</TT><A NAME="2660"></A> 
+                foreground color of the widget
+</DD>
+<DT></DT>
+<DD><TT>height</TT><A NAME="2662"></A> 
+                height of the widget
+</DD>
+<DT></DT>
+<DD><TT>highlightbackground</TT><A NAME="2664"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightcolor</TT><A NAME="2666"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightthickness</TT><A NAME="2668"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>image</TT><A NAME="2670"></A> 
+                the image to display on the widget, the display is affected by the options 'anchor' and 'justify'
+</DD>
+<DT></DT>
+<DD><TT>indicatoron</TT><A NAME="2672"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>justify</TT><A NAME="2674"></A> 
+                justification of the text on the widget
+</DD>
+<DT></DT>
+<DD><TT>menu</TT><A NAME="2676"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>padx</TT><A NAME="2678"></A> 
+                padding around text displayed on the widget
+</DD>
+<DT></DT>
+<DD><TT>pady</TT><A NAME="2680"></A> 
+                padding around text displayed on the widget
+</DD>
+<DT></DT>
+<DD><TT>relief</TT><A NAME="2682"></A> 
+                relief of the widgets border (raised, sunken, ridge, groove)
+</DD>
+<DT></DT>
+<DD><TT>state</TT><A NAME="2684"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>takefocus</TT><A NAME="2686"></A> 
+                if true, the widget can take the focus
+</DD>
+<DT></DT>
+<DD><TT>text</TT><A NAME="2688"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>underline</TT><A NAME="2690"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>width</TT><A NAME="2692"></A> 
+                width of the widget
+</DD>
+<DT></DT>
+<DD><TT>wraplength</TT><A NAME="2694"></A> 
+
+<P>
+</DD>
+</DL>
+
+<H2><A NAME="SECTION000611000000000000000"></A><A NAME="2781"></A>
+<BR>
+Message
+</H2>
+
+<P>
+The following keyword arguments are available for creating an instance of the message and for configuring it<DL>
+<DT></DT>
+<DD><TT>anchor</TT><A NAME="2784"></A> 
+                specify the alignment of text/image drawn on the widget, one of (:n :w :s :e :nw :sw :se :ne) with :nw designating the top left corner
+</DD>
+<DT></DT>
+<DD><TT>aspect</TT><A NAME="2786"></A> 
+                Aspect ratio for the wrapping of the text. 100 means that the text is redered as wide as, tall, 200 twice as wide.
+</DD>
+<DT></DT>
+<DD><TT>background</TT><A NAME="2788"></A> 
+                background color of the widget
+</DD>
+<DT></DT>
+<DD><TT>borderwidth</TT><A NAME="2790"></A> 
+                width of the border around the widget in pixels
+</DD>
+<DT></DT>
+<DD><TT>cursor</TT><A NAME="2792"></A> 
+                mouse pointer to display on the widget (valid values are listed in *cursors*)
+</DD>
+<DT></DT>
+<DD><TT>font</TT><A NAME="2794"></A> 
+                font to use to display text on the widget
+</DD>
+<DT></DT>
+<DD><TT>foreground</TT><A NAME="2796"></A> 
+                foreground color of the widget
+</DD>
+<DT></DT>
+<DD><TT>highlightbackground</TT><A NAME="2798"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightcolor</TT><A NAME="2800"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightthickness</TT><A NAME="2802"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>justify</TT><A NAME="2804"></A> 
+                justification of the text on the widget
+</DD>
+<DT></DT>
+<DD><TT>padx</TT><A NAME="2806"></A> 
+                padding around text displayed on the widget
+</DD>
+<DT></DT>
+<DD><TT>pady</TT><A NAME="2808"></A> 
+                padding around text displayed on the widget
+</DD>
+<DT></DT>
+<DD><TT>relief</TT><A NAME="2810"></A> 
+                relief of the widgets border (raised, sunken, ridge, groove)
+</DD>
+<DT></DT>
+<DD><TT>takefocus</TT><A NAME="2812"></A> 
+                if true, the widget can take the focus
+</DD>
+<DT></DT>
+<DD><TT>text</TT><A NAME="2814"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>width</TT><A NAME="2816"></A> 
+                width of the widget
+</DD>
+</DL>
+
+<H2><A NAME="SECTION000612000000000000000"></A><A NAME="2863"></A>
+<BR>
+Paned-window
+</H2>
+
+<P>
+The following keyword arguments are available for creating an instance of the paned-window and for configuring it<DL>
+<DT></DT>
+<DD><TT>background</TT><A NAME="2866"></A> 
+                background color of the widget
+</DD>
+<DT></DT>
+<DD><TT>borderwidth</TT><A NAME="2868"></A> 
+                width of the border around the widget in pixels
+</DD>
+<DT></DT>
+<DD><TT>cursor</TT><A NAME="2870"></A> 
+                mouse pointer to display on the widget (valid values are listed in *cursors*)
+</DD>
+<DT></DT>
+<DD><TT>handlepad</TT><A NAME="2872"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>handlesize</TT><A NAME="2874"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>height</TT><A NAME="2876"></A> 
+                height of the widget
+</DD>
+<DT></DT>
+<DD><TT>opaqueresize</TT><A NAME="2878"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>orientation</TT><A NAME="2880"></A> 
+                orientation of the widget (horizontal, vertical)
+</DD>
+<DT></DT>
+<DD><TT>relief</TT><A NAME="2882"></A> 
+                relief of the widgets border (raised, sunken, ridge, groove)
+</DD>
+<DT></DT>
+<DD><TT>sashcursor</TT><A NAME="2884"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>sashpad</TT><A NAME="2886"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>sashrelief</TT><A NAME="2888"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>sashwidth</TT><A NAME="2890"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>showhandle</TT><A NAME="2892"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>width</TT><A NAME="2894"></A> 
+                width of the widget
+</DD>
+</DL>
+
+<H2><A NAME="SECTION000613000000000000000"></A><A NAME="2945"></A>
+<BR>
+Radio-button
+</H2>
+
+<P>
+The following keyword arguments are available for creating an instance of the radio-button and for configuring it<DL>
+<DT></DT>
+<DD><TT>activebackground</TT><A NAME="2948"></A> 
+                background of the active area
+</DD>
+<DT></DT>
+<DD><TT>activeforeground</TT><A NAME="2950"></A> 
+                foreground color for active widgets (when the mouse cursor is over the widget)
+</DD>
+<DT></DT>
+<DD><TT>anchor</TT><A NAME="2952"></A> 
+                specify the alignment of text/image drawn on the widget, one of (:n :w :s :e :nw :sw :se :ne) with :nw designating the top left corner
+</DD>
+<DT></DT>
+<DD><TT>background</TT><A NAME="2954"></A> 
+                background color of the widget
+</DD>
+<DT></DT>
+<DD><TT>bitmap</TT><A NAME="2956"></A> 
+                the bitmap to display on the widget, the display is affected by the options 'anchor' and 'justify'
+</DD>
+<DT></DT>
+<DD><TT>borderwidth</TT><A NAME="2958"></A> 
+                width of the border around the widget in pixels
+</DD>
+<DT></DT>
+<DD><TT>command</TT><A NAME="2960"></A> 
+                function to call when the action of the widget is executed
+</DD>
+<DT></DT>
+<DD><TT>compound</TT><A NAME="2962"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>cursor</TT><A NAME="2964"></A> 
+                mouse pointer to display on the widget (valid values are listed in *cursors*)
+</DD>
+<DT></DT>
+<DD><TT>disabledforeground</TT><A NAME="2966"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>font</TT><A NAME="2968"></A> 
+                font to use to display text on the widget
+</DD>
+<DT></DT>
+<DD><TT>foreground</TT><A NAME="2970"></A> 
+                foreground color of the widget
+</DD>
+<DT></DT>
+<DD><TT>height</TT><A NAME="2972"></A> 
+                height of the widget
+</DD>
+<DT></DT>
+<DD><TT>highlightbackground</TT><A NAME="2974"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightcolor</TT><A NAME="2976"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightthickness</TT><A NAME="2978"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>image</TT><A NAME="2980"></A> 
+                the image to display on the widget, the display is affected by the options 'anchor' and 'justify'
+</DD>
+<DT></DT>
+<DD><TT>indicatoron</TT><A NAME="2982"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>justify</TT><A NAME="2984"></A> 
+                justification of the text on the widget
+</DD>
+<DT></DT>
+<DD><TT>offrelief</TT><A NAME="2986"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>overrelief</TT><A NAME="2988"></A> 
+                relief of the border, when the mouse is over the widget
+</DD>
+<DT></DT>
+<DD><TT>padx</TT><A NAME="2990"></A> 
+                padding around text displayed on the widget
+</DD>
+<DT></DT>
+<DD><TT>pady</TT><A NAME="2992"></A> 
+                padding around text displayed on the widget
+</DD>
+<DT></DT>
+<DD><TT>relief</TT><A NAME="2994"></A> 
+                relief of the widgets border (raised, sunken, ridge, groove)
+</DD>
+<DT></DT>
+<DD><TT>selectcolor</TT><A NAME="2996"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>selectimage</TT><A NAME="2998"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>state</TT><A NAME="3000"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>takefocus</TT><A NAME="3002"></A> 
+                if true, the widget can take the focus
+</DD>
+<DT></DT>
+<DD><TT>text</TT><A NAME="3004"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>underline</TT><A NAME="3006"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>nil</TT><A NAME="3008"></A> 
+                value for the radio button group to take, when the button is selected
+</DD>
+<DT></DT>
+<DD><TT>nil</TT><A NAME="3010"></A> 
+                name of the radio button group the button shall belong to as a string
+</DD>
+<DT></DT>
+<DD><TT>width</TT><A NAME="3012"></A> 
+                width of the widget
+</DD>
+<DT></DT>
+<DD><TT>wraplength</TT><A NAME="3014"></A> 
+
+<P>
+</DD>
+</DL>
+
+<H2><A NAME="SECTION000614000000000000000"></A><A NAME="3113"></A>
+<BR>
+Scale
+</H2>
+
+<P>
+The following keyword arguments are available for creating an instance of the scale and for configuring it<DL>
+<DT></DT>
+<DD><TT>activebackground</TT><A NAME="3116"></A> 
+                background of the active area
+</DD>
+<DT></DT>
+<DD><TT>background</TT><A NAME="3118"></A> 
+                background color of the widget
+</DD>
+<DT></DT>
+<DD><TT>bigincrement</TT><A NAME="3120"></A> 
+                size of the big step increment
+</DD>
+<DT></DT>
+<DD><TT>borderwidth</TT><A NAME="3122"></A> 
+                width of the border around the widget in pixels
+</DD>
+<DT></DT>
+<DD><TT>command</TT><A NAME="3124"></A> 
+                function to call when the action of the widget is executed
+</DD>
+<DT></DT>
+<DD><TT>cursor</TT><A NAME="3126"></A> 
+                mouse pointer to display on the widget (valid values are listed in *cursors*)
+</DD>
+<DT></DT>
+<DD><TT>digits</TT><A NAME="3128"></A> 
+                number of digits to use when converting the value to a string.
+</DD>
+<DT></DT>
+<DD><TT>font</TT><A NAME="3130"></A> 
+                font to use to display text on the widget
+</DD>
+<DT></DT>
+<DD><TT>foreground</TT><A NAME="3132"></A> 
+                foreground color of the widget
+</DD>
+<DT></DT>
+<DD><TT>from</TT><A NAME="3134"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightbackground</TT><A NAME="3136"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightcolor</TT><A NAME="3138"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightthickness</TT><A NAME="3140"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>label</TT><A NAME="3142"></A> 
+                text to display on the widget
+</DD>
+<DT></DT>
+<DD><TT>length</TT><A NAME="3144"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>orientation</TT><A NAME="3146"></A> 
+                orientation of the widget (horizontal, vertical)
+</DD>
+<DT></DT>
+<DD><TT>relief</TT><A NAME="3148"></A> 
+                relief of the widgets border (raised, sunken, ridge, groove)
+</DD>
+<DT></DT>
+<DD><TT>repeatdelay</TT><A NAME="3150"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>repeatinterval</TT><A NAME="3152"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>resolution</TT><A NAME="3154"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>showvalue</TT><A NAME="3156"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>sliderlength</TT><A NAME="3158"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>sliderrelief</TT><A NAME="3160"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>state</TT><A NAME="3162"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>takefocus</TT><A NAME="3164"></A> 
+                if true, the widget can take the focus
+</DD>
+<DT></DT>
+<DD><TT>tickinterval</TT><A NAME="3166"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>to</TT><A NAME="3168"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>troughcolor</TT><A NAME="3170"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>variable</TT><A NAME="3172"></A> 
+                name of the variable associated with the widget
+</DD>
+<DT></DT>
+<DD><TT>width</TT><A NAME="3174"></A> 
+                width of the widget
+</DD>
+</DL>
+
+<H2><A NAME="SECTION000615000000000000000"></A><A NAME="3269"></A>
+<BR>
+Scrollbar
+</H2>
+
+<P>
+The following keyword arguments are available for creating an instance of the scrollbar and for configuring it<DL>
+<DT></DT>
+<DD><TT>activebackground</TT><A NAME="3272"></A> 
+                background of the active area
+</DD>
+<DT></DT>
+<DD><TT>activerelief</TT><A NAME="3274"></A> 
+                the border relief for active widgets (when the mouse cursor is over the widget)
+</DD>
+<DT></DT>
+<DD><TT>background</TT><A NAME="3276"></A> 
+                background color of the widget
+</DD>
+<DT></DT>
+<DD><TT>borderwidth</TT><A NAME="3278"></A> 
+                width of the border around the widget in pixels
+</DD>
+<DT></DT>
+<DD><TT>command</TT><A NAME="3280"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>cursor</TT><A NAME="3282"></A> 
+                mouse pointer to display on the widget (valid values are listed in *cursors*)
+</DD>
+<DT></DT>
+<DD><TT>elementborderwidth</TT><A NAME="3284"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightbackground</TT><A NAME="3286"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightcolor</TT><A NAME="3288"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightthickness</TT><A NAME="3290"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>jump</TT><A NAME="3292"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>orientation</TT><A NAME="3294"></A> 
+                orientation of the widget (horizontal, vertical)
+</DD>
+<DT></DT>
+<DD><TT>relief</TT><A NAME="3296"></A> 
+                relief of the widgets border (raised, sunken, ridge, groove)
+</DD>
+<DT></DT>
+<DD><TT>repeatdelay</TT><A NAME="3298"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>repeatinterval</TT><A NAME="3300"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>takefocus</TT><A NAME="3302"></A> 
+                if true, the widget can take the focus
+</DD>
+<DT></DT>
+<DD><TT>troughcolor</TT><A NAME="3304"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>width</TT><A NAME="3306"></A> 
+                width of the widget
+</DD>
+</DL>
+
+<H2><A NAME="SECTION000616000000000000000"></A><A NAME="3365"></A>
+<BR>
+Spinbox
+</H2>
+
+<P>
+The following keyword arguments are available for creating an instance of the spinbox and for configuring it<DL>
+<DT></DT>
+<DD><TT>activebackground</TT><A NAME="3368"></A> 
+                background of the active area
+</DD>
+<DT></DT>
+<DD><TT>background</TT><A NAME="3370"></A> 
+                background color of the widget
+</DD>
+<DT></DT>
+<DD><TT>borderwidth</TT><A NAME="3372"></A> 
+                width of the border around the widget in pixels
+</DD>
+<DT></DT>
+<DD><TT>button.background</TT><A NAME="3374"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>button.cursor</TT><A NAME="3376"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>button.relief</TT><A NAME="3378"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>cursor</TT><A NAME="3380"></A> 
+                mouse pointer to display on the widget (valid values are listed in *cursors*)
+</DD>
+<DT></DT>
+<DD><TT>disabledbackground</TT><A NAME="3382"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>disabledforeground</TT><A NAME="3384"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>exportselection</TT><A NAME="3386"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>font</TT><A NAME="3388"></A> 
+                font to use to display text on the widget
+</DD>
+<DT></DT>
+<DD><TT>foreground</TT><A NAME="3390"></A> 
+                foreground color of the widget
+</DD>
+<DT></DT>
+<DD><TT>format</TT><A NAME="3392"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>from</TT><A NAME="3394"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightbackground</TT><A NAME="3396"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightcolor</TT><A NAME="3398"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightthickness</TT><A NAME="3400"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>increment</TT><A NAME="3402"></A> 
+                size of the increment of the widget
+</DD>
+<DT></DT>
+<DD><TT>insertbackground</TT><A NAME="3404"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>insertborderwidth</TT><A NAME="3406"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>insertofftime</TT><A NAME="3408"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>insertontime</TT><A NAME="3410"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>insertwidth</TT><A NAME="3412"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>invalidcommand</TT><A NAME="3414"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>justify</TT><A NAME="3416"></A> 
+                justification of the text on the widget
+</DD>
+<DT></DT>
+<DD><TT>readonlybackground</TT><A NAME="3418"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>relief</TT><A NAME="3420"></A> 
+                relief of the widgets border (raised, sunken, ridge, groove)
+</DD>
+<DT></DT>
+<DD><TT>repeatdelay</TT><A NAME="3422"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>repeatinterval</TT><A NAME="3424"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>selectbackground</TT><A NAME="3426"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>selectborderwidth</TT><A NAME="3428"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>selectforeground</TT><A NAME="3430"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>command</TT><A NAME="3432"></A> 
+                (AND COMMAND
+                     (PROGN (ADD-CALLBACK (NAME WIDGET) COMMAND) (NAME WIDGET)))
+</DD>
+<DT></DT>
+<DD><TT>state</TT><A NAME="3434"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>takefocus</TT><A NAME="3436"></A> 
+                if true, the widget can take the focus
+</DD>
+<DT></DT>
+<DD><TT>text</TT><A NAME="3438"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>to</TT><A NAME="3440"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>validate</TT><A NAME="3442"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>validatecommand</TT><A NAME="3444"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>values</TT><A NAME="3446"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>width</TT><A NAME="3448"></A> 
+                width of the widget
+</DD>
+<DT></DT>
+<DD><TT>wrap</TT><A NAME="3450"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>xscrollcommand</TT><A NAME="3452"></A> 
+
+<P>
+</DD>
+</DL>
+
+<H2><A NAME="SECTION000617000000000000000"></A><A NAME="3605"></A>
+<BR>
+Text
+</H2>
+
+<P>
+The following keyword arguments are available for creating an instance of the text and for configuring it<DL>
+<DT></DT>
+<DD><TT>autoseparators</TT><A NAME="3608"></A> 
+                when t, separators are added automatically to the undo stack
+</DD>
+<DT></DT>
+<DD><TT>background</TT><A NAME="3610"></A> 
+                background color of the widget
+</DD>
+<DT></DT>
+<DD><TT>borderwidth</TT><A NAME="3612"></A> 
+                width of the border around the widget in pixels
+</DD>
+<DT></DT>
+<DD><TT>cursor</TT><A NAME="3614"></A> 
+                mouse pointer to display on the widget (valid values are listed in *cursors*)
+</DD>
+<DT></DT>
+<DD><TT>exportselection</TT><A NAME="3616"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>font</TT><A NAME="3618"></A> 
+                font to use to display text on the widget
+</DD>
+<DT></DT>
+<DD><TT>foreground</TT><A NAME="3620"></A> 
+                foreground color of the widget
+</DD>
+<DT></DT>
+<DD><TT>height</TT><A NAME="3622"></A> 
+                height of the widget
+</DD>
+<DT></DT>
+<DD><TT>highlightbackground</TT><A NAME="3624"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightcolor</TT><A NAME="3626"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightthickness</TT><A NAME="3628"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>insertbackground</TT><A NAME="3630"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>insertborderwidth</TT><A NAME="3632"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>insertofftime</TT><A NAME="3634"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>insertontime</TT><A NAME="3636"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>insertwidth</TT><A NAME="3638"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>maxundo</TT><A NAME="3640"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>padx</TT><A NAME="3642"></A> 
+                padding around text displayed on the widget
+</DD>
+<DT></DT>
+<DD><TT>pady</TT><A NAME="3644"></A> 
+                padding around text displayed on the widget
+</DD>
+<DT></DT>
+<DD><TT>relief</TT><A NAME="3646"></A> 
+                relief of the widgets border (raised, sunken, ridge, groove)
+</DD>
+<DT></DT>
+<DD><TT>selectbackground</TT><A NAME="3648"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>selectborderwidth</TT><A NAME="3650"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>selectforeground</TT><A NAME="3652"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>setgrid</TT><A NAME="3654"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>spacing1</TT><A NAME="3656"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>spacing2</TT><A NAME="3658"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>spacing3</TT><A NAME="3660"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>state</TT><A NAME="3662"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>tabs</TT><A NAME="3664"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>takefocus</TT><A NAME="3666"></A> 
+                if true, the widget can take the focus
+</DD>
+<DT></DT>
+<DD><TT>undo</TT><A NAME="3668"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>width</TT><A NAME="3670"></A> 
+                width of the widget
+</DD>
+<DT></DT>
+<DD><TT>wrap</TT><A NAME="3672"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>xscrollcommand</TT><A NAME="3674"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>yscrollcommand</TT><A NAME="3676"></A> 
+
+<P>
+</DD>
+</DL>
+
+<H2><A NAME="SECTION000618000000000000000"></A><A NAME="3797"></A>
+<BR>
+Toplevel
+</H2>
+
+<P>
+The following keyword arguments are available for creating an instance of the toplevel and for configuring it<DL>
+<DT></DT>
+<DD><TT>background</TT><A NAME="3800"></A> 
+                background color of the widget
+</DD>
+<DT></DT>
+<DD><TT>borderwidth</TT><A NAME="3802"></A> 
+                width of the border around the widget in pixels
+</DD>
+<DT></DT>
+<DD><TT>class</TT><A NAME="3804"></A> 
+                the class of the widget, used for lookup in the option database. This option cannot be changed after the widget creation.
+</DD>
+<DT></DT>
+<DD><TT>colormap</TT><A NAME="3806"></A> 
+                The colormap to use for the widget.
+</DD>
+<DT></DT>
+<DD><TT>container</TT><A NAME="3808"></A> 
+                if t, then the widget will be used as a container for other widgets.
+</DD>
+<DT></DT>
+<DD><TT>cursor</TT><A NAME="3810"></A> 
+                mouse pointer to display on the widget (valid values are listed in *cursors*)
+</DD>
+<DT></DT>
+<DD><TT>height</TT><A NAME="3812"></A> 
+                height of the widget
+</DD>
+<DT></DT>
+<DD><TT>highlightbackground</TT><A NAME="3814"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightcolor</TT><A NAME="3816"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>highlightthickness</TT><A NAME="3818"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>menu</TT><A NAME="3820"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>padx</TT><A NAME="3822"></A> 
+                padding around text displayed on the widget
+</DD>
+<DT></DT>
+<DD><TT>pady</TT><A NAME="3824"></A> 
+                padding around text displayed on the widget
+</DD>
+<DT></DT>
+<DD><TT>relief</TT><A NAME="3826"></A> 
+                relief of the widgets border (raised, sunken, ridge, groove)
+</DD>
+<DT></DT>
+<DD><TT>screen</TT><A NAME="3828"></A> 
+                screen on which the toplevel is to be shown
+</DD>
+<DT></DT>
+<DD><TT>takefocus</TT><A NAME="3830"></A> 
+                if true, the widget can take the focus
+</DD>
+<DT></DT>
+<DD><TT>use</TT><A NAME="3832"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>visual</TT><A NAME="3834"></A> 
+
+<P>
+</DD>
+<DT></DT>
+<DD><TT>width</TT><A NAME="3836"></A> 
+                width of the widget
+</DD>
+</DL>
+
+<H2><A NAME="SECTION000619000000000000000"></A><A NAME="3891"></A>
+<BR>
+Widget
+</H2>
+
+<P>
+The following keyword arguments are available for creating an instance of the widget and for configuring it<DL>
+<DT></DT>
+<DD><TT>background</TT><A NAME="3894"></A> 
+                background color of the widget
+</DD>
+<DT></DT>
+<DD><TT>borderwidth</TT><A NAME="3896"></A> 
+                width of the border around the widget in pixels
+</DD>
+<DT></DT>
+<DD><TT>cursor</TT><A NAME="3898"></A> 
+                mouse pointer to display on the widget (valid values are listed in *cursors*)
+</DD>
+<DT></DT>
+<DD><TT>relief</TT><A NAME="3900"></A> 
+                relief of the widgets border (raised, sunken, ridge, groove)
+</DD>
+</DL>
+
+<P>
+
+<P>
+
+<H1><A NAME="SECTION00070000000000000000">
+Under the hood</A>
+</H1>
+
+<P>
+In this section, the technical detaills of the implementation and workings
+of ltk are explained. Reading this section should not be neccessary to 
+use ltk, but helps understanding it and serves as a documentation for
+those, who want to extend ltk.
+
+<P>
+The Tk library is a GUI library for the tcl programming language. 
+It is used via the program <TT>wish</TT>. Commonly, it is used
+as the shell to execute tcl/tk programs. But when no script name
+to execute is being given, it starts in an interactive mode, using
+<code>stdin</code> to read commands and <code>stdout</code> to print the results. 
+This can be used to enter the tcl commands manually in an interactive
+session or, as used by ltk to access <code>wish</code> from another program.
+Every Lisp I know of, offers a function to run a program in a subprocess
+and to communicate to its stdin/stdout streams. The ltk function <code>do-execute</code>
+wraps these platform-dependant functions in a generic one. Its parameter
+is the name of the program to start as a string, a list with the parameters
+for the program. It starts the program as a subprocess of the Lisp process
+and returns a two-way stream to communicate with the program. To send
+some text to the program, its just written into the stream, and likewise
+output from the program can be read from the string. 
+
+<P>
+All ltk widget creation functions actually create two objects: the CLOS
+object to represent the widged on the Lisp side, and the corresponding Tk object.
+
+<P>
+The root class of the ltk class hierarchy is the <code>tkobject</code> class. It has 
+only one slot: the name of the object. In tcl objects are tracked by their names,
+very similiarly like symbols in Lisp. To represent all widgets the <code>widget</code> class
+is derived from <code>tkobject</code>. It adds the slots for the object being the master
+of the widget and the path string for the widget. As mentioned before, all tcl objects
+are referenced by their name, and all tk widgets have to be put in an hierarchy. This
+is represented by a path-like naming system. The name of the root object is just ``.''. 
+Creating a frame named <code>frame1</code> below it would lead to a path name <code>.frame1</code>. A
+button called <code>button1</code> placed into this frame gets the pathname <code>.frame1.button1</code>.
+Both the naming and the path creation is automatically handled by ltk. To create
+both only the reference to the master is needed. In an after-method to the 
+<code>initialize-instance</code> method of <code>widget</code>, the name is created as an unique
+string and the pathname is created by appending this name to the pathname of the master
+widget, or ``.'', if the widget has no master specified. The unique name is created by
+appending an upcounting number to the letter ``w''. Finally the method calls the 
+<code>create</code> methode upon the new widget. This create method is, where the 
+code interfacing with tk takes place. So to support new tk widgets, only a subclass
+of <code>widget</code> has to be made and a <code>create</code> method to be written. 
+
+<P>
+Internally used special variables are:
+<DL>
+<DT></DT>
+<DD><TT>*wish*</TT> The stream used to communicate with <TT>wish</TT>.
+</DD>
+<DT></DT>
+<DD><TT>*callbacks*</TT> The hashtable associating widget names
+</DD>
+<DT></DT>
+<DD><TT>*counter*</TT> The counter variable used to give widgets unique names (<TT>w</TT><I>n</I>, where <I>n</I> is the counter variable, that gets incremented upon use).
+</DD>
+<DT></DT>
+<DD><TT>*event-queue*</TT> If event messages are read while waiting for a data message they are buffered in that list.
+</DD>
+</DL>
+
+<P>
+
+<H2><A NAME="SECTION00071000000000000000">
+Communication</A>
+</H2>
+
+<P>
+At the startup of the wish process, some tcl helper functions are defined and then the
+functions in the list <TT>*INIT-WISH-HOOK*</TT>. These purpose of these functions is to
+perform initialisations, e.g. loading Tk extensions.
+
+<P>
+All communication from Tk to Lisp takes place in form of lists, which are <TT>read</TT>-able.
+The first element of the list is a keyword, which determines what kind of information is
+following. <TT>:data</TT> is the answer to a call to a function like reading out the 
+content of a widget. <TT>:callback</TT> is sent upon a callback event and <TT>:event</TT>
+for an event created by the <TT>bind</TT> function. This design is neccessary, because
+events can be generated (and thus messages to Lisp sent), while Lisp is waiting 
+for a data answer. So the function <TT>read-data</TT> can buffer those events until
+the requested data arrives. Only after the data request has been fufilled, all pending
+events are processed.
+
+<P>
+
+<P>
+
+<H2><A NAME="SECTION00072000000000000000"></A><A NAME="3923"></A>
+<BR>
+Writing Ltk extensions
+</H2>
+
+<P>
+It is difficult to give a fully generic set of instructions how to 
+write Ltk extensions, as some part of it depends on the package
+that is to be wrapped, but at the example of the tix extension
+set, a very common case can be shown. For sake of brevity, here
+only the creation of a partial implementation of the tixBalloon
+widget is demonstrated.
+
+<P>
+The first step is to create a Lisp package to host the extension 
+library:
+
+<P>
+<PRE>
+(defpackage "LTK-TIX"
+  (:use "COMMON-LISP"
+        "LTK")
+  (:export
+        "BALLOON"
+        "BALLOON-BIND"))
+
+(in-package ltk-tix)
+</PRE>
+It creates a package called <TT>ltk-tix</TT>, based on <TT>common-lisp</TT>,
+and of course <TT>ltk</TT>. It exports two symbols <TT>balloon</TT> for the widget
+class to create and <TT>balloon-bind</TT> a function defined on this widget.
+
+<P>
+As the usage of the Tix extension requires a tcl statement to be run before
+any widget is used, the proper way for this would be to put it onto the
+<TT>*init-wish-hook*</TT> which is run after the startup of wish:
+
+<P>
+<PRE>
+(eval-when (:load-toplevel)
+  (setf *init-wish-hook* (append *init-wish-hook*
+                                 (list (lambda ()
+                                   (send-wish "package require Tix"))
+                                 ))))
+</PRE>
+Now we need to create the Lisp class that wraps the balloon widget.
+First we need a class definition:
+
+<P>
+<PRE>
+(defclass balloon (widget)
+  ())
+</PRE>
+Unless there are some special storage needs, an empty sub-class of <TT>widget</TT>
+is all one needs. What is still missing, is the Tk code to actually create the
+widget. It is put in the <TT>initialize-instance</TT> after-method for the widget class.
+This is easy to do when we look how the widget is created on the Tk side:
+
+<P>
+<TT>tixBalloon</TT> <I>pathname</I>
+
+<P>
+where <I>pathname</I> is the path string describing the widget to be created.
+This translates into Lisp code as:
+
+<P>
+<PRE>
+(defmethod initialize-instance :after ((b balloon) &amp;key)
+  (format-wish "tixBalloon ~a" (path b)))
+</PRE>
+<TT>path</TT> is an accessor function created for the widget class. The corresponding
+slot is automatically filled in the <TT>initialize-instance</TT> method for the widget class.
+Now we can create instances of the balloon widget, what is left to do is to define
+the methods upon it. 
+
+<P>
+We want to implement the bind command upon the balloon widget. 
+First lets again look at the Tk side of it:
+
+<P>
+<I>pathname</I> <TT>bind</TT> <I>widget</I> <I>options</I>
+
+<P>
+<I>pathname</I> is the path of the balloon widget, <I>widget</I> is another
+widget for which the balloon help should be displayed and options are
+additional command options. The following options should be implemented:
+<DL>
+<DT></DT>
+<DD><TT>-msg</TT> <I>text</I>  Sets the displayed message to <TT>text</TT>.
+</DD>
+<DT></DT>
+<DD><TT>-balloonmsg</TT> <I>text</I>  Sets the balloon message to <TT>text</TT>.
+</DD>
+<DT></DT>
+<DD><TT>-statusmsg</TT> <I>text</I>  Sets the statusbar message to <TT>text</TT>.
+</DD>
+</DL>
+
+<P>
+To implement it, we need to define a generic function:
+<A NAME="tex2html7"
+  HREF="#foot4013"><SUP>2</SUP></A>
+<P>
+<PRE>
+(defgeneric balloon-bind (b w &amp;key msg balloonmsg statusmsg))
+</PRE>
+
+<P>
+We call this <TT>balloon-bind</TT> to avoid name conflicts with the
+function <TT>bind</TT> defined by the Ltk package. It is a generic
+function of two parameters, the balloon widget and the widget the
+message should be bound to. The message is to be specified by the
+keyword parameters. The actual implementation of the generic
+function is very straight forward and looks like this:
+
+<P>
+<PRE>
+(defmethod balloon-bind ((balloon balloon) (widget widget) 
+                             &amp;key msg balloonmsg statusmsg)
+  (format-wish "~a bind ~a~@[ -msg {~a}~]~
+                          ~@[ -balloonmsg {~a}~]~
+                          ~@[ -statusmsg {~a}~]" 
+      (path balloon) (path widget) msg balloonmsg statusmsg))
+</PRE>
+Format wish is a wrapper around the <TT>format</TT> function, that
+sends the output to wish and automaticalls flushes the output buffer,
+so that the statement is directly executed by wish.
+It is worth noting, that the Lisp <TT>format</TT> function has some
+very nice options, allowing us to elegantly implement the optional keyword
+arguments. The <code>~@[ ~]</code> format directive peeks at the next
+argument in the list and only when it is non-nil, the format code inside
+is executed, otherwise, this argument will be consumed. As unspecified
+keyword argumends are set to nil, if no argument is specified this
+nicely fits to this format directive. So <code>~@[ -msg {~a}~]</code> will
+output nothing, if the argument <TT>msg</TT> is not given at the invokation
+of <TT>balloon-bind</TT>, or print ``<code> -msg xxx</code>'', where xxx is the 
+content specified for the <TT>msg</TT> argument.
+
+<P>
+
+<P>
+
+<H1><A NAME="SECTION00080000000000000000"></A>
+<A NAME="3976"></A>
+<BR>
+ltk-remote
+</H1>
+
+<P>
+As the connection between Lisp and tcl/tk is done via a stream, it is 
+obvious that this connection can easily be run over a tcp socket. This
+allows the gui to be displayed on computers different to the one running
+the Lisp program. So ltk applications are not only network transparent 
+accross different operating systems, they are actually very efficiently
+network transparent, since the creation of a button requires only 
+in the magnitude of 100 bytes of network transfer. Likewise, only the
+generated events are transmitted back to the Lisp server. 
+
+<P>
+The only difference for the lisp application to enable remote access
+is using the <TT>with-remote-ltk <EM>port</EM></TT> macro instead of the <TT>with-ltk</TT>
+ macro. As sockets are not part of the ANSI Common Lisp standard, currently
+only CMUCL, SBCL and Lispworks are supported by ltk-remote.
+
+<P>
+The only thing required on the client computer is tcl/tk installed
+and the remote.tcl script (which has less than 30 lines of code in it).
+Connection to the lisp process is established by 
+<PRE>
+wish remote.tcl hostname port
+</PRE>
+Where hostname is the name of the computer running the lisp process and
+port the port on which the lisp process is listening.
+
+<P>
+
+<H1><A NAME="SECTION00090000000000000000"></A>
+<A NAME="3982"></A>
+<BR>
+ltk-mw
+</H1>
+
+<P>
+Ltk-mw is a ``megawidgets'' package inspired by PMW (Python Mega Widgets). 
+It contains extension widgets for Ltk written in Lisp. Besides serving as an
+example, how to extend Ltk, it provides usefull new widgets listed below.
+
+<P>
+
+<H2><A NAME="SECTION00091000000000000000">
+progress</A>
+</H2>
+
+<P>
+A progress-bar widget. It displays a bar which covers the width of the widget in the given percentage.
+The widget has two settable accessor functions: <TT>percent</TT> and <TT>bar-color</TT>.
+
+<P>
+
+<H2><A NAME="SECTION00092000000000000000">
+history-entry</A>
+</H2>
+
+<P>
+History-entry is an entry widget, that provides a history of all input. The history can be browsed
+with the cursor-up and down keys. If the <TT>:command</TT> initarg is passed to <TT>make-instance</TT> when
+creating an instance of the widget, the specified function is called whenever the user pressed the
+<TT>return</TT> key. The function gets passed the text in the widget and the input field of the widget is cleared.
+
+<P>
+
+<H2><A NAME="SECTION00093000000000000000">
+menu-entry</A>
+</H2>
+
+<P>
+A combo-box style entry widget, that displays a menu of input content, when the user clicks the widget.
+The initial content for the menu is passed as a list to the <TT>:content</TT> initarg. To modify the menu,
+the generic functions <TT>(append-item <I>entry string</I>)</TT> and <TT>(delete-item <I>entry index</I>)</TT> can be used.
+
+<P>
+
+<H1><A NAME="SECTION000100000000000000000">
+Example: A  ``Hello World'' application</A>
+</H1>
+
+<P>
+This section contains a step-by-step example how to create a ``stand-allone'' application using Ltk and SBCL.
+Fist of all, you need the application itself:
+
+<P>
+<PRE>
+(defpackage :hello-world
+  (:use :common-lisp :ltk)
+  (:export #:main))
+
+(in-package :hello-world)
+
+(defun main ()
+  (setf *debug-tk* nil)
+  (with-ltk ()
+    (let ((b (make-instance
+              'button
+              :text "Hello World!"
+              :command (lambda ()
+                         (do-msg "Bye!" "Hello World!")
+                         (setf *exit-mainloop* t)))))
+      (pack b))))
+</PRE>
+
+<P>
+This may not be the worlds greatest application, but I shows the important  steps. First rule is: whenever you write lisp code, put it in a package. While this seems overkill, it is the easiest solution to avoid symbol conflicts, and if your code grows you will need a package anyway.
+
+<P>
+Next, you want to build your application, here is a shell-script that will do that work:
+
+<P>
+<PRE>
+sbcl --eval "(progn 
+               (compile-file \"ltk\") 
+               (load \"ltk\") 
+               (compile-file \"hello-world\") 
+               (load \"hello-world\") 
+               (save-lisp-and-die \"hello-world.core\"))"
+</PRE>
+
+<P>
+This script compiles and loads both <TT>ltk</TT> and <TT>hello-world</TT>. Then it calls <TT>save-lisp-and-die</TT> to create the core file for the application. Put it in a file called <TT>build-hello</TT>, make it executable and run it to build the application.
+Once you have build your core, all what is left is running the application. For that, a small startup script will create the ``executable'' feeling: 
+
+<P>
+<PRE>
+sbcl --core hello-world.core --noinform\
+     --eval "(progn (hello-world:main) (quit))"
+</PRE>
+
+<P>
+If you put it in a file called <TT>helloworld</TT>, and make it executable, you can start your application just by typing <TT>helloworld</TT> at the shell prompt.
+
+<P>
+To deliver your application, you need to provide three files: <TT>sbcl</TT>, <TT>hello-world.core</TT> and <TT>helloworld</TT>. <TT>sbcl</TT> is the sbcl launching program, you can find its location by typing <TT>which sbcl</TT>. It is less than 300k in size, so just copy and deliver it with your custom core and startup scipt.
+
+<P>
+Thats all :).
+
+<P>
+<BR>
+
+<H2><A NAME="SECTION000110000000000000000">
+Index</A>
+</H2><DL COMPACT>
+<DT><STRONG><TT>canvastest</TT></STRONG>
+<DD><A HREF="ltkdoc.html#473">Example</A>
+<DT><STRONG>activebackground</STRONG>
+<DD><A HREF="ltkdoc.html#1460">Button</A>
+ | <A HREF="ltkdoc.html#1762">Check-button</A>
+ | <A HREF="ltkdoc.html#2190">Label</A>
+ | <A HREF="ltkdoc.html#2552">Menu</A>
+ | <A HREF="ltkdoc.html#2638">Menubutton</A>
+ | <A HREF="ltkdoc.html#2948">Radio-button</A>
+ | <A HREF="ltkdoc.html#3116">Scale</A>
+ | <A HREF="ltkdoc.html#3272">Scrollbar</A>
+ | <A HREF="ltkdoc.html#3368">Spinbox</A>
+<DT><STRONG>activeborderwidth</STRONG>
+<DD><A HREF="ltkdoc.html#2554">Menu</A>
+<DT><STRONG>activeforeground</STRONG>
+<DD><A HREF="ltkdoc.html#1462">Button</A>
+ | <A HREF="ltkdoc.html#1764">Check-button</A>
+ | <A HREF="ltkdoc.html#2192">Label</A>
+ | <A HREF="ltkdoc.html#2556">Menu</A>
+ | <A HREF="ltkdoc.html#2640">Menubutton</A>
+ | <A HREF="ltkdoc.html#2950">Radio-button</A>
+<DT><STRONG>activerelief</STRONG>
+<DD><A HREF="ltkdoc.html#3274">Scrollbar</A>
+<DT><STRONG>activestyle</STRONG>
+<DD><A HREF="ltkdoc.html#2422">Listbox</A>
+<DT><STRONG>anchor</STRONG>
+<DD><A HREF="ltkdoc.html#385">Configuring widgets</A>
+ | <A HREF="ltkdoc.html#1464">Button</A>
+ | <A HREF="ltkdoc.html#1766">Check-button</A>
+ | <A HREF="ltkdoc.html#2194">Label</A>
+ | <A HREF="ltkdoc.html#2642">Menubutton</A>
+ | <A HREF="ltkdoc.html#2784">Message</A>
+ | <A HREF="ltkdoc.html#2952">Radio-button</A>
+<DT><STRONG>append-text</STRONG>
+<DD><A HREF="ltkdoc.html#222">Text</A>
+<DT><STRONG>aspect</STRONG>
+<DD><A HREF="ltkdoc.html#2786">Message</A>
+<DT><STRONG>autoseparators</STRONG>
+<DD><A HREF="ltkdoc.html#3608">Text</A>
+<DT><STRONG>background</STRONG>
+<DD><A HREF="ltkdoc.html#388">Configuring widgets</A>
+ | <A HREF="ltkdoc.html#1466">Button</A>
+ | <A HREF="ltkdoc.html#1614">Canvas</A>
+ | <A HREF="ltkdoc.html#1768">Check-button</A>
+ | <A HREF="ltkdoc.html#1938">Entry</A>
+ | <A HREF="ltkdoc.html#2112">Frame</A>
+ | <A HREF="ltkdoc.html#2196">Label</A>
+ | <A HREF="ltkdoc.html#2318">Labelframe</A>
+ | <A HREF="ltkdoc.html#2424">Listbox</A>
+ | <A HREF="ltkdoc.html#2558">Menu</A>
+ | <A HREF="ltkdoc.html#2644">Menubutton</A>
+ | <A HREF="ltkdoc.html#2788">Message</A>
+ | <A HREF="ltkdoc.html#2866">Paned-window</A>
+ | <A HREF="ltkdoc.html#2954">Radio-button</A>
+ | <A HREF="ltkdoc.html#3118">Scale</A>
+ | <A HREF="ltkdoc.html#3276">Scrollbar</A>
+ | <A HREF="ltkdoc.html#3370">Spinbox</A>
+ | <A HREF="ltkdoc.html#3610">Text</A>
+ | <A HREF="ltkdoc.html#3800">Toplevel</A>
+ | <A HREF="ltkdoc.html#3894">Widget</A>
+<DT><STRONG>bigincrement</STRONG>
+<DD><A HREF="ltkdoc.html#3120">Scale</A>
+<DT><STRONG>bitmap</STRONG>
+<DD><A HREF="ltkdoc.html#391">Configuring widgets</A>
+ | <A HREF="ltkdoc.html#1468">Button</A>
+ | <A HREF="ltkdoc.html#1770">Check-button</A>
+ | <A HREF="ltkdoc.html#2198">Label</A>
+ | <A HREF="ltkdoc.html#2646">Menubutton</A>
+ | <A HREF="ltkdoc.html#2956">Radio-button</A>
+<DT><STRONG>borderwidth</STRONG>
+<DD><A HREF="ltkdoc.html#394">Configuring widgets</A>
+ | <A HREF="ltkdoc.html#1470">Button</A>
+ | <A HREF="ltkdoc.html#1616">Canvas</A>
+ | <A HREF="ltkdoc.html#1772">Check-button</A>
+ | <A HREF="ltkdoc.html#1940">Entry</A>
+ | <A HREF="ltkdoc.html#2114">Frame</A>
+ | <A HREF="ltkdoc.html#2200">Label</A>
+ | <A HREF="ltkdoc.html#2320">Labelframe</A>
+ | <A HREF="ltkdoc.html#2426">Listbox</A>
+ | <A HREF="ltkdoc.html#2560">Menu</A>
+ | <A HREF="ltkdoc.html#2648">Menubutton</A>
+ | <A HREF="ltkdoc.html#2790">Message</A>
+ | <A HREF="ltkdoc.html#2868">Paned-window</A>
+ | <A HREF="ltkdoc.html#2958">Radio-button</A>
+ | <A HREF="ltkdoc.html#3122">Scale</A>
+ | <A HREF="ltkdoc.html#3278">Scrollbar</A>
+ | <A HREF="ltkdoc.html#3372">Spinbox</A>
+ | <A HREF="ltkdoc.html#3612">Text</A>
+ | <A HREF="ltkdoc.html#3802">Toplevel</A>
+ | <A HREF="ltkdoc.html#3896">Widget</A>
+<DT><STRONG>button</STRONG>
+<DD><A HREF="ltkdoc.html#1457">Button</A>
+<DT><STRONG>button.background</STRONG>
+<DD><A HREF="ltkdoc.html#3374">Spinbox</A>
+<DT><STRONG>button.cursor</STRONG>
+<DD><A HREF="ltkdoc.html#3376">Spinbox</A>
+<DT><STRONG>button.relief</STRONG>
+<DD><A HREF="ltkdoc.html#3378">Spinbox</A>
+<DT><STRONG>canvas</STRONG>
+<DD><A HREF="ltkdoc.html#48">Canvas</A>
+ | <A HREF="ltkdoc.html#1611">Canvas</A>
+<DT><STRONG>check-button</STRONG>
+<DD><A HREF="ltkdoc.html#1759">Check-button</A>
+<DT><STRONG>class</STRONG>
+<DD><A HREF="ltkdoc.html#2116">Frame</A>
+ | <A HREF="ltkdoc.html#2322">Labelframe</A>
+ | <A HREF="ltkdoc.html#3804">Toplevel</A>
+<DT><STRONG>clear-text</STRONG>
+<DD><A HREF="ltkdoc.html#224">Text</A>
+<DT><STRONG>closeenough</STRONG>
+<DD><A HREF="ltkdoc.html#1618">Canvas</A>
+<DT><STRONG>colormap</STRONG>
+<DD><A HREF="ltkdoc.html#2118">Frame</A>
+ | <A HREF="ltkdoc.html#2324">Labelframe</A>
+ | <A HREF="ltkdoc.html#3806">Toplevel</A>
+<DT><STRONG>command</STRONG>
+<DD><A HREF="ltkdoc.html#1472">Button</A>
+ | <A HREF="ltkdoc.html#1774">Check-button</A>
+ | <A HREF="ltkdoc.html#2960">Radio-button</A>
+ | <A HREF="ltkdoc.html#3124">Scale</A>
+ | <A HREF="ltkdoc.html#3280">Scrollbar</A>
+ | <A HREF="ltkdoc.html#3432">Spinbox</A>
+<DT><STRONG>compound</STRONG>
+<DD><A HREF="ltkdoc.html#1474">Button</A>
+ | <A HREF="ltkdoc.html#1776">Check-button</A>
+ | <A HREF="ltkdoc.html#2202">Label</A>
+ | <A HREF="ltkdoc.html#2650">Menubutton</A>
+ | <A HREF="ltkdoc.html#2962">Radio-button</A>
+<DT><STRONG>configure</STRONG>
+<DD><A HREF="ltkdoc.html#378">Configuring widgets</A>
+<DT><STRONG>confine</STRONG>
+<DD><A HREF="ltkdoc.html#1620">Canvas</A>
+<DT><STRONG>container</STRONG>
+<DD><A HREF="ltkdoc.html#2120">Frame</A>
+ | <A HREF="ltkdoc.html#2326">Labelframe</A>
+ | <A HREF="ltkdoc.html#3808">Toplevel</A>
+<DT><STRONG>create-arc</STRONG>
+<DD><A HREF="ltkdoc.html#54">Canvas</A>
+<DT><STRONG>create-bitmap</STRONG>
+<DD><A HREF="ltkdoc.html#62">Canvas</A>
+<DT><STRONG>create-image</STRONG>
+<DD><A HREF="ltkdoc.html#76">Canvas</A>
+<DT><STRONG>create-line</STRONG>
+<DD><A HREF="ltkdoc.html#89">Canvas</A>
+<DT><STRONG>create-line*</STRONG>
+<DD><A HREF="ltkdoc.html#108">Canvas</A>
+<DT><STRONG>create-oval</STRONG>
+<DD><A HREF="ltkdoc.html#112">Canvas</A>
+<DT><STRONG>create-polygon</STRONG>
+<DD><A HREF="ltkdoc.html#114">Canvas</A>
+<DT><STRONG>create-rectangle</STRONG>
+<DD><A HREF="ltkdoc.html#124">Canvas</A>
+<DT><STRONG>create-text</STRONG>
+<DD><A HREF="ltkdoc.html#126">Canvas</A>
+<DT><STRONG>create-window</STRONG>
+<DD><A HREF="ltkdoc.html#142">Canvas</A>
+<DT><STRONG>cursor</STRONG>
+<DD><A HREF="ltkdoc.html#397">Configuring widgets</A>
+ | <A HREF="ltkdoc.html#1476">Button</A>
+ | <A HREF="ltkdoc.html#1622">Canvas</A>
+ | <A HREF="ltkdoc.html#1778">Check-button</A>
+ | <A HREF="ltkdoc.html#1942">Entry</A>
+ | <A HREF="ltkdoc.html#2122">Frame</A>
+ | <A HREF="ltkdoc.html#2204">Label</A>
+ | <A HREF="ltkdoc.html#2328">Labelframe</A>
+ | <A HREF="ltkdoc.html#2428">Listbox</A>
+ | <A HREF="ltkdoc.html#2562">Menu</A>
+ | <A HREF="ltkdoc.html#2652">Menubutton</A>
+ | <A HREF="ltkdoc.html#2792">Message</A>
+ | <A HREF="ltkdoc.html#2870">Paned-window</A>
+ | <A HREF="ltkdoc.html#2964">Radio-button</A>
+ | <A HREF="ltkdoc.html#3126">Scale</A>
+ | <A HREF="ltkdoc.html#3282">Scrollbar</A>
+ | <A HREF="ltkdoc.html#3380">Spinbox</A>
+ | <A HREF="ltkdoc.html#3614">Text</A>
+ | <A HREF="ltkdoc.html#3810">Toplevel</A>
+ | <A HREF="ltkdoc.html#3898">Widget</A>
+<DT><STRONG>default</STRONG>
+<DD><A HREF="ltkdoc.html#1478">Button</A>
+<DT><STRONG>deiconify</STRONG>
+<DD><A HREF="ltkdoc.html#282">Window manager functions</A>
+<DT><STRONG>digits</STRONG>
+<DD><A HREF="ltkdoc.html#3128">Scale</A>
+<DT><STRONG>direction</STRONG>
+<DD><A HREF="ltkdoc.html#2654">Menubutton</A>
+<DT><STRONG>disabledbackground</STRONG>
+<DD><A HREF="ltkdoc.html#1944">Entry</A>
+ | <A HREF="ltkdoc.html#3382">Spinbox</A>
+<DT><STRONG>disabledforeground</STRONG>
+<DD><A HREF="ltkdoc.html#1480">Button</A>
+ | <A HREF="ltkdoc.html#1780">Check-button</A>
+ | <A HREF="ltkdoc.html#1946">Entry</A>
+ | <A HREF="ltkdoc.html#2206">Label</A>
+ | <A HREF="ltkdoc.html#2430">Listbox</A>
+ | <A HREF="ltkdoc.html#2564">Menu</A>
+ | <A HREF="ltkdoc.html#2656">Menubutton</A>
+ | <A HREF="ltkdoc.html#2966">Radio-button</A>
+ | <A HREF="ltkdoc.html#3384">Spinbox</A>
+<DT><STRONG>elementborderwidth</STRONG>
+<DD><A HREF="ltkdoc.html#3284">Scrollbar</A>
+<DT><STRONG>entry</STRONG>
+<DD><A HREF="ltkdoc.html#1935">Entry</A>
+<DT><STRONG>exportselection</STRONG>
+<DD><A HREF="ltkdoc.html#1948">Entry</A>
+ | <A HREF="ltkdoc.html#2432">Listbox</A>
+ | <A HREF="ltkdoc.html#3386">Spinbox</A>
+ | <A HREF="ltkdoc.html#3616">Text</A>
+<DT><STRONG>font</STRONG>
+<DD><A HREF="ltkdoc.html#1482">Button</A>
+ | <A HREF="ltkdoc.html#1782">Check-button</A>
+ | <A HREF="ltkdoc.html#1950">Entry</A>
+ | <A HREF="ltkdoc.html#2208">Label</A>
+ | <A HREF="ltkdoc.html#2330">Labelframe</A>
+ | <A HREF="ltkdoc.html#2434">Listbox</A>
+ | <A HREF="ltkdoc.html#2566">Menu</A>
+ | <A HREF="ltkdoc.html#2658">Menubutton</A>
+ | <A HREF="ltkdoc.html#2794">Message</A>
+ | <A HREF="ltkdoc.html#2968">Radio-button</A>
+ | <A HREF="ltkdoc.html#3130">Scale</A>
+ | <A HREF="ltkdoc.html#3388">Spinbox</A>
+ | <A HREF="ltkdoc.html#3618">Text</A>
+<DT><STRONG>foreground</STRONG>
+<DD><A HREF="ltkdoc.html#401">Configuring widgets</A>
+ | <A HREF="ltkdoc.html#1484">Button</A>
+ | <A HREF="ltkdoc.html#1784">Check-button</A>
+ | <A HREF="ltkdoc.html#1952">Entry</A>
+ | <A HREF="ltkdoc.html#2210">Label</A>
+ | <A HREF="ltkdoc.html#2332">Labelframe</A>
+ | <A HREF="ltkdoc.html#2436">Listbox</A>
+ | <A HREF="ltkdoc.html#2568">Menu</A>
+ | <A HREF="ltkdoc.html#2660">Menubutton</A>
+ | <A HREF="ltkdoc.html#2796">Message</A>
+ | <A HREF="ltkdoc.html#2970">Radio-button</A>
+ | <A HREF="ltkdoc.html#3132">Scale</A>
+ | <A HREF="ltkdoc.html#3390">Spinbox</A>
+ | <A HREF="ltkdoc.html#3620">Text</A>
+<DT><STRONG>format</STRONG>
+<DD><A HREF="ltkdoc.html#3392">Spinbox</A>
+<DT><STRONG>frame</STRONG>
+<DD><A HREF="ltkdoc.html#2109">Frame</A>
+<DT><STRONG>from</STRONG>
+<DD><A HREF="ltkdoc.html#3134">Scale</A>
+ | <A HREF="ltkdoc.html#3394">Spinbox</A>
+<DT><STRONG>geometry</STRONG>
+<DD><A HREF="ltkdoc.html#284">Window manager functions</A>
+<DT><STRONG>grid</STRONG>
+<DD><A HREF="ltkdoc.html#376">The grid geometry manager</A>
+<DT><STRONG>handlepad</STRONG>
+<DD><A HREF="ltkdoc.html#2872">Paned-window</A>
+<DT><STRONG>handlesize</STRONG>
+<DD><A HREF="ltkdoc.html#2874">Paned-window</A>
+<DT><STRONG>height</STRONG>
+<DD><A HREF="ltkdoc.html#1486">Button</A>
+ | <A HREF="ltkdoc.html#1624">Canvas</A>
+ | <A HREF="ltkdoc.html#1786">Check-button</A>
+ | <A HREF="ltkdoc.html#2124">Frame</A>
+ | <A HREF="ltkdoc.html#2212">Label</A>
+ | <A HREF="ltkdoc.html#2334">Labelframe</A>
+ | <A HREF="ltkdoc.html#2438">Listbox</A>
+ | <A HREF="ltkdoc.html#2662">Menubutton</A>
+ | <A HREF="ltkdoc.html#2876">Paned-window</A>
+ | <A HREF="ltkdoc.html#2972">Radio-button</A>
+ | <A HREF="ltkdoc.html#3622">Text</A>
+ | <A HREF="ltkdoc.html#3812">Toplevel</A>
+<DT><STRONG>hello-1</STRONG>
+<DD><A HREF="ltkdoc.html#27">First steps</A>
+<DT><STRONG>hello-2</STRONG>
+<DD><A HREF="ltkdoc.html#39">A more complex example</A>
+<DT><STRONG>highlightbackground</STRONG>
+<DD><A HREF="ltkdoc.html#1488">Button</A>
+ | <A HREF="ltkdoc.html#1626">Canvas</A>
+ | <A HREF="ltkdoc.html#1788">Check-button</A>
+ | <A HREF="ltkdoc.html#1954">Entry</A>
+ | <A HREF="ltkdoc.html#2126">Frame</A>
+ | <A HREF="ltkdoc.html#2214">Label</A>
+ | <A HREF="ltkdoc.html#2336">Labelframe</A>
+ | <A HREF="ltkdoc.html#2440">Listbox</A>
+ | <A HREF="ltkdoc.html#2664">Menubutton</A>
+ | <A HREF="ltkdoc.html#2798">Message</A>
+ | <A HREF="ltkdoc.html#2974">Radio-button</A>
+ | <A HREF="ltkdoc.html#3136">Scale</A>
+ | <A HREF="ltkdoc.html#3286">Scrollbar</A>
+ | <A HREF="ltkdoc.html#3396">Spinbox</A>
+ | <A HREF="ltkdoc.html#3624">Text</A>
+ | <A HREF="ltkdoc.html#3814">Toplevel</A>
+<DT><STRONG>highlightcolor</STRONG>
+<DD><A HREF="ltkdoc.html#1490">Button</A>
+ | <A HREF="ltkdoc.html#1628">Canvas</A>
+ | <A HREF="ltkdoc.html#1790">Check-button</A>
+ | <A HREF="ltkdoc.html#1956">Entry</A>
+ | <A HREF="ltkdoc.html#2128">Frame</A>
+ | <A HREF="ltkdoc.html#2216">Label</A>
+ | <A HREF="ltkdoc.html#2338">Labelframe</A>
+ | <A HREF="ltkdoc.html#2442">Listbox</A>
+ | <A HREF="ltkdoc.html#2666">Menubutton</A>
+ | <A HREF="ltkdoc.html#2800">Message</A>
+ | <A HREF="ltkdoc.html#2976">Radio-button</A>
+ | <A HREF="ltkdoc.html#3138">Scale</A>
+ | <A HREF="ltkdoc.html#3288">Scrollbar</A>
+ | <A HREF="ltkdoc.html#3398">Spinbox</A>
+ | <A HREF="ltkdoc.html#3626">Text</A>
+ | <A HREF="ltkdoc.html#3816">Toplevel</A>
+<DT><STRONG>highlightthickness</STRONG>
+<DD><A HREF="ltkdoc.html#1492">Button</A>
+ | <A HREF="ltkdoc.html#1630">Canvas</A>
+ | <A HREF="ltkdoc.html#1792">Check-button</A>
+ | <A HREF="ltkdoc.html#1958">Entry</A>
+ | <A HREF="ltkdoc.html#2130">Frame</A>
+ | <A HREF="ltkdoc.html#2218">Label</A>
+ | <A HREF="ltkdoc.html#2340">Labelframe</A>
+ | <A HREF="ltkdoc.html#2444">Listbox</A>
+ | <A HREF="ltkdoc.html#2668">Menubutton</A>
+ | <A HREF="ltkdoc.html#2802">Message</A>
+ | <A HREF="ltkdoc.html#2978">Radio-button</A>
+ | <A HREF="ltkdoc.html#3140">Scale</A>
+ | <A HREF="ltkdoc.html#3290">Scrollbar</A>
+ | <A HREF="ltkdoc.html#3400">Spinbox</A>
+ | <A HREF="ltkdoc.html#3628">Text</A>
+ | <A HREF="ltkdoc.html#3818">Toplevel</A>
+<DT><STRONG>iconify</STRONG>
+<DD><A HREF="ltkdoc.html#280">Window manager functions</A>
+<DT><STRONG>image</STRONG>
+<DD><A HREF="ltkdoc.html#404">Configuring widgets</A>
+ | <A HREF="ltkdoc.html#1494">Button</A>
+ | <A HREF="ltkdoc.html#1794">Check-button</A>
+ | <A HREF="ltkdoc.html#2220">Label</A>
+ | <A HREF="ltkdoc.html#2670">Menubutton</A>
+ | <A HREF="ltkdoc.html#2980">Radio-button</A>
+<DT><STRONG>increment</STRONG>
+<DD><A HREF="ltkdoc.html#3402">Spinbox</A>
+<DT><STRONG>indicatoron</STRONG>
+<DD><A HREF="ltkdoc.html#1796">Check-button</A>
+ | <A HREF="ltkdoc.html#2672">Menubutton</A>
+ | <A HREF="ltkdoc.html#2982">Radio-button</A>
+<DT><STRONG>insertbackground</STRONG>
+<DD><A HREF="ltkdoc.html#1632">Canvas</A>
+ | <A HREF="ltkdoc.html#1960">Entry</A>
+ | <A HREF="ltkdoc.html#3404">Spinbox</A>
+ | <A HREF="ltkdoc.html#3630">Text</A>
+<DT><STRONG>insertborderwidth</STRONG>
+<DD><A HREF="ltkdoc.html#1634">Canvas</A>
+ | <A HREF="ltkdoc.html#1962">Entry</A>
+ | <A HREF="ltkdoc.html#3406">Spinbox</A>
+ | <A HREF="ltkdoc.html#3632">Text</A>
+<DT><STRONG>insertofftime</STRONG>
+<DD><A HREF="ltkdoc.html#1636">Canvas</A>
+ | <A HREF="ltkdoc.html#1964">Entry</A>
+ | <A HREF="ltkdoc.html#3408">Spinbox</A>
+ | <A HREF="ltkdoc.html#3634">Text</A>
+<DT><STRONG>insertontime</STRONG>
+<DD><A HREF="ltkdoc.html#1638">Canvas</A>
+ | <A HREF="ltkdoc.html#1966">Entry</A>
+ | <A HREF="ltkdoc.html#3410">Spinbox</A>
+ | <A HREF="ltkdoc.html#3636">Text</A>
+<DT><STRONG>insertwidth</STRONG>
+<DD><A HREF="ltkdoc.html#1640">Canvas</A>
+ | <A HREF="ltkdoc.html#1968">Entry</A>
+ | <A HREF="ltkdoc.html#3412">Spinbox</A>
+ | <A HREF="ltkdoc.html#3638">Text</A>
+<DT><STRONG>installation</STRONG>
+<DD><A HREF="ltkdoc.html#14">Installation</A>
+<DT><STRONG>invalidcommand</STRONG>
+<DD><A HREF="ltkdoc.html#1970">Entry</A>
+ | <A HREF="ltkdoc.html#3414">Spinbox</A>
+<DT><STRONG>itemconfigure</STRONG>
+<DD><A HREF="ltkdoc.html#158">Managing graphical objects</A>
+<DT><STRONG>jump</STRONG>
+<DD><A HREF="ltkdoc.html#3292">Scrollbar</A>
+<DT><STRONG>justify</STRONG>
+<DD><A HREF="ltkdoc.html#407">Configuring widgets</A>
+ | <A HREF="ltkdoc.html#1496">Button</A>
+ | <A HREF="ltkdoc.html#1798">Check-button</A>
+ | <A HREF="ltkdoc.html#1972">Entry</A>
+ | <A HREF="ltkdoc.html#2222">Label</A>
+ | <A HREF="ltkdoc.html#2674">Menubutton</A>
+ | <A HREF="ltkdoc.html#2804">Message</A>
+ | <A HREF="ltkdoc.html#2984">Radio-button</A>
+ | <A HREF="ltkdoc.html#3416">Spinbox</A>
+<DT><STRONG>label</STRONG>
+<DD><A HREF="ltkdoc.html#2187">Label</A>
+ | <A HREF="ltkdoc.html#3142">Scale</A>
+<DT><STRONG>labelanchor</STRONG>
+<DD><A HREF="ltkdoc.html#2342">Labelframe</A>
+<DT><STRONG>labelframe</STRONG>
+<DD><A HREF="ltkdoc.html#2315">Labelframe</A>
+<DT><STRONG>labelwidget</STRONG>
+<DD><A HREF="ltkdoc.html#2344">Labelframe</A>
+<DT><STRONG>length</STRONG>
+<DD><A HREF="ltkdoc.html#3144">Scale</A>
+<DT><STRONG>listbox</STRONG>
+<DD><A HREF="ltkdoc.html#2419">Listbox</A>
+<DT><STRONG>listvariable</STRONG>
+<DD><A HREF="ltkdoc.html#2446">Listbox</A>
+<DT><STRONG>load-text</STRONG>
+<DD><A HREF="ltkdoc.html#239">Text</A>
+<DT><STRONG>Ltk extensions</STRONG>
+<DD><A HREF="ltkdoc.html#3923">Writing Ltk extensions</A>
+<DT><STRONG>ltk-mw</STRONG>
+<DD><A HREF="ltkdoc.html#3982">ltk-mw</A>
+<DT><STRONG>ltk-remote</STRONG>
+<DD><A HREF="ltkdoc.html#3976">ltk-remote</A>
+<DT><STRONG>maxsize</STRONG>
+<DD><A HREF="ltkdoc.html#274">Window manager functions</A>
+<DT><STRONG>maxundo</STRONG>
+<DD><A HREF="ltkdoc.html#3640">Text</A>
+<DT><STRONG>menu</STRONG>
+<DD><A HREF="ltkdoc.html#2549">Menu</A>
+ | <A HREF="ltkdoc.html#2676">Menubutton</A>
+ | <A HREF="ltkdoc.html#3820">Toplevel</A>
+<DT><STRONG>menubutton</STRONG>
+<DD><A HREF="ltkdoc.html#2635">Menubutton</A>
+<DT><STRONG>message</STRONG>
+<DD><A HREF="ltkdoc.html#2781">Message</A>
+<DT><STRONG>minsize</STRONG>
+<DD><A HREF="ltkdoc.html#272">Window manager functions</A>
+<DT><STRONG>nil</STRONG>
+<DD><A HREF="ltkdoc.html#3008">Radio-button</A>
+ | <A HREF="ltkdoc.html#3010">Radio-button</A>
+<DT><STRONG>normalize</STRONG>
+<DD><A HREF="ltkdoc.html#278">Window manager functions</A>
+<DT><STRONG>offrelief</STRONG>
+<DD><A HREF="ltkdoc.html#1800">Check-button</A>
+ | <A HREF="ltkdoc.html#2986">Radio-button</A>
+<DT><STRONG>offset</STRONG>
+<DD><A HREF="ltkdoc.html#1642">Canvas</A>
+<DT><STRONG>offvalue</STRONG>
+<DD><A HREF="ltkdoc.html#1802">Check-button</A>
+<DT><STRONG>on-close</STRONG>
+<DD><A HREF="ltkdoc.html#288">Window manager functions</A>
+<DT><STRONG>on-focus</STRONG>
+<DD><A HREF="ltkdoc.html#290">Window manager functions</A>
+<DT><STRONG>onvalue</STRONG>
+<DD><A HREF="ltkdoc.html#1804">Check-button</A>
+<DT><STRONG>opaqueresize</STRONG>
+<DD><A HREF="ltkdoc.html#2878">Paned-window</A>
+<DT><STRONG>orient</STRONG>
+<DD><A HREF="ltkdoc.html#419">Configuring widgets</A>
+<DT><STRONG>orientation</STRONG>
+<DD><A HREF="ltkdoc.html#2880">Paned-window</A>
+ | <A HREF="ltkdoc.html#3146">Scale</A>
+ | <A HREF="ltkdoc.html#3294">Scrollbar</A>
+<DT><STRONG>overrelief</STRONG>
+<DD><A HREF="ltkdoc.html#1498">Button</A>
+ | <A HREF="ltkdoc.html#1806">Check-button</A>
+ | <A HREF="ltkdoc.html#2988">Radio-button</A>
+<DT><STRONG>pack</STRONG>
+<DD><A HREF="ltkdoc.html#341">The pack geometry manager</A>
+<DT><STRONG>padx</STRONG>
+<DD><A HREF="ltkdoc.html#410">Configuring widgets</A>
+ | <A HREF="ltkdoc.html#1500">Button</A>
+ | <A HREF="ltkdoc.html#1808">Check-button</A>
+ | <A HREF="ltkdoc.html#2132">Frame</A>
+ | <A HREF="ltkdoc.html#2224">Label</A>
+ | <A HREF="ltkdoc.html#2346">Labelframe</A>
+ | <A HREF="ltkdoc.html#2678">Menubutton</A>
+ | <A HREF="ltkdoc.html#2806">Message</A>
+ | <A HREF="ltkdoc.html#2990">Radio-button</A>
+ | <A HREF="ltkdoc.html#3642">Text</A>
+ | <A HREF="ltkdoc.html#3822">Toplevel</A>
+<DT><STRONG>pady</STRONG>
+<DD><A HREF="ltkdoc.html#413">Configuring widgets</A>
+ | <A HREF="ltkdoc.html#1502">Button</A>
+ | <A HREF="ltkdoc.html#1810">Check-button</A>
+ | <A HREF="ltkdoc.html#2134">Frame</A>
+ | <A HREF="ltkdoc.html#2226">Label</A>
+ | <A HREF="ltkdoc.html#2348">Labelframe</A>
+ | <A HREF="ltkdoc.html#2680">Menubutton</A>
+ | <A HREF="ltkdoc.html#2808">Message</A>
+ | <A HREF="ltkdoc.html#2992">Radio-button</A>
+ | <A HREF="ltkdoc.html#3644">Text</A>
+ | <A HREF="ltkdoc.html#3824">Toplevel</A>
+<DT><STRONG>paned-window</STRONG>
+<DD><A HREF="ltkdoc.html#2863">Paned-window</A>
+<DT><STRONG>postcommand</STRONG>
+<DD><A HREF="ltkdoc.html#2570">Menu</A>
+<DT><STRONG>radio-button</STRONG>
+<DD><A HREF="ltkdoc.html#2945">Radio-button</A>
+<DT><STRONG>readonlybackground</STRONG>
+<DD><A HREF="ltkdoc.html#1974">Entry</A>
+ | <A HREF="ltkdoc.html#3418">Spinbox</A>
+<DT><STRONG>relief</STRONG>
+<DD><A HREF="ltkdoc.html#416">Configuring widgets</A>
+ | <A HREF="ltkdoc.html#1504">Button</A>
+ | <A HREF="ltkdoc.html#1644">Canvas</A>
+ | <A HREF="ltkdoc.html#1812">Check-button</A>
+ | <A HREF="ltkdoc.html#1976">Entry</A>
+ | <A HREF="ltkdoc.html#2136">Frame</A>
+ | <A HREF="ltkdoc.html#2228">Label</A>
+ | <A HREF="ltkdoc.html#2350">Labelframe</A>
+ | <A HREF="ltkdoc.html#2448">Listbox</A>
+ | <A HREF="ltkdoc.html#2572">Menu</A>
+ | <A HREF="ltkdoc.html#2682">Menubutton</A>
+ | <A HREF="ltkdoc.html#2810">Message</A>
+ | <A HREF="ltkdoc.html#2882">Paned-window</A>
+ | <A HREF="ltkdoc.html#2994">Radio-button</A>
+ | <A HREF="ltkdoc.html#3148">Scale</A>
+ | <A HREF="ltkdoc.html#3296">Scrollbar</A>
+ | <A HREF="ltkdoc.html#3420">Spinbox</A>
+ | <A HREF="ltkdoc.html#3646">Text</A>
+ | <A HREF="ltkdoc.html#3826">Toplevel</A>
+ | <A HREF="ltkdoc.html#3900">Widget</A>
+<DT><STRONG>repeatdelay</STRONG>
+<DD><A HREF="ltkdoc.html#1506">Button</A>
+ | <A HREF="ltkdoc.html#3150">Scale</A>
+ | <A HREF="ltkdoc.html#3298">Scrollbar</A>
+ | <A HREF="ltkdoc.html#3422">Spinbox</A>
+<DT><STRONG>repeatinterval</STRONG>
+<DD><A HREF="ltkdoc.html#1508">Button</A>
+ | <A HREF="ltkdoc.html#3152">Scale</A>
+ | <A HREF="ltkdoc.html#3300">Scrollbar</A>
+ | <A HREF="ltkdoc.html#3424">Spinbox</A>
+<DT><STRONG>resolution</STRONG>
+<DD><A HREF="ltkdoc.html#3154">Scale</A>
+<DT><STRONG>sashcursor</STRONG>
+<DD><A HREF="ltkdoc.html#2884">Paned-window</A>
+<DT><STRONG>sashpad</STRONG>
+<DD><A HREF="ltkdoc.html#2886">Paned-window</A>
+<DT><STRONG>sashrelief</STRONG>
+<DD><A HREF="ltkdoc.html#2888">Paned-window</A>
+<DT><STRONG>sashwidth</STRONG>
+<DD><A HREF="ltkdoc.html#2890">Paned-window</A>
+<DT><STRONG>save-text</STRONG>
+<DD><A HREF="ltkdoc.html#237">Text</A>
+<DT><STRONG>scale</STRONG>
+<DD><A HREF="ltkdoc.html#3113">Scale</A>
+<DT><STRONG>screen</STRONG>
+<DD><A HREF="ltkdoc.html#3828">Toplevel</A>
+<DT><STRONG>screen-height</STRONG>
+<DD><A HREF="ltkdoc.html#246">Screen functions</A>
+<DT><STRONG>screen-heigth-mm</STRONG>
+<DD><A HREF="ltkdoc.html#250">Screen functions</A>
+<DT><STRONG>screen-mouse</STRONG>
+<DD><A HREF="ltkdoc.html#256">Screen functions</A>
+<DT><STRONG>screen-mouse-x</STRONG>
+<DD><A HREF="ltkdoc.html#252">Screen functions</A>
+<DT><STRONG>screen-mouse-y</STRONG>
+<DD><A HREF="ltkdoc.html#254">Screen functions</A>
+<DT><STRONG>screen-width</STRONG>
+<DD><A HREF="ltkdoc.html#244">Screen functions</A>
+<DT><STRONG>screen-width-mm</STRONG>
+<DD><A HREF="ltkdoc.html#248">Screen functions</A>
+<DT><STRONG>scrollbar</STRONG>
+<DD><A HREF="ltkdoc.html#3269">Scrollbar</A>
+<DT><STRONG>scrollregion</STRONG>
+<DD><A HREF="ltkdoc.html#154">Managing graphical objects</A>
+ | <A HREF="ltkdoc.html#1646">Canvas</A>
+<DT><STRONG>see</STRONG>
+<DD><A HREF="ltkdoc.html#231">Text</A>
+<DT><STRONG>selectbackground</STRONG>
+<DD><A HREF="ltkdoc.html#1648">Canvas</A>
+ | <A HREF="ltkdoc.html#1978">Entry</A>
+ | <A HREF="ltkdoc.html#2450">Listbox</A>
+ | <A HREF="ltkdoc.html#3426">Spinbox</A>
+ | <A HREF="ltkdoc.html#3648">Text</A>
+<DT><STRONG>selectborderwidth</STRONG>
+<DD><A HREF="ltkdoc.html#1650">Canvas</A>
+ | <A HREF="ltkdoc.html#1980">Entry</A>
+ | <A HREF="ltkdoc.html#2452">Listbox</A>
+ | <A HREF="ltkdoc.html#3428">Spinbox</A>
+ | <A HREF="ltkdoc.html#3650">Text</A>
+<DT><STRONG>selectcolor</STRONG>
+<DD><A HREF="ltkdoc.html#1814">Check-button</A>
+ | <A HREF="ltkdoc.html#2574">Menu</A>
+ | <A HREF="ltkdoc.html#2996">Radio-button</A>
+<DT><STRONG>selectforeground</STRONG>
+<DD><A HREF="ltkdoc.html#1652">Canvas</A>
+ | <A HREF="ltkdoc.html#1982">Entry</A>
+ | <A HREF="ltkdoc.html#2454">Listbox</A>
+ | <A HREF="ltkdoc.html#3430">Spinbox</A>
+ | <A HREF="ltkdoc.html#3652">Text</A>
+<DT><STRONG>selectimage</STRONG>
+<DD><A HREF="ltkdoc.html#1816">Check-button</A>
+ | <A HREF="ltkdoc.html#2998">Radio-button</A>
+<DT><STRONG>selectmode</STRONG>
+<DD><A HREF="ltkdoc.html#2456">Listbox</A>
+<DT><STRONG>set-coords</STRONG>
+<DD><A HREF="ltkdoc.html#150">Managing graphical objects</A>
+<DT><STRONG>set-geometry</STRONG>
+<DD><A HREF="ltkdoc.html#286">Window manager functions</A>
+<DT><STRONG>setf text</STRONG>
+<DD><A HREF="ltkdoc.html#229">Text</A>
+<DT><STRONG>setgrid</STRONG>
+<DD><A HREF="ltkdoc.html#2458">Listbox</A>
+ | <A HREF="ltkdoc.html#3654">Text</A>
+<DT><STRONG>show</STRONG>
+<DD><A HREF="ltkdoc.html#1984">Entry</A>
+<DT><STRONG>showhandle</STRONG>
+<DD><A HREF="ltkdoc.html#2892">Paned-window</A>
+<DT><STRONG>showvalue</STRONG>
+<DD><A HREF="ltkdoc.html#3156">Scale</A>
+<DT><STRONG>sliderlength</STRONG>
+<DD><A HREF="ltkdoc.html#3158">Scale</A>
+<DT><STRONG>sliderrelief</STRONG>
+<DD><A HREF="ltkdoc.html#3160">Scale</A>
+<DT><STRONG>spacing1</STRONG>
+<DD><A HREF="ltkdoc.html#3656">Text</A>
+<DT><STRONG>spacing2</STRONG>
+<DD><A HREF="ltkdoc.html#3658">Text</A>
+<DT><STRONG>spacing3</STRONG>
+<DD><A HREF="ltkdoc.html#3660">Text</A>
+<DT><STRONG>spinbox</STRONG>
+<DD><A HREF="ltkdoc.html#3365">Spinbox</A>
+<DT><STRONG>state</STRONG>
+<DD><A HREF="ltkdoc.html#1510">Button</A>
+ | <A HREF="ltkdoc.html#1654">Canvas</A>
+ | <A HREF="ltkdoc.html#1818">Check-button</A>
+ | <A HREF="ltkdoc.html#1986">Entry</A>
+ | <A HREF="ltkdoc.html#2230">Label</A>
+ | <A HREF="ltkdoc.html#2460">Listbox</A>
+ | <A HREF="ltkdoc.html#2684">Menubutton</A>
+ | <A HREF="ltkdoc.html#3000">Radio-button</A>
+ | <A HREF="ltkdoc.html#3162">Scale</A>
+ | <A HREF="ltkdoc.html#3434">Spinbox</A>
+ | <A HREF="ltkdoc.html#3662">Text</A>
+<DT><STRONG>tabs</STRONG>
+<DD><A HREF="ltkdoc.html#3664">Text</A>
+<DT><STRONG>tag-bind</STRONG>
+<DD><A HREF="ltkdoc.html#235">Text</A>
+<DT><STRONG>tag-configure</STRONG>
+<DD><A HREF="ltkdoc.html#233">Text</A>
+<DT><STRONG>takefocus</STRONG>
+<DD><A HREF="ltkdoc.html#422">Configuring widgets</A>
+ | <A HREF="ltkdoc.html#1512">Button</A>
+ | <A HREF="ltkdoc.html#1656">Canvas</A>
+ | <A HREF="ltkdoc.html#1820">Check-button</A>
+ | <A HREF="ltkdoc.html#1988">Entry</A>
+ | <A HREF="ltkdoc.html#2138">Frame</A>
+ | <A HREF="ltkdoc.html#2232">Label</A>
+ | <A HREF="ltkdoc.html#2352">Labelframe</A>
+ | <A HREF="ltkdoc.html#2462">Listbox</A>
+ | <A HREF="ltkdoc.html#2576">Menu</A>
+ | <A HREF="ltkdoc.html#2686">Menubutton</A>
+ | <A HREF="ltkdoc.html#2812">Message</A>
+ | <A HREF="ltkdoc.html#3002">Radio-button</A>
+ | <A HREF="ltkdoc.html#3164">Scale</A>
+ | <A HREF="ltkdoc.html#3302">Scrollbar</A>
+ | <A HREF="ltkdoc.html#3436">Spinbox</A>
+ | <A HREF="ltkdoc.html#3666">Text</A>
+ | <A HREF="ltkdoc.html#3830">Toplevel</A>
+<DT><STRONG>tearoff</STRONG>
+<DD><A HREF="ltkdoc.html#2578">Menu</A>
+<DT><STRONG>tearoffcommand</STRONG>
+<DD><A HREF="ltkdoc.html#2580">Menu</A>
+<DT><STRONG>text</STRONG>
+<DD><A HREF="ltkdoc.html#226">Text</A>
+ | <A HREF="ltkdoc.html#425">Configuring widgets</A>
+ | <A HREF="ltkdoc.html#1514">Button</A>
+ | <A HREF="ltkdoc.html#1822">Check-button</A>
+ | <A HREF="ltkdoc.html#1990">Entry</A>
+ | <A HREF="ltkdoc.html#2234">Label</A>
+ | <A HREF="ltkdoc.html#2354">Labelframe</A>
+ | <A HREF="ltkdoc.html#2688">Menubutton</A>
+ | <A HREF="ltkdoc.html#2814">Message</A>
+ | <A HREF="ltkdoc.html#3004">Radio-button</A>
+ | <A HREF="ltkdoc.html#3438">Spinbox</A>
+ | <A HREF="ltkdoc.html#3605">Text</A>
+<DT><STRONG>tickinterval</STRONG>
+<DD><A HREF="ltkdoc.html#3166">Scale</A>
+<DT><STRONG>title</STRONG>
+<DD><A HREF="ltkdoc.html#2582">Menu</A>
+<DT><STRONG>to</STRONG>
+<DD><A HREF="ltkdoc.html#3168">Scale</A>
+ | <A HREF="ltkdoc.html#3440">Spinbox</A>
+<DT><STRONG>toplevel</STRONG>
+<DD><A HREF="ltkdoc.html#3797">Toplevel</A>
+<DT><STRONG>troughcolor</STRONG>
+<DD><A HREF="ltkdoc.html#3170">Scale</A>
+ | <A HREF="ltkdoc.html#3304">Scrollbar</A>
+<DT><STRONG>type</STRONG>
+<DD><A HREF="ltkdoc.html#2584">Menu</A>
+<DT><STRONG>underline</STRONG>
+<DD><A HREF="ltkdoc.html#428">Configuring widgets</A>
+ | <A HREF="ltkdoc.html#1516">Button</A>
+ | <A HREF="ltkdoc.html#1824">Check-button</A>
+ | <A HREF="ltkdoc.html#2236">Label</A>
+ | <A HREF="ltkdoc.html#2690">Menubutton</A>
+ | <A HREF="ltkdoc.html#3006">Radio-button</A>
+<DT><STRONG>undo</STRONG>
+<DD><A HREF="ltkdoc.html#3668">Text</A>
+<DT><STRONG>use</STRONG>
+<DD><A HREF="ltkdoc.html#3832">Toplevel</A>
+<DT><STRONG>validate</STRONG>
+<DD><A HREF="ltkdoc.html#1992">Entry</A>
+ | <A HREF="ltkdoc.html#3442">Spinbox</A>
+<DT><STRONG>validatecommand</STRONG>
+<DD><A HREF="ltkdoc.html#1994">Entry</A>
+ | <A HREF="ltkdoc.html#3444">Spinbox</A>
+<DT><STRONG>values</STRONG>
+<DD><A HREF="ltkdoc.html#3446">Spinbox</A>
+<DT><STRONG>variable</STRONG>
+<DD><A HREF="ltkdoc.html#1826">Check-button</A>
+ | <A HREF="ltkdoc.html#3172">Scale</A>
+<DT><STRONG>visual</STRONG>
+<DD><A HREF="ltkdoc.html#2140">Frame</A>
+ | <A HREF="ltkdoc.html#2356">Labelframe</A>
+ | <A HREF="ltkdoc.html#3834">Toplevel</A>
+<DT><STRONG>widget</STRONG>
+<DD><A HREF="ltkdoc.html#3891">Widget</A>
+<DT><STRONG>width</STRONG>
+<DD><A HREF="ltkdoc.html#1518">Button</A>
+ | <A HREF="ltkdoc.html#1658">Canvas</A>
+ | <A HREF="ltkdoc.html#1828">Check-button</A>
+ | <A HREF="ltkdoc.html#1996">Entry</A>
+ | <A HREF="ltkdoc.html#2142">Frame</A>
+ | <A HREF="ltkdoc.html#2238">Label</A>
+ | <A HREF="ltkdoc.html#2358">Labelframe</A>
+ | <A HREF="ltkdoc.html#2464">Listbox</A>
+ | <A HREF="ltkdoc.html#2692">Menubutton</A>
+ | <A HREF="ltkdoc.html#2816">Message</A>
+ | <A HREF="ltkdoc.html#2894">Paned-window</A>
+ | <A HREF="ltkdoc.html#3012">Radio-button</A>
+ | <A HREF="ltkdoc.html#3174">Scale</A>
+ | <A HREF="ltkdoc.html#3306">Scrollbar</A>
+ | <A HREF="ltkdoc.html#3448">Spinbox</A>
+ | <A HREF="ltkdoc.html#3670">Text</A>
+ | <A HREF="ltkdoc.html#3836">Toplevel</A>
+<DT><STRONG>window-height</STRONG>
+<DD><A HREF="ltkdoc.html#261">Screen functions</A>
+<DT><STRONG>window-width</STRONG>
+<DD><A HREF="ltkdoc.html#259">Screen functions</A>
+<DT><STRONG>window-x</STRONG>
+<DD><A HREF="ltkdoc.html#263">Screen functions</A>
+<DT><STRONG>window-y</STRONG>
+<DD><A HREF="ltkdoc.html#265">Screen functions</A>
+<DT><STRONG>withdraw</STRONG>
+<DD><A HREF="ltkdoc.html#276">Window manager functions</A>
+<DT><STRONG>wm-title</STRONG>
+<DD><A HREF="ltkdoc.html#270">Window manager functions</A>
+<DT><STRONG>wrap</STRONG>
+<DD><A HREF="ltkdoc.html#3450">Spinbox</A>
+ | <A HREF="ltkdoc.html#3672">Text</A>
+<DT><STRONG>wraplength</STRONG>
+<DD><A HREF="ltkdoc.html#1520">Button</A>
+ | <A HREF="ltkdoc.html#1830">Check-button</A>
+ | <A HREF="ltkdoc.html#2240">Label</A>
+ | <A HREF="ltkdoc.html#2694">Menubutton</A>
+ | <A HREF="ltkdoc.html#3014">Radio-button</A>
+<DT><STRONG>xscrollcommand</STRONG>
+<DD><A HREF="ltkdoc.html#1660">Canvas</A>
+ | <A HREF="ltkdoc.html#1998">Entry</A>
+ | <A HREF="ltkdoc.html#2466">Listbox</A>
+ | <A HREF="ltkdoc.html#3452">Spinbox</A>
+ | <A HREF="ltkdoc.html#3674">Text</A>
+<DT><STRONG>xscrollincrement</STRONG>
+<DD><A HREF="ltkdoc.html#1662">Canvas</A>
+<DT><STRONG>yscrollcommand</STRONG>
+<DD><A HREF="ltkdoc.html#1664">Canvas</A>
+ | <A HREF="ltkdoc.html#2468">Listbox</A>
+ | <A HREF="ltkdoc.html#3676">Text</A>
+<DT><STRONG>yscrollincrement</STRONG>
+<DD><A HREF="ltkdoc.html#1666">Canvas</A>
+
+</DL>
+
+<P>
+
+<H1><A NAME="SECTION000120000000000000000">
+About this document ...</A>
+</H1>
+ <STRONG> LTK - a Lisp binding to the Tk toolkit</STRONG><P>
+This document was generated using the
+<A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2002-2-1 (1.70)
+<P>
+Copyright &#169; 1993, 1994, 1995, 1996,
+<A HREF="http://cbl.leeds.ac.uk/nikos/personal.html">Nikos Drakos</A>, 
+Computer Based Learning Unit, University of Leeds.
+<BR>
+Copyright &#169; 1997, 1998, 1999,
+<A HREF="http://www.maths.mq.edu.au/~ross/">Ross Moore</A>, 
+Mathematics Department, Macquarie University, Sydney.
+<P>
+The command line arguments were: <BR>
+ <STRONG>latex2html</STRONG> <TT>-local_icons ltkdoc -split 0</TT>
+<P>
+The translation was initiated by Peter Herth on 2009-11-01
+<BR><HR><H4>Footnotes</H4>
+<DL>
+<DT><A NAME="foot454">... function)</TT></A><A
+ HREF="ltkdoc.html#tex2html6"><SUP>1</SUP></A></DT>
+<DD>Currently the event has to 
+be specified as a string as with Tk. In future releases perhaps a more Lispy style might be used.
+
+</DD>
+<DT><A NAME="foot4013">... function:</A><A
+ HREF="ltkdoc.html#tex2html7"><SUP>2</SUP></A></DT>
+<DD>It is not required to have a <TT>defgeneric</TT> definition for
+each generic function, as to the standard, <TT>defmethod</TT> implicitly
+generates the definition if they do not exist, but as SBCL issues a 
+warning in this case and shipped code preferrably should not issue
+warnings on compilation, I add the defgeneric statements for all
+generic functions I create.
+
+</DD>
+</DL><HR>
+<!--Navigation Panel-->
+<IMG WIDTH="81" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next_inactive" SRC="nx_grp_g.png"> 
+<IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up" SRC="up_g.png"> 
+<IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous" SRC="prev_g.png">   
+<BR>
+<!--End of Navigation Panel-->
+<ADDRESS>
+Peter Herth
+2009-11-01
+</ADDRESS>
+</BODY>
+</HTML>

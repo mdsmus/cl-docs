@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.8 Inline Expansion</TITLE>
+<META NAME="description" CONTENT="5.8 Inline Expansion">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2647" HREF="node156.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2645" HREF="node105.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2639" HREF="node154.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2649" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2650" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2648" HREF="node156.html">5.8.1 Inline Expansion Recording</A>
+<B>Up:</B> <A NAME="tex2html2646" HREF="node105.html">5 Advanced Compiler Use </A>
+<B> Previous:</B> <A NAME="tex2html2640" HREF="node154.html">5.7.6 Context Declaration Example</A>
+<BR> <P>
+<H1><A NAME="SECTION00680000000000000000">5.8 Inline Expansion</A></H1>
+<P>
+<A NAME="inlineexpansion">&#160;</A>
+<A NAME="10388">&#160;</A>
+<A NAME="10389">&#160;</A>
+<A NAME="10390">&#160;</A>
+<A NAME="10391">&#160;</A>
+<A NAME="10392">&#160;</A>
+<P>
+Python can expand almost any function inline, including functions
+with keyword arguments.  The only restrictions are that keyword
+argument keywords in the call must be constant, and that global
+function definitions (<tt>defun</tt>) must be done in a null lexical
+environment (not nested in a <tt>let</tt> or other binding form.)  Local
+functions (<tt>flet</tt>) can be inline expanded in any environment.
+Combined with Python's source-level optimization, inline expansion
+can be used for things that formerly required macros for efficient
+implementation.  In Python, macros don't have any efficiency
+advantage, so they need only be used where a macro's syntactic
+flexibility is required.
+<P>
+Inline expansion is a compiler optimization technique that reduces
+the overhead of a function call by simply not doing the call:
+instead, the compiler effectively rewrites the program to appear as
+though the definition of the called function was inserted at each
+call site.  In Common Lisp, this is straightforwardly expressed by
+inserting the <tt>lambda</tt> corresponding to the original definition:
+<BLOCKQUOTE> <PRE>(proclaim '(inline my-1+))
+(defun my-1+ (x) (+ x 1))
+<P>
+(my-1+ someval) <IMG WIDTH=14 HEIGHT=10 ALIGN=BOTTOM ALT="tex2html_wrap_inline15923" SRC="img3.gif"> ((lambda (x) (+ x 1)) someval)
+</PRE> </BLOCKQUOTE>
+<P>
+When the function expanded inline is large, the program after inline
+expansion may be substantially larger than the original program.  If
+the program becomes too large, inline expansion hurts speed rather
+than helping it, since hardware resources such as physical memory and
+cache will be exhausted.  Inline expansion is called for:
+<UL>
+<LI> When profiling has shown that a relatively simple function is
+  called so often that a large amount of time is being wasted in the
+  calling of that function (as opposed to running in that function.)
+  If a function is complex, it will take a long time to run relative
+  the time spent in call, so the speed advantage of inline expansion
+  is diminished at the same time the space cost of inline expansion is
+  increased.  Of course, if a function is rarely called, then the
+  overhead of calling it is also insignificant.
+<LI> With functions so simple that they take less space to inline
+  expand than would be taken to call the function (such as
+  <tt>my-1+</tt> above.)  It would require intimate knowledge of the
+  compiler to be certain when inline expansion would reduce space, but
+  it is generally safe to inline expand functions whose definition is
+  a single function call, or a few calls to simple Common Lisp functions.
+</UL>
+<P>
+In addition to this speed/space tradeoff from inline expansion's
+avoidance of the call, inline expansion can also reveal opportunities
+for optimization.  Python's extensive source-level optimization can
+make use of context information from the caller to tremendously
+simplify the code resulting from the inline expansion of a function.
+<P>
+The main form of caller context is local information about the actual
+argument values: what the argument types are and whether the arguments
+are constant.  Knowledge about argument types can eliminate run-time
+type tests (e.g., for generic arithmetic.)  Constant arguments in a
+call provide opportunities for constant folding optimization after
+inline expansion.
+<P>
+A hidden way that constant arguments are often supplied to functions
+is through the defaulting of unsupplied optional or keyword arguments.
+There can be a huge efficiency advantage to inline expanding functions
+that have complex keyword-based interfaces, such as this definition of
+the <tt>member</tt> function:
+<BLOCKQUOTE> <PRE>(proclaim '(inline member))
+(defun member (item list &amp;key
+                    (key #'identity)
+                    (test #'eql testp)
+                    (test-not nil notp))
+  (do ((list list (cdr list)))
+      ((null list) nil)
+    (let ((car (car list)))
+      (if (cond (testp
+                 (funcall test item (funcall key car)))
+                (notp
+                 (not (funcall test-not item (funcall key car))))
+                (t
+                 (funcall test item (funcall key car))))
+          (return list)))))
+<P>
+</PRE> </BLOCKQUOTE>
+After inline expansion, this call is simplified to the obvious code:
+<BLOCKQUOTE> <PRE>(member a l :key #'foo-a :test #'char=) <IMG WIDTH=14 HEIGHT=10 ALIGN=BOTTOM ALT="tex2html_wrap_inline15923" SRC="img3.gif">
+<P>
+(do ((list list (cdr list)))
+    ((null list) nil)
+  (let ((car (car list)))
+    (if (char= item (foo-a car))
+        (return list))))
+</PRE> </BLOCKQUOTE>
+In this example, there could easily be more than an order of magnitude
+improvement in speed.  In addition to eliminating the original call to
+<tt>member</tt>, inline expansion also allows the calls to <tt>char=</tt>
+and <tt>foo-a</tt> to be open-coded.  We go from a loop with three tests
+and two calls to a loop with one test and no calls.
+<P>
+See section&nbsp;<A HREF="node131.html#sourceoptimization">5.4</A> for more discussion of source level
+optimization.
+<P>
+<BR> <HR>
+<UL><A NAME="CHILD_LINKS">&#160;</A>
+<LI> <A NAME="tex2html2651" HREF="node156.html#SECTION00681000000000000000">5.8.1 Inline Expansion Recording</A>
+<LI> <A NAME="tex2html2652" HREF="node157.html#SECTION00682000000000000000">Semi-Inline Expansion</A>
+<LI> <A NAME="tex2html2653" HREF="node158.html#SECTION00683000000000000000">The Maybe-Inline Declaration</A>
+</UL>
+<HR><A NAME="tex2html2647" HREF="node156.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2645" HREF="node105.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2639" HREF="node154.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2649" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2650" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2648" HREF="node156.html">5.8.1 Inline Expansion Recording</A>
+<B>Up:</B> <A NAME="tex2html2646" HREF="node105.html">5 Advanced Compiler Use </A>
+<B> Previous:</B> <A NAME="tex2html2640" HREF="node154.html">5.7.6 Context Declaration Example</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

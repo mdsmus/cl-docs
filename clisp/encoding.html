@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>31.5. Encodings</title><link rel="stylesheet" href="impnotes.css" type="text/css" /><link rev="made" href="mailto:clisp-list@lists.sourceforge.net" /><meta name="generator" content="DocBook XSL Stylesheets Vsnapshot_7566" /><link rel="start" href="index.html" title="Implementation Notes for GNU CLISP" /><link rel="up" href="ext-p-indep.html" title="Chapter 31. Platform Independent Extensions" /><link rel="prev" href="i18n.html" title="31.4. Internationalization of CLISP" /><link rel="next" href="gstream.html" title="31.6. Generic streams" /><link rel="copyright" href="legalese.html" title="Legal Status of the CLISP Implementation Notes" /><meta name="date" content="'generated: 2008-07-02 11:52:30-04:00'" /><link rel="author" title="Authors" href="index.html#authors" /><link rel="contents" title="Table of Contents" href="index.html" /><link rel="glossary" href="glossary.html" /><link rel="help" href="faq.html#faq-help" title="How do I ask for help?" /><link rel="home" title="Home" href="http://clisp.cons.org" /><link rel="index" href="idx.html" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">31.5. Encodings</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="i18n.html">Prev</a> </td><th width="60%" align="center">Chapter 31. Platform Independent Extensions</th><td width="20%" align="right"> <a accesskey="n" href="gstream.html">Next</a></td></tr></table><hr /></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="encoding"></a>31.5. Encodings</h2></div></div></div><div class="toc"><dl><dt><span class="section"><a href="encoding.html#encodings-intro">31.5.1. Introduction</a></span></dt><dt><span class="section"><a href="encoding.html#charset">31.5.2. Character Sets</a></span></dt><dt><span class="section"><a href="encoding.html#newline">31.5.3. Line Terminators</a></span></dt><dt><span class="section"><a href="encoding.html#make-encoding">31.5.4. Function <code class="function">EXT:MAKE-ENCODING</code></a></span></dt><dt><span class="section"><a href="encoding.html#enc-charset">31.5.5. Function <code class="function">EXT:ENCODING-CHARSET</code></a></span></dt><dt><span class="section"><a href="encoding.html#enc-dflt">31.5.6. Default encodings</a></span></dt><dd><dl><dt><span class="section"><a href="encoding.html#line-term-default">31.5.6.1. Default line terminator</a></span></dt></dl></dd><dt><span class="section"><a href="encoding.html#string-byte">31.5.7. Converting between strings and byte vectors</a></span></dt></dl></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="encodings-intro"></a>31.5.1. Introduction</h3></div></div></div><p>An “<span class="quote">encoding</span>” describes the correspondence
+ between <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_character.html" target="_top"><code class="classname">CHARACTER</code></a>s and raw bytes during input/output via
+ <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_stream.html" target="_top"><code class="classname">STREAM</code></a>s with <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_stream-element-type.html" target="_top"><code class="function">STREAM-ELEMENT-TYPE</code></a> <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_character.html" target="_top"><code class="classname">CHARACTER</code></a>.</p><p>An <a class="link" href="encoding.html" title="31.5. Encodings"><code class="classname">EXT:ENCODING</code></a> is an object composed of the following facets:
+</p><div class="variablelist"><dl><dt><span class="term"><a class="link" href="encoding.html#charset" title="31.5.2. Character Sets">character set</a></span></dt><dd>This denotes both the set of <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_character.html" target="_top"><code class="classname">CHARACTER</code></a>s that
+    can be represented and passed through the I/O channel, and the way
+    these characters translate into raw bytes, i.e., the map between
+    sequences of <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_character.html" target="_top"><code class="classname">CHARACTER</code></a> and <span class="type"><code class="literal">(<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/typ_unsigned-byte.html" target="_top"><code class="classname">UNSIGNED-BYTE</code></a> 8)</code></span> in the form of <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_string.html" target="_top"><code class="classname">STRING</code></a>s
+    and <span class="type"><code class="literal">(<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_vector.html" target="_top"><code class="classname">VECTOR</code></a> (<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/typ_unsigned-byte.html" target="_top"><code class="classname">UNSIGNED-BYTE</code></a> 8))</code></span> as well as character and byte <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_stream.html" target="_top"><code class="classname">STREAM</code></a>s.
+    In this context, for example, <a class="link" href="encoding.html#charset-UTF-8"><code class="constant">CHARSET:UTF-8</code></a> and <a class="link" href="encoding.html#charset-UCS-4"><code class="constant">CHARSET:UCS-4</code></a>
+    are considered different, although they can represent the same set
+    of characters.</dd><dt><span class="term"><a class="link" href="encoding.html#newline" title="31.5.3. Line Terminators">line terminator</a> mode</span></dt><dd>This denotes the way newline characters are
+    represented.</dd></dl></div><p><a class="link" href="encoding.html" title="31.5. Encodings"><code class="classname">EXT:ENCODING</code></a>s are also <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/glo_t.html" target="_top"><code class="literal">TYPE</code></a>s.  As such, they represent the set of
+ characters encodable in the character set.  In this context, the way
+ characters are translated into raw bytes is ignored, and the line
+ terminator mode is ignored as well.  <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_typep.html" target="_top"><code class="function">TYPEP</code></a> and <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_subtypep.html" target="_top"><code class="function">SUBTYPEP</code></a> can be used
+ on encodings:</p><pre class="programlisting">
+(<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_subtypep.html" target="_top"><code class="function">SUBTYPEP</code></a> <a class="link" href="encoding.html#charset-UTF-8"><code class="constant">CHARSET:UTF-8</code></a> <a class="link" href="encoding.html#charset-UTF-16"><code class="constant">CHARSET:UTF-16</code></a>)
+⇒ <code class="computeroutput"><a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_t.html" target="_top"><code class="constant">T</code></a></code> ;
+⇒ <code class="computeroutput"><a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_t.html" target="_top"><code class="constant">T</code></a></code>
+(<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_subtypep.html" target="_top"><code class="function">SUBTYPEP</code></a> <a class="link" href="encoding.html#charset-UTF-16"><code class="constant">CHARSET:UTF-16</code></a> <a class="link" href="encoding.html#charset-UTF-8"><code class="constant">CHARSET:UTF-8</code></a>)
+⇒ <code class="computeroutput"><a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_t.html" target="_top"><code class="constant">T</code></a></code> ;
+⇒ <code class="computeroutput"><a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_t.html" target="_top"><code class="constant">T</code></a></code>
+(<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_subtypep.html" target="_top"><code class="function">SUBTYPEP</code></a> CHARSET:ASCII CHARSET:ISO-8859-1)
+⇒ <code class="computeroutput"><a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_t.html" target="_top"><code class="constant">T</code></a></code> ;
+⇒ <code class="computeroutput"><a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_t.html" target="_top"><code class="constant">T</code></a></code>
+(<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_subtypep.html" target="_top"><code class="function">SUBTYPEP</code></a> CHARSET:ISO-8859-1 CHARSET:ASCII)
+⇒ <code class="computeroutput"><a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_nil.html" target="_top"><code class="constant">NIL</code></a></code> ;
+⇒ <code class="computeroutput"><a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_t.html" target="_top"><code class="constant">T</code></a></code>
+</pre></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="charset"></a>31.5.2. Character Sets</h3></div></div></div><div class="variablelist">
+<!--#ifndef UNICODE-->
+<dl><dt><span class="term"><span class="plat-dep">Platform Dependent: <span class="plat-dep">Only in <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> built <span class="strong"><strong>without</strong></span> compile-time flag <a class="ulink" href="http://www.unicode.org/" target="_top"><span class="platform">UNICODE</span></a></span></span></span></dt><dd>Only one character set is understood: the platform's
+ native (8-bit) character set.  See <a class="xref" href="characters.html" title="Chapter 13. Characters">Chapter 13, <i>Characters
+  </i></a>.
+</dd>
+<!--#else-->
+<dt><a id="charset-symbols"></a><span class="term"><span class="plat-dep">Platform Dependent: <span class="plat-dep">Only in <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> built <span class="strong"><strong>with</strong></span> compile-time flag <a class="ulink" href="http://www.unicode.org/" target="_top"><span class="platform">UNICODE</span></a></span></span></span></dt><dd><p>The following character sets are supported, as values
+ of the corresponding (constant) symbol in the <a class="link" href="encoding.html" title="31.5. Encodings"><strong class="package">“<span class="quote">CHARSET</span>”</strong></a> package:
+</p><div class="orderedlist"><a id="charset-symbol-list"></a><p class="title"><b>Symbols in package <a class="link" href="encoding.html" title="31.5. Encodings"><strong class="package">“<span class="quote">CHARSET</span>”</strong></a></b></p><ol type="1"><li><a id="charset-UCS-2"></a><code class="constant">UCS-2</code>
+   ≡ <code class="constant">UNICODE-16</code>
+   ≡ <code class="constant">UNICODE-16-BIG-ENDIAN</code>,
+   the 16-bit basic multilingual plane of the <a class="ulink" href="http://www.unicode.org/" target="_top"><span class="platform">UNICODE</span></a> character set.
+   Every character is represented as two bytes.</li><li><a id="charset-UNICODE-16-LITTLE-ENDIAN"></a><code class="constant">UNICODE-16-LITTLE-ENDIAN</code>
+    </li><li><a id="charset-UCS-4"></a><code class="constant">UCS-4</code>
+   ≡ <code class="constant">UNICODE-32</code>
+   ≡ <code class="constant">UNICODE-32-BIG-ENDIAN</code>,
+   the 21-bit <a class="ulink" href="http://www.unicode.org/" target="_top"><span class="platform">UNICODE</span></a> character set. Every character is represented as
+   four bytes. This encoding is used by <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> internally.</li><li><a id="charset-UNICODE-32-LITTLE-ENDIAN"></a><code class="constant">UNICODE-32-LITTLE-ENDIAN</code></li><li><a id="charset-UTF-8"></a><code class="constant">UTF-8</code>,
+   the 21-bit <a class="ulink" href="http://www.unicode.org/" target="_top"><span class="platform">UNICODE</span></a> character set.
+   Every character is represented as one to four bytes.
+   <a class="ulink" href="http://en.wikipedia.org/wiki/ASCII" target="_top"><span class="platform">ASCII</span></a> characters represent themselves and need one byte per character.
+   Most Latin/Greek/Cyrillic/Hebrew characters need two bytes per
+   character. Most other characters need three bytes per character,
+   and the rarely used remaining characters need four bytes per
+   character. This is therefore, in general, the most space-efficient
+   encoding of all of Unicode.</li>
+<!--#ifdef GNU_LIBICONV-->
+<li><a id="charset-UTF-16"></a><code class="constant">UTF-16</code>,
+   the 21-bit <a class="ulink" href="http://www.unicode.org/" target="_top"><span class="platform">UNICODE</span></a> character set. Every character in the 16-bit
+   basic multilingual plane is represented as two bytes, and the
+   rarely used remaining characters need four bytes per character.
+   This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-UTF-7"></a><code class="constant">UTF-7</code>,
+   the 21-bit <a class="ulink" href="http://www.unicode.org/" target="_top"><span class="platform">UNICODE</span></a> character set. This is a stateful 7-bit encoding.
+   Not all <a class="ulink" href="http://en.wikipedia.org/wiki/ASCII" target="_top"><span class="platform">ASCII</span></a> characters represent themselves.
+   This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li>
+<!--#endif /* GNU_LIBICONV */-->
+<li><a id="charset-JAVA"></a><code class="constant">JAVA</code>,
+   the 21-bit <a class="ulink" href="http://www.unicode.org/" target="_top"><span class="platform">UNICODE</span></a> character set.
+   <a class="ulink" href="http://en.wikipedia.org/wiki/ASCII" target="_top"><span class="platform">ASCII</span></a> characters represent themselves and need one byte per character.
+   All other characters of the basic multilingual plane are represented
+   by <code class="literal">\u<em class="replaceable"><code>nnnn</code></em></code> sequences
+   (<em class="replaceable"><code>nnnn</code></em> a hexadecimal number)
+   and need 6 bytes per character. The remaining characters are represented
+   by <code class="literal">\u<em class="replaceable"><code>xxxx</code></em>\u<em class="replaceable"><code>yyyy</code></em></code>
+   and need 12 bytes per character. While this encoding is very comfortable
+   for editing Unicode files using only <a class="ulink" href="http://en.wikipedia.org/wiki/ASCII" target="_top"><span class="platform">ASCII</span></a>-aware tools and editors, it
+   cannot faithfully represent all <a class="ulink" href="http://www.unicode.org/" target="_top"><span class="platform">UNICODE</span></a> text. Only text which
+   does not contain <code class="literal">\u</code> (backslash followed by
+   lowercase Latin u) can be faithfully represented by this encoding.
+ </li><li><a id="charset-ASCII"></a><code class="constant">ASCII</code>,
+   the well-known US-centric 7-bit character set (American Standard
+   Code for Information Interchange - <a class="ulink" href="http://en.wikipedia.org/wiki/ASCII" target="_top"><span class="platform">ASCII</span></a>).</li><li><a id="charset-ISO-8859-1"></a><p><code class="constant">ISO-8859-1</code>,
+   an extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, suitable for the Afrikaans, Albanian, Basque, Breton, Catalan,
+   Cornish, Danish, Dutch, English, Færoese, Finnish, French,
+   Frisian, Galician, German, Greenlandic, Icelandic, Irish, Italian,
+   Latin, Luxemburgish, Norwegian, Portuguese, Ræto-Romanic,
+   Scottish, Spanish, and Swedish languages.</p><p>This encoding has the nice property that</p><pre class="programlisting">
+(<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/mac_loop.html" target="_top"><code class="function">LOOP</code></a> :for i :from 0 :to <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/convar_char-code-limit.html" target="_top"><code class="constant">CHAR-CODE-LIMIT</code></a> :for c = (<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_code-char.html" target="_top"><code class="function">CODE-CHAR</code></a> i)
+  :always (<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/mac_or.html" target="_top"><code class="function">OR</code></a> (<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_not.html" target="_top"><code class="function">NOT</code></a> (<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_typep.html" target="_top"><code class="function">TYPEP</code></a> c CHARSET:ISO-8859-1))
+              (<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_equalp.html" target="_top"><code class="function">EQUALP</code></a> (<a class="link" href="encoding.html#string-byte" title="31.5.7. Converting between strings and byte vectors"><code class="function">EXT:CONVERT-STRING-TO-BYTES</code></a> (<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_string.html" target="_top"><code class="function">STRING</code></a> c) CHARSET:ISO-8859-1)
+                      (<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_vector.html" target="_top"><code class="function">VECTOR</code></a> i))))
+⇒ <code class="computeroutput">T</code></pre><p>
+   i.e., it is compatible with <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_code-char.html" target="_top"><code class="function">CODE-CHAR</code></a>/<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_char-code.html" target="_top"><code class="function">CHAR-CODE</code></a>
+   in its own domain.</p></li><li><a id="charset-ISO-8859-2"></a><code class="constant">ISO-8859-2</code>,
+   an extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, suitable for the Croatian, Czech, German, Hungarian, Polish,
+   Slovak, Slovenian, and Sorbian languages. </li><li><a id="charset-ISO-8859-3"></a><code class="constant">ISO-8859-3</code>,
+   an extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, suitable for the Esperanto and Maltese languages.</li><li><a id="charset-ISO-8859-4"></a><code class="constant">ISO-8859-4</code>,
+   an extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, suitable for the Estonian, Latvian, Lithuanian and Sami (Lappish)
+   languages.</li><li><a id="charset-ISO-8859-5"></a><code class="constant">ISO-8859-5</code>,
+   an extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, suitable for the Bulgarian, Byelorussian, Macedonian, Russian,
+   Serbian, and Ukrainian languages.</li><li><a id="charset-ISO-8859-6"></a><code class="constant">ISO-8859-6</code>,
+   suitable for the Arabic language.</li><li><a id="charset-ISO-8859-7"></a><code class="constant">ISO-8859-7</code>,
+   an extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, suitable for the Greek language.</li><li><a id="charset-ISO-8859-8"></a><code class="constant">ISO-8859-8</code>,
+      an extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, suitable for the Hebrew language (without punctuation).
+ </li><li><a id="charset-ISO-8859-9"></a><code class="constant">ISO-8859-9</code>,
+   an extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, suitable for the Turkish language.</li><li><a id="charset-ISO-8859-10"></a><code class="constant">ISO-8859-10</code>,
+   an extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, suitable for the Estonian, Icelandic, Inuit (Greenlandic), Latvian,
+   Lithuanian, and Sami (Lappish) languages.</li><li><a id="charset-ISO-8859-13"></a><code class="constant">ISO-8859-13</code>,
+   an extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, suitable for the Estonian, Latvian, Lithuanian, Polish and Sami
+   (Lappish) languages.</li><li><a id="charset-ISO-8859-14"></a><code class="constant">ISO-8859-14</code>,
+   an extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, suitable for the Irish Gælic, Manx Gælic, Scottish
+   Gælic, and Welsh languages.</li><li><a id="charset-ISO-8859-15"></a><code class="constant">ISO-8859-15</code>,
+   an extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, suitable for the ISO-8859-1 languages, with improvements for
+   French, Finnish and the Euro.</li><li><a id="charset-ISO-8859-16"></a><code class="constant">ISO-8859-16</code>
+   an extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, suitable for the Rumanian language.</li><li><a id="charset-KOI8-R"></a><code class="constant">KOI8-R</code>,
+   an extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, suitable for the Russian language (very popular, especially on the
+   internet).</li><li><a id="charset-KOI8-U"></a><code class="constant">KOI8-U</code>,
+   an extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, suitable for the Ukrainian language (very popular, especially on the
+   internet).</li>
+<!--#ifdef GNU_LIBICONV-->
+<li><a id="charset-KOI8-RU"></a><code class="constant">KOI8-RU</code>,
+   an extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, suitable for the Russian language. This character set is only available on
+                           platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li>
+<!--#endif /* GNU_LIBICONV */-->
+<li><code class="constant">JIS_X0201</code>,
+   a character set for the Japanese language.</li><li><a id="charset-MAC-ARABIC"></a><code class="constant">MAC-ARABIC</code>,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>.</li><li><a id="charset-MAC-CENTRAL-EUROPE"></a><code class="constant">MAC-CENTRAL-EUROPE</code>,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>.</li><li><a id="charset-MAC-CROATIAN"></a><code class="constant">MAC-CROATIAN</code>,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>.</li><li><a id="charset-MAC-CYRILLIC"></a><code class="constant">MAC-CYRILLIC</code>,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>.</li><li><a id="charset-MAC-DINGBAT"></a><code class="constant">MAC-DINGBAT</code>,
+   a platform specific character set.
+ </li><li><a id="charset-MAC-GREEK"></a><code class="constant">MAC-GREEK</code>,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>.</li><li><a id="charset-MAC-HEBREW"></a><code class="constant">MAC-HEBREW</code>,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>.</li><li><a id="charset-MAC-ICELAND"></a><code class="constant">MAC-ICELAND</code>,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>.</li><li><a id="charset-MAC-ROMAN"></a><code class="constant">MAC-ROMAN</code>
+   ≡ <code class="constant">MACINTOSH</code>,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>.</li><li><a id="charset-MAC-ROMANIA"></a><code class="constant">MAC-ROMANIA</code>,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>.</li><li><a id="charset-MAC-SYMBOL"></a><code class="constant">MAC-SYMBOL</code>,
+   a platform specific character set.</li><li><a id="charset-MAC-THAI"></a><code class="constant">MAC-THAI</code>,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>.</li><li><a id="charset-MAC-TURKISH"></a><code class="constant">MAC-TURKISH</code>,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>.</li><li><a id="charset-MAC-UKRAINE"></a><code class="constant">MAC-UKRAINE</code>,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>.</li><li><a id="charset-CP437"></a><code class="constant">CP437</code>, a DOS oldie,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>.</li><li><a id="charset-CP437-IBM"></a><code class="constant">CP437-IBM</code>,
+   an IBM variant of <code class="constant">CP437</code>.
+ </li><li><a id="charset-CP737"></a><code class="constant">CP737</code>, a DOS oldie,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, meant to be suitable for the Greek language.
+ </li><li><a id="charset-CP775"></a><code class="constant">CP775</code>, a DOS oldie,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, meant to be suitable for some Baltic languages.
+ </li><li><a id="charset-CP850"></a><code class="constant">CP850</code>, a DOS oldie,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>.</li><li><a id="charset-CP852"></a><code class="constant">CP852</code>, a DOS oldie,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>.</li><li><a id="charset-CP852-IBM"></a><code class="constant">CP852-IBM</code>,
+   an IBM variant of <code class="constant">CP852</code>.</li><li><a id="charset-CP855"></a><code class="constant">CP855</code>, a DOS oldie,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, meant to be suitable for the Russian language.
+ </li><li><a id="charset-CP857"></a><code class="constant">CP857</code>, a DOS oldie,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, meant to be suitable for the Turkish language.
+ </li><li><a id="charset-CP860"></a><code class="constant">CP860</code>, a DOS oldie,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, meant to be suitable for the Portuguese language.
+ </li><li><a id="charset-CP860-IBM"></a><code class="constant">CP860-IBM</code>,
+   an IBM variant of <code class="constant">CP860</code>.
+ </li><li><a id="charset-CP861"></a><code class="constant">CP861</code>, a DOS oldie,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, meant to be suitable for the Icelandic language.
+ </li><li><a id="charset-CP861-IBM"></a><code class="constant">CP861-IBM</code>,
+   an IBM variant of <code class="constant">CP861</code>.
+ </li><li><a id="charset-CP862"></a><code class="constant">CP862</code>, a DOS oldie,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, meant to be suitable for the Hebrew language.
+ </li><li><a id="charset-CP862-IBM"></a><code class="constant">CP862-IBM</code>,
+   an IBM variant of <code class="constant">CP862</code>.
+ </li><li><a id="charset-CP863"></a><code class="constant">CP863</code>, a DOS oldie,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>.</li><li><a id="charset-CP863-IBM"></a><code class="constant">CP863-IBM</code>,
+   an IBM variant of <code class="constant">CP863</code>.
+ </li><li><a id="charset-CP864"></a><code class="constant">CP864</code>, a DOS oldie,
+   meant to be suitable for the Arabic language.
+ </li><li><a id="charset-CP864-IBM"></a><code class="constant">CP864-IBM</code>,
+   an IBM variant of <code class="constant">CP864</code>.
+ </li><li><a id="charset-CP865"></a><code class="constant">CP865</code>, a DOS oldie,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, meant to be suitable for some Nordic languages.
+ </li><li><a id="charset-CP865-IBM"></a><code class="constant">CP865-IBM</code>,
+   an IBM variant of <code class="constant">CP865</code>.
+ </li><li><a id="charset-CP866"></a><code class="constant">CP866</code>, a DOS oldie,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, meant to be suitable for the Russian language.
+ </li><li><a id="charset-CP869"></a><code class="constant">CP869</code>, a DOS oldie,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, meant to be suitable for the Greek language.
+ </li><li><a id="charset-CP869-IBM"></a><code class="constant">CP869-IBM</code>,
+   an IBM variant of <code class="constant">CP869</code>.
+ </li><li><a id="charset-CP874"></a><code class="constant">CP874</code>, a DOS oldie,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, meant to be suitable for the Thai language.
+ </li><li><a id="charset-CP874-IBM"></a><code class="constant">CP874-IBM</code>,
+   an IBM variant of <code class="constant">CP874</code>.
+ </li><li><a id="charset-WINDOWS-1250"></a><code class="constant">WINDOWS-1250</code>
+   ≡ <code class="constant">CP1250</code>,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, heavily incompatible with ISO-8859-2.
+ </li><li><a id="charset-WINDOWS-1251"></a><code class="constant">WINDOWS-1251</code>
+   ≡ <code class="constant">CP1251</code>,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, heavily incompatible with ISO-8859-5,
+   meant to be suitable for the Russian language.
+ </li><li><a id="charset-WINDOWS-1252"></a><code class="constant">WINDOWS-1252</code>
+   ≡ <code class="constant">CP1252</code>,
+   a platform specific extension of the ISO-8859-1 character set.
+ </li><li><a id="charset-WINDOWS-1253"></a><code class="constant">WINDOWS-1253</code>
+   ≡ <code class="constant">CP1253</code>,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, gratuitously incompatible with ISO-8859-7,
+   meant to be suitable for the Greek language.
+ </li><li><a id="charset-WINDOWS-1254"></a><code class="constant">WINDOWS-1254</code>
+   ≡ <code class="constant">CP1254</code>,
+   a platform specific extension of the ISO-8859-9 character set.
+ </li>
+<!--#ifdef GNU_LIBICONV-->
+<li><a id="charset-WINDOWS-1255"></a><code class="constant">WINDOWS-1255</code>
+   ≡ <code class="constant">CP1255</code>,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, gratuitously incompatible with ISO-8859-8,
+   suitable for the Hebrew language.
+   This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li>
+<!--#endif /* GNU_LIBICONV */-->
+<li><a id="charset-WINDOWS-1256"></a><code class="constant">WINDOWS-1256</code>
+   ≡ <code class="constant">CP1256</code>,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, meant to be suitable for the Arabic language.
+ </li><li><a id="charset-WINDOWS-1257"></a><code class="constant">WINDOWS-1257</code>
+   ≡ <code class="constant">CP1257</code>,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>.</li>
+<!--#ifdef GNU_LIBICONV-->
+<li><a id="charset-WINDOWS-1258"></a><code class="constant">WINDOWS-1258</code>
+   ≡ <code class="constant">CP1258</code>,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, meant to be suitable for the Vietnamese language.
+   This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li>
+<!--#endif /* GNU_LIBICONV */-->
+<li><a id="charset-HP-ROMAN8"></a><code class="constant">HP-ROMAN8</code>,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>.</li><li><a id="charset-NEXTSTEP"></a><code class="constant">NEXTSTEP</code>,
+   a platform specific extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>.</li>
+<!--#ifdef GNU_LIBICONV-->
+<li><a id="charset-EUC-JP"></a><code class="constant">EUC-JP</code>,
+   a multibyte character set for the Japanese language.
+   This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-SHIFT-JIS"></a><code class="constant">SHIFT-JIS</code>,
+   a multibyte character set for the Japanese language.
+   This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-CP932"></a><code class="constant">CP932</code>,
+   a Microsoft variant of <code class="constant">SHIFT-JIS</code>.
+   This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-ISO-2022-JP"></a><code class="constant">ISO-2022-JP</code>,
+   a stateful 7-bit multibyte character set for the Japanese language.
+   This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-ISO-2022-JP-2"></a><code class="constant">ISO-2022-JP-2</code>,
+   a stateful 7-bit multibyte character set for the Japanese language.
+   This character set is only available on platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> 2.3
+   or newer or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-ISO-2022-JP-1"></a><code class="constant">ISO-2022-JP-1</code>,
+   a stateful 7-bit multibyte character set for the Japanese language.
+   This character set is only available on
+                           platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-EUC-CN"></a><code class="constant">EUC-CN</code>,
+   a multibyte character set for simplified Chinese.
+   This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-HZ"></a><code class="constant">HZ</code>,
+   a stateful 7-bit multibyte character set for simplified Chinese.
+   This character set is only available on
+                           platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-GBK"></a><code class="constant">GBK</code>,
+   a multibyte character set for Chinese,
+   This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-CP936"></a><code class="constant">CP936</code>,
+   a Microsoft variant of <code class="constant">GBK</code>.
+   This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-GB18030"></a><code class="constant">GB18030</code>,
+   a multibyte character set for Chinese,
+   This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-EUC-TW"></a><code class="constant">EUC-TW</code>,
+   a multibyte character set for traditional Chinese.
+   This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-BIG5"></a><code class="constant">BIG5</code>,
+   a multibyte character set for traditional Chinese.
+   This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-CP950"></a><code class="constant">CP950</code>,
+   a Microsoft variant of <code class="constant">BIG5</code>.
+   This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-BIG5-HKSCS"></a><code class="constant">BIG5-HKSCS</code>,
+   a multibyte character set for traditional Chinese.
+   This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-ISO-2022-CN"></a><code class="constant">ISO-2022-CN</code>,
+   a stateful 7-bit multibyte character set for Chinese.
+   This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-ISO-2022-CN-EXT"></a><code class="constant">ISO-2022-CN-EXT</code>,
+   a stateful 7-bit multibyte character set for Chinese.
+   This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-EUC-KR"></a><code class="constant">EUC-KR</code>,
+   a multibyte character set for Korean.
+   This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-CP949"></a><code class="constant">CP949</code>,
+   a Microsoft variant of <code class="constant">EUC-KR</code>.
+   This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-ISO-2022-KR"></a><code class="constant">ISO-2022-KR</code>,
+   a stateful 7-bit multibyte character set for Korean.
+   This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-JOHAB"></a><code class="constant">JOHAB</code>,
+   a multibyte character set for Korean used mostly on <a class="ulink" href="http://www.freedos.org/" target="_top"><span class="platform">DOS</span></a>.
+   This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-ARMSCII-8"></a><code class="constant">ARMSCII-8</code>,
+   an extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, suitable for the Armenian. This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-GEORGIAN-ACADEMY"></a><code class="constant">GEORGIAN-ACADEMY</code>,
+   an extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, suitable for the Georgian. This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-GEORGIAN-PS"></a><code class="constant">GEORGIAN-PS</code>,
+   an extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, suitable for the Georgian. This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-TIS-620"></a><code class="constant">TIS-620</code>,
+   an extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, suitable for the Thai. This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-MULELAO-1"></a><code class="constant">MULELAO-1</code>,
+   an extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, suitable for the Laotian. This character set is only available on
+                           platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-CP1133"></a><code class="constant">CP1133</code>,
+   an extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, suitable for the Laotian. This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-VISCII"></a><code class="constant">VISCII</code>,
+   an extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, suitable for the Vietnamese. This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li><li><a id="charset-TCVN"></a><code class="constant">TCVN</code>,
+   an extension of the <a class="link" href="encoding.html#charset-ASCII">ASCII character set</a>, suitable for the Vietnamese. This character set is only available on
+                                 platforms with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>.</li>
+<!--#endif /* GNU_LIBICONV */-->
+<li><p><a id="base64"></a><code class="constant">BASE64</code>, encodes
+  arbitrary byte sequences with 64 <a class="ulink" href="http://en.wikipedia.org/wiki/ASCII" target="_top"><span class="platform">ASCII</span></a> characters </p><div class="literallayout"><p><br />
+   ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/<br />
+  </p></div><p> as specifined by <a class="rfc" href="http://rfc.net/rfc2045.html"><code>MIME</code></a>; 3 bytes are encoded with 4
+  characters, line breaks are inserted after every 76 characters.</p><p>While this is not a traditional character set (i.e., it does
+  not map a set of characters in a natural language into bytes), it
+  does define a map between arbitrary byte sequences and certain
+  character sequences, so it falls naturally into the <a class="link" href="encoding.html" title="31.5. Encodings"><code class="classname">EXT:ENCODING</code></a> class.
+</p></li></ol></div><p>
+
+
+<!--#ifdef /* HAVE_ICONV */-->
+
+</p><div class="variablelist"><dl><dt><a id="iconv"></a><span class="term"><span class="plat-dep">Platform Dependent: <span class="plat-dep">Only on <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> systems
+  with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> 2.2 or better and other systems (<a class="ulink" href="http://www.unix.org/online.html" target="_top"><span class="strong"><strong>UNIX</strong></span></a> and <a class="ulink" href="http://winehq.org/" target="_top"><span class="platform">Win32</span></a>)
+  on which the <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a> <a class="ulink" href="http://c-faq.com/" target="_top"><span class="command"><strong>C</strong></span></a> library has been installed</span></span></span></dt><dd><p>The character sets provided by the library function
+ <a class="unix" href="http://www.opengroup.org/onlinepubs/009695399/functions/iconv.html"><code class="function">iconv</code></a> can also be used as encodings.  To create such an encoding,
+ call <a class="link" href="encoding.html#make-encoding" title="31.5.4. Function EXT:MAKE-ENCODING"><code class="function">EXT:MAKE-ENCODING</code></a> with the character set name (a string) as the
+ <code class="constant">:CHARSET</code> argument.</p><p>When an <a class="link" href="encoding.html" title="31.5. Encodings"><code class="classname">EXT:ENCODING</code></a> is available both as a <a class="link" href="encoding.html#charset-symbols">built-in</a> and
+ through <a class="unix" href="http://www.opengroup.org/onlinepubs/009695399/functions/iconv.html"><code class="function">iconv</code></a>, the <a class="link" href="encoding.html#charset-symbols">built-in</a> is used, because it is more
+ efficient and available across all platforms.</p><p>These encodings are not assigned to global variables, since
+ there is no portable way to get the list of all character sets
+ supported by <a class="unix" href="http://www.opengroup.org/onlinepubs/009695399/functions/iconv.html"><code class="function">iconv</code></a>.</p><p>On standard-compliant <a class="ulink" href="http://www.unix.org/online.html" target="_top"><span class="strong"><strong>UNIX</strong></span></a> systems (e.g., <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> systems, such
+ as <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a>/<a class="ulink" href="http://www.linux.org/" target="_top"><span class="platform">Linux</span></a> and <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a>/<a class="ulink" href="http://www.gnu.org/software/hurd/" target="_top"><span class="platform">Hurd</span></a>) and on systems with <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a> you
+ get this list by calling the <span class="emphasis"><em>program</em></span>:
+ <a class="unix" href="http://www.opengroup.org/onlinepubs/009695399/utilities/iconv.html"><span class="command"><strong>iconv -l</strong></span></a>.</p><p>The reason we use only <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libc/" target="_top">libc</a> 2.2 or <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a> is
+ that the other <a class="unix" href="http://www.opengroup.org/onlinepubs/009695399/functions/iconv.html"><code class="function">iconv</code></a> implementations are broken in various ways and
+ we do not want to deal with random <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> crashes caused by those bugs.
+ If your system supplies an <a class="unix" href="http://www.opengroup.org/onlinepubs/009695399/functions/iconv.html"><code class="function">iconv</code></a> implementation which passes the
+ <a class="ulink" href="http://www.gnu.org" target="_top">GNU</a> <a class="ulink" href="http://www.gnu.org/software/libiconv/" target="_top">libiconv</a>'s test suite, please report that
+ to <a class="" href="https://lists.sourceforge.net/lists/listinfo/clisp-list">clisp-list</a> and a
+ future <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> version will use <a class="unix" href="http://www.opengroup.org/onlinepubs/009695399/functions/iconv.html"><code class="function">iconv</code></a> on your system.</p></dd></dl></div><p>
+
+<!--#endif /* HAVE_ICONV */-->
+
+</p></dd>
+<!--#endif /* UNICODE */-->
+</dl></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="newline"></a>31.5.3. Line Terminators</h3></div></div></div><p>The line terminator mode can be one of the following three keywords:
+</p><div class="variablelist"><dl><dt><span class="term"><code class="constant">:UNIX</code></span></dt><dd>Newline is represented by the <a class="ulink" href="http://en.wikipedia.org/wiki/ASCII" target="_top"><span class="platform">ASCII</span></a>
+   <span class="keycode">LF</span> character (<span class="keycode">U000A</span>).
+</dd><dt><span class="term"><code class="constant">:MAC</code></span></dt><dd>Newline is represented by the <a class="ulink" href="http://en.wikipedia.org/wiki/ASCII" target="_top"><span class="platform">ASCII</span></a>
+   <span class="keycode">CR</span> character (<span class="keycode">U000D</span>).
+</dd><dt><span class="term"><code class="constant">:DOS</code></span></dt><dd>Newline is represented by the <a class="ulink" href="http://en.wikipedia.org/wiki/ASCII" target="_top"><span class="platform">ASCII</span></a>
+   <span class="keycode">CR</span> followed by the <a class="ulink" href="http://en.wikipedia.org/wiki/ASCII" target="_top"><span class="platform">ASCII</span></a> <span class="keycode">LF</span>.
+</dd></dl></div><p>Windows programs typically use the <code class="constant">:DOS</code> line terminator,
+ sometimes they also accept <code class="constant">:UNIX</code> line terminators or produce
+ <code class="constant">:MAC</code> line terminators.</p><p>The <a class="ulink" href="http://www.w3.org/Protocols/" target="_top"><span class="command"><strong>HTTP</strong></span></a> protocol also requires <code class="constant">:DOS</code> line terminators.</p><p>The line terminator mode is relevant only for output (writing to a
+ <a class="link" href="open.html" title="21.11. Function OPEN">file</a>/<a class="link" href="shell.html#pipe" title="32.6.2. Pipes">pipe</a>/<a class="link" href="socket.html" title="32.4. Socket Streams">socket</a> <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_stream.html" target="_top"><code class="classname">STREAM</code></a>).  During input, all three kinds of line terminators
+ are recognized.  See also <a class="xref" href="clhs-newline.html" title="13.10. Treatment of Newline during Input and Output">Section 13.10, “Treatment of Newline during Input and Output
+  ”</a>.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="make-encoding"></a>31.5.4. Function <a class="link" href="encoding.html#make-encoding" title="31.5.4. Function EXT:MAKE-ENCODING"><code class="function">EXT:MAKE-ENCODING</code></a></h3></div></div></div><p>The function <code class="code">(<a class="link" href="encoding.html#make-encoding" title="31.5.4. Function EXT:MAKE-ENCODING"><code class="function">EXT:MAKE-ENCODING</code></a> <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/sec_3-4-1.html" target="_top"><code class="literal">&amp;KEY</code></a> :CHARSET
+     :LINE-TERMINATOR :INPUT-ERROR-ACTION :OUTPUT-ERROR-ACTION)</code>
+ returns an <a class="link" href="encoding.html" title="31.5. Encodings"><code class="classname">EXT:ENCODING</code></a>. The <code class="constant">:CHARSET</code> argument may be
+ an encoding, a string, or <code class="constant">:DEFAULT</code>.
+ The possible values for the <a class="link" href="encoding.html#newline" title="31.5.3. Line Terminators">line terminator</a> argument are the
+ keywords <code class="constant">:UNIX</code>, <code class="constant">:MAC</code>, <code class="constant">:DOS</code>.</p><p>The <code class="constant">:INPUT-ERROR-ACTION</code> argument specifies
+ what happens when an invalid byte sequence is encountered while
+ converting bytes to characters.  Its value can be <code class="constant">:ERROR</code>, <code class="constant">:IGNORE</code>
+ or a character to be used instead.  The <a class="ulink" href="http://www.unicode.org/" target="_top"><span class="platform">UNICODE</span></a> character
+ <span class="keysym">#\uFFFD</span> is typically used to indicate an error in the
+ input sequence.</p><p>The <code class="constant">:OUTPUT-ERROR-ACTION</code> argument specifies
+ what happens when an invalid character is encountered while converting
+ characters to bytes.  Its value can be <code class="constant">:ERROR</code>, <code class="constant">:IGNORE</code>, a byte to
+ be used instead, or a character to be used instead.  The <a class="ulink" href="http://www.unicode.org/" target="_top"><span class="platform">UNICODE</span></a>
+ character <span class="keysym">#\uFFFD</span> can be used here only if it is
+ encodable in the character set.</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="enc-charset"></a>31.5.5. Function <a class="link" href="encoding.html#enc-charset" title="31.5.5. Function EXT:ENCODING-CHARSET"><code class="function">EXT:ENCODING-CHARSET</code></a></h3></div><div><h4 class="subtitle"><span class="plat-dep">Platform Dependent: <span class="plat-dep">Only in <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> built <span class="strong"><strong>with</strong></span> compile-time flag <a class="ulink" href="http://www.unicode.org/" target="_top"><span class="platform">UNICODE</span></a></span></span></h4></div></div></div><p>The function <code class="code">(<a class="link" href="encoding.html#enc-charset" title="31.5.5. Function EXT:ENCODING-CHARSET"><code class="function">EXT:ENCODING-CHARSET</code></a> <em class="replaceable"><code>encoding</code></em>)</code> returns the
+ charset of the <em class="replaceable"><code>encoding</code></em>, as a <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_symbol.html" target="_top"><code class="classname">SYMBOL</code></a> or a <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_string.html" target="_top"><code class="classname">STRING</code></a>.</p><div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Warning</h3><p><code class="code">(<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/fun_string.html" target="_top"><code class="function">STRING</code></a> (<a class="link" href="encoding.html#enc-charset" title="31.5.5. Function EXT:ENCODING-CHARSET"><code class="function">EXT:ENCODING-CHARSET</code></a> <em class="replaceable"><code>encoding</code></em>))</code> is
+  not necessarily a valid <a class="rfc" href="http://rfc.net/rfc2045.html"><code>MIME</code></a> name.</p></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="enc-dflt"></a>31.5.6. Default encodings</h3></div></div></div><div class="toc"><dl><dt><span class="section"><a href="encoding.html#line-term-default">31.5.6.1. Default line terminator</a></span></dt></dl></div><p>Besides every <a class="link" href="open.html" title="21.11. Function OPEN">file</a>/<a class="link" href="shell.html#pipe" title="32.6.2. Pipes">pipe</a>/<a class="link" href="socket.html" title="32.4. Socket Streams">socket</a> <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_stream.html" target="_top"><code class="classname">STREAM</code></a> containing an encoding,
+ the following <a class="clhs" href="http://www.lisp.org/HyperSpec/Body/mac_define-symbol-macro.html"><code class="classname">SYMBOL-MACRO</code></a> places contain global <a class="link" href="encoding.html" title="31.5. Encodings"><code class="classname">EXT:ENCODING</code></a>s:</p><p><a id="def-file-enc"></a><b><a class="clhs" href="http://www.lisp.org/HyperSpec/Body/mac_define-symbol-macro.html"><code class="classname">SYMBOL-MACRO</code></a> <a href="encoding.html#def-file-enc" class="olink"><code class="varname">CUSTOM:*DEFAULT-FILE-ENCODING*</code></a>. </b>The <a class="clhs" href="http://www.lisp.org/HyperSpec/Body/mac_define-symbol-macro.html"><code class="classname">SYMBOL-MACRO</code></a> <a class="" href="http://www.lisp.org/HyperSpec/Body/glo_p.html#place">place</a> <a href="encoding.html#def-file-enc" class="olink"><code class="varname">CUSTOM:*DEFAULT-FILE-ENCODING*</code></a> is the encoding used for
+ new <a class="link" href="open.html" title="21.11. Function OPEN">file</a>/<a class="link" href="shell.html#pipe" title="32.6.2. Pipes">pipe</a>/<a class="link" href="socket.html" title="32.4. Socket Streams">socket</a> <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_stream.html" target="_top"><code class="classname">STREAM</code></a>, when no <a class="link" href="open.html#extfmt"><code class="constant">:EXTERNAL-FORMAT</code></a> argument was specified.
+</p>
+<!--#ifdef UNICODE-->
+<div class="variablelist"><dl><dt><span class="term"><span class="plat-dep">Platform Dependent: <span class="plat-dep">Only in <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> built <span class="strong"><strong>with</strong></span> compile-time flag <a class="ulink" href="http://www.unicode.org/" target="_top"><span class="platform">UNICODE</span></a></span></span></span></dt><dd><p>The following are <a class="clhs" href="http://www.lisp.org/HyperSpec/Body/mac_define-symbol-macro.html"><code class="classname">SYMBOL-MACRO</code></a> places.</p><div class="variablelist"><dl><dt><span class="term"><strong class="first"><em class="firstterm"><a href="encoding.html#path-enc" class="olink"><code class="varname">CUSTOM:*PATHNAME-ENCODING*</code></a>
+   <a id="path-enc" class="indexterm"></a></em></strong></span></dt><dd>is the encoding used for pathnames in the file
+   system. Normally, this should be a 1:1 encoding.
+   Its <a class="link" href="encoding.html#newline" title="31.5.3. Line Terminators">line terminator</a> mode is ignored.</dd><dt><span class="term"><strong class="first"><em class="firstterm"><a href="encoding.html#term-enc" class="olink"><code class="varname">CUSTOM:*TERMINAL-ENCODING*</code></a>
+   <a id="term-enc" class="indexterm"></a></em></strong></span></dt><dd>is the encoding used for communication with the
+  terminal, in particular by <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/var_stterminal-iost.html" target="_top"><code class="varname">*TERMINAL-IO*</code></a>.
+ </dd><dt><span class="term"><strong class="first"><em class="firstterm"><a href="encoding.html#misc-enc" class="olink"><code class="varname">CUSTOM:*MISC-ENCODING*</code></a>
+   <a id="misc-enc" class="indexterm"></a></em></strong></span></dt><dd>is the encoding used for access to <a class="unix" href="http://www.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap08.html">environment variable</a>s,
+ command line options, and the like.  Its <a class="link" href="encoding.html#newline" title="31.5.3. Line Terminators">line terminator</a> mode is ignored.
+ </dd>
+<!--#if defined(DYNAMIC_FFI)-->
+<dt><span class="term"><strong class="first"><em class="firstterm"><a href="encoding.html#foreign-enc" class="olink"><code class="varname">CUSTOM:*FOREIGN-ENCODING*</code></a>
+   <a id="foreign-enc" class="indexterm"></a></em></strong></span></dt><dd>is the encoding for strings passed through the
+ <a class="link" href="dffi.html" title="32.3. The Foreign Function Call Facility"><strong class="package">“<span class="quote">FFI</span>”</strong></a> (some platforms only). If it is a 1:1 encoding,
+ i.e. an encoding in which every character is represented by one byte,
+ it is also used for passing characters through the <a class="link" href="dffi.html" title="32.3. The Foreign Function Call Facility"><strong class="package">“<span class="quote">FFI</span>”</strong></a>.
+</dd>
+<!--#endif-->
+</dl></div></dd></dl></div>
+<!--#endif-->
+<p>The default encoding objects are initialized according to <code class="option"><a href="clisp.html#opt-enc" class="olink"><code class="option">-E<em class="replaceable"><code>domain</code></em> <em class="replaceable"><code>encoding</code></em></code></a></code>.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Reminder</h3><p>You have to use <a class="link" href="macros3.html#letf" title="31.11.2. Macros EXT:LETF &amp; EXT:LETF*"><code class="function">EXT:LETF</code></a>/<a class="link" href="macros3.html#letf" title="31.11.2. Macros EXT:LETF &amp; EXT:LETF*"><code class="function">EXT:LETF*</code></a>
+  for <a class="clhs" href="http://www.lisp.org/HyperSpec/Body/mac_define-symbol-macro.html"><code class="classname">SYMBOL-MACRO</code></a>s; <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/speope_letcm_letst.html" target="_top"><code class="function">LET</code></a>/<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/speope_letcm_letst.html" target="_top"><code class="function">LET*</code></a> will <span class="strong"><strong>not</strong></span> work!</p></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h4 class="title"><a id="line-term-default"></a>31.5.6.1. Default <a class="link" href="encoding.html#newline" title="31.5.3. Line Terminators">line terminator</a></h4></div></div></div><p>The <a class="link" href="encoding.html#newline" title="31.5.3. Line Terminators">line terminator</a> facet of the above <a class="link" href="encoding.html" title="31.5. Encodings"><code class="classname">EXT:ENCODING</code></a>s is determined by
+ the following logic: since <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> understands all possible
+ <a class="link" href="encoding.html#newline" title="31.5.3. Line Terminators">line terminator</a>s on <span class="emphasis"><em>input</em></span> (see
+ <a class="xref" href="clhs-newline.html" title="13.10. Treatment of Newline during Input and Output">Section 13.10, “Treatment of Newline during Input and Output
+  ”</a>), all that matters is what <a class="link" href="encoding.html#newline" title="31.5.3. Line Terminators">line terminator</a>
+ do most <span class="emphasis"><em>other</em></span> programs expect?</p><div class="variablelist">
+<!--#ifdef UNIX-->
+<dl><dt><span class="term"><span class="plat-dep">Platform Dependent: <span class="plat-dep"><a class="ulink" href="http://www.unix.org/online.html" target="_top"><span class="strong"><strong>UNIX</strong></span></a> platform only.</span></span></span></dt><dd>If a non-0 <code class="literal">O_BINARY</code> <a class="ulink" href="http://gcc.gnu.org/onlinedocs/cpp/" target="_top"><span class="command"><strong>cpp</strong></span></a>
+   constant is defined, we assume that the OS distinguishes between text
+   and binary files, and, since the encodings are relevant only for text
+   files, we thus use <code class="constant">:DOS</code>; otherwise the default is <code class="constant">:UNIX</code>.
+</dd>
+<!--#endif-->
+<!--#ifdef WIN32-->
+<dt><span class="term"><span class="plat-dep">Platform Dependent: <span class="plat-dep"><a class="ulink" href="http://winehq.org/" target="_top"><span class="platform">Win32</span></a> platform only.</span></span></span></dt><dd>Since most <a class="ulink" href="http://winehq.org/" target="_top"><span class="platform">Win32</span></a> programs expect CRLF, the default
+  <a class="link" href="encoding.html#newline" title="31.5.3. Line Terminators">line terminator</a> is <code class="constant">:DOS</code>.</dd>
+<!--#endif-->
+</dl></div><p>This boils down to the following code
+ in <a class="clisp-cvs" href="http://clisp.cvs.sourceforge.net/*checkout*/clisp/clisp/src/encoding.d"><code class="filename">src/encoding.d</code></a>:
+</p><pre class="programlisting">
+ #if defined(WIN32) || (defined(UNIX) &amp;&amp; (O_BINARY != 0))
+</pre><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title"><a id="cygwin-line-term-default"></a>Default line terminator on
+  <span class="platform">Cygwin</span></h3><p><span class="emphasis"><em>Both</em></span> of the above tests
+  pass on <a class="ulink" href="http://cygwin.com/" target="_top"><span class="platform">Cygwin</span></a>, so the default <a class="link" href="encoding.html#newline" title="31.5.3. Line Terminators">line terminator</a> is <code class="constant">:DOS</code>.
+  If you so desire, you can change it in your <a href="clisp.html#opt-norc" class="olink">RC file</a>.</p></div></div></div><div class="section" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="string-byte"></a>31.5.7. Converting between strings and byte vectors</h3></div></div></div><p>Encodings can also be used to convert directly between strings and
+their corresponding byte vector representation according to that encoding.
+</p><div class="variablelist"><dl><dt><span class="term"><code class="code">(<a class="link" href="encoding.html#string-byte" title="31.5.7. Converting between strings and byte vectors"><code class="function">EXT:CONVERT-STRING-FROM-BYTES</code></a>
+      <em class="replaceable"><code>vector</code></em> <em class="replaceable"><code>encoding</code></em> <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/sec_3-4-1.html" target="_top"><code class="literal">&amp;KEY</code></a> <code class="constant">:START</code> <code class="constant">:END</code>)</code></span></dt><dd>converts the subsequence of <em class="replaceable"><code>vector</code></em> (a <span class="type"><code class="literal">(<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_vector.html" target="_top"><code class="classname">VECTOR</code></a> (<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/typ_unsigned-byte.html" target="_top"><code class="classname">UNSIGNED-BYTE</code></a> 8))</code></span>)
+   from <em class="replaceable"><code>start</code></em> to <em class="replaceable"><code>end</code></em> to a <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_string.html" target="_top"><code class="classname">STRING</code></a>, according to the given
+   <em class="replaceable"><code>encoding</code></em>, and returns the resulting string.
+</dd><dt><span class="term"><code class="code">(<a class="link" href="encoding.html#string-byte" title="31.5.7. Converting between strings and byte vectors"><code class="function">EXT:CONVERT-STRING-TO-BYTES</code></a>
+      <em class="replaceable"><code>string</code></em> <em class="replaceable"><code>encoding</code></em> <a class="ulink" href="http://www.lisp.org/HyperSpec/Body/sec_3-4-1.html" target="_top"><code class="literal">&amp;KEY</code></a> <code class="constant">:START</code> <code class="constant">:END</code>)</code></span></dt><dd>converts the subsequence of <em class="replaceable"><code>string</code></em> from
+   <em class="replaceable"><code>start</code></em> to <em class="replaceable"><code>end</code></em> to a <span class="type"><code class="literal">(<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/syscla_vector.html" target="_top"><code class="classname">VECTOR</code></a> (<a class="ulink" href="http://www.lisp.org/HyperSpec/Body/typ_unsigned-byte.html" target="_top"><code class="classname">UNSIGNED-BYTE</code></a> 8))</code></span>, according to the given
+   <em class="replaceable"><code>encoding</code></em>, and returns the resulting byte vector.
+</dd></dl></div></div></div><div class="bookinfo"><hr /><table width="100%" summary="impnotes meta info"><th><td align="left">These notes document <a class="ulink" href="http://clisp.cons.org" target="_top"><span class="command"><strong>CLISP</strong></span></a> version 2.46</td><td align="right">Last modified: 2008-07-02</td></th></table></div><div class="custom-footer"><hr /><table width="100%"><tr><td align="left"><a href="http://clisp.cons.org"><img src="clisp.png" width="48" height="48" alt="[CLISP home]" /></a></td><td align="center"><a href="http://sourceforge.net/donate/index.php?group_id=1355"><img src="http://images.sourceforge.net/images/project-support.jpg" width="88" height="32" alt="[Support CLISP]" /></a></td><td align="right"><a href="http://sourceforge.net"><img width="125" height="37" alt="[SourceForge]" src="http://sflogo.sourceforge.net/sflogo.php?group_id=1355&amp;type=2&amp;page=encoding" /></a></td></tr></table></div><hr /><form method="get" action="http://www.google.com/custom" target="_top"><table width="100%" border="0"><tr><td nowrap="nowrap" align="center"><input type="hidden" name="domains" value="clisp.cons.org;clisp.podval.org;www.lisp.org" /><label for="sbi" style="display: none">Enter your search terms</label><input type="text" name="q" size="50" maxlength="255" id="sbi" value="31.5. Encodings" /><label for="sbb" style="display: none">Submit search form</label><input type="submit" name="sa" value="Google Search" id="sbb" /></td></tr><tr><td nowrap="nowrap" align="center"><input type="radio" name="sitesearch" value="" checked="1" id="ss0" /><label for="ss0" title="Search the Web"><small>Web</small></label><input type="radio" name="sitesearch" value="clisp.cons.org" id="ss1" /><label for="ss1" title="Search clisp.cons.org"><small>clisp.cons.org</small></label><input type="radio" name="sitesearch" value="clisp.podval.org" id="ss2" /><label for="ss2" title="Search clisp.podval.org"><small>clisp.podval.org</small></label><input type="radio" name="sitesearch" value="www.lisp.org" id="ss3" /><label for="ss3" title="Search www.lisp.org"><small>www.lisp.org</small></label><input type="hidden" name="client" value="pub-4445255502750357" /><input type="hidden" name="forid" value="1" /><input type="hidden" name="ie" value="UTF-8" /><input type="hidden" name="oe" value="UTF-8" /><input type="hidden" name="cof" value="GALT:#008000;GL:1;DIV:#336699;VLC:663399;AH:center;BGC:FFFFFF;LBGC:000000;ALC:0000FF;LC:0000FF;T:000000;GFNT:0000FF;GIMP:0000FF;LH:48;LW:48;L:http://clisp.cons.org/clisp.png;S:http://clisp.cons.org;FORID:1" /><input type="hidden" name="hl" value="en" /></td></tr></table></form><hr /><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="i18n.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="ext-p-indep.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="gstream.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">31.4. Internationalization of <span class="command"><strong>CLISP</strong></span> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 31.6. Generic streams</td></tr></table></div></body></html>

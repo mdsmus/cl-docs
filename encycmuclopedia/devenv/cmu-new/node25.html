@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>2.2 Default Interrupts for Lisp</TITLE>
+<META NAME="description" CONTENT="2.2 Default Interrupts for Lisp">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html915" HREF="node26.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html913" HREF="node11.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html907" HREF="node24.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html917" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html918" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html916" HREF="node26.html">2.3 Packages</A>
+<B>Up:</B> <A NAME="tex2html914" HREF="node11.html">2 Design Choices and </A>
+<B> Previous:</B> <A NAME="tex2html908" HREF="node24.html">2.1.5 Array Initialization</A>
+<BR> <P>
+<H1><A NAME="SECTION00320000000000000000">2.2 Default Interrupts for Lisp</A></H1>
+<P>
+CMU Common Lisp has several interrupt handlers defined when it starts up,
+as follows:
+<DL ><DT><STRONG><tt>SIGINT</tt> (<IMG WIDTH=3 HEIGHT=22 ALIGN=MIDDLE ALT="tex2html_wrap_inline16649" SRC="img2.gif"><i>c</i>)</STRONG>
+<DD> causes Lisp to enter a break loop.
+  This puts you into the debugger which allows you to look at the
+  current state of the computation.  If you proceed from the break
+  loop, the computation will proceed from where it was interrupted.
+<P>
+<DT><STRONG><tt>SIGQUIT</tt> (<IMG WIDTH=3 HEIGHT=22 ALIGN=MIDDLE ALT="tex2html_wrap_inline16649" SRC="img2.gif"><i>L</i>)</STRONG>
+<DD> causes Lisp to do a throw to the
+  top-level.  This causes the current computation to be aborted, and
+  control returned to the top-level read-eval-print loop.
+<P>
+<DT><STRONG><tt>SIGTSTP</tt> (<IMG WIDTH=3 HEIGHT=22 ALIGN=MIDDLE ALT="tex2html_wrap_inline16649" SRC="img2.gif"><i>z</i>)</STRONG>
+<DD> causes Lisp to suspend execution and
+  return to the Unix shell.  If control is returned to Lisp, the
+  computation will proceed from where it was interrupted.
+<P>
+<DT><STRONG><tt>SIGILL</tt>, <tt>SIGBUS</tt>, <tt>SIGSEGV</tt>, and <tt>SIGFPE</tt></STRONG>
+<DD>
+  cause Lisp to signal an error.
+<P>
+</DL>
+For keyboard interrupt signals, the standard interrupt character is in
+parentheses.  Your `<tt>.login</tt>' may set up different interrupt
+characters.  When a signal is generated, there may be some delay before
+it is processed since Lisp cannot be interrupted safely in an arbitrary
+place.  The computation will continue until a safe point is reached and
+then the interrupt will be processed.  See section&nbsp;<A HREF="node209.html#signalhandlers">6.9.1</A> to define
+your own signal handlers.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

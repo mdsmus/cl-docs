@@ -1,0 +1,1812 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+"http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+<meta name="generator" content=
+"HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 13), see www.w3.org">
+<meta http-equiv="Content-Type" content=
+"text/html; charset=us-ascii">
+<meta name="GENERATOR" content="hevea 1.06">
+<link rel="stylesheet" href="cmucl.css" type="text/css">
+<meta http-equiv="Content-Language" content="en">
+<title>CMUCL User's Manual: Alien Objects</title>
+</head>
+<body>
+<a href="serve-event.html"><img src="previous_motif.gif" alt=
+"Previous"></a> <a href="index.html"><img src="contents_motif.gif"
+alt="Up"></a> <a href="ipc.html"><img src="next_motif.gif" alt=
+"Next"></a>
+<hr>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFBC">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc240" id="htoc240"><b><font size=
+"6">Chapter&nbsp;8</font></b></a></td>
+<td width="100%" align="center"><b><font size="6">Alien
+Objects</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<ul>
+<li><a href="aliens.html#toc246">Introduction to Aliens</a></li>
+<li><a href="aliens.html#toc247">Alien Types</a>
+<ul>
+<li><a href="aliens.html#toc248">Defining Alien Types</a></li>
+<li><a href="aliens.html#toc249">Alien Types and Lisp
+Types</a></li>
+<li><a href="aliens.html#toc250">Alien Type Specifiers</a></li>
+<li><a href="aliens.html#toc251">The C-Call Package</a></li>
+</ul>
+</li>
+<li><a href="aliens.html#toc252">Alien Operations</a>
+<ul>
+<li><a href="aliens.html#toc253">Alien Access Operations</a></li>
+<li><a href="aliens.html#toc254">Alien Coercion Operations</a></li>
+<li><a href="aliens.html#toc255">Alien Dynamic Allocation</a></li>
+</ul>
+</li>
+<li><a href="aliens.html#toc256">Alien Variables</a>
+<ul>
+<li><a href="aliens.html#toc257">Local Alien Variables</a></li>
+<li><a href="aliens.html#toc258">External Alien Variables</a></li>
+</ul>
+</li>
+<li><a href="aliens.html#toc259">Alien Data Structure
+Example</a></li>
+<li><a href="aliens.html#toc260">Loading Unix Object Files</a></li>
+<li><a href="aliens.html#toc261">Alien Function Calls</a>
+<ul>
+<li><a href="aliens.html#toc262">The alien-funcall
+Primitive</a></li>
+<li><a href="aliens.html#toc263">The def-alien-routine
+Macro</a></li>
+<li><a href="aliens.html#toc264">def-alien-routine Example</a></li>
+<li><a href="aliens.html#toc265">Calling Lisp from C</a></li>
+<li><a href="aliens.html#toc266">Callback Example</a></li>
+<li><a href="aliens.html#toc267">Accessing Lisp Arrays</a></li>
+</ul>
+</li>
+<li><a href="aliens.html#toc268">Step-by-Step Alien
+Example</a></li>
+</ul>
+<a name="aliens" id="aliens"></a><br>
+<div align="center"><b>by Robert MacLachlan and William
+Lott</b></div>
+<br>
+<a name="toc246" id="toc246"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc241" id="htoc241"><b><font size=
+"5">8.1</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Introduction to
+Aliens</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+Because of Lisp's emphasis on dynamic memory allocation and garbage
+collection, Lisp implementations use unconventional memory
+representations for objects. This representation mismatch creates
+problems when a Lisp program must share objects with programs
+written in another language. There are three different approaches
+to establishing communication:
+<ul>
+<li>The burden can be placed on the foreign program (and
+programmer) by requiring the use of Lisp object representations.
+The main difficulty with this approach is that either the foreign
+program must be written with Lisp interaction in mind, or a
+substantial amount of foreign ``glue'' code must be written to
+perform the translation.<br>
+<br></li>
+<li>The Lisp system can automatically convert objects back and
+forth between the Lisp and foreign representations. This is
+convenient, but translation becomes prohibitively slow when large
+or complex data structures must be shared.<br>
+<br></li>
+<li>The Lisp program can directly manipulate foreign objects
+through the use of extensions to the Lisp language. Most Lisp
+systems make use of this approach, but the language for describing
+types and expressing accesses is often not powerful enough for
+complex objects to be easily manipulated.</li>
+</ul>
+CMUCL relies primarily on the automatic conversion and direct
+manipulation approaches: Aliens of simple scalar types are
+automatically converted, while complex types are directly
+manipulated in their foreign representation. Any foreign objects
+that can't automatically be converted into Lisp values are
+represented by objects of type <tt class="code">alien-value</tt>.
+Since Lisp is a dynamically typed language, even foreign objects
+must have a run-time type; this type information is provided by
+encapsulating the raw pointer to the foreign data within an
+<tt class="code">alien-value</tt> object.<br>
+<br>
+The Alien type language and operations are most similar to those of
+the C language, but Aliens can also be used when communicating with
+most other languages that can be linked with C.<br>
+<br>
+<a name="toc247" id="toc247"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc242" id="htoc242"><b><font size=
+"5">8.2</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Alien
+Types</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+Alien types have a description language based on nested list
+structure. For example:
+<blockquote class="example">
+<pre>
+struct foo {
+    int a;
+    struct foo *b[100];
+};
+</pre></blockquote>
+has the corresponding Alien type:
+<blockquote class="lisp">
+<pre>
+(struct foo
+  (a int)
+  (b (array (* (struct foo)) 100)))
+</pre></blockquote>
+<a name="toc248" id="toc248"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc243" id="htoc243"><b><font size=
+"4">8.2.1</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Defining Alien
+Types</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+Types may be either named or anonymous. With structure and union
+types, the name is part of the type specifier, allowing recursively
+defined types such as:
+<blockquote class="lisp">
+<pre>
+(struct foo (a (* (struct foo))))
+</pre></blockquote>
+An anonymous structure or union type is specified by using the name
+<tt class="code">nil</tt>. The <a name="@funs191"></a><tt class=
+"code">with-alien</tt> macro defines a local scope which
+``captures'' any named type definitions. Other types are not
+inherently named, but can be given named abbreviations using
+<tt class="code">def-alien-type</tt>.<br>
+<br>
+<br>
+<a name="@funs192"></a><a name="FN:def-alien-type" id=
+"FN:def-alien-type"></a>
+<div align="left">[Macro]<br>
+<tt class="function-name">alien:</tt><tt class=
+"function-name">def-alien-type</tt> name type
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote>This macro globally defines <tt class=
+"variable">name</tt> as a shorthand for the Alien type <tt class=
+"variable">type</tt>. When introducing global structure and union
+type definitions, <tt class="variable">name</tt> may be <tt class=
+"code">nil</tt>, in which case the name to define is taken from the
+type's name.</blockquote>
+<a name="toc249" id="toc249"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc244" id="htoc244"><b><font size=
+"4">8.2.2</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Alien Types and
+Lisp Types</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+The Alien types form a subsystem of the CMUCL type system. An
+<tt class="code">alien</tt> type specifier provides a way to use
+any Alien type as a Lisp type specifier. For example
+<blockquote class="lisp">
+<pre>
+(typep foo '(alien (* int)))
+</pre></blockquote>
+can be used to determine whether <tt class="code">foo</tt> is a
+pointer to an <tt class="code">int</tt>. <tt class=
+"code">alien</tt> type specifiers can be used in the same ways as
+ordinary type specifiers (like <tt class="code">string</tt>.) Alien
+type declarations are subject to the same precise type checking as
+any other declaration (see section&nbsp;<a href=
+"compiler.html#precise-type-checks">4.5.2</a>.)<br>
+<br>
+Note that the Alien type system overlaps with normal Lisp type
+specifiers in some cases. For example, the type specifier
+<tt class="code">(alien single-float)</tt> is identical to
+<tt class="code">single-float</tt>, since Alien floats are
+automatically converted to Lisp floats. When <tt class=
+"code">type-of</tt> is called on an Alien value that is not
+automatically converted to a Lisp value, then it will return an
+<tt class="code">alien</tt> type specifier.<br>
+<br>
+<a name="toc250" id="toc250"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc245" id="htoc245"><b><font size=
+"4">8.2.3</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Alien Type
+Specifiers</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+Some Alien type names are Common Lisp symbols, but the names are
+still exported from the <tt class="code">alien</tt> package, so it
+is legal to say <tt class="code">alien:single-float</tt>. These are
+the basic Alien type specifiers:<br>
+<br>
+<br>
+<br>
+<a name="@types31"></a>
+<div align="left">[Alien type]<br>
+<tt class="function-name">*</tt> <tt class="variable"><tt class=
+"variable">type</tt></tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+A pointer to an object of the specified <tt class=
+"variable">type</tt>. If <tt class="variable">type</tt> is
+<tt class="code">t</tt>, then it means a pointer to anything,
+similar to ``<tt class="code">void *</tt>'' in ANSI C. Currently,
+the only way to detect a null pointer is:
+<blockquote class="lisp">
+<pre>
+  (zerop (sap-int (alien-sap <tt class="variable">ptr</tt>)))
+</pre></blockquote>
+See section&nbsp;<a href=
+"unix.html#system-area-pointers">6.5</a></blockquote>
+<br>
+<br>
+<a name="@types32"></a>
+<div align="left">[Alien type]<br>
+<tt class="function-name">array</tt> <tt class=
+"variable"><tt class="variable">type</tt> <tt class=
+"code">{<tt class="variable">dimension</tt>}</tt><sup><font size=
+"2">*</font></sup></tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+An array of the specified <tt class="variable">dimensions</tt>,
+holding elements of type <tt class="variable">type</tt>. Note that
+<tt class="code">(* int)</tt> and <tt class="code">(array int)</tt>
+are considered to be different types when type checking is done;
+pointer and array types must be explicitly coerced using <tt class=
+"code">cast</tt>.<br>
+<br>
+Arrays are accessed using <tt class="code">deref</tt>, passing the
+indices as additional arguments. Elements are stored in
+column-major order (as in C), so the first dimension determines
+only the size of the memory block, and not the layout of the higher
+dimensions. An array whose first dimension is variable may be
+specified by using <tt class="code">nil</tt> as the first
+dimension. Fixed-size arrays can be allocated as array elements,
+structure slots or <tt class="code">with-alien</tt> variables.
+Dynamic arrays can only be allocated using <a name=
+"@funs193"></a><tt class="code">make-alien</tt>.</blockquote>
+<br>
+<br>
+<a name="@types33"></a>
+<div align="left">[Alien type]<br>
+<tt class="function-name">struct</tt> <tt class=
+"variable"><tt class="variable">name</tt> <tt class=
+"code">{(<tt class="variable">field</tt> <tt class=
+"variable">type</tt> <tt class="code">{<tt class=
+"variable">bits</tt>}</tt>)}</tt><sup><font size=
+"2">*</font></sup></tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+A structure type with the specified <tt class="variable">name</tt>
+and <tt class="variable">fields</tt>. Fields are allocated at the
+same positions used by the implementation's C compiler. <tt class=
+"variable">bits</tt> is intended for C-like bit field support, but
+is currently unused. If <tt class="variable">name</tt> is
+<tt class="code">nil</tt>, then the type is anonymous.<br>
+<br>
+If a named Alien <tt class="code">struct</tt> specifier is passed
+to <a name="@funs194"></a><tt class="code">def-alien-type</tt> or
+<a name="@funs195"></a><tt class="code">with-alien</tt>, then this
+defines, respectively, a new global or local Alien structure type.
+If no <tt class="variable">fields</tt> are specified, then the
+fields are taken from the current (local or global) Alien structure
+type definition of <tt class="variable">name</tt>.</blockquote>
+<br>
+<br>
+<a name="@types34"></a>
+<div align="left">[Alien type]<br>
+<tt class="function-name">union</tt> <tt class=
+"variable"><tt class="variable">name</tt> <tt class=
+"code">{(<tt class="variable">field</tt> <tt class=
+"variable">type</tt> <tt class="code">{<tt class=
+"variable">bits</tt>}</tt>)}</tt><sup><font size=
+"2">*</font></sup></tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+Similar to <tt class="code">struct</tt>, but defines a union type.
+All fields are allocated at the same offset, and the size of the
+union is the size of the largest field. The programmer must
+determine which field is active from context.</blockquote>
+<br>
+<br>
+<a name="@types35"></a>
+<div align="left">[Alien type]<br>
+<tt class="function-name">enum</tt> <tt class="variable"><tt class=
+"variable">name</tt> <tt class="code">{<tt class=
+"variable">spec</tt>}</tt><sup><font size="2">*</font></sup></tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+An enumeration type that maps between integer values and keywords.
+If <tt class="variable">name</tt> is <tt class="code">nil</tt>,
+then the type is anonymous. Each <tt class="variable">spec</tt> is
+either a keyword, or a list <tt class="code">(<tt class=
+"variable">keyword</tt> <tt class="variable">value</tt>)</tt>. If
+<tt class="variable">integer</tt> is not supplied, then it defaults
+to one greater than the value for the preceding spec (or to zero if
+it is the first spec.)</blockquote>
+<br>
+<br>
+<a name="@types36"></a>
+<div align="left">[Alien type]<br>
+<tt class="function-name">signed</tt> <tt class=
+"variable"><tt class="code">{<tt class=
+"variable">bits</tt>}</tt></tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote>A signed integer with the specified number of bits
+precision. The upper limit on integer precision is determined by
+the machine's word size. If no size is specified, the maximum size
+will be used.</blockquote>
+<br>
+<br>
+<a name="@types37"></a>
+<div align="left">[Alien type]<br>
+<tt class="function-name">integer</tt> <tt class=
+"variable"><tt class="code">{<tt class=
+"variable">bits</tt>}</tt></tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote>Identical to <tt class="code">signed</tt>---the
+distinction between <tt class="code">signed</tt> and <tt class=
+"code">integer</tt> is purely stylistic.</blockquote>
+<br>
+<br>
+<a name="@types38"></a>
+<div align="left">[Alien type]<br>
+<tt class="function-name">unsigned</tt> <tt class=
+"variable"><tt class="code">{<tt class=
+"variable">bits</tt>}</tt></tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote>Like <tt class="code">signed</tt>, but specifies an
+unsigned integer.</blockquote>
+<br>
+<br>
+<a name="@types39"></a>
+<div align="left">[Alien type]<br>
+<tt class="function-name">boolean</tt> <tt class=
+"variable"><tt class="code">{<tt class=
+"variable">bits</tt>}</tt></tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote>Similar to an enumeration type that maps <tt class=
+"code">0</tt> to <tt class="code">nil</tt> and all other values to
+<tt class="code">t</tt>. <tt class="variable">bits</tt> determines
+the amount of storage allocated to hold the truth
+value.</blockquote>
+<br>
+<br>
+<a name="@types40"></a>
+<div align="left">[Alien type]<br>
+<tt class="function-name">single-float</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote>A floating-point number in IEEE single
+format.</blockquote>
+<br>
+<br>
+<a name="@types41"></a>
+<div align="left">[Alien type]<br>
+<tt class="function-name">double-float</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote>A floating-point number in IEEE double
+format.</blockquote>
+<br>
+<br>
+<a name="@types42"></a>
+<div align="left">[Alien type]<br>
+<tt class="function-name">function</tt> <tt class=
+"variable"><tt class="variable">result-type</tt> <tt class=
+"code">{<tt class="variable">arg-type</tt>}</tt><sup><font size=
+"2">*</font></sup></tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><a name="alien-function-types" id=
+"alien-function-types"></a> A Alien function that takes arguments
+of the specified <tt class="variable">arg-types</tt> and returns a
+result of type <tt class="variable">result-type</tt>. Note that the
+only context where a <tt class="code">function</tt> type is
+directly specified is in the argument to <tt class=
+"code">alien-funcall</tt> (see section <a name=
+"@funs196"></a><tt class="code">alien-funcall</tt>.) In all other
+contexts, functions are represented by function pointer types:
+<tt class="code">(* (function ...))</tt>.</blockquote>
+<br>
+<br>
+<a name="@types43"></a>
+<div align="left">[Alien type]<br>
+<tt class="function-name">system-area-pointer</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote>A pointer which is represented in Lisp as a <tt class=
+"code">system-area-pointer</tt> object (see section&nbsp;<a href=
+"unix.html#system-area-pointers">6.5</a>.)</blockquote>
+<a name="toc251" id="toc251"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc246" id="htoc246"><b><font size=
+"4">8.2.4</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">The C-Call
+Package</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+The <tt class="code">c-call</tt> package exports these
+type-equivalents to the C type of the same name: <tt class=
+"code">char</tt>, <tt class="code">short</tt>, <tt class=
+"code">int</tt>, <tt class="code">long</tt>, <tt class=
+"code">unsigned-char</tt>, <tt class="code">unsigned-short</tt>,
+<tt class="code">unsigned-int</tt>, <tt class=
+"code">unsigned-long</tt>, <tt class="code">float</tt>, <tt class=
+"code">double</tt>. <tt class="code">c-call</tt> also exports these
+types:<br>
+<br>
+<br>
+<br>
+<a name="@types44"></a>
+<div align="left">[Alien type]<br>
+<tt class="function-name">void</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote>This type is used in function types to declare that no
+useful value is returned. Evaluation of an <tt class=
+"code">alien-funcall</tt> form will return zero
+values.</blockquote>
+<br>
+<br>
+<a name="@types45"></a>
+<div align="left">[Alien type]<br>
+<tt class="function-name">c-string</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote>This type is similar to <tt class="code">(* char)</tt>,
+but is interpreted as a null-terminated string, and is
+automatically converted into a Lisp string when accessed. If the
+pointer is C <tt class="code">NULL</tt> (or 0), then accessing
+gives Lisp <tt class="code">nil</tt>.<br>
+<br>
+Assigning a Lisp string to a <tt class="code">c-string</tt>
+structure field or variable stores the contents of the string to
+the memory already pointed to by that variable. When an Alien of
+type <tt class="code">(* char)</tt> is assigned to a <tt class=
+"code">c-string</tt>, then the <tt class="code">c-string</tt>
+pointer is assigned to. This allows <tt class="code">c-string</tt>
+pointers to be initialized. For example:
+<blockquote class="lisp">
+<pre>
+  (def-alien-type nil (struct foo (str c-string)))
+  
+  (defun make-foo (str) (let ((my-foo (make-alien (struct foo))))
+  (setf (slot my-foo 'str) (make-alien char (length str))) (setf (slot
+  my-foo 'str) str) my-foo))
+</pre></blockquote>
+Storing Lisp <tt class="code">nil</tt> writes C <tt class=
+"code">NULL</tt> to the <tt class="code">c-string</tt>
+pointer.</blockquote>
+<a name="toc252" id="toc252"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc247" id="htoc247"><b><font size=
+"5">8.3</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Alien
+Operations</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+This section describes the basic operations on Alien values.<br>
+<br>
+<a name="toc253" id="toc253"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc248" id="htoc248"><b><font size=
+"4">8.3.1</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Alien Access
+Operations</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+<br>
+<a name="@funs197"></a><a name="FN:deref" id="FN:deref"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">alien:</tt><tt class=
+"function-name">deref</tt> <tt class=
+"variable">pointer-or-array</tt> <tt class=
+"code">&amp;rest</tt><tt class="variable">indices</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This function returns the value pointed to by an Alien pointer or
+the value of an Alien array element. If a pointer, an optional
+single index can be specified to give the equivalent of C pointer
+arithmetic; this index is scaled by the size of the type pointed
+to. If an array, the number of indices must be the same as the
+number of dimensions in the array type. <tt class="code">deref</tt>
+can be set with <tt class="code">setf</tt> to assign a new
+value.</blockquote>
+<br>
+<a name="@funs198"></a><a name="FN:slot" id="FN:slot"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">alien:</tt><tt class=
+"function-name">slot</tt> <tt class="variable">struct-or-union</tt>
+<tt class="variable">slot-name</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This function extracts the value of slot <tt class=
+"variable">slot-name</tt> from the an Alien <tt class=
+"code">struct</tt> or <tt class="code">union</tt>. If <tt class=
+"variable">struct-or-union</tt> is a pointer to a structure or
+union, then it is automatically dereferenced. This can be set with
+<tt class="code">setf</tt> to assign a new value. Note that
+<tt class="variable">slot-name</tt> is evaluated, and need not be a
+compile-time constant (but only constant slot accesses are
+efficiently compiled.)</blockquote>
+<a name="toc254" id="toc254"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc249" id="htoc249"><b><font size=
+"4">8.3.2</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Alien Coercion
+Operations</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+<br>
+<a name="@funs199"></a><a name="FN:addr" id="FN:addr"></a>
+<div align="left">[Macro]<br>
+<tt class="function-name">alien:</tt><tt class=
+"function-name">addr</tt> <tt class="variable">alien-expr</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This macro returns a pointer to the location specified by
+<tt class="variable">alien-expr</tt>, which must be either an Alien
+variable, a use of <tt class="code">deref</tt>, a use of <tt class=
+"code">slot</tt>, or a use of <a name="@funs200"></a><tt class=
+"code">extern-alien</tt>.</blockquote>
+<br>
+<a name="@funs201"></a><a name="FN:cast" id="FN:cast"></a>
+<div align="left">[Macro]<br>
+<tt class="function-name">alien:</tt><tt class=
+"function-name">cast</tt> <tt class="variable">alien</tt>
+<tt class="variable">new-type</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This macro converts <tt class="variable">alien</tt> to a new Alien
+with the specified <tt class="variable">new-type</tt>. Both types
+must be an Alien pointer, array or function type. Note that the
+result is not <tt class="code">eq</tt> to the argument, but does
+refer to the same data bits.</blockquote>
+<br>
+<a name="@funs202"></a><a name="FN:sap-alien" id=
+"FN:sap-alien"></a>
+<div align="left">[Macro]<br>
+<tt class="function-name">alien:</tt><tt class=
+"function-name">sap-alien</tt> <tt class="variable">sap</tt>
+<tt class="variable">type</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+<a name="@funs203"></a><a name="FN:alien-sap" id=
+"FN:alien-sap"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">alien:</tt><tt class=
+"function-name">alien-sap</tt> <tt class=
+"variable">alien-value</tt> &nbsp;&nbsp;&nbsp;</div>
+<br>
+<br>
+<tt class="code">sap-alien</tt> converts <tt class=
+"variable">sap</tt> (a system area pointer see
+section&nbsp;<a href="unix.html#system-area-pointers">6.5</a>) to
+an Alien value with the specified <tt class="variable">type</tt>.
+<tt class="variable">type</tt> is not evaluated.<br>
+<br>
+<tt class="code">alien-sap</tt> returns the SAP which points to
+<tt class="variable">alien-value</tt>'s data.<br>
+<br>
+The <tt class="variable">type</tt> to <tt class=
+"code">sap-alien</tt> and the type of the <tt class=
+"variable">alien-value</tt> to <tt class="code">alien-sap</tt> must
+some Alien pointer, array or record type.</blockquote>
+<a name="toc255" id="toc255"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc250" id="htoc250"><b><font size=
+"4">8.3.3</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Alien Dynamic
+Allocation</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+Dynamic Aliens are allocated using the <tt class="code">malloc</tt>
+library, so foreign code can call <tt class="code">free</tt> on the
+result of <tt class="code">make-alien</tt>, and Lisp code can call
+<tt class="code">free-alien</tt> on objects allocated by foreign
+code.<br>
+<br>
+<br>
+<a name="@funs204"></a><a name="FN:make-alien" id=
+"FN:make-alien"></a>
+<div align="left">[Macro]<br>
+<tt class="function-name">alien:</tt><tt class=
+"function-name">make-alien</tt> <tt class="variable">type</tt>
+<tt class="code">{<tt class="variable">size</tt>}</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This macro returns a dynamically allocated Alien of the specified
+<tt class="variable">type</tt> (which is not evaluated.) The
+allocated memory is not initialized, and may contain arbitrary
+junk. If supplied, <tt class="variable">size</tt> is an expression
+to evaluate to compute the size of the allocated object. There are
+two major cases:
+<ul>
+<li>When <tt class="variable">type</tt> is an array type, an array
+of that type is allocated and a <tt class="variable">pointer</tt>
+to it is returned. Note that you must use <tt class=
+"code">deref</tt> to change the result to an array before you can
+use <tt class="code">deref</tt> to read or write elements:
+<blockquote class="lisp">
+<pre>
+(defvar *foo* (make-alien (array char 10)))
+
+(type-of *foo*) ==&gt; (alien (* (array (signed 8) 10)))
+
+(setf (deref (deref foo) 0) 10) ==&gt; 10
+</pre></blockquote>
+If supplied, <tt class="variable">size</tt> is used as the first
+dimension for the array.<br>
+<br></li>
+<li>When <tt class="variable">type</tt> is any other type, then
+then an object for that type is allocated, and a <tt class=
+"variable">pointer</tt> to it is returned. So <tt class=
+"code">(make-alien int)</tt> returns a <tt class="code">(*
+int)</tt>. If <tt class="variable">size</tt> is specified, then a
+block of that many objects is allocated, with the result pointing
+to the first one.</li>
+</ul>
+</blockquote>
+<br>
+<a name="@funs205"></a><a name="FN:free-alien" id=
+"FN:free-alien"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">alien:</tt><tt class=
+"function-name">free-alien</tt> <tt class="variable">alien</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This function frees the storage for <tt class="variable">alien</tt>
+(which must have been allocated with <tt class=
+"code">make-alien</tt> or <tt class=
+"code">malloc</tt>.)</blockquote>
+See also <a name="@funs206"></a><tt class="code">with-alien</tt>,
+which stack-allocates Aliens.<br>
+<br>
+<a name="toc256" id="toc256"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc251" id="htoc251"><b><font size=
+"5">8.4</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Alien
+Variables</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+Both local (stack allocated) and external (C global) Alien
+variables are supported.<br>
+<br>
+<a name="toc257" id="toc257"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc252" id="htoc252"><b><font size=
+"4">8.4.1</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Local Alien
+Variables</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+<br>
+<a name="@funs207"></a><a name="FN:with-alien" id=
+"FN:with-alien"></a>
+<div align="left">[Macro]<br>
+<tt class="function-name">alien:</tt><tt class=
+"function-name">with-alien</tt> <tt class="code">{(<tt class=
+"variable">name</tt> <tt class="variable">type</tt> <tt class=
+"code">{<tt class=
+"variable">initial-value</tt>}</tt>)}</tt><sup><font size=
+"2">*</font></sup> <tt class="code">{form}</tt><sup><font size=
+"2">*</font></sup> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This macro establishes local alien variables with the specified
+Alien types and names for dynamic extent of the body. The variable
+<tt class="variable">names</tt> are established as symbol-macros;
+the bindings have lexical scope, and may be assigned with
+<tt class="code">setq</tt> or <tt class="code">setf</tt>. This form
+is analogous to defining a local variable in C: additional storage
+is allocated, and the initial value is copied.<br>
+<br>
+<tt class="code">with-alien</tt> also establishes a new scope for
+named structures and unions. Any <tt class="variable">type</tt>
+specified for a variable may contain name structure or union types
+with the slots specified. Within the lexical scope of the binding
+specifiers and body, a locally defined structure type <tt class=
+"variable">foo</tt> can be referenced by its name using:
+<blockquote class="lisp">
+<pre>
+  (struct foo)
+</pre></blockquote>
+</blockquote>
+<a name="toc258" id="toc258"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc253" id="htoc253"><b><font size=
+"4">8.4.2</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">External Alien
+Variables</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<a name="external-aliens" id="external-aliens"></a><br>
+External Alien names are strings, and Lisp names are symbols. When
+an external Alien is represented using a Lisp variable, there must
+be a way to convert from one name syntax into the other. The macros
+<tt class="code">extern-alien</tt>, <tt class=
+"code">def-alien-variable</tt> and <a name=
+"@funs208"></a><tt class="code">def-alien-routine</tt> use this
+conversion heuristic:
+<ul>
+<li>Alien names are converted to Lisp names by uppercasing and
+replacing underscores with hyphens.<br>
+<br></li>
+<li>Conversely, Lisp names are converted to Alien names by
+lowercasing and replacing hyphens with underscores.<br>
+<br></li>
+<li>Both the Lisp symbol and Alien string names may be separately
+specified by using a list of the form:
+<blockquote class="lisp">
+<pre>
+  (<tt class="variable">alien-string</tt> <tt class=
+"variable">lisp-symbol</tt>)
+</pre></blockquote>
+</li>
+</ul>
+<br>
+<a name="@funs209"></a><a name="FN:def-alien-variable" id=
+"FN:def-alien-variable"></a>
+<div align="left">[Macro]<br>
+<tt class="function-name">alien:</tt><tt class=
+"function-name">def-alien-variable</tt> <tt class=
+"variable">name</tt> <tt class="variable">type</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This macro defines <tt class="variable">name</tt> as an external
+Alien variable of the specified Alien <tt class=
+"variable">type</tt>. <tt class="variable">name</tt> and <tt class=
+"variable">type</tt> are not evaluated. The Lisp name of the
+variable (see above) becomes a global Alien variable in the Lisp
+namespace. Global Alien variables are effectively ``global symbol
+macros''; a reference to the variable fetches the contents of the
+external variable. Similarly, setting the variable stores new
+contents---the new contents must be of the declared <tt class=
+"variable">type</tt>.<br>
+<br>
+For example, it is often necessary to read the global C variable
+<tt class="code">errno</tt> to determine why a particular function
+call failed. It is possible to define errno and make it accessible
+from Lisp by the following:
+<blockquote class="lisp">
+<pre>
+(def-alien-variable "errno" int)
+
+;; Now it is possible to get the value of the C variable errno simply by
+;; referencing that Lisp variable:
+;;
+(print errno)
+</pre></blockquote>
+</blockquote>
+<br>
+<a name="@funs210"></a><a name="FN:extern-alien" id=
+"FN:extern-alien"></a>
+<div align="left">[Macro]<br>
+<tt class="function-name">alien:</tt><tt class=
+"function-name">extern-alien</tt> <tt class="variable">name</tt>
+<tt class="variable">type</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This macro returns an Alien with the specified <tt class=
+"variable">type</tt> which points to an externally defined value.
+<tt class="variable">name</tt> is not evaluated, and may be
+specified either as a string or a symbol. <tt class=
+"variable">type</tt> is an unevaluated Alien type
+specifier.</blockquote>
+<a name="toc259" id="toc259"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc254" id="htoc254"><b><font size=
+"5">8.5</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Alien Data
+Structure Example</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+Now that we have Alien types, operations and variables, we can
+manipulate foreign data structures. This C declaration can be
+translated into the following Alien type:
+<blockquote class="lisp">
+<pre>
+struct foo {
+    int a;
+    struct foo *b[100];
+};
+
+ &lt;==&gt;
+
+(def-alien-type nil
+  (struct foo
+    (a int)
+    (b (array (* (struct foo)) 100))))
+</pre></blockquote>
+With this definition, the following C expression can be translated
+in this way:
+<blockquote class="example">
+<pre>
+struct foo f;
+f.b[7].a
+
+ &lt;==&gt;
+
+(with-alien ((f (struct foo)))
+  (slot (deref (slot f 'b) 7) 'a)
+  ;;
+  ;; Do something with f...
+  )
+</pre></blockquote>
+Or consider this example of an external C variable and some
+accesses:
+<blockquote class="example">
+<pre>
+struct c_struct {
+        short x, y;
+        char a, b;
+        int z;
+        c_struct *n;
+};
+
+extern struct c_struct *my_struct;
+
+my_struct-&gt;x++;
+my_struct-&gt;a = 5;
+my_struct = my_struct-&gt;n;
+</pre></blockquote>
+which can be made be manipulated in Lisp like this:
+<blockquote class="lisp">
+<pre>
+(def-alien-type nil
+  (struct c-struct
+          (x short)
+          (y short)
+          (a char)
+          (b char)
+          (z int)
+          (n (* c-struct))))
+
+(def-alien-variable "my_struct" (* c-struct))
+
+(incf (slot my-struct 'x))
+(setf (slot my-struct 'a) 5)
+(setq my-struct (slot my-struct 'n))
+</pre></blockquote>
+<a name="toc260" id="toc260"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc255" id="htoc255"><b><font size=
+"5">8.6</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Loading Unix
+Object Files</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+CMUCL is able to load foreign object files at runtime, using the
+function <tt class="code">load-foreign</tt>. This function is able
+to load shared libraries (that are typically named
+<code>.so</code>) via the dlopen mechanism. It can also load
+<code>.a</code> or <code>.o</code> object files by calling the
+linker on the files and libraries to create a loadable object file.
+Once loaded, the external symbols that define routines and
+variables are made available for future external references (e.g.
+by <tt class="code">extern-alien</tt>.) <tt class=
+"code">load-foreign</tt> must be run before any of the defined
+symbols are referenced.<br>
+<br>
+Note that if a Lisp core image is saved (using <a name=
+"@funs211"></a><tt class="code">save-lisp</tt>), all loaded foreign
+code is lost when the image is restarted.<br>
+<br>
+<br>
+<a name="@funs212"></a><a name="FN:load-foreign" id=
+"FN:load-foreign"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">ext:</tt><tt class=
+"function-name">load-foreign</tt> <tt class="variable">files</tt>
+<tt class="code">&amp;key</tt> <tt class="code">:libraries</tt>
+<tt class="code">:base-file</tt> <tt class="code">:env</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+<br>
+<tt class="variable">files</tt> is a <tt class=
+"code">simple-string</tt> or list of <tt class=
+"code">simple-string</tt>s specifying the names of the object
+files. If <tt class="variable">files</tt> is a simple-string, the
+file that it designates is loaded using the platform's dlopen
+mechanism. If it is a list of strings, the platform linker
+<tt class="code">ld</tt> is invoked to transform the object files
+into a loadable object file. <tt class="variable">libraries</tt> is
+a list of <tt class="code">simple-string</tt>s specifying libraries
+in a format that the platform linker expects. The default value for
+<tt class="variable">libraries</tt> is <tt class=
+"code">("-lc")</tt> (i.e., the standard C library). <tt class=
+"variable">base-file</tt> is the file to use for the initial symbol
+table information. The default is the Lisp start up code:
+<tt class="filename">path:lisp</tt>. <tt class="variable">env</tt>
+should be a list of simple strings in the format of Unix
+environment variables (i.e., <tt class="code"><tt class=
+"variable">A</tt>=<tt class="variable">B</tt></tt>, where
+<tt class="variable">A</tt> is an environment variable and
+<tt class="variable">B</tt> is its value). The default value for
+<tt class="variable">env</tt> is the environment information
+available at the time Lisp was invoked. Unless you are certain that
+you want to change this, you should just use the
+default.</blockquote>
+<a name="toc261" id="toc261"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc256" id="htoc256"><b><font size=
+"5">8.7</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Alien Function
+Calls</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+The foreign function call interface allows a Lisp program to call
+functions written in other languages. The current implementation of
+the foreign function call interface assumes a C calling convention
+and thus routines written in any language that adheres to this
+convention may be called from Lisp.<br>
+<br>
+Lisp sets up various interrupt handling routines and other
+environment information when it first starts up, and expects these
+to be in place at all times. The C functions called by Lisp should
+either not change the environment, especially the interrupt entry
+points, or should make sure that these entry points are restored
+when the C function returns to Lisp. If a C function makes changes
+without restoring things to the way they were when the C function
+was entered, there is no telling what will happen.<br>
+<br>
+<a name="toc262" id="toc262"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc257" id="htoc257"><b><font size=
+"4">8.7.1</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">The alien-funcall
+Primitive</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+<br>
+<a name="@funs213"></a><a name="FN:alien-funcall" id=
+"FN:alien-funcall"></a>
+<div align="left">[Function]<br>
+<tt class="function-name">alien:</tt><tt class=
+"function-name">alien-funcall</tt> <tt class=
+"variable">alien-function</tt> <tt class="code">&amp;rest</tt>
+<tt class="variable">arguments</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This function is the foreign function call primitive: <tt class=
+"variable">alien-function</tt> is called with the supplied
+<tt class="variable">arguments</tt> and its value is returned. The
+<tt class="variable">alien-function</tt> is an arbitrary run-time
+expression; to call a constant function, use <a name=
+"@funs214"></a><tt class="code">extern-alien</tt> or <tt class=
+"code">def-alien-routine</tt>.<br>
+<br>
+The type of <tt class="variable">alien-function</tt> must be
+<tt class="code">(alien (function ...))</tt> or <tt class=
+"code">(alien (* (function ...)))</tt>, See section&nbsp;<a href=
+"#alien-function-types">8.2.3</a>. The function type is used to
+determine how to call the function (as though it was declared with
+a prototype.) The type need not be known at compile time, but only
+known-type calls are efficiently compiled. Limitations:
+<ul>
+<li>Structure type return values are not implemented.</li>
+<li>Passing of structures by value is not implemented.</li>
+</ul>
+</blockquote>
+Here is an example which allocates a <tt class="code">(struct
+foo)</tt>, calls a foreign function to initialize it, then returns
+a Lisp vector of all the <tt class="code">(* (struct foo))</tt>
+objects filled in by the foreign call:
+<blockquote class="lisp">
+<pre>
+;; Allocate a foo on the stack.
+(with-alien ((f (struct foo)))
+  ;;
+  ;; Call some C function to fill in foo fields.
+  (alien-funcall (extern-alien "mangle_foo" (function void (* foo)))
+                 (addr f))
+  ;;
+  ;; Find how many foos to use by getting the A field.
+  (let* ((num (slot f 'a))
+         (result (make-array num)))
+    ;;
+    ;; Get a pointer to the array so that we don't have to keep
+    ;; extracting it:
+    (with-alien ((a (* (array (* (struct foo)) 100)) (addr (slot f 'b))))
+      ;;
+      ;; Loop over the first N elements and stash them in the
+      ;; result vector.
+      (dotimes (i num)
+        (setf (svref result i) (deref (deref a) i)))
+      result)))
+</pre></blockquote>
+<a name="toc263" id="toc263"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc258" id="htoc258"><b><font size=
+"4">8.7.2</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">The
+def-alien-routine Macro</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+<br>
+<a name="@funs215"></a><a name="FN:def-alien-routine" id=
+"FN:def-alien-routine"></a>
+<div align="left">[Macro]<br>
+<tt class="function-name">alien:</tt><tt class=
+"function-name">def-alien-routine</tt> <tt class=
+"variable">name</tt> <tt class="variable">result-type</tt>
+<tt class="code">{(<tt class="variable">aname</tt> <tt class=
+"variable">atype</tt> <tt class=
+"code">{style}</tt>)}</tt><sup><font size="2">*</font></sup>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote><br>
+This macro is a convenience for automatically generating Lisp
+interfaces to simple foreign functions. The primary feature is the
+parameter style specification, which translates the C
+pass-by-reference idiom into additional return values.<br>
+<br>
+<tt class="variable">name</tt> is usually a string external symbol,
+but may also be a symbol Lisp name or a list of the foreign name
+and the Lisp name. If only one name is specified, the other is
+automatically derived, (see section&nbsp;<a href=
+"#external-aliens">8.4.2</a>.)<br>
+<br>
+<tt class="variable">result-type</tt> is the Alien type of the
+return value. Each remaining subform specifies an argument to the
+foreign function. <tt class="variable">aname</tt> is the symbol
+name of the argument to the constructed function (for
+documentation) and <tt class="variable">atype</tt> is the Alien
+type of corresponding foreign argument. The semantics of the actual
+call are the same as for <a name="@funs216"></a><tt class=
+"code">alien-funcall</tt>. <tt class="variable">style</tt> should
+be one of the following:
+<dl compact="compact">
+<dt><tt class="code">:in</tt><br></dt>
+<dd>specifies that the argument is passed by value. This is the
+default. <tt class="code">:in</tt> arguments have no corresponding
+return value from the Lisp function.<br>
+<br></dd>
+<dt><tt class="code">:out</tt><br></dt>
+<dd>specifies a pass-by-reference output value. The type of the
+argument must be a pointer to a fixed sized object (such as an
+integer or pointer). <tt class="code">:out</tt> and <tt class=
+"code">:in-out</tt> cannot be used with pointers to arrays, records
+or functions. An object of the correct size is allocated, and its
+address is passed to the foreign function. When the function
+returns, the contents of this location are returned as one of the
+values of the Lisp function.<br>
+<br></dd>
+<dt><tt class="code">:copy</tt><br></dt>
+<dd>is similar to <tt class="code">:in</tt>, but the argument is
+copied to a pre-allocated object and a pointer to this object is
+passed to the foreign routine.<br>
+<br></dd>
+<dt><tt class="code">:in-out</tt><br></dt>
+<dd>is a combination of <tt class="code">:copy</tt> and <tt class=
+"code">:out</tt>. The argument is copied to a pre-allocated object
+and a pointer to this object is passed to the foreign routine. On
+return, the contents of this location is returned as an additional
+value.</dd>
+</dl>
+Any efficiency-critical foreign interface function should be inline
+expanded by preceding <tt class="code">def-alien-routine</tt> with:
+<blockquote class="lisp">
+<pre>
+(declaim (inline <tt class="variable">lisp-name</tt>))
+</pre></blockquote>
+In addition to avoiding the Lisp call overhead, this allows
+pointers, word-integers and floats to be passed using
+non-descriptor representations, avoiding consing (see
+section&nbsp;<a href=
+"compiler-hint.html#non-descriptor">5.11.2</a>.)</blockquote>
+<a name="toc264" id="toc264"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc259" id="htoc259"><b><font size=
+"4">8.7.3</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">def-alien-routine
+Example</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+Consider the C function <tt class="code">cfoo</tt> with the
+following calling convention:
+<blockquote class="example">
+<pre>
+/* a for update
+ * i out
+ */
+void cfoo (char *str, char *a, int *i);
+</pre></blockquote>
+which can be described by the following call to <tt class=
+"code">def-alien-routine</tt>:
+<blockquote class="lisp">
+<pre>
+(def-alien-routine "cfoo" void
+  (str c-string)
+  (a char :in-out)
+  (i int :out))
+</pre></blockquote>
+The Lisp function <tt class="code">cfoo</tt> will have two
+arguments (<tt class="variable">str</tt> and <tt class=
+"variable">a</tt>) and two return values (<tt class=
+"variable">a</tt> and <tt class="variable">i</tt>).<br>
+<br>
+<a name="toc265" id="toc265"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc260" id="htoc260"><b><font size=
+"4">8.7.4</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Calling Lisp from
+C</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+CMUCL supports calling Lisp from C via the <a name=
+"@funs217"></a><tt class="code">def-callback</tt> macro:<br>
+<br>
+<br>
+<a name="@funs218"></a><a name="FN:def-callback" id=
+"FN:def-callback"></a>
+<div align="left">[Macro]<br>
+<tt class="function-name">alien:</tt><tt class=
+"function-name">def-callback</tt> <tt class="variable">name</tt>
+(<tt class="variable">return-type</tt> <tt class="code">{(arg-name
+arg-type)}</tt><sup><font size="2">*</font></sup>) <tt class=
+"code">&amp;body</tt> body &nbsp;&nbsp;&nbsp;</div>
+<blockquote>This macro defines a Lisp function that can be called
+from C and a Lisp variable. The arguments to the function must be
+alien types, and the return type must also be an alien type. This
+Lisp function can be accessed via the <a name=
+"@funs219"></a><tt class="code">callback</tt> macro.<br>
+<br>
+<tt class="variable">name</tt> is the name of the Lisp function. It
+is also the name of a variable to be used by the <tt class=
+"code">callback</tt> macro.<br>
+<br>
+<tt class="variable">return-type</tt> is the return type of the
+function. This must be a recognized alien type.<br>
+<br>
+<tt class="variable">arg-name</tt> specifies the name of the
+argument to the function, and the argument has type <tt class=
+"variable">arg-type</tt>, which must be an alien type.</blockquote>
+<br>
+<a name="@funs220"></a><a name="FN:callback" id="FN:callback"></a>
+<div align="left">[Macro]<br>
+<tt class="function-name">alien:</tt><tt class=
+"function-name">callback</tt> <tt class=
+"variable">callback-symbol</tt> &nbsp;&nbsp;&nbsp;</div>
+<blockquote>This macro extracts the appropriate information for the
+function named <tt class="variable">callback-symbol</tt> so that it
+can be called by a C function. <tt class=
+"variable">callback-symbol</tt> must be a symbol created by the
+<tt class="code">def-callback</tt> macro.</blockquote>
+<br>
+<a name="@funs221"></a><a name="FN:callback-funcall" id=
+"FN:callback-funcall"></a>
+<div align="left">[Macro]<br>
+<tt class="function-name">alien:</tt><tt class=
+"function-name">callback-funcall</tt> <tt class=
+"variable">callback-name</tt> <tt class=
+"code">&amp;rest</tt><tt class="variable">args</tt>
+&nbsp;&nbsp;&nbsp;</div>
+<blockquote>This macro does the necessary stuff to call the
+callback named <tt class="variable">callback-name</tt> with the
+given arguments.</blockquote>
+<a name="toc266" id="toc266"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc261" id="htoc261"><b><font size=
+"4">8.7.5</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Callback
+Example</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+Here is a simple example of using callbacks.
+<blockquote class="lisp">
+<pre>
+(use-package :alien)
+(use-package :c-call)
+
+(def-callback foo (int (arg1 int) (arg2 int))
+  (format t "~&amp;foo: ~S, ~S~%" arg1 arg2)
+  (+ arg1 arg2))
+
+(defun test-foo ()
+  (callback-funcall foo 555 444444))
+</pre></blockquote>
+In this example, the callback function <tt class="code">foo</tt> is
+defined which takes two C <tt class="code">int</tt> parameters and
+returns a <tt class="code">int</tt>. As this shows, we can use
+arbitrary Lisp inside the function.<br>
+<br>
+The function <tt class="code">test-foo</tt> shows how we can call
+this callback function from Lisp. The macro <tt class=
+"code">callback</tt> extracts the necessary information for the
+callback function <tt class="code">foo</tt> which can be converted
+into a pointer which we can call via <tt class=
+"code">alien-funcall</tt>.<br>
+<br>
+The following code is a more complete example where a foreign
+routine calls our Lisp routine.
+<blockquote class="lisp">
+<pre>
+(use-package :alien)
+(use-package :c-call)
+
+(def-alien-routine qsort void
+  (base (* t))
+  (nmemb int)
+  (size int)
+  (compar (* (function int (* t) (* t)))))
+
+(def-callback my&lt; (int (arg1 (* double))
+                       (arg2 (* double)))
+  (let ((a1 (deref arg1))
+        (a2 (deref arg2)))
+    (cond ((= a1 a2)  0)
+          ((&lt; a1 a2) -1)
+          (t         +1))))
+
+(defun test-qsort ()
+  (let ((a (make-array 10 :element-type 'double-float
+                       :initial-contents '(0.1d0 0.5d0 0.2d0 1.2d0 1.5d0
+                                           2.5d0 0.0d0 0.1d0 0.2d0 0.3d0))))
+    (print a)
+    (qsort (sys:vector-sap a)
+           (length a)
+           (alien-size double :bytes)
+           (alien:callback my&lt;))
+    (print a)))
+</pre></blockquote>
+We define the alien routine, <tt class="code">qsort</tt>, and a
+callback, <tt class="code">my&lt;</tt>, to determine whether two
+<tt class="code">double</tt>'s are less than, greater than or equal
+to each other.<br>
+<br>
+The test function <tt class="code">test-qsort</tt> shows how we can
+call the alien sort routine with our Lisp comparison routine to
+produce a sorted array.<br>
+<br>
+<a name="toc267" id="toc267"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFE2">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc262" id="htoc262"><b><font size=
+"4">8.7.6</font></b></a></td>
+<td width="100%" align="center"><b><font size="4">Accessing Lisp
+Arrays</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+Due to the way CMUCL manages memory, the amount of memory that can
+be dynamically allocated by <tt class="code">malloc</tt> or
+<a name="@funs222"></a><tt class="code">make-alien</tt> is
+limited<sup><a name="text16" href="#note16" id="text16"><font size=
+"2">1</font></a></sup>.<br>
+<br>
+To overcome this limitation, it is possible to access the content
+of Lisp arrays which are limited only by the amount of physical
+memory and swap space available. However, this technique is only
+useful if the foreign function takes pointers to memory instead of
+allocating memory for itself. In latter case, you will have to
+modify the foreign functions.<br>
+<br>
+This technique takes advantage of the fact that CMUCL has
+specialized array types (see section&nbsp;<a href=
+"compiler-hint.html#specialized-array-types">5.11.8</a>) that match
+a typical C array. For example, a <tt class="code">(simple-array
+double-float (100))</tt> is stored in memory in essentially the
+same way as the C array <tt class="code">double x[100]</tt> would
+be. The following function allows us to get the physical address of
+such a Lisp array:
+<blockquote class="example">
+<pre>
+(defun array-data-address (array)
+  "Return the physical address of where the actual data of an array is
+stored.
+
+ARRAY must be a specialized array type in CMUCL.  This means ARRAY
+must be an array of one of the following types:
+
+                  double-float
+                  single-float
+                  (unsigned-byte 32)
+                  (unsigned-byte 16)
+                  (unsigned-byte  8)
+                  (signed-byte 32)
+                  (signed-byte 16)
+                  (signed-byte  8)
+"
+  (declare (type (or (simple-array (signed-byte 8))
+                     (simple-array (signed-byte 16))
+                     (simple-array (signed-byte 32))
+                     (simple-array (unsigned-byte 8))
+                     (simple-array (unsigned-byte 16))
+                     (simple-array (unsigned-byte 32))
+                     (simple-array single-float)
+                     (simple-array double-float)
+                     (simple-array (complex single-float))
+                     (simple-array (complex double-float)))
+                 array)
+           (optimize (speed 3) (safety 0))
+           (ext:optimize-interface (safety 3)))
+  ;; with-array-data will get us to the actual data.  However, because
+  ;; the array could have been displaced, we need to know where the
+  ;; data starts.
+  (lisp::with-array-data ((data array)
+                          (start)
+                          (end))
+    (declare (ignore end))
+    ;; DATA is a specialized simple-array.  Memory is laid out like this:
+    ;;
+    ;;   byte offset    Value
+    ;;        0         type code (should be 70 for double-float vector)
+    ;;        4         4 * number of elements in vector
+    ;;        8         1st element of vector
+    ;;      ...         ...
+    ;;
+    (let ((addr (+ 8 (logandc1 7 (kernel:get-lisp-obj-address data))))
+          (type-size
+           (let ((type (array-element-type data)))
+             (cond ((or (equal type '(signed-byte 8))
+                        (equal type '(unsigned-byte 8)))
+                    1)
+                   ((or (equal type '(signed-byte 16))
+                        (equal type '(unsigned-byte 16)))
+                    2)
+                   ((or (equal type '(signed-byte 32))
+                        (equal type '(unsigned-byte 32)))
+                    4)
+                   ((equal type 'single-float)
+                    4)
+                   ((equal type 'double-float)
+                    8)
+                   (t
+                    (error "Unknown specialized array element type"))))))
+      (declare (type (unsigned-byte 32) addr)
+               (optimize (speed 3) (safety 0) (ext:inhibit-warnings 3)))
+      (system:int-sap (the (unsigned-byte 32)
+                        (+ addr (* type-size start)))))))
+</pre></blockquote>
+We note, however, that the system function <a name=
+"@funs223"></a><tt class="code">system:vector-sap</tt> will do the
+same thing as above does.<br>
+<br>
+Assume we have the C function below that we wish to use:
+<blockquote class="example">
+<pre>
+  double dotprod(double* x, double* y, int n)
+  {
+    int k;
+    double sum = 0;
+
+    for (k = 0; k &lt; n; ++k) {
+      sum += x[k] * y[k];
+    }
+    return sum;
+  }
+</pre></blockquote>
+The following example generates two large arrays in Lisp, and calls
+the C function to do the desired computation. This would not have
+been possible using <tt class="code">malloc</tt> or <tt class=
+"code">make-alien</tt> since we need about 16 MB of memory to hold
+the two arrays.
+<blockquote class="example">
+<pre>
+  (alien:def-alien-routine "dotprod" c-call:double
+    (x (* double-float) :in)
+    (y (* double-float) :in)
+    (n c-call:int :in))
+    
+  (defun test-dotprod ()
+    (let ((x (make-array 10000 :element-type 'double-float 
+                         :initial-element 2d0))
+          (y (make-array 10000 :element-type 'double-float
+                         :initial-element 10d0)))
+        (sys:without-gcing
+          (let ((x-addr (sys:vector-sap x))
+                (y-addr (sys:vector-sap y)))
+            (dotprod x-addr y-addr 10000)))))
+</pre></blockquote>
+In this example, we have used <tt class="code">sys:vector-sap</tt>
+instead of <tt class="code">array-data-address</tt>, but we could
+have used <tt class="code">(sys:int-sap (array-data-address
+x))</tt> as well.<br>
+<br>
+Also, we have wrapped the inner <tt class="code">let</tt>
+expression in a <tt class="code">sys:without-gcing</tt> that
+disables garbage collection for the duration of the body. This will
+prevent garbage collection from moving <tt class="code">x</tt> and
+<tt class="code">y</tt> arrays after we have obtained the (now
+erroneous) addresses but before the call to <tt class=
+"code">dotprod</tt> is made.<br>
+<br>
+<a name="toc268" id="toc268"></a>
+<table cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td bgcolor="#FFFFD3">
+<div align="center">
+<table>
+<tr>
+<td><a name="htoc263" id="htoc263"><b><font size=
+"5">8.8</font></b></a></td>
+<td width="100%" align="center"><b><font size="5">Step-by-Step
+Alien Example</font></b></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+<br>
+This section presents a complete example of an interface to a
+somewhat complicated C function. This example should give a fairly
+good idea of how to get the effect you want for almost any kind of
+C function. Suppose you have the following C function which you
+want to be able to call from Lisp in the file <tt class=
+"filename">test.c</tt>:
+<pre>
+                
+struct c_struct
+{
+  int x;
+  char *s;
+};
+ 
+struct c_struct *c_function (i, s, r, a)
+    int i;
+    char *s;
+    struct c_struct *r;
+    int a[10];
+{
+  int j;
+  struct c_struct *r2;
+ 
+  printf("i = %d\n", i);
+  printf("s = %s\n", s);
+  printf("r-&gt;x = %d\n", r-&gt;x);
+  printf("r-&gt;s = %s\n", r-&gt;s);
+  for (j = 0; j &lt; 10; j++) printf("a[%d] = %d.\n", j, a[j]);
+  r2 = (struct c_struct *) malloc (sizeof(struct c_struct));
+  r2-&gt;x = i + 5;
+  r2-&gt;s = "A C string";
+  return(r2);
+};
+</pre>
+It is possible to call this function from Lisp using the file
+<tt class="filename">test.lisp</tt> whose contents is:
+<blockquote class="lisp">
+<pre>
+;;; -*- Package: test-c-call -*-
+(in-package "TEST-C-CALL")
+(use-package "ALIEN")
+(use-package "C-CALL")
+
+;;; Define the record c-struct in Lisp.
+(def-alien-type nil
+    (struct c-struct
+            (x int)
+            (s c-string)))
+
+;;; Define the Lisp function interface to the C routine.  It returns a
+;;; pointer to a record of type c-struct.  It accepts four parameters:
+;;; i, an int; s, a pointer to a string; r, a pointer to a c-struct
+;;; record; and a, a pointer to the array of 10 ints.
+;;;
+;;; The INLINE declaration eliminates some efficiency notes about heap
+;;; allocation of Alien values.
+(declaim (inline c-function))
+(def-alien-routine c-function
+    (* (struct c-struct))
+  (i int)
+  (s c-string)
+  (r (* (struct c-struct)))
+  (a (array int 10)))
+
+;;; A function which sets up the parameters to the C function and
+;;; actually calls it.
+(defun call-cfun ()
+  (with-alien ((ar (array int 10))
+               (c-struct (struct c-struct)))
+    (dotimes (i 10)                     ; Fill array.
+      (setf (deref ar i) i))
+    (setf (slot c-struct 'x) 20)
+    (setf (slot c-struct 's) "A Lisp String")
+
+    (with-alien ((res (* (struct c-struct))
+                 (c-function 5 "Another Lisp String" (addr c-struct) ar)))
+      (format t "Returned from C function.~%")
+      (multiple-value-prog1
+          (values (slot res 'x)
+                  (slot res 's))
+        ;;              
+        ;; Deallocate result <em> after</em> we are done using it.
+        (free-alien res)))))
+</pre></blockquote>
+To execute the above example, it is necessary to compile the C
+routine as follows:
+<blockquote class="example">
+<pre>
+cc -c test.c
+</pre></blockquote>
+In order to enable incremental loading with some linkers, you may
+need to say:
+<blockquote class="example">
+<pre>
+cc -G 0 -c test.c
+</pre></blockquote>
+Once the C code has been compiled, you can start up Lisp and load
+it in:
+<blockquote class="example">
+<pre>
+% lisp
+;;; Lisp should start up with its normal prompt.
+
+;;; Compile the Lisp file.  This step can be done separately.  You don't have
+;;; to recompile every time.
+* (compile-file "test.lisp")
+
+;;; Load the foreign object file to define the necessary symbols.  This must
+;;; be done before loading any code that refers to these symbols.  next block
+;;; of comments are actually the output of LOAD-FOREIGN.  Different linkers
+;;; will give different warnings, but some warning about redefining the code
+;;; size is typical.
+* (load-foreign "test.o")
+
+;;; Running library:load-foreign.csh...
+;;; Loading object file...
+;;; Parsing symbol table...
+Warning:  "_gp" moved from #x00C082C0 to #x00C08460.
+Warning:  "end" moved from #x00C00340 to #x00C004E0.
+
+;;; o.k. now load the compiled Lisp object file.
+* (load "test")
+
+;;; Now we can call the routine that sets up the parameters and calls the C
+;;; function.
+* (test-c-call::call-cfun)
+
+;;; The C routine prints the following information to standard output.
+i = 5
+s = Another Lisp string
+r-&gt;x = 20
+r-&gt;s = A Lisp string
+a[0] = 0.
+a[1] = 1.
+a[2] = 2.
+a[3] = 3.
+a[4] = 4.
+a[5] = 5.
+a[6] = 6.
+a[7] = 7.
+a[8] = 8.
+a[9] = 9.
+;;; Lisp prints out the following information.
+Returned from C function.
+;;; Return values from the call to test-c-call::call-cfun.
+10
+"A C string"
+*
+</pre></blockquote>
+If any of the foreign functions do output, they should not be
+called from within Hemlock. Depending on the situation, various
+strange behavior occurs. Under X, the output goes to the window in
+which Lisp was started; on a terminal, the output will overwrite
+the Hemlock screen image; in a Hemlock slave, standard output is
+<tt class="filename">/dev/null</tt> by default, so any output is
+discarded.
+<hr width="50%" size="1">
+<dl>
+<dt><a name="note16" href="#text16" id="note16"><font size=
+"5">1</font></a></dt>
+<dd>CMUCL mmaps a large piece of memory for its own use and this
+memory is typically about 256&nbsp;MB above the start of the C
+heap. Thus, only about 256&nbsp;MB of memory can be dynamically
+allocated. In earlier versions, this limit was closer to
+8&nbsp;MB.</dd>
+</dl>
+<hr>
+<a href="serve-event.html"><img src="previous_motif.gif" alt=
+"Previous"></a> <a href="index.html"><img src="contents_motif.gif"
+alt="Up"></a> <a href="ipc.html"><img src="next_motif.gif" alt=
+"Next"></a>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 3, Lesson 8</title> 
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 3 - Essential Lisp in Twelve Lessons</h1> 
+
+<h2><A NAME="lesson-8">Lesson 8 - Essential Macro Definition</A></h2> 
+
+<h3>DEFMACRO defines named macros</h3> 
+
+<P>A <CODE>DEFMACRO</CODE> form looks a lot like a <CODE>DEFUN</CODE> 
+form (see <A HREF="chapter03-07.html">Lesson 7</A>) -- it has a name, a 
+list of argument names, and a body:</P>
+
+<PRE WIDTH=80>(defmacro <VAR>name</VAR> (<VAR>argument</VAR> ...)
+   <VAR>body</VAR>)</PRE>
+
+<h3>Macros return a form, not values</h3> 
+
+<P>The macro body returns a form to be evaluated.  In other words, you need 
+to write the body of the macro such that it returns a form, not a value.  
+When Lisp evaluates a call to your macro, it first evaluates the body of 
+your macro definition, then evaluates the result of the first evaluation.
+(By way of comparison, a function's body is evaluated to return a value.)</P>
+
+<P>Here are a couple of simple macros to illustrate most of what you need 
+to know:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (defmacro setq-literal (place literal)<br>     `(setq ,place ',literal))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> SETQ-LITERAL<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq-literal a b)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> B<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> a<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> B<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (defmacro reverse-cons (rest first)<br>     `(cons ,first ,rest))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> REVERSE-CONS<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (reverse-cons nil A)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (B)</PRE>
+
+<P><CODE>SETQ-LITERAL</CODE> works like <CODE>SETQ</CODE>, except that 
+<EM>neither</EM> argument is evaluated.  (Remember that <CODE>SETQ</CODE> 
+evaluates its second argument.)  The body of <CODE>SETQ-LITERAL</CODE> has 
+a form that begins with a <CODE>`</CODE> (pronounced "backquote").  
+Backquote behaves like quote -- suppressing evaluation of all the enclosed 
+forms -- except where a comma appears within the backquoted form.  A 
+symbol following the comma is evaluated.</P>
+
+<P>So in our call to <CODE>(SETQ-LITERAL A B)</CODE> above, here's what 
+happens:</P>
+
+<OL>
+<LI>bind <CODE>PLACE</CODE> to the symbol <CODE>A</CODE>.</LI>
+<LI>bind <CODE>LITERAL</CODE> to the symbol <CODE>B</CODE>.</LI>
+<LI>evaluate the body <CODE>`(SETQ ,PLACE ',LITERAL)</CODE>, following 
+these steps:</LI>
+	<OL>
+	<LI>evaluate <CODE>PLACE</CODE> to get the symbol <CODE>A</CODE>.</LI>
+	<LI>evaluate <CODE>LITERAL</CODE> to get the symbol <CODE>B</CODE>.</LI>
+	<LI>return the form <CODE>(SETQ A 'B)</CODE>.</LI>
+	</OL>
+<LI>evaluate the form <CODE>(SETQ A 'B)</CODE>.</LI>
+</OL>
+
+<P>Neither the backquote nor the commas appear in the returned form.  
+Neither <CODE>A</CODE> nor <CODE>B</CODE> is evaluated in a call to 
+<CODE>SETQ-LITERAL</CODE>, but for different reasons.  <CODE>A</CODE> is 
+unevaluated because it appears as the first argument of 
+<CODE>SETQ</CODE>.  <CODE>B</CODE> is unevaluated because it appears after 
+a quote in the form returned by the macro.</P>
+
+<P>The operation of <CODE>(REVERSE-CONS NIL A)</CODE> is similar:</P>
+
+<OL>
+<LI>bind <CODE></CODE>REST</LI> to the symbol <CODE>NIL</CODE>.
+<LI>bind <CODE>FIRST</CODE> to the symbol <CODE>A</CODE>.</LI>
+<LI>evaluate the body <CODE>`(CONS ,FIRST ,REST)</CODE>, following these 
+steps:</LI>
+	<OL>
+	<LI>evaluate <CODE>FIRST</CODE> to get the symbol <CODE>A</CODE>.</LI>
+	<LI>evaluate <CODE>REST</CODE> to get the symbol <CODE>NIL</CODE>.</LI>
+	<LI>return the form <CODE>(CONS A NIL)</CODE>.</LI>
+	</OL>
+<LI>evaluate the form <CODE>(CONS A NIL)</CODE>.</LI>
+</OL>
+
+<P>Both arguments of <CODE>REVERSE-CONS</CODE> are evaluated because 
+<CODE>CONS</CODE> evaluates its arguments, and our macro body doesn't quote 
+either argument.  <CODE>A</CODE> evaluates to the symbol <CODE>B</CODE>, and 
+<CODE>NIL</CODE> evaluates to itself.</P>
+
+<P>If you want to see how your macro body appears before evaluation, you 
+can use the <CODE>MACROEXPAND</CODE> function:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (macroexpand '(setq-literal a b))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (SETQ A 'B)<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (macroexpand '(reverse-cons nil a))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> (CONS A NIL)</PRE>
+
+<P>Since <CODE>MACROEXPAND</CODE> is a function, it evaluates its 
+arguments.  This is why you have to quote the form you want expanded.</P>
+
+<P>The examples in this lesson are deliberately very simple, so you can 
+understand the basic mechanism.  In general, macros are trickier to write 
+than functions -- in <A HREF="chapter20.html">Chapter 20</A> we'll look at 
+the reasons and the correct techniques for dealing with more complex 
+situations.</P>
+
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter02.html">Chapter 2</a> | <A HREF="chapter03.html">Chapter 3, Introduction</A> | <A HREF="chapter03-07.html">Chapter 3, Lesson 7</A> | Chapter 3, Lesson 8 | <A HREF="chapter03-09.html">Chapter 3, Lesson 9</A> | <a href="chapter04.html">Chapter 4</a> | 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its 
+author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

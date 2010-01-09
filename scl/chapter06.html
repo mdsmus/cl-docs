@@ -1,0 +1,287 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 6</title>
+</head> 
+
+<body bgcolor="white" text="black">
+<h1>Chapter 6 - Deeper into Structures</h1> 
+
+Structures were introduced in <a href="chapter03-10.html">Chapter
+3</a>. In this chapter, we'll look at the most useful optional
+features of structures.<p>
+
+<h2>Default values let you omit some initializers, sometimes</h2>
+
+Normally, if you create a new structure without specifying a value for
+some slot, that slot will default to <code>NIL</code>.<p>
+
+<pre>
+? (defstruct foo-struct a b c)
+FOO-STRUCT
+
+? (let ((foo-1 (make-foo-struct :a 1 :b "two")))
+    (print (foo-struct-b foo-1))
+    (print (foo-struct-c foo-1))
+    (values))
+"two"
+NIL
+</pre> 
+
+<blockquote>
+NOTE: We use the <code>(values)</code> form to suppress the return
+value from the <code>LET</code> form.  Otherwise, we would have seen
+one more <code>NIL</code> printed.
+</blockquote> 
+
+In cases where <code>NIL</code> is a reasonable default value, this behavior is
+acceptable. But if the normal value of a slot is numeric, for example, you'd
+really like to start with a reasonable default value rather than having to
+add a test in all of the code which uses a structure. The full form of a slot
+specification is a list of the slot name, its default value, and additional
+options; specifying a bare name instead of the complete list is shorthand for
+"default value of NIL, and no options."<p>
+
+<pre>
+? (defstruct ship
+    (name "unnamed")
+    player
+    (x-pos 0.0)
+    (y-pos 0.0)
+    (x-vel 0.0)
+    (y-vel 0.0))
+SHIP
+</pre> 
+
+When we instantiate this structure using <code>(MAKE-SHIP)</code>, the <code>NAME</code> 
+slot defaults to <code>"unnamed"</code>, the <code>PLAYER</code> slot defaults to 
+<code>NIL</code>, and the position and velocity slots all default to <code>0.0</code>.<p>
+
+Of course, we can still specify slot values to override the defaults:<p>
+
+<pre>
+? (make-ship :name "Excalibur" :player "Dave" :x-pos 100.0 :y-pos 221.0)
+#S(SHIP :NAME "Excalibur" :PLAYER "Dave" :X-POS 100.0 :Y-POS 221.0 :X-VEL 0.0 :Y-VEL 0.0)
+</pre> 
+
+Lisp's default printer for structures makes it easy to see the slots and their values.
+We've given explicit values to all of the slots except the two velocity slots, which
+have their default values.<p>
+
+<h2>Change the way Lisp prints your structures</h2>
+
+To print a structure using other than the default printer, you may define a new
+print function as a structure option.<p>
+
+<pre>
+? (defstruct (ship
+              (:print-function
+               (lambda (struct stream depth)
+                 (declare (ignore depth))
+                 (format stream "[ship ~A of ~A at (~D, ~D) moving (~D, ~D)]"
+                         (ship-name struct)
+                         (ship-player struct)
+                         (ship-x-pos struct)
+                         (ship-y-pos struct)
+                         (ship-x-vel struct)
+                         (ship-y-vel struct)))))
+    (name "unnamed")
+    player
+    (x-pos 0.0)
+    (y-pos 0.0)
+    (x-vel 0.0)
+    (y-vel 0.0))
+SHIP
+
+? (make-ship :name "Proud Mary" :player 'CCR)
+[ship Proud Mary of CCR at (0.0, 0.0) moving (0.0, 0.0)]
+</pre> 
+
+Actually, it's considered bad practice to print something the reader can't
+interpret. Our use of the brackets around the printed ship description is
+not necessarily good or bad, it depends upon how the current read table is
+specified (we first saw reader macros in <a href="chapter03-12.html">Chapter 3,
+Lesson 12</a>.<p>
+
+One way to ensure that the reader doesn't get confused is to deliberately print
+something so as to be unreadable. By convention, Lisp prints such objects
+beginning with <code>#&lt;</code>. You could change your format string to read
+<code>"#&lt;ship ~A of ~A at (~D, ~D) moving (~D, ~D)&gt;"</code>, so the prior
+<code>MAKE-SHIP</code> example would print <code>#&lt;ship Proud Mary of CCR at (0.0,
+0.0) moving (0.0, 0.0)&gt;</code>. However, since 1990 Lisp systems have had a
+<code>PRINT-UNREADABLE-OBJECT</code> macro which should be used for this 
+purpose. If the printer control variable <code>*PRINT-READABLY*</code> is true,
+<code>PRINT-UNREADABLE-OBJECT</code> will signal an error.<p>
+
+<pre>
+<i>;; Use PRINT-UNREADABLE-OBJECT macro -- changes in <b>boldface</b> </i> 
+? (defstruct (ship
+              (:print-function
+               (lambda (struct stream depth)
+                 (declare (ignore depth))
+                 <b>(print-unreadable-object (struct stream)</b> 
+                   (format stream "ship ~A of ~A at (~D, ~D) moving (~D, ~D)"
+                           (ship-name struct)
+                           (ship-player struct)
+                           (ship-x-pos struct)
+                           (ship-y-pos struct)
+                           (ship-x-vel struct)
+                           (ship-y-vel struct))<b>)</b>)))
+    (name "unnamed")
+    player
+    (x-pos 0.0)
+    (y-pos 0.0)
+    (x-vel 0.0)
+    (y-vel 0.0))
+SHIP
+</pre> 
+
+<h2>Alter the way structures are stored in memory</h2>
+
+Lisp stores structures in an implementation-dependent manner unless you
+specify otherwise using a structure option. You have two choices if you
+decide to specify structure storage: store it as a vector (possibly with
+a particular type for all of the elements) or as a list.  Here, we use
+the untyped vector option -- the list option is similar:<p>
+
+<pre>
+? (defstruct (bar
+              (:type vector))
+    a b c)
+BAR
+
+? (make-bar)
+#(NIL NIL NIL)
+</pre> 
+
+Note that the slot names are not stored when you specify the storage type.
+This is probably the biggest advantage for using this option -- it can save
+storage in the amount of a machine word per slot per instance.  The disadvantage
+is that Lisp does not recognize such a structure as a distinct type, and does
+not create a <code>&lt;structure-name&gt;-P</code> predicate for you.<p>
+
+If you are satisfied with being able to retrieve the name of the structure,
+but still want the storage savings associated with specifying the structure's
+representation, you can do this:<p>
+
+<pre>
+? (defstruct (bar
+              (:type vector)
+              :named)
+    a b c)
+BAR
+
+? (make-bar)
+#(BAR NIL NIL NIL)
+</pre> 
+
+Using the list representation option has the drawbacks noted above, but none
+of the advantages; the backbone of the list typically <em>adds</em> a machine
+word of storage per slot when compared to the default representation, which is
+usually a vector.  The only time it would make sense to explicitly specify a
+list representation is when the default structure representation is list-based
+or when the Lisp implementation imposes some artificial limit on the space
+reserved for storage of vectors; neither case applies in modern implementations.<p>
+
+<h2>Shorten slot accessor names</h2>
+
+Slot accessor names are constructed from the name of the structure and the
+slot.  If the structure and the slot both have lengthy names, the accessor
+names can get unwieldy.  You can abbreviate names somewhat by using the 
+<code>:CONC-NAME</code> structure option to specify a name to use instead
+of the structure name.
+
+<pre>
+? (defstruct (galaxy-class-cruiser-ship
+              (:conc-name gcc-ship-)) <i>; name includes trailing hyphen!</i> 
+    name player (x-pos 0.0) (y-pos 0.0) (x-vel 0.0) (y-vel 0.0))
+GALAXY-CLASS-CRUISER-SHIP
+
+? (let ((ship (make-galaxy-class-cruiser-ship)))
+    (print (gcc-ship-x-pos ship)) <i>; note abbreviated accessor name</i> 
+    (values))
+0.0
+</pre> 
+
+<h2>Allocate new structures without using keyword arguments</h2>
+
+For certain structures, it may be more convenient to make a new instance
+using just a list of arguments instead of keywords and arguments.  You can
+redefine a structure constructor's argument list using the <code>:CONSTRUCTOR</code> 
+option.<p>
+
+<pre>
+? (defstruct (3d-point
+              (:constructor
+               create-3d-point (x y z)))
+    x y z)
+3D-POINT
+
+? (create-3d-point 1 -2 3)
+#S(3D-POINT :X 1 :Y -2 :Z 3)
+</pre> 
+
+<blockquote>
+NOTE: The slot values do <em>not</em> default to <code>NIL</code> if you use a
+<code>:CONSTRUCTOR</code> option!
+</blockquote> 
+
+Most lambda-list options are available to the constructor function -- consult
+a Lisp reference manual for details.<p>
+
+<h2>Define one structure as an extension of another</h2>
+
+We use inheritance to define one object in terms of another. Structures permit
+a very simple form of inheritance using the <code>:INCLUDE</code> option.<p>
+
+<pre>
+? (defstruct employee
+    name department salary social-security-number telephone)
+EMPLOYEE
+
+? (make-employee)
+#S(EMPLOYEE :NAME NIL :DEPARTMENT NIL :SALARY NIL :SOCIAL-SECURITY-NUMBER NIL :TELEPHONE NIL)
+
+? (defstruct (manager
+              (:include employee))
+    bonus direct-reports)
+MANAGER
+
+? (make-manager)
+#S(MANAGER :NAME NIL :DEPARTMENT NIL :SALARY NIL :SOCIAL-SECURITY-NUMBER NIL :TELEPHONE NIL :BONUS NIL :DIRECT-REPORTS NIL)
+</pre> 
+
+All accessors which apply to an <code>EMPLOYEE</code> also apply to a
+<code>MANAGER</code>, and a <code>MANAGER</code> instance is also an
+<code>EMPLOYEE</code> instance. Notice in the following example how the
+<code>...-NAME</code> accessors for both <code>MANAGER</code> and
+<code>EMPLOYEE</code> reference the same slot.<p>
+
+<pre>
+? (setq mgr (make-manager))
+#S(MANAGER :NAME NIL :DEPARTMENT NIL :SALARY NIL :SOCIAL-SECURITY-NUMBER NIL :TELEPHONE NIL :BONUS NIL :DIRECT-REPORTS NIL)
+
+? (setf (manager-name mgr) "Buzz")
+"Buzz"
+
+? (employee-name mgr)
+"Buzz"
+</pre> 
+
+A structure may have one <code>:INCLUDE</code> option, at most.  This limits the
+ability of structures to model the real world by describing inheritance.  CLOS
+objects allow multiple inheritance, and have many other useful and convenient features.
+We will get our first look at CLOS in <a href="chapter07.html">Chapter 7</a>.
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter05.html">Chapter 5</a> | Chapter 6 | <a href="chapter07.html">Chapter 7</a> 
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

@@ -1,0 +1,105 @@
+From nobody@nowhere.net Wed Feb 14 04:17:29 2001
+Path: news.mclink.it!news.caspur.it!serra.unipi.it!none!chico.franken.de!news-nue1.dfn.de!news-lei1.dfn.de!news-was.dfn.de!news-spur1.maxwell.syr.edu!news.maxwell.syr.edu!newsfeed.slurp.net!not-for-mail
+Message-ID: <3A89F8C9.E752FE83@nowhere.net>
+From: Jerry Gregg <nobody@nowhere.net>
+X-Mailer: Mozilla 4.7 [en]C-CCK-MCD EBM-Compaq1  (Win98; U)
+X-Accept-Language: en
+MIME-Version: 1.0
+Newsgroups: comp.lang.lisp
+Subject: cmucl on linux (redhat 7.0) easy install.
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Lines: 77
+Date: Tue, 13 Feb 2001 22:17:29 -0500
+NNTP-Posting-Host: 209.161.78.155
+X-Trace: newsfeed.slurp.net 982120588 209.161.78.155 (Tue, 13 Feb 2001 21:16:28 CDT)
+NNTP-Posting-Date: Tue, 13 Feb 2001 21:16:28 CDT
+Xref: news.mclink.it comp.lang.lisp:46542
+
+
+Hi,
+
+I just wanted to know if my installation of cmucl 18c under redhat 7.0
+has any hidden problems.
+It just seems too easy. All that I heard referenced to on this form was
+painful sounding installs using
+Dabein packages etc. If it really is this easy, why isn't it talked
+about more? I'm sure that more people
+would use cmucl if this is all that there is to it. All that I did to
+install it was (done as "root" of course):
+
+1. Download the tarballs for cmucl-18c that use glib21. This included
+the basic, extras, docs and
+source. (The source really isn't needed but I found that, that is where
+the good version of the xlib
+demo program "menu.lisp" is.) (Actually the docs aren't needed either
+but they are nice to have. I also
+use this doc directory to keep the CMU encyclopedia etc. downloaded from
+
+other sites.)
+
+2. Expand the tarballs in /usr/local/lib/cmucl-18c/
+The "doc" tarball needed to be expanded into a "doc" sub directory, all
+of the others created their own
+sub directories.
+
+3. Copy the "sample-wrapper" that you will find in ../cmucl-18c/bin/
+to /usr/local/bin and rename it what ever name you want to call lisp.
+This directory is in the standard path so
+linux will find it here. Edit this file and change the
+"/<<your-cmucl-path>>/"
+at the two locations to "/usr/local/lib/cmucl-18c/". In other words
+Change:
+   CMUCLLIB=/<<your-cmucl-path>>/lib
+To:
+CMUCLLIB=/usr/local/lib/cmucl-18c/lib
+And Change:
+   exec /<<your-cmucl-path>>/bin/lisp "$@"
+To:
+   exec /usr/local/lib/cmucl-18c/bin/lisp "$@"
+I've haven't done anything with the entry that talks about a temp file.
+Exactly when would this be used and
+what would be the best way to set this up in Linux? All of this would be
+
+easy to change later so don't sweat it.
+
+4. Change directory to /usr/local/lib/cmucl-18c/lib and run ./config
+I enabled everything except "motif and graphical debugger" since Motif
+(lesstif) is not part of Red Hat's standard
+installation. This creates a new lisp.core with these configurations and
+
+it made a backup of the original. (It is good
+to make a copy first that is explicitly labeled as the original version
+that has the safest configuration.)
+
+This is all that it took. If it is really this simple why didn't anyone
+tell me sooner? I've run small programs and
+had no problems yet.
+
+Actually my install is a little more complicated but it works installed
+like I said. On my system I named
+the sample-wrapper cmucl-18c and made soft links for it called "cmucl"
+and "lisp" so I can call it multiple ways.
+This is one advantage of this type of install, if you have other lisps
+which all want to be called "lisp" you can
+just rename the wrapper. I also have a soft link for the "cmucl-18c"
+directory just called "cmucl". I originally got
+this from a statement about how a cmu system was set up (using
+/usr/local/lib/cmucl/) but I don't know if it is
+important.
+
+Gary
+g-c-r-a-i-g-at-n-b-dot-n-e-t
+
+
+---------------------------------------------------------------------
+[The author of this article, Jerry Gregg, suggested the inclusion of the
+text below, which is a fragment of another article of his in the same
+thread - Paolo Amoroso, editor of the EncyCMUCLOpedia]
+
+>> First of all concerning the easy install that I posted: Remember that you can use
+>> the sample-wrapper to rename lisp
+>> something else but you need to have cmucl named lisp and findable by linux when you
+>> run ./config. After that you
+>> can name it whatever you want.
+---------------------------------------------------------------------

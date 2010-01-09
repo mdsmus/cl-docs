@@ -1,0 +1,101 @@
+<html lang="en">
+<head>
+<title>Name Service - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Networking.html#Networking" title="Networking">
+<link rel="prev" href="Local-_0028Unix_0029-Domain-Sockets.html#Local-_0028Unix_0029-Domain-Sockets" title="Local (Unix) Domain Sockets">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Name-Service"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Local-_0028Unix_0029-Domain-Sockets.html#Local-_0028Unix_0029-Domain-Sockets">Local (Unix) Domain Sockets</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Networking.html#Networking">Networking</a>
+<hr>
+</div>
+
+<h3 class="section">13.6 Name Service</h3>
+
+<p>Presently name service is implemented by calling out to the
+<code>getaddrinfo(3)</code> and <code>gethostinfo(3)</code>, or to
+<code>gethostbyname(3)</code> <code>gethostbyaddr(3)</code> on platforms where
+the preferred functions are not available. The exact details of
+the name resolving process (for example the choice of whether
+DNS or a hosts file is used for lookup) are platform dependent.
+
+<!-- Direct links to the asynchronous @code{resolver(3)} routines would be -->
+<!-- nice to have eventually, so that we can do DNS lookups in parallel -->
+<!-- with other things. -->
+   <p><a name="Class-sb_002dbsd_002dsockets_003ahost_002dent"></a>
+
+<div class="defun">
+&mdash; Class: <b>sb-bsd-sockets:host-ent</b><var><a name="index-sb_002dbsd_002dsockets_003ahost_002dent-552"></a></var><br>
+<blockquote><p><a name="index-sb_002dbsd_002dsockets_003ahost_002dent-553"></a>Class precedence list: <code>host-ent, standard-object, t</code>
+
+        <p>Slots:
+          <ul>
+<li><code>name</code> &mdash; initarg: <code>:name<!-- /@w --></code>; reader: <code>sb-bsd-sockets:host-ent-name<!-- /@w --></code>
+
+          <p>The name of the host
+<li><code>addresses</code> &mdash; initarg: <code>:addresses<!-- /@w --></code>; reader: <code>sb-bsd-sockets:host-ent-addresses<!-- /@w --></code>
+
+          <p>A list of addresses for this host. 
+</ul>
+
+        <p>This class represents the results of an address lookup. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dbsd_002dsockets_003aget_002dhost_002dby_002dname"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-bsd-sockets:get-host-by-name</b><var> host-name<a name="index-sb_002dbsd_002dsockets_003aget_002dhost_002dby_002dname-554"></a></var><br>
+<blockquote><p><a name="index-sb_002dbsd_002dsockets_003aget_002dhost_002dby_002dname-555"></a>Returns a <code>host-ent</code> instance for <code>host-name</code> or signals a <code>name-service-error</code>. 
+<code>host-name</code> may also be an <code>ip</code> address in dotted quad notation or some other
+weird stuff <code>-</code> see gethostbyname(3) or getaddrinfo(3) for the details. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dbsd_002dsockets_003aget_002dhost_002dby_002daddress"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-bsd-sockets:get-host-by-address</b><var> address<a name="index-sb_002dbsd_002dsockets_003aget_002dhost_002dby_002daddress-556"></a></var><br>
+<blockquote><p><a name="index-sb_002dbsd_002dsockets_003aget_002dhost_002dby_002daddress-557"></a>Returns a <code>host-ent</code> instance for <code>address</code>, which should be a vector of
+ (integer 0 255), or signals a <code>name-service-error</code>.  See gethostbyaddr(3)
+ or gethostinfo(3) for details. 
+</p></blockquote></div>
+
+   <p><a name="Generic_002dFunction-sb_002dbsd_002dsockets_003ahost_002dent_002daddress"></a>
+
+<div class="defun">
+&mdash; Generic Function: <b>sb-bsd-sockets:host-ent-address</b><var> host-ent<a name="index-sb_002dbsd_002dsockets_003ahost_002dent_002daddress-558"></a></var><br>
+<blockquote><p><a name="index-sb_002dbsd_002dsockets_003ahost_002dent_002daddress-559"></a>Returns some valid address for <code>host-ent</code>. 
+</p></blockquote></div>
+
+   </body></html>
+

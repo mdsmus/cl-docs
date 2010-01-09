@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.4.8 Style Recommendations</TITLE>
+<META NAME="description" CONTENT="5.4.8 Style Recommendations">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2449" HREF="node140.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2447" HREF="node131.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2443" HREF="node138.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2451" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2452" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2450" HREF="node140.html">5.5 Tail Recursion</A>
+<B>Up:</B> <A NAME="tex2html2448" HREF="node131.html">5.4 Source Optimization</A>
+<B> Previous:</B> <A NAME="tex2html2444" HREF="node138.html">5.4.7 Source to Source </A>
+<BR> <P>
+<H2><A NAME="SECTION00648000000000000000">5.4.8 Style Recommendations</A></H2>
+<P>
+<A NAME="10080">&#160;</A>
+<P>
+Source level optimization makes possible a clearer and more relaxed programming
+style:
+<UL>
+<LI> Don't use macros purely to avoid function call.  If you want an
+  inline function, write it as a function and declare it inline.  It's
+  clearer, less error-prone, and works just as well.
+<LI> Don't write macros that try to ``optimize'' their expansion in
+  trivial ways such as avoiding binding variables for simple
+  expressions.  The compiler does these optimizations too, and is less
+  likely to make a mistake.
+<LI> Make use of local functions (i.e., <tt>labels</tt> or <tt>flet</tt>)
+  and tail-recursion in places where it is clearer.  Local function
+  call is faster than full call.
+<LI> Avoid setting local variables when possible.  Binding a new
+  <tt>let</tt> variable is at least as efficient as setting an existing
+  variable, and is easier to understand, both for the compiler and the
+  programmer.
+<LI> Instead of writing similar code over and over again so that it
+  can be hand customized for each use, define a macro or inline
+  function, and let the compiler do the work.
+</UL><BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

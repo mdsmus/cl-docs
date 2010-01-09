@@ -1,0 +1,207 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<title>Successful Lisp - Chapter 3, Lesson 3</title> 
+</head> 
+
+<body bgcolor="white" text="black"><h1>Chapter 3 - Essential Lisp in Twelve Lessons</h1> 
+
+<h2><A NAME="lesson-3">Lesson 3 - Some Examples of Special Forms and Macros</A></h2> 
+
+<P>Now we'll look at several special forms and macros.  Over the next four 
+lessons, we'll build up a repertoire that will let you write simple 
+functions using the most elementary Lisp data type, the list.  Later 
+chapters will cover more complex program structures and data types.</P>
+
+<h3>SETQ</h3> 
+
+<P>Earlier, I told you that Lisp evaluates a symbol form by retrieving its 
+variable value.  <CODE>SETQ</CODE> gives you a way to set that value:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq my-name "David")<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> "David"<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> my-name<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> "David"<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq a-variable 57)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 57<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> a-variable<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 57<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq a-variable :a-keyword)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> :A-KEYWORD</PRE>
+
+<P><CODE>SETQ</CODE>'s first argument is a symbol.  This is not evaluated.  
+The second argument is assigned as the variable's value.  
+<CODE>SETQ</CODE> returns the value of its last argument.</P>
+
+<BLOCKQUOTE>
+<CODE>SETQ</CODE> doesn't evaluate its first argument because you want to 
+assign a value to the symbol itself.  If <CODE>SETQ</CODE> evaluated its first argument, the <EM>value</EM> of 
+that argument would have to be a symbol.  The <CODE>SET</CODE> form does 
+this.  Pay particular attention to the difference between the <CODE>SET</CODE> and <CODE>SETQ</CODE> forms in the following example, and make sure you understand what's happening with the <CODE>(set var-1 99)</CODE> form:
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq var-1 'var-2)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> VAR-2<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> var-1<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> VAR-2<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> var-2<br><IMG SRC="gifs/right-arrow-bar.gif" ALT="-&gt;|" ALIGN="BOTTOM"> Error: Unbound variable<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (set var-1 99)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 99<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> var-1<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> VAR-2<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> VAR-2<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 99</PRE>
+
+<P>Did you notice the <CODE>'</CODE> in the first form?  This keeps the 
+following form, <CODE>var-2</CODE>, from being evaluated.  Later in this 
+lesson, when we look at <A HREF="#quote"><CODE>QUOTE</CODE></A>, I'll 
+explain this in greater detail.</P>
+
+<P>In the example, we first make the value of <CODE>VAR-1</CODE> be the 
+<EM>symbol</EM> <CODE>VAR-2</CODE>.  Checking the value of 
+<CODE>VAR-2</CODE>, we find that it has none.  Next, we use 
+<CODE>SET</CODE> (not <CODE>SETQ</CODE>) to assign the value 
+<CODE>99</CODE> to the symbol, <CODE>VAR-2</CODE>, which is the 
+<EM>value</EM> of <CODE>VAR-1</CODE>.</P>
+
+</BLOCKQUOTE>
+
+<P>The <CODE>SETQ</CODE> form can actually take any even number of 
+arguments, which should be alternating symbols and values:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq month "June" day 8 year 1954)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 1954<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> month<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> "June"<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> day<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;|" ALIGN="BOTTOM"> 8<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> year<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 1954</PRE>
+
+<P><CODE>SETQ</CODE> performs the assignments from left to right, and 
+returns the rightmost value.</P>
+
+<h3>LET</h3> 
+
+<P>The <CODE>LET</CODE> form looks a little more complicated than what we've 
+seen so far.  The <CODE>LET</CODE> form uses nested lists, but because it's a 
+special form, only certain elements get evaluated.</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (let ((a 3)<br>        (b 4)<br>        (c 5))<br>    (* (+ a b) c))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 35<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> a<br><IMG SRC="gifs/right-arrow-bar.gif" ALT="-&gt;|" ALIGN="BOTTOM"> Error: Unbound variable<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> b<br><IMG SRC="gifs/right-arrow-bar.gif" ALT="-&gt;|" ALIGN="BOTTOM"> Error: Unbound variable<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> c<br><IMG SRC="gifs/right-arrow-bar.gif" ALT="-&gt;|" ALIGN="BOTTOM"> Error: Unbound variable</PRE>
+
+<P>The above <CODE>LET</CODE> form defines values for the symbols 
+<CODE>A</CODE>, <CODE>B</CODE>, and <CODE>C</CODE>, then uses these as 
+variables in an arithmetic calculation.  The calculation's result is also 
+the result of the <CODE>LET</CODE> form.  Note that none of the variables 
+defined in the <CODE>LET</CODE> have a value after Lisp has finished 
+evaluating the form.</P>
+
+<P>In general, <CODE>LET</CODE> looks like this:</P>
+
+<PRE WIDTH=80>(let (<VAR>bindings</VAR>) <VAR>forms</VAR>)</PRE>
+
+<P>where <VAR>bindings</VAR> is any number of two-element lists -- each 
+list containing a symbol and a value -- and <VAR>forms</VAR> is any number 
+of Lisp forms.  The forms are evaluated, in order, using the values 
+established by the bindings.  <CODE>LET</CODE> returns the value(s) 
+returned by the last form.</P>
+
+<P>Indentation doesn't affect the operation of <CODE>LET</CODE>, but proper
+indentation does improve readability.  Consider these equivalent forms:</P>
+
+<PRE WIDTH=80>(let ((p 52.8)
+      (q 35.9)
+      (r (f 12.07)))
+  (g 18.3)
+  (f p) 
+  (f q) 
+  (g r t))
+
+(let ((p 52.8) (q 35.9) (r (f 12.07))) (g 18.3) (f p) (f q) (g r t))</PRE>
+
+<P>In the first case, indentation makes clear which are the bindings and 
+which are the forms.  Even if the reader doesn't know about the different 
+roles played by the two parts of the <CODE>LET</CODE> form, the 
+indentation suggests a difference.</P>
+
+<P>In the second case, you'll have to count parentheses to know where the 
+bindings end and the forms begin.  Even worse, the absence of indentation 
+destroys visual cues about the different roles played by the two parts of 
+the <CODE>LET</CODE> form.</P>
+
+<P>If you define a variable using <CODE>SETQ</CODE> and then name the same 
+variable in a <CODE>LET</CODE> form, the value defined by <CODE>LET</CODE> 
+supersedes the other value during evaluation of the <CODE>LET</CODE>:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq a 89)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 89<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> a<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 89<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (let ((a 3))<br>    (+ a 2))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 5<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> a<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 89</PRE>
+
+<P>Unlike <CODE>SETQ</CODE>, which assigns values in left-to-right order, 
+<CODE>LET</CODE> binds variables all at the same time:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq w 77)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 77<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (let ((w 8)<br>        (x w))<br>    (+ w x))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 85</PRE>
+
+<P><CODE>LET</CODE> bound <CODE>W</CODE> to <CODE>8</CODE> and <CODE>X</CODE> 
+to <CODE>W</CODE>.  Because these bindings happened at the same time, 
+<CODE>W</CODE> still had its value of <CODE>77</CODE>.</P>
+
+<BLOCKQUOTE>
+Lisp has a variation of <CODE>LET</CODE>, called <CODE>LET*</CODE>, that <EM>does</EM> perform 
+bindings in order:
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq u 37)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 37<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (let* ((v 4)<br>         (u v))<br>    (+ u v))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 8</PRE>
+
+</BLOCKQUOTE>
+
+<h3>COND</h3> 
+
+<P>The <CODE>COND</CODE> macro lets you evaluate Lisp forms conditionally.  
+Like <CODE>LET</CODE>, <CODE>COND</CODE> uses parentheses to delimit 
+different parts of the form.  Consider these examples:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (let ((a 1)<br>        (b 2)<br>        (c 1)<br>        (d 1))<br>    (cond ((eql a b) 1)<br>          ((eql a c) "First form" 2)<br>          ((eql a d) 3)))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 2</PRE>
+
+<P>In the above <CODE>COND</CODE> form we defined three clauses.  Each 
+clause is a list beginning with a test form and followed by as many body 
+forms as desired.  The body forms are simply code that you want to execute 
+if the test succeeds.  The clauses are selected in order -- as soon as one 
+test succeeds, the corresponding body forms are evaluated and the value of 
+the last body form becomes the value of the <CODE>COND</CODE> form.</P>
+
+<BLOCKQUOTE>
+<CODE>COND</CODE> is more general than the special form, <CODE>IF</CODE>, which only 
+allows one test and one form each for the <VAR>then</VAR> and <VAR>else</VAR> 
+parts.
+</BLOCKQUOTE>
+
+<P>Let's look at what happened in the example.  <CODE>EQL</CODE> returns 
+<CODE>T</CODE> if its two arguments are identical, or the same number 
+(there's a subtle difference that we'll cover in <A 
+HREF="chapter17.html">Chapter 17</A>).  Only two of the three tests executed.  
+The first, <CODE>(EQL A B)</CODE>, returned NIL.  Therefore, the rest of 
+that clause (containing the number <CODE>1</CODE> as its only form) was 
+skipped.  The second clause tested <CODE>(EQL A C)</CODE>, which was true.  
+Because this test returned a non-<CODE>NIL</CODE> value, the remainder of 
+the clause (the two atomic forms, <CODE>"First form"</CODE> and 
+<CODE>2</CODE>) was evaluated, and the value of the last form was returned 
+as the value of the <CODE>COND</CODE>, which was then returned as the value 
+of the enclosing <CODE>LET</CODE>.  The third clause was never tested, 
+since an earlier clause had already been chosen -- clauses are tested in 
+order.</P>
+
+<P>Conventional use of <CODE>COND</CODE> uses <CODE>T</CODE> as the 
+test form in the final clause.  This guarantees that the body forms of the 
+final clause get evaluated if the tests fail in all of the other clauses.  
+You can use the last clause to return a default value or perform some 
+appropriate operation.  Here's an example:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (let ((a 32))<br>    (cond ((eql a 13) "An unlucky number")<br>          ((eql a 99) "A lucky number")<br>          (t "Nothing special about this number")))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> "Nothing special about this number"</PRE>
+
+<h3><A NAME="quote">QUOTE</A></h3> 
+
+<P>Sometimes we'd like to suppress Lisp's normal evaluation rules.  One 
+such case is when we'd like a symbol to stand for itself, rather than its 
+value, when it appears as an argument of a function call:</P>
+
+<PRE WIDTH=80><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq a 97)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 97<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> a<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 97<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq b 23)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 23<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq a b)<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 23<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> a<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> 23<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> (setq a (quote b))<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> B<br><br><IMG SRC="gifs/circle-dot.gif" ALT="?" ALIGN="BOTTOM"> a<br><IMG SRC="gifs/right-arrow.gif" ALT="-&gt;" ALIGN="BOTTOM"> B</PRE>
+
+<P>The difference is that <CODE>B</CODE>'s <EM>value</EM> is used in 
+<CODE>(SETQ A B)</CODE>, whereas <CODE>B</CODE> <EM>stands for itself</EM> 
+in <CODE>(SETQ A (QUOTE B))</CODE>.</P>
+
+<P>The <CODE>QUOTE</CODE> form is so commonly used that Lisp provides a 
+shorthand notation:</P>
+
+<PRE WIDTH=80>(QUOTE <VAR>form</VAR>) <IMG SRC="gifs/equivalent.gif" ALT="eqv" ALIGN="BOTTOM"> '<VAR>form</VAR></PRE>
+
+<P>The <IMG SRC="gifs/equivalent.gif" ALT="eqv" ALIGN="BOTTOM"> symbol 
+means that the two Lisp forms are equivalent.  Lisp arranges the 
+equivalence of <CODE>'</CODE> and <CODE>QUOTE</CODE> through a reader 
+macro.  We'll take a brief look at how you can define your own reader 
+macros in <A HREF="chapter03-12.html">Lesson 12</A>.</P>
+
+<hr>
+<div align="center">
+<a href="contents.html">Contents</a> | <a href="cover.html">Cover</a> <br> 
+<a href="chapter02.html">Chapter 2</a> | <A HREF="chapter03.html">Chapter 3, Introduction</A> | <A HREF="chapter03-02.html">Chapter 3, Lesson 2</A> | Chapter 3, Lesson 3 | <A HREF="chapter03-04.html">Chapter 3, Lesson 4</A> | <a href="chapter04.html">Chapter 4</a>
+</div>
+<hr>
+<address>
+Copyright &copy; 1995-2001, David B. Lamkins<br>
+All Rights Reserved Worldwide<br>
+<br>
+This book may not be reproduced without the written consent of its 
+author.  Online distribution is restricted to the author's site.
+</address> 
+</body> </html> 

@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.10.3 Arrays</TITLE>
+<META NAME="description" CONTENT="5.10.3 Arrays">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2750" HREF="node164.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2748" HREF="node160.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2742" HREF="node162.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2752" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2753" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2751" HREF="node164.html">5.10.4 Vectors</A>
+<B>Up:</B> <A NAME="tex2html2749" HREF="node160.html">5.10 Object Representation</A>
+<B> Previous:</B> <A NAME="tex2html2743" HREF="node162.html">5.10.2 Structure Representation</A>
+<BR> <P>
+<H2><A NAME="SECTION006103000000000000000">5.10.3 Arrays</A></H2>
+<P>
+<A NAME="arraytypes">&#160;</A>
+<A NAME="10479">&#160;</A>
+<P>
+Arrays are often the most efficient representation for collections of objects
+because:
+<UL>
+<LI> Array representations are often the most compact.  An array is
+  always more compact than a list containing the same number of
+  elements.
+<LI> Arrays allow fast constant-time access.
+<LI> Arrays are easily destructively modified, which can reduce
+  consing.
+<LI> Array element types can be specialized, which reduces both
+  overall size and consing (see section&nbsp;<A HREF="node175.html#specializedarraytypes">5.11.8</A>.)
+</UL>
+<P>
+Access of arrays that are not of type <tt>simple-array</tt> is less
+efficient, so declarations are appropriate when an array is of a
+simple type like <tt>simple-string</tt> or <tt>simple-bit-vector</tt>.
+Arrays are almost always simple, but the compiler may not be able to
+prove simpleness at every use.  The only way to get a non-simple array
+is to use the <tt>:displaced-to</tt>, <tt>:fill-pointer</tt> or
+<tt>adjustable</tt> arguments to <tt>make-array</tt>.  If you don't use
+these hairy options, then arrays can always be declared to be simple.
+<P>
+Because of the many specialized array types and the possibility of
+non-simple arrays, array access is much like generic arithmetic
+(see section&nbsp;<A HREF="node171.html#genericarithmetic">5.11.4</A>).  In order for array accesses to be
+efficiently compiled, the element type and simpleness of the array
+must be known at compile time.  If there is inadequate information,
+the compiler is forced to call a generic array access routine.  You
+can detect inefficient array accesses by enabling efficiency notes,
+see section&nbsp;<A HREF="node185.html#efficiencynotes">5.13</A>.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

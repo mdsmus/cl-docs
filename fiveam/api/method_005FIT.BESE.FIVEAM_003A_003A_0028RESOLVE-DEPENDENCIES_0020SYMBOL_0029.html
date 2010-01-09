@@ -1,0 +1,33 @@
+<html
+  ><head
+    ><title
+      >Method (RESOLVE-DEPENDENCIES SYMBOL)</title
+    ><link href="../style.css" rel="stylesheet"
+    /><link title="Print" href="../print.css" rel="alternate stylesheet"
+    /></head
+  ><body
+    ><div class="qbook"
+      ><div class="computational-element"
+        ><h1
+          >Method: (RESOLVE-DEPENDENCIES SYMBOL)</h1
+        ><div class="contents"
+          ><h2
+  >Documentation</h2
+><blockquote
+  >A test which depends on a symbol is interpreted as `(AND
+  ,DEPENDS-ON).</blockquote
+><h2
+            >Source</h2
+          ><pre class="code"
+            >(defmethod resolve-dependencies ((depends-on symbol))
+  &quot;A test which depends on a symbol is interpreted as `(AND
+  ,DEPENDS-ON).&quot;
+  (run-resolving-dependencies (get-test depends-on)))</pre
+          ><a href="../Running_0020Tests.html#method_005FIT.BESE.FIVEAM_003A_003A_0028RESOLVE-DEPENDENCIES_0020SYMBOL_0029"
+            >Source Context</a
+          ></div
+        ></div
+      ></div
+    ></body
+  ></html
+>

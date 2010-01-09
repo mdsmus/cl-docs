@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>4.5.3 Weakened Type Checking</TITLE>
+<META NAME="description" CONTENT="4.5.3 Weakened Type Checking">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1856" HREF="node100.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1854" HREF="node96.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1850" HREF="node98.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1858" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1859" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1857" HREF="node100.html">4.6 Getting Existing Programs </A>
+<B>Up:</B> <A NAME="tex2html1855" HREF="node96.html">4.5 Types in Python</A>
+<B> Previous:</B> <A NAME="tex2html1851" HREF="node98.html">4.5.2 Precise Type Checking</A>
+<BR> <P>
+<H2><A NAME="SECTION00553000000000000000">4.5.3 Weakened Type Checking</A></H2>
+<P>
+<A NAME="weakenedtypechecks">&#160;</A>
+<A NAME="9547">&#160;</A>
+<A NAME="9548">&#160;</A>
+<P>
+When the value for the <tt>speed</tt> optimization quality is greater
+than <tt>safety</tt>, and <tt>safety</tt> is not <tt>0</tt>, then type
+checking is weakened to reduce the speed and space penalty.  In
+structure-intensive code this can double the speed, yet still catch
+most type errors.  Weakened type checks provide a level of safety
+similar to that of ``safe'' code in other Common Lisp compilers.
+<P>
+A type check is weakened by changing the check to be for some
+convenient supertype of the asserted type.  For example,
+<tt>(integer 3 17)</tt> is changed to <tt>fixnum</tt>,
+<tt>(simple-vector 17)</tt> to <tt>simple-vector</tt>, and structure
+types are changed to <tt>structure</tt>.  A complex check like:
+<BLOCKQUOTE> <PRE>(or node hunk (member :foo :bar :baz))
+</PRE> </BLOCKQUOTE>
+will be omitted entirely (i.e., the check is weakened to <tt>*</tt>.)  If
+a precise check can be done for no extra cost, then no weakening is
+done.
+<P>
+Although weakened type checking is similar to type checking done by
+other compilers, it is sometimes safer and sometimes less safe.
+Weakened checks are done in the same places is precise checks, so all
+the preceding discussion about where checking is done still applies.
+Weakened checking is sometimes somewhat unsafe because although the
+check is weakened, the precise type is still input into type
+inference.  In some contexts this will result in type inferences not
+justified by the weakened check, and hence deletion of some type
+checks that would be done by conventional compilers.
+<P>
+For example, if this code was compiled with weakened checks:
+<BLOCKQUOTE> <PRE>(defstruct foo
+  (a nil :type simple-string))
+<P>
+(defstruct bar
+  (a nil :type single-float))
+<P>
+(defun myfun (x)
+  (declare (type bar x))
+  (* (bar-a x) 3.0))
+</PRE> </BLOCKQUOTE>
+and <tt>myfun</tt> was passed a <tt>foo</tt>, then no type error would be
+signaled, and we would try to multiply a <tt>simple-vector</tt> as
+though it were a float (with unpredictable results.)  This is because
+the check for <tt>bar</tt> was weakened to <tt>structure</tt>, yet when
+compiling the call to <tt>bar-a</tt>, the compiler thinks it knows it
+has a <tt>bar</tt>.
+<P>
+Note that normally even weakened type checks report the precise type
+in error messages.  For example, if <tt>myfun</tt>'s <tt>bar</tt> check is
+weakened to <tt>structure</tt>, and the argument is <i>nil</i>, then the
+error will be:
+<BLOCKQUOTE> <PRE>Type-error in MYFUN:
+  NIL is not of type BAR
+</PRE> </BLOCKQUOTE>
+However, there is some speed and space cost for signaling a precise
+error, so the weakened type is reported if the <tt>speed</tt>
+optimization quality is <tt>3</tt> or <tt>debug</tt> quality is less than
+<tt>1</tt>:
+<BLOCKQUOTE> <PRE>Type-error in MYFUN:
+  NIL is not of type STRUCTURE
+</PRE> </BLOCKQUOTE>
+See section&nbsp;<A HREF="node102.html#optimizedeclaration">4.7.1</A> for further discussion of the
+<tt>optimize</tt> declaration.
+<P>
+<HR><A NAME="tex2html1856" HREF="node100.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1854" HREF="node96.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1850" HREF="node98.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1858" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1859" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1857" HREF="node100.html">4.6 Getting Existing Programs </A>
+<B>Up:</B> <A NAME="tex2html1855" HREF="node96.html">4.5 Types in Python</A>
+<B> Previous:</B> <A NAME="tex2html1851" HREF="node98.html">4.5.2 Precise Type Checking</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

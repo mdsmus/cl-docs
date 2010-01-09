@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>Debug-functions</TITLE>
+<META NAME="description" CONTENT="Debug-functions">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html4006" HREF="node262.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html4004" HREF="node255.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3998" HREF="node260.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html4008" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html4009" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html4007" HREF="node262.html">Debug-blocks</A>
+<B>Up:</B> <A NAME="tex2html4005" HREF="node255.html">10 Debugger Programmer's Interface</A>
+<B> Previous:</B> <A NAME="tex2html3999" HREF="node260.html">10.3 Frames</A>
+<BR> <P>
+<H1><A NAME="SECTION001140000000000000000">Debug-functions</A></H1>
+<P>
+Debug-functions represent the static information about a function determined at
+compile time--argument and variable storage, their lifetime information,
+etc.  The debug-function also contains all the debug-blocks representing
+basic-blocks of code, and these contains information about specific
+code-locations in a debug-function.
+<P>
+<b>[Macro]</b><BR> 
+<tt>  do-debug-function-blocks</tt> <em> (<i>block-var</i> <i>debug-function</i> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i>result-form</i></i><IMG WIDTH=5 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17168" SRC="img6.gif">)
+      <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i>form</i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></em><BR>
+<P>
+  This executes the forms in a context with <i>block-var</i> bound to
+  each debug-block in <i>debug-function</i> successively.
+  <i>Result-form</i> is an optional form to execute for a return value,
+  and <tt>do-debug-function-blocks</tt> returns <i>nil</i> if there is no
+  <i>result-form</i>.  This signals a <tt>no-debug-blocks</tt> condition
+  when the <i>debug-function</i> lacks debug-block information.
+<P>
+<b>[Function]</b><BR> 
+<tt>  debug-function-lambda-list</tt> <em> <i>debug-function</i></em><BR>
+<P>
+  This function returns a list representing the lambda-list for
+  <i>debug-function</i>.  The list has the following structure:
+  <BLOCKQUOTE> <PRE>(required-var1 required-var2
+    ...
+    (:optional var3 suppliedp-var4)
+    (:optional var5)
+    ...
+    (:rest var6) (:rest var7)
+    ...
+    (:keyword keyword-symbol var8 suppliedp-var9)
+    (:keyword keyword-symbol var10)
+    ...
+    )
+  </PRE> </BLOCKQUOTE>
+  Each <tt>var</tt><i>n</i> is a debug-variable; however, the symbol
+  <tt>:deleted</tt> appears instead whenever the argument remains
+  unreferenced throughout <i>debug-function</i>.
+<P>
+  If there is no lambda-list information, this signals a
+  <tt>lambda-list-unavailable</tt> condition.
+<P>
+<b>[Macro]</b><BR> 
+<tt>  do-debug-function-variables</tt> <em> (<i>var</i> <i>debug-function</i> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i>result</i></i><IMG WIDTH=5 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17168" SRC="img6.gif">)
+      <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i>form</i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif"></em><BR>
+<P>
+  This macro executes each <i>form</i> in a context with <i>var</i>
+  bound to each debug-variable in <i>debug-function</i>.  This returns
+  the value of executing <i>result</i> (defaults to <i>nil</i>).  This may
+  iterate over only some of <i>debug-function</i>'s variables or none
+  depending on debug policy; for example, possibly the compilation
+  only preserved argument information.
+<P>
+<b>[Function]</b><BR> 
+<tt>  debug-variable-info-available</tt> <em> <i>debug-function</i></em><BR>
+<P>
+  This function returns whether there is any variable information for
+  <i>debug-function</i>.  This is useful for distinguishing whether
+  there were no locals in a function or whether there was no variable
+  information.  For example, if <tt>do-debug-function-variables</tt>
+  executes its forms zero times, then you can use this function to
+  determine the reason.
+<P>
+<b>[Function]</b><BR> 
+<tt>  debug-function-symbol-variables</tt> <em> <i>debug-function</i> <i>symbol</i></em><BR>
+<P>
+  This function returns a list of debug-variables in
+  <i>debug-function</i> having the same name and package as
+  <i>symbol</i>.  If <i>symbol</i> is uninterned, then this returns a
+  list of debug-variables without package names and with the same name
+  as <i>symbol</i>.  The result of this function is limited to the
+  availability of variable information in <i>debug-function</i>; for
+  example, possibly <i>debug-function</i> only knows about its
+  arguments.
+<P>
+<b>[Function]</b><BR> 
+<tt>  ambiguous-debug-variables</tt> <em> <i>debug-function</i> <i>name-prefix-string</i></em><BR>
+<P>
+  This function returns a list of debug-variables in
+  <i>debug-function</i> whose names contain <i>name-prefix-string</i> as
+  an initial substring.  The result of this function is limited to the
+  availability of variable information in <i>debug-function</i>; for
+  example, possibly <i>debug-function</i> only knows about its
+  arguments.
+<P>
+<b>[Function]</b><BR> 
+<tt>  preprocess-for-eval</tt> <em> <i>form</i> <i>basic-code-location</i></em><BR>
+<P>
+  This function returns a function of one argument that evaluates
+  <i>form</i> in the lexical context of <i>basic-code-location</i>.
+  This allows efficient repeated evaluation of <i>form</i> at a certain
+  place in a function which could be useful for conditional breaking.
+  This signals a <tt>no-debug-variables</tt> condition when the
+  code-location's debug-function has no debug-variable information
+  available.  The returned function takes a frame as an argument.  See
+  also <A NAME="12322">&#160;</A><tt>eval-in-frame</tt> (page&nbsp;<A HREF="node260.html#FNevalinframe"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>).
+<P>
+<b>[Function]</b><BR> 
+<tt>  function-debug-function</tt> <em> <i>function</i></em><BR>
+<P>
+  This function returns a debug-function that represents debug
+  information for <i>function</i>.
+<P>
+<b>[Function]</b><BR> 
+<tt>  debug-function-kind</tt> <em> <i>debug-function</i></em><BR>
+<P>
+  This function returns the kind of function <i>debug-function</i>
+  represents.  The value is one of the following:
+  <DL ><DT><STRONG><tt>:optional</tt></STRONG>
+<DD> This kind of function is an entry point to an
+    ordinary function.  It handles optional defaulting, parsing
+    keywords, etc.
+  <DT><STRONG><tt>:external</tt></STRONG>
+<DD> This kind of function is an entry point to an
+    ordinary function.  It checks argument values and count and calls
+    the defined function.
+  <DT><STRONG><tt>:top-level</tt></STRONG>
+<DD> This kind of function executes one or more
+    random top-level forms from a file.
+  <DT><STRONG><tt>:cleanup</tt></STRONG>
+<DD> This kind of function represents the cleanup
+    forms in an <tt>unwind-protect</tt>.
+  <DT><STRONG><i>nil</i></STRONG>
+<DD> This kind of function is not one of the above; that is,
+    it is not specially marked in any way.
+<P>
+</DL>
+<P>
+<b>[Function]</b><BR> 
+<tt>  debug-function-function</tt> <em> <i>debug-function</i></em><BR>
+<P>
+  This function returns the Common Lisp function associated with the
+  <i>debug-function</i>.  This returns <i>nil</i> if the function is
+  unavailable or is non-existent as a user callable function object.
+<P>
+<b>[Function]</b><BR> 
+<tt>  debug-function-name</tt> <em> <i>debug-function</i></em><BR>
+<P>
+  This function returns the name of the function represented by
+  <i>debug-function</i>.  This may be a string or a cons; do not assume
+  it is a symbol.
+<P>
+<HR><A NAME="tex2html4006" HREF="node262.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html4004" HREF="node255.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html3998" HREF="node260.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html4008" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html4009" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html4007" HREF="node262.html">Debug-blocks</A>
+<B>Up:</B> <A NAME="tex2html4005" HREF="node255.html">10 Debugger Programmer's Interface</A>
+<B> Previous:</B> <A NAME="tex2html3999" HREF="node260.html">10.3 Frames</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

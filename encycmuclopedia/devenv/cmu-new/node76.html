@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>3.7 Exiting Commands</TITLE>
+<META NAME="description" CONTENT="3.7 Exiting Commands">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1558" HREF="node77.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1556" HREF="node59.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1550" HREF="node75.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1560" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1561" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1559" HREF="node77.html">3.8 Information Commands</A>
+<B>Up:</B> <A NAME="tex2html1557" HREF="node59.html">3 The Debugger</A>
+<B> Previous:</B> <A NAME="tex2html1551" HREF="node75.html">3.6 Compiler Policy Control</A>
+<BR> <P>
+<H1><A NAME="SECTION00470000000000000000">3.7 Exiting Commands</A></H1>
+<P>
+These commands get you out of the debugger.
+<P>
+<DL ><DT><STRONG><tt>quit</tt></STRONG>
+<DD>
+Throw to top level.
+<P>
+<DT><STRONG><tt>restart</tt> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>n</i></i></i><IMG WIDTH=5 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17168" SRC="img6.gif"></STRONG>
+<DD>Invokes the <i>n</i>th restart case as displayed by the <tt>error</tt>
+command.  If <i>n</i> is not specified, the available restart cases are
+reported.
+<P>
+<DT><STRONG><tt>go</tt></STRONG>
+<DD>
+Calls <tt>continue</tt> on the condition given to <tt>debug</tt>.  If there is no
+restart case named <i>continue</i>, then an error is signaled.
+<P>
+<DT><STRONG><tt>abort</tt></STRONG>
+<DD>
+Calls <tt>abort</tt> on the condition given to <tt>debug</tt>.  This is
+useful for popping debug command loop levels or aborting to top level,
+as the case may be.
+<P>
+</DL><BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

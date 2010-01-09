@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>1.2 Local Distribution of CMU Common Lisp</TITLE>
+<META NAME="description" CONTENT="1.2 Local Distribution of CMU Common Lisp">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html604" HREF="node5.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html602" HREF="node2.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html596" HREF="node3.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html606" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html607" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html605" HREF="node5.html">1.3 Net Distribution of </A>
+<B>Up:</B> <A NAME="tex2html603" HREF="node2.html">1 Introduction</A>
+<B> Previous:</B> <A NAME="tex2html597" HREF="node3.html">1.1 Support</A>
+<BR> <P>
+<H1><A NAME="SECTION00220000000000000000">1.2 Local Distribution of CMU Common Lisp</A></H1>
+<P>
+In CMU CS, CMU Common Lisp should be runnable as `<tt>/usr/local/bin/cmucl</tt>'.
+The full binary distribution should appear under
+`<tt>/usr/local/lib/cmucl/</tt>'.  Note that the first time you run Lisp,
+it will take AFS several minutes to copy the image into its local
+cache.  Subsequent starts will be much faster.
+<P>
+Or, you can run directly out of the AFS release area (which may be
+necessary on SunOS machines).  Put this in your `<tt>.login</tt>' shell
+script:
+<BLOCKQUOTE> <PRE>setenv CMUCLLIB &quot;/afs/cs/misc/cmucl/@sys/beta/lib&quot;
+setenv PATH $PATH:/afs/cs/misc/cmucl/@sys/beta/bin
+</PRE> </BLOCKQUOTE>
+<P>
+If you also set <tt>MANPATH</tt> or <tt>MPATH</tt> (depending on the Unix)
+to point to `<tt>/usr/local/lib/cmucl/man/</tt>', then `<tt>man cmucl</tt>'
+will give an introduction to CMU CL and `<tt>man lisp</tt>' will describe
+command line options.  For installation notes, see the `<tt>README</tt>'
+file in the release area.
+<P>
+See `<tt>/usr/local/lib/cmucl/doc</tt>' for release notes and
+documentation.  Hardcopy documentation is available in the document
+room.  Documentation supplements may be available for recent
+additions: see the `<tt>README</tt>' file.
+<P>
+Send bug reports and questions to `<tt>cmucl-bugs@cs.cmu.edu</tt>'.  If
+you send a bug report to `<tt>gripe</tt>' or `<tt>help</tt>', they will just
+forward it to this mailing list.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

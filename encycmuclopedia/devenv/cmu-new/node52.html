@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>2.14.2 File Name Completion</TITLE>
+<META NAME="description" CONTENT="2.14.2 File Name Completion">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1247" HREF="node53.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1245" HREF="node50.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1239" HREF="node51.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1249" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1250" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1248" HREF="node53.html">2.14.3 Miscellaneous Filesystem Operations</A>
+<B>Up:</B> <A NAME="tex2html1246" HREF="node50.html">2.14 Filesystem Operations</A>
+<B> Previous:</B> <A NAME="tex2html1240" HREF="node51.html">2.14.1 Wildcard Matching</A>
+<BR> <P>
+<H2><A NAME="SECTION003142000000000000000">2.14.2 File Name Completion</A></H2>
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:complete-file</tt> <em> <i>pathname</i>
+      <tt>&amp;key</tt> <tt>:defaults</tt> <tt>:ignore-types</tt></em><BR>
+<P>
+  Attempt to complete a file name to the longest unambiguous prefix.
+  If supplied, directory from <tt>:defaults</tt> is used as the ``working
+  directory'' when doing completion.  <tt>:ignore-types</tt> is a list of
+  strings of the pathname types (a.k.a. extensions) that should be
+  disregarded as possible matches (binary file names, etc.)
+<P>
+<b>[Function]</b><BR> 
+<tt> extensions:ambiguous-files</tt> <em> <i>pathname</i>
+      <i>&amp;optional</i> <i>defaults</i></em><BR>
+<P>
+  Return a list of pathnames for all the possible completions of
+  <i>pathname</i> with respect to <i>defaults</i>.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

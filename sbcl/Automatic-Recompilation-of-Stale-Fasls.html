@@ -1,0 +1,61 @@
+<html lang="en">
+<head>
+<title>Automatic Recompilation of Stale Fasls - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Initialization-Examples.html#Initialization-Examples" title="Initialization Examples">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Automatic-Recompilation-of-Stale-Fasls"></a>
+<p>
+Up:&nbsp;<a rel="up" accesskey="u" href="Initialization-Examples.html#Initialization-Examples">Initialization Examples</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h5 class="subsubsection">2.4.4.1 Automatic Recompilation of Stale Fasls</h5>
+
+<p>SBCL fasl-format is at current stage of development undergoing
+non-backwards compatible changes fairly often. The following snippet
+handles recompilation automatically for ASDF-based systems.
+
+<pre class="lisp">     (require :asdf)
+     
+     ;;; If a fasl was stale, try to recompile and load (once).
+     (defmethod asdf:perform :around ((o asdf:load-op)
+                                      (c asdf:cl-source-file))
+        (handler-case (call-next-method o c)
+           ;; If a fasl was stale, try to recompile and load (once).
+           (sb-ext:invalid-fasl ()
+              (asdf:perform (make-instance 'asdf:compile-op) c)
+              (call-next-method))))
+</pre>
+   </body></html>
+

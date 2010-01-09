@@ -1,0 +1,92 @@
+<html lang="en">
+<head>
+<title>sb-aclrepl - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Contributed-Modules.html#Contributed-Modules" title="Contributed Modules">
+<link rel="next" href="sb_002dgrovel.html#sb_002dgrovel" title="sb-grovel">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="sb-aclrepl"></a>
+<a name="sb_002daclrepl"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="sb_002dgrovel.html#sb_002dgrovel">sb-grovel</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Contributed-Modules.html#Contributed-Modules">Contributed Modules</a>
+<hr>
+</div>
+
+<h3 class="section">15.1 sb-aclrepl</h3>
+
+<p><a name="index-Read_002dEval_002dPrint-Loop-591"></a><a name="index-REPL-592"></a>
+<!-- FIXME: I wanted to use @registeredsymbol{}, but that's -->
+<!-- only available in Texinfo 4.7.  sigh. -->
+The <code>sb-aclrepl</code> module offers an Allegro CL-style
+Read-Eval-Print Loop for SBCL, with integrated inspector.  Adding a
+debugger interface is planned.
+
+<h4 class="subsection">15.1.1 Usage</h4>
+
+<p>To start <code>sb-aclrepl</code> as your read-eval-print loop, put the form
+<pre class="lisp">     (require 'sb-aclrepl)
+</pre>
+   <p>in your <samp><span class="file">~/.sbclrc</span></samp> initialization file.
+
+<h4 class="subsection">15.1.2 Example Initialization</h4>
+
+<p>Here's a longer example of a <samp><span class="file">~/.sbclrc</span></samp> file that shows off
+some of the features of <code>sb-aclrepl</code>:
+
+<pre class="lisp">     (ignore-errors (require 'sb-aclrepl))
+     
+     (when (find-package 'sb-aclrepl)
+       (push :aclrepl cl:*features*))
+     #+aclrepl
+     (progn
+       (setq sb-aclrepl:*max-history* 100)
+       (setf (sb-aclrepl:alias "asdc")
+            #'(lambda (sys) (asdf:operate 'asdf:compile-op sys)))
+       (sb-aclrepl:alias "l" (sys) (asdf:operate 'asdf:load-op sys))
+       (sb-aclrepl:alias "t" (sys) (asdf:operate 'asdf:test-op sys))
+       ;; The 1 below means that two characaters ("up") are required
+       (sb-aclrepl:alias ("up" 1 "Use package") (package) (use-package package))
+       ;; The 0 below means only the first letter ("r") is required,
+       ;; such as ":r base64"
+       (sb-aclrepl:alias ("require" 0 "Require module") (sys) (require sys))
+       (setq cl:*features* (delete :aclrepl cl:*features*)))
+</pre>
+   <p>Questions, comments, or bug reports should be sent to Kevin Rosenberg
+(<a href="mailto:kevin@rosenberg.net">kevin@rosenberg.net</a>).
+
+<h4 class="subsection">15.1.3 Credits</h4>
+
+<p>Allegro CL is a registered trademark of Franz Inc.
+
+   </body></html>
+

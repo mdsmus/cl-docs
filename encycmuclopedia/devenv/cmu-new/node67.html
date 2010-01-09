@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>3.3.5 Debug Tail Recursion</TITLE>
+<META NAME="description" CONTENT="3.3.5 Debug Tail Recursion">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html1452" HREF="node68.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html1450" HREF="node62.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html1444" HREF="node66.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html1454" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html1455" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html1453" HREF="node68.html">3.3.6 Unknown Locations and </A>
+<B>Up:</B> <A NAME="tex2html1451" HREF="node62.html">3.3 Stack Frames</A>
+<B> Previous:</B> <A NAME="tex2html1445" HREF="node66.html">3.3.4 Funny Frames</A>
+<BR> <P>
+<H2><A NAME="SECTION00435000000000000000">3.3.5 Debug Tail Recursion</A></H2>
+<P>
+<A NAME="debugtailrecursion">&#160;</A>
+<A NAME="8768">&#160;</A>
+<A NAME="8769">&#160;</A>
+<P>
+Both the compiler and the interpreter are ``properly tail recursive.''  If a
+function call is in a tail-recursive position, the stack frame will be
+deallocated &#305;at the time of the call, rather than after the call returns.
+Consider this backtrace:
+<BLOCKQUOTE> <PRE>(BAR ...) 
+(FOO ...)
+</PRE> </BLOCKQUOTE>
+Because of tail recursion, it is not necessarily the case that
+<tt>FOO</tt> directly called <tt>BAR</tt>.  It may be that <tt>FOO</tt> called
+some other function <tt>FOO2</tt> which then called <tt>BAR</tt>
+tail-recursively, as in this example:
+<BLOCKQUOTE> <PRE>(defun foo ()
+  ...
+  (foo2 ...)
+  ...)
+<P>
+(defun foo2 (...)
+  ...
+  (bar ...))
+<P>
+(defun bar (...)
+  ...)
+</PRE> </BLOCKQUOTE>
+<P>
+Usually the elimination of tail-recursive frames makes debugging more
+pleasant, since theses frames are mostly uninformative.  If there is any
+doubt about how one function called another, it can usually be
+eliminated by finding the source location in the calling frame (section
+<A HREF="node72.html#sourcelocations">3.5</A>.)
+<P>
+For a more thorough discussion of tail recursion, see section&nbsp;<A HREF="node140.html#tailrecursion">5.5</A>.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

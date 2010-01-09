@@ -1,0 +1,114 @@
+<html lang="en">
+<head>
+<title>Output prefixing character stream - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Gray-Streams-examples.html#Gray-Streams-examples" title="Gray Streams examples">
+<link rel="prev" href="Character-counting-input-stream.html#Character-counting-input-stream" title="Character counting input stream">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Output-prefixing-character-stream"></a>
+<p>
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Character-counting-input-stream.html#Character-counting-input-stream">Character counting input stream</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Gray-Streams-examples.html#Gray-Streams-examples">Gray Streams examples</a>
+<hr>
+</div>
+
+<h5 class="subsubsection">9.2.8.2 Output prefixing character stream</h5>
+
+<p>One use for a wrapped output stream might be to prefix each line of
+text with a timestamp, e.g., for a logging stream.  Here's a simple
+stream that does this, though without any fancy line-wrapping.  Note
+that all character output stream classes must implement
+<code>stream-write-char<!-- /@w --></code> and <code>stream-line-column<!-- /@w --></code>.
+
+<pre class="lisp">     (defclass wrapped-stream (fundamental-stream)
+       ((stream :initarg :stream :reader stream-of)))
+     
+     (defmethod stream-element-type ((stream wrapped-stream))
+       (stream-element-type (stream-of stream)))
+     
+     (defmethod close ((stream wrapped-stream) &amp;key abort)
+       (close (stream-of stream) :abort abort))
+     
+     (defclass wrapped-character-output-stream
+         (wrapped-stream fundamental-character-output-stream)
+       ((col-index :initform 0 :accessor col-index-of)))
+     
+     (defmethod stream-line-column ((stream wrapped-character-output-stream))
+       (col-index-of stream))
+     
+     (defmethod stream-write-char ((stream wrapped-character-output-stream)
+                                   char)
+       (with-accessors ((inner-stream stream-of) (cols col-index-of)) stream
+         (write-char char inner-stream)
+         (if (char= char #\Newline)
+             (setf cols 0)
+             (incf cols))))
+     
+     (defclass prefixed-character-output-stream
+         (wrapped-character-output-stream)
+       ((prefix :initarg :prefix :reader prefix-of)))
+     
+     (defgeneric write-prefix (prefix stream)
+       (:method ((prefix string) stream) (write-string prefix stream))
+       (:method ((prefix function) stream) (funcall prefix stream)))
+     
+     (defmethod stream-write-char ((stream prefixed-character-output-stream)
+                                   char)
+       (with-accessors ((inner-stream stream-of) (cols col-index-of)
+                        (prefix prefix-of)) stream
+         (when (zerop cols)
+           (write-prefix prefix inner-stream))
+         (call-next-method)))
+</pre>
+   <p>As with the example input stream, this implements only the minimal
+protocol.  A production implementation should also provide methods for
+at least <code>stream-write-line<!-- /@w --></code>, <code>stream-write-sequence<!-- /@w --></code>.
+
+   <p>And here's a sample use of this class:
+
+<pre class="lisp">     (flet ((format-timestamp (stream)
+              (apply #'format stream "[~2@*~2,' D:~1@*~2,'0D:~0@*~2,'0D] "
+                     (multiple-value-list (get-decoded-time)))))
+       (let ((output (make-instance 'prefixed-character-output-stream
+                                    :stream *standard-output*
+                                    :prefix #'format-timestamp)))
+         (loop for string in '("abc" "def" "ghi") do
+              (write-line string output)
+              (sleep 1))))
+<pre class="verbatim">     [ 0:30:05] abc
+     [ 0:30:06] def
+     [ 0:30:07] ghi
+     NIL
+</pre>
+</pre>
+   </body></html>
+

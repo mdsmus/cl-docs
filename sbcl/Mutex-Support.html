@@ -1,0 +1,164 @@
+<html lang="en">
+<head>
+<title>Mutex Support - SBCL 1.0.21.18 User Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="SBCL 1.0.21.18 User Manual">
+<meta name="generator" content="makeinfo 4.13">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Threading.html#Threading" title="Threading">
+<link rel="prev" href="Special-Variables.html#Special-Variables" title="Special Variables">
+<link rel="next" href="Semaphores.html#Semaphores" title="Semaphores">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+
+     This manual is part of the SBCL software system. See the `README'
+     file for more information.
+
+     This manual is largely derived from the manual for the CMUCL
+     system, which was produced at Carnegie Mellon University and later
+     released into the public domain. This manual is in the public
+     domain and is provided with absolutely no warranty. See the
+     `COPYING' and `CREDITS' files for more information.
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<a name="Mutex-Support"></a>
+<p>
+Next:&nbsp;<a rel="next" accesskey="n" href="Semaphores.html#Semaphores">Semaphores</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Special-Variables.html#Special-Variables">Special Variables</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Threading.html#Threading">Threading</a>
+<hr>
+</div>
+
+<!-- node-name,  next,  previous,  up -->
+<h3 class="section">11.3 Mutex Support</h3>
+
+<p>Mutexes are used for controlling access to a shared resource. One
+thread is allowed to hold the mutex, others which attempt to take it
+will be made to wait until it's free. Threads are woken in the order
+that they go to sleep.
+
+   <p>There isn't a timeout on mutex acquisition, but the usual WITH-TIMEOUT
+macro (which throws a TIMEOUT condition after n seconds) can be used
+if you want a bounded wait.
+
+<pre class="lisp">     (defpackage :demo (:use "CL" "SB-THREAD" "SB-EXT"))
+     
+     (in-package :demo)
+     
+     (defvar *a-mutex* (make-mutex :name "my lock"))
+     
+     (defun thread-fn ()
+       (format t "Thread ~A running ~%" *current-thread*)
+       (with-mutex (*a-mutex*)
+         (format t "Thread ~A got the lock~%" *current-thread*)
+         (sleep (random 5)))
+       (format t "Thread ~A dropped lock, dying now~%" *current-thread*))
+     
+     (make-thread #'thread-fn)
+     (make-thread #'thread-fn)
+</pre>
+   <p><a name="Structure-sb_002dthread_003amutex"></a>
+
+<div class="defun">
+&mdash; Structure: <b>sb-thread:mutex</b><var><a name="index-sb_002dthread_003amutex-443"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003amutex-444"></a>Class precedence list: <code>mutex, structure-object, t</code>
+
+        <p>Mutex type. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dthread_003amake_002dmutex"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-thread:make-mutex</b><var> &amp;key name %owner state<a name="index-sb_002dthread_003amake_002dmutex-445"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003amake_002dmutex-446"></a>Create a mutex. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dthread_003amutex_002dname"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-thread:mutex-name</b><var> instance<a name="index-sb_002dthread_003amutex_002dname-447"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003amutex_002dname-448"></a>The name of the mutex. Setfable. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dthread_003amutex_002dvalue"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-thread:mutex-value</b><var> mutex<a name="index-sb_002dthread_003amutex_002dvalue-449"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003amutex_002dvalue-450"></a>Current owner of the mutex, <code>nil</code> if the mutex is free. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dthread_003aget_002dmutex"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-thread:get-mutex</b><var> mutex &amp;optional new-owner waitp<a name="index-sb_002dthread_003aget_002dmutex-451"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003aget_002dmutex-452"></a>Acquire <code>mutex</code> for <code>new-owner</code>, which must be a thread or <code>nil</code>. If
+<code>new-owner</code> is <code>nil</code>, it defaults to the current thread. If <code>waitp</code> is
+non-NIL and the mutex is in use, sleep until it is available.
+
+        <p>Note: using <code>get-mutex</code> to assign a <code>mutex</code> to another thread then the
+current one is not recommended, and liable to be deprecated.
+
+        <p><code>get-mutex</code> is not interrupt safe. The correct way to call it is:
+
+     <pre class="lisp">           (WITHOUT-INTERRUPTS
+             ...
+             (ALLOW-WITH-INTERRUPTS (GET-MUTEX ...))
+             ...)
+</pre>
+        <p><code>without-interrupts</code> is necessary to avoid an interrupt unwinding the
+call while the mutex is in an inconsistent state while
+<code>allow-with-interrupts</code> allows the call to be interrupted from sleep.
+
+        <p>It is recommended that you use <code>with-mutex</code> instead of calling <code>get-mutex</code>
+directly. 
+</p></blockquote></div>
+
+   <p><a name="Function-sb_002dthread_003arelease_002dmutex"></a>
+
+<div class="defun">
+&mdash; Function: <b>sb-thread:release-mutex</b><var> mutex<a name="index-sb_002dthread_003arelease_002dmutex-453"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003arelease_002dmutex-454"></a>Release <code>mutex</code> by setting it to <code>nil</code>. Wake up threads waiting for
+this mutex.
+
+        <p><code>release-mutex</code> is not interrupt safe: interrupts should be disabled
+around calls to it.
+
+        <p>Signals a <code>warning</code> is current thread is not the current owner of the
+mutex. 
+</p></blockquote></div>
+
+   <p><a name="Macro-sb_002dthread_003awith_002dmutex"></a>
+
+<div class="defun">
+&mdash; Macro: <b>sb-thread:with-mutex</b> (<var>mutex &amp;key value wait-p</var>)<var> &amp;body body<a name="index-sb_002dthread_003awith_002dmutex-455"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003awith_002dmutex-456"></a>Acquire <code>mutex</code> for the dynamic scope of <code>body</code>, setting it to
+<code>new-value</code> or some suitable default value if <code>nil</code>.  If <code>wait-p</code> is non-NIL
+and the mutex is in use, sleep until it is available
+</p></blockquote></div>
+
+   <p><a name="Macro-sb_002dthread_003awith_002drecursive_002dlock"></a>
+
+<div class="defun">
+&mdash; Macro: <b>sb-thread:with-recursive-lock</b> (<var>mutex</var>)<var> &amp;body body<a name="index-sb_002dthread_003awith_002drecursive_002dlock-457"></a></var><br>
+<blockquote><p><a name="index-sb_002dthread_003awith_002drecursive_002dlock-458"></a>Acquires <code>mutex</code> for the dynamic scope of <code>body</code>. Within that scope
+further recursive lock attempts for the same mutex succeed. It is
+allowed to mix <code>with-mutex</code> and <code>with-recursive-lock</code> for the same mutex
+provided the default value is used for the mutex. 
+</p></blockquote></div>
+
+   </body></html>
+

@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.12.4 Mapping and Iteration</TITLE>
+<META NAME="description" CONTENT="5.12.4 Mapping and Iteration">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html3002" HREF="node184.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html3000" HREF="node179.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2994" HREF="node182.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html3004" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html3005" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html3003" HREF="node184.html">5.12.5 Trace Files and </A>
+<B>Up:</B> <A NAME="tex2html3001" HREF="node179.html">5.12 General Efficiency Hints</A>
+<B> Previous:</B> <A NAME="tex2html2995" HREF="node182.html">5.12.3 Complex Argument Syntax</A>
+<BR> <P>
+<H2><A NAME="SECTION006124000000000000000">5.12.4 Mapping and Iteration</A></H2>
+<P>
+<A NAME="10716">&#160;</A>
+<P>
+One of the traditional Common Lisp programming styles is a highly applicative one,
+involving the use of mapping functions and many lists to store intermediate
+results.  To compute the sum of the square-roots of a list of numbers, one
+might say:
+<BLOCKQUOTE> <PRE>(apply #'+ (mapcar #'sqrt list-of-numbers))
+</PRE> </BLOCKQUOTE>
+<P>
+This programming style is clear and elegant, but unfortunately results
+in slow code.  There are two reasons why:
+<UL>
+<LI> The creation of lists of intermediate results causes much
+  consing (see <A HREF="node181.html#consing">5.12.2</A>).
+<LI> Each level of application requires another scan down the list.
+  Thus, disregarding other effects, the above code would probably take
+  twice as long as a straightforward iterative version.
+</UL>
+<P>
+An example of an iterative version of the same code:
+<BLOCKQUOTE> <PRE>(do ((num list-of-numbers (cdr num))
+     (sum 0 (+ (sqrt (car num)) sum)))
+    ((null num) sum))
+</PRE> </BLOCKQUOTE>
+<P>
+See sections <A HREF="node125.html#variabletypeinference">5.3.1</A> and <A HREF="node132.html#letoptimization">5.4.1</A>
+for a discussion of the interactions of iteration constructs with type
+inference and variable optimization.  Also, section
+<A HREF="node146.html#localtailrecursion">5.6.4</A> discusses an applicative style of
+iteration.
+<P>
+<BR> <HR>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>

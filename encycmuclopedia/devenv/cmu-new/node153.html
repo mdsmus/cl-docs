@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.2//EN">
+<!--Converted with LaTeX2HTML 96.1-h (September 30, 1996) by Nikos Drakos (nikos@cbl.leeds.ac.uk), CBLU, University of Leeds -->
+<HTML>
+<HEAD>
+<TITLE>5.7.5 Context Declarations</TITLE>
+<META NAME="description" CONTENT="5.7.5 Context Declarations">
+<META NAME="keywords" CONTENT="cmu-new">
+<META NAME="resource-type" CONTENT="document">
+<META NAME="distribution" CONTENT="global">
+<LINK REL=STYLESHEET HREF="cmu-new.css">
+</HEAD>
+<BODY LANG="EN" >
+ <A NAME="tex2html2625" HREF="node154.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2623" HREF="node148.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2617" HREF="node152.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2627" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2628" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2626" HREF="node154.html">5.7.6 Context Declaration Example</A>
+<B>Up:</B> <A NAME="tex2html2624" HREF="node148.html">5.7 Block Compilation</A>
+<B> Previous:</B> <A NAME="tex2html2618" HREF="node152.html">5.7.4 Practical Difficulties</A>
+<BR> <P>
+<H2><A NAME="SECTION00675000000000000000">5.7.5 Context Declarations</A></H2>
+<P>
+<A NAME="contextdeclarations">&#160;</A>
+<A NAME="10255">&#160;</A>
+<A NAME="10256">&#160;</A>
+<P>
+CMU Common Lisp has a context-sensitive declaration mechanism which is useful
+because it allows flexible control of the compilation policy in large
+systems without requiring changes to the source files.  The primary
+use of this feature is to allow the exported interfaces of a system to
+be compiled more safely than the system internals.  The context used
+is the name being defined and the kind of definition (function, macro,
+etc.)
+<P>
+The <tt>:context-declarations</tt> option to <A NAME="10258">&#160;</A><tt>with-compilation-unit</tt> (page&nbsp;<A HREF="node86.html#FNwithcompilationunit"><IMG  ALIGN=BOTTOM ALT="gif" SRC="cross_ref_motif.gif"></A>) has
+dynamic scope, affecting all compilation done during the evaluation of the
+body.  The argument to this option should evaluate to a list of lists of the
+form:
+<BLOCKQUOTE> <PRE>(<i>context-spec</i> <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>declare-form</i></i></i><IMG WIDTH=16 HEIGHT=26 ALIGN=MIDDLE ALT="tex2html_wrap_inline17429" SRC="img16.gif">)
+</PRE> </BLOCKQUOTE>
+In the indicated context, the specified declare forms are inserted at
+the head of each definition.  The declare forms for all contexts that
+match are appended together, with earlier declarations getting
+precedence over later ones.  A simple example:
+<BLOCKQUOTE> <PRE>:context-declarations
+    '((:external (declare (optimize (safety 2)))))
+</PRE> </BLOCKQUOTE>
+This will cause all functions that are named by external symbols to be
+compiled with <tt>safety 2</tt>.
+<P>
+The full syntax of context specs is:
+<DL ><DT><STRONG><tt>:internal</tt>, <tt>:external</tt></STRONG>
+<DD> True if the symbol is internal
+  (external) in its home package.
+<P>
+<DT><STRONG><tt>:uninterned</tt></STRONG>
+<DD> True if the symbol has no home package.
+<P>
+<DT><STRONG><tt>(:package <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>package-name</i></i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif">)</tt></STRONG>
+<DD> True if the
+  symbol's home package is in any of the named packages (false if
+  uninterned.)
+<P>
+<DT><STRONG><tt>:anonymous</tt></STRONG>
+<DD> True if the function doesn't have any
+  interesting name (not <tt>defmacro</tt>, <tt>defun</tt>, <tt>labels</tt>
+  or <tt>flet</tt>).
+<P>
+<DT><STRONG><tt>:macro</tt>, <tt>:function</tt></STRONG>
+<DD> <tt>:macro</tt> is a global
+  (<tt>defmacro</tt>) macro.  <tt>:function</tt> is anything else.
+<P>
+<DT><STRONG><tt>:local</tt>, <tt>:global</tt></STRONG>
+<DD> <tt>:local</tt> is a <tt>labels</tt> or
+  <tt>flet</tt>.  <tt>:global</tt> is anything else.
+<P>
+<DT><STRONG><tt>(:or <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>context-spec</i></i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif">)</tt></STRONG>
+<DD> True when any
+  supplied <i>context-spec</i> is true.
+<P>
+<DT><STRONG><tt>(:and <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>context-spec</i></i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif">)</tt></STRONG>
+<DD> True only when all
+  supplied <i>context-spec</i>s are true.
+<P>
+<DT><STRONG><tt>(:not <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>context-spec</i></i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif">)</tt></STRONG>
+<DD> True when
+  <i>context-spec</i> is false.
+<P>
+<DT><STRONG><tt>(:member <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>name</i></i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif">)</tt></STRONG>
+<DD> True when the defined
+  name is one of these names (<tt>equal</tt> test.)
+<P>
+<DT><STRONG><tt>(:match <IMG WIDTH=6 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17166" SRC="img5.gif"><i><i><i>pattern</i></i></i><IMG WIDTH=13 HEIGHT=24 ALIGN=MIDDLE ALT="tex2html_wrap_inline17172" SRC="img7.gif">)</tt></STRONG>
+<DD> True when any of the
+  patterns is a substring of the name.  The name is wrapped with
+  <tt>$</tt>'s, so ``<tt>$FOO</tt>'' matches names beginning with
+  ``<tt>FOO</tt>'', etc.
+<P>
+</DL><HR><A NAME="tex2html2625" HREF="node154.html"><IMG WIDTH=37 HEIGHT=24 ALIGN=BOTTOM ALT="next" SRC="next_motif.gif"></A> <A NAME="tex2html2623" HREF="node148.html"><IMG WIDTH=26 HEIGHT=24 ALIGN=BOTTOM ALT="up" SRC="up_motif.gif"></A> <A NAME="tex2html2617" HREF="node152.html"><IMG WIDTH=63 HEIGHT=24 ALIGN=BOTTOM ALT="previous" SRC="previous_motif.gif"></A> <A NAME="tex2html2627" HREF="node1.html"><IMG WIDTH=65 HEIGHT=24 ALIGN=BOTTOM ALT="contents" SRC="contents_motif.gif"></A> <A NAME="tex2html2628" HREF="node267.html"><IMG WIDTH=43 HEIGHT=24 ALIGN=BOTTOM ALT="index" SRC="index_motif.gif"></A> <BR>
+<B> Next:</B> <A NAME="tex2html2626" HREF="node154.html">5.7.6 Context Declaration Example</A>
+<B>Up:</B> <A NAME="tex2html2624" HREF="node148.html">5.7 Block Compilation</A>
+<B> Previous:</B> <A NAME="tex2html2618" HREF="node152.html">5.7.4 Practical Difficulties</A>
+<P><ADDRESS>
+<I>Raymond Toy <BR>
+Mon Sep 22 16:34:07 EDT 1997</I>
+</ADDRESS>
+</BODY>
+</HTML>
